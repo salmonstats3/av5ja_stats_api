@@ -1,0 +1,41 @@
+{
+  "cSpell.words": [
+    "antfu",
+    "cohock",
+    "demi",
+    "iconify",
+    "Ikura",
+    "intlify",
+    "mothership",
+    "nestjs",
+    "nightless",
+    "nsaid",
+    "pinia",
+    "pnpm",
+    "snakecase",
+    "tkgling",
+    "unocss",
+    "unplugin",
+    "Vite",
+    "vitejs",
+    "Vitesse",
+    "vitest",
+    "vueuse"
+  ],
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.localesPaths": "locales",
+  "i18n-ally.sortKeys": true,
+  "prettier.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "files.associations": {
+    "*.css": "postcss"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true
+}

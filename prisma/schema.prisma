@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model Result {
+  salmonId             Int        @id @default(autoincrement()) @map("salmon_id")
+  /// オオモノ出現数
+  bossCounts           Int[]      @map("boss_counts")
+  /// オオモノ討伐数
+  bossKillCounts       Int[]      @map("boss_kill_counts")
+  /// イクラ数
+  ikuraNum             Int        @map("ikura_num")
+  /// 金イクラ数
+  goldenIkuraNum       Int        @map("golden_ikura_num")
+  /// 金イクラ数
+  goldenIkuraAssistNum Int        @map("golden_ikura_assist_num")
+  /// 夜イベントを含むかどうか
+  nightLess            Boolean    @map("night_less")
+  /// キケン度
+  dangerRate           Float      @map("danger_rate")
+  /// 遊んだ時間
+  startTime            DateTime?  @map("start_time")
+  /// 遊んだ字kな
+  playTime             DateTime   @map("play_time")
+  /// バイト終了時刻
+  endTime              DateTime?  @map("end_time")
+  /// プレイヤーのID配列
+  members              String[]
+  /// プレイヤー
+  players              Player[]
+  /// WAVE
+  waves                Wave[]
+  /// バイト結果
+  jobResult            JobResult?
+  schedule             Schedule?  @relation(fields: [salmonId], references: [id])
+  /// 作成日
+  createdAt            DateTime   @default(now())
+  /// 更新日
+  updatedAt            DateTime   @updatedAt()
+
+  @@unique([playTime, members])
+  @@index([ikuraNum, goldenIkuraNum, goldenIkuraAssistNum, members])
+  @@map("results")
+}
+
+model JobResult {
+  id             Int      @id @map("salmon_id")
+  /// クリアしたかどうか
+  isClear        Boolean  @map("is_clear")
+  /// 失敗したWAVE
+  failureWave    Int?     @map("failure_wave")
+  /// オカシラシャケを討伐したかどうか
+  isBossDefeated Boolean? @map("is_boss_defeated")
+  result         Result   @relation(fields: [id], references: [salmonId])
+
+  @@map("job_results")
+}
+
+model Schedule {
+  /// ユニークID
+  id         Int       @id @default(autoincrement()) @map("id")
+  /// ステージID
+  stageId    Int       @map("stage_id")
+  /// 開始時刻
+  startTime  DateTime? @map("start_time")
+  /// 終了時刻
+  endTime    DateTime? @map("end_time")
+  /// レアブキID
+  rareWeapon Int?      @map("rare_weapon")
+  /// 支給ブキID
+  weaponList Int[]     @map("weapon_list")
+  results    Result[]
+
+  @@unique([stageId, startTime, endTime, weaponList])
+  @@map("schedules")
+}
+
+model Player {
+  id                   Int     @id @default(autoincrement())
+  /// バックリンク用のID
+  salmonId             Int     @map("salmon_id")
+  /// ID
+  nsaid                String
+  /// 名前
+  name                 String
+  /// オオモノ討伐数合計
+  bossKillCountsTotal  Int     @map("boss_kill_counts_total")
+  /// オオモノ討伐数
+  bossKillCounts       Int[]   @map("boss_kill_counts")
+  /// 被救助数
+  deadCount            Int     @map("dead_count")
+  /// 救助数
+  helpCount            Int     @map("help_count")
+  /// イクラ数
+  ikuraNum             Int     @map("ikura_num")
+  /// 金イクラ数
+  goldenIkuraNum       Int     @map("golden_ikura_num")
+  /// 金イクラアシスト数
+  goldenIkuraAssistNum Int     @map("golden_ikura_assist_num")
+  /// バイトボーナス
+  jobBonus             Int?    @map("job_bonus")
+  /// バイトレート
+  jobRate              Int?    @map("job_rate")
+  /// バイトスコア
+  jobScore             Int?    @map("job_score")
+  /// クマサンポイント
+  kumaPoint            Int?    @map("kuma_point")
+  /// 称号
+  gradeId              Int?    @map("grade_id")
+  /// 評価レート
+  gradePoint           Int?    @map("grade_point")
+  /// オカシラメーター
+  smellMeter           Int?    @map("smell_meter")
+  /// シナリオコード
+  scenarioCode         String? @map("scenario_code")
+  /// 種族
+  species              String
+  /// 性別
+  style                String
+  /// スペシャルID
+  specialId            Int     @map("special_id")
+  /// スペシャル使用数
+  specialCounts        Int[]   @map("special_count")
+  /// 支給されたブキのリスト
+  weaponList           Int[]   @map("weapon_list")
+  /// バックリンク
+  result               Result  @relation(fields: [salmonId], references: [salmonId])
+
+  @@unique([salmonId, nsaid])
+  @@map("players")
+}
+
+model Wave {
+  id                Int     @id @default(autoincrement())
+  // WAVE数
+  waveId            Int     @map("wave_id")
+  // イベント
+  eventType         Int     @map("event_type")
+  // 潮位
+  waterLevel        Int     @map("water_level")
+  // 金イクラ数
+  goldenIkuraNum    Int     @map("golden_ikura_num")
+  // 金イクラドロップ数
+  goldenIkuraPopNum Int     @map("golden_ikura_pop_num")
+  // 金イクラドロップ数
+  quotaNum          Int     @map("quota_num")
+  // クリアしたか
+  isClear           Boolean @map("is_clear")
+  result            Result  @relation(fields: [resultId], references: [salmonId])
+  resultId          Int
+
+  @@unique([resultId, waveId])
+  @@index([eventType, waterLevel, goldenIkuraNum])
+  @@map("waves")
+}
