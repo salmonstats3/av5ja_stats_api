@@ -45,15 +45,15 @@ import { CoopResultCreateResponse } from '../dto/response.dto';
 export class ResultsController {
   constructor(private readonly service: ResultsService) {}
 
-  // @Get(':salmon_id')
-  // @ApiParam({ name: 'salmon_id', type: 'integer', description: 'リザルトID' })
-  // @ApiTags('リザルト')
-  // @ApiOperation({ operationId: '取得' })
-  // @ApiNotFoundResponse()
-  // @ApiOkResponse({ type: Result })
-  // find(@Param('salmon_id', ParseIntPipe) salmon_id: number): Promise<Result> {
-  //   return;
-  // }
+  @Get(':salmon_id')
+  @ApiParam({ name: 'salmon_id', type: 'integer', description: 'リザルトID' })
+  @ApiTags('リザルト')
+  @ApiOperation({ operationId: '取得' })
+  @ApiNotFoundResponse()
+  @ApiOkResponse({ type: Result })
+  find(@Param('salmon_id', ParseIntPipe) salmonId: number) {
+    return this.service.getResults(salmonId);
+  }
 
   // @Get('')
   // @ApiTags('リザルト')
@@ -94,6 +94,6 @@ export class ResultsController {
   upsertMany(
     @Body() request: CustomResultRequest
   ): Promise<CoopResultCreateResponse[]> {
-    return this.service.upsertManyV2(request);
+    return this.service.upsertManyV2All(request);
   }
 }

@@ -174,12 +174,14 @@ class WaveResult {
   eventType: number;
 
   @ApiProperty()
+  @IsOptional()
   @IsInt()
   @Min(0)
   @Max(35)
   quotaNum: number;
 
   @ApiProperty()
+  @IsOptional()
   @IsInt()
   @Min(0)
   goldenIkuraNum: number;
@@ -270,6 +272,11 @@ export class CustomCoopResult {
   @IsString()
   @IsNotEmpty()
   id: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  uuid: string;
 
   @ApiProperty()
   @ValidateNested({ each: true })
