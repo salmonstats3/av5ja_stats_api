@@ -6,11 +6,11 @@ serve:
 
 .PHONY: up
 up:
-	docker-compose --env-file .env.local up
+	docker-compose up
 
 .PHONY: start
 start:
-	docker-compose --env-file .env.local up -d
+	docker-compose up -d
 
 .PHONY: down
 down:

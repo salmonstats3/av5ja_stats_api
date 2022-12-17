@@ -12,10 +12,12 @@ datasource db {
 }
 
 model Result {
-  // 固有ID
-  resultId             String    @id @map("result_id")
+  // ID
+  id                   String    @id
   // サーモンID
   salmonId             Int       @unique @default(autoincrement()) @map("salmon_id")
+  // バイト固有ID(シナリオコードの代わりみたいなもの)
+  uuid                 String    @map("uuid")
   // オオモノ出現数
   bossCounts           Int[]     @map("boss_counts")
   // オオモノ討伐数
@@ -29,15 +31,11 @@ model Result {
   // 夜イベントを含むかどうか
   nightLess            Boolean   @map("night_less")
   // キケン度
-  dangerRate           Decimal   @map("danger_rate")
+  dangerRate           Float     @map("danger_rate")
   // 遊んだ時間
   playTime             DateTime  @map("play_time")
   // プレイヤーのID配列
   members              String[]
-  // プレイヤー
-  players              Player[]
-  // WAVE
-  waves                Wave[]
   // クリアしたかどうか
   isClear              Boolean   @map("is_clear")
   // 失敗したWAVE
@@ -46,23 +44,24 @@ model Result {
   isBossDefeated       Boolean?  @map("is_boss_defeated")
   // たおしたオカシラシャケのID
   bossId               Int?      @map("boss_id")
-  // スケジュール
-  schedule             Schedule? @relation(fields: [salmonId], references: [id])
   // シナリオコード
   scenarioCode         String?   @map("scenario_code")
   // 作成日
   createdAt            DateTime  @default(now())
   // 更新日
   updatedAt            DateTime  @updatedAt()
+  // リレーション
+  schedule             Schedule? @relation(fields: [scheduleId], references: [id])
+  scheduleId           Int?
+  waves                Wave[]
+  players              Player[]
 
-  @@unique([playTime, members])
-  // @@index([ikuraNum, goldenIkuraNum, goldenIkuraAssistNum, members])
   @@map("results")
 }
 
 model Schedule {
   // ユニークID
-  id         Int      @id @default(autoincrement()) @map("id")
+  id         Int      @id @default(autoincrement()) @map("schedule_id")
   // ステージID
   stageId    Int      @map("stage_id")
   // レアブキID
@@ -73,80 +72,80 @@ model Schedule {
   mode       String   @default("REGULAR")
   // ルール
   rule       String   @default("REGULAR")
-  // バックリンク
-  results    Result[]
   // 作成日
   createdAt  DateTime @default(now())
   // 更新日
   updatedAt  DateTime @updatedAt()
 
+  results Result[]
+
   @@unique([stageId, weaponList, mode, rule])
-  @@index([stageId, mode, rule])
   @@map("schedules")
 }
 
 model Player {
-  id                   Int       @id @default(autoincrement())
-  // リザルトID
-  resultId             String?   @map("result_id")
-  // ID
+  // 内部的なID
+  id                   Int      @id @default(autoincrement()) @map("id")
+  // プレイヤーID
   pid                  String
   // 名前
   name                 String
   // 称号
   byname               String
   // 名前ID
-  nameId               String    @map("name_id")
+  nameId               String   @map("name_id")
   // バッジ
   badges               Int[]
   // ネームプレート
   nameplate            Int
   // ネームプレート
-  textColor            Decimal[] @map("text_color")
+  textColor            Float[]  @map("text_color")
   // ユニフォーム
   uniform              Int
   // オオモノ討伐数合計
-  bossKillCountsTotal  Int       @map("boss_kill_counts_total")
+  bossKillCountsTotal  Int      @map("boss_kill_counts_total")
   // オオモノ討伐数
-  bossKillCounts       Int[]     @map("boss_kill_counts")
+  bossKillCounts       Int[]    @map("boss_kill_counts")
   // 被救助数
-  deadCount            Int       @map("dead_count")
+  deadCount            Int      @map("dead_count")
   // 救助数
-  helpCount            Int       @map("help_count")
+  helpCount            Int      @map("help_count")
   // イクラ数
-  ikuraNum             Int       @map("ikura_num")
+  ikuraNum             Int      @map("ikura_num")
   // 金イクラ数
-  goldenIkuraNum       Int       @map("golden_ikura_num")
+  goldenIkuraNum       Int      @map("golden_ikura_num")
   // 金イクラアシスト数
-  goldenIkuraAssistNum Int       @map("golden_ikura_assist_num")
+  goldenIkuraAssistNum Int      @map("golden_ikura_assist_num")
   // バイトボーナス
-  jobBonus             Int?      @map("job_bonus")
+  jobBonus             Int?     @map("job_bonus")
   // バイトレート
-  jobRate              Decimal?  @map("job_rate")
+  jobRate              Float?   @map("job_rate")
   // バイトスコア
-  jobScore             Int?      @map("job_score")
+  jobScore             Int?     @map("job_score")
   // クマサンポイント
-  kumaPoint            Int?      @map("kuma_point")
+  kumaPoint            Int?     @map("kuma_point")
   // 称号
-  gradeId              Int?      @map("grade_id")
+  gradeId              Int?     @map("grade_id")
   // 評価レート
-  gradePoint           Int?      @map("grade_point")
+  gradePoint           Int?     @map("grade_point")
   // オカシラメーター
-  smellMeter           Int?      @map("smell_meter")
+  smellMeter           Int?     @map("smell_meter")
   // 種族
   species              String
   // スペシャルID
-  specialId            Int       @map("special_id")
+  specialId            Int      @map("special_id")
   // スペシャル使用数
-  specialCounts        Int[]     @map("special_count")
+  specialCounts        Int[]    @map("special_count")
   // 支給されたブキのリスト
-  weaponList           Int[]     @map("weapon_list")
-  // バックリンク
-  Result               Result?   @relation(fields: [resultId], references: [resultId])
+  weaponList           Int[]    @map("weapon_list")
   // 作成日
-  createdAt            DateTime  @default(now())
+  createdAt            DateTime @default(now())
   // 更新日
-  updatedAt            DateTime  @updatedAt()
+  updatedAt            DateTime @updatedAt()
+  /// リレーション
+  Result               Result?  @relation(fields: [resultId], references: [id])
+  // リザルトID
+  resultId             String?  @map("result_id")
 
   @@unique([resultId, pid])
   @@map("players")
@@ -154,8 +153,6 @@ model Player {
 
 model Wave {
   id                Int      @id @default(autoincrement())
-  // リザルトID
-  resultId          String?  @map("result_id")
   // WAVE数
   waveId            Int      @map("wave_id")
   // イベント
@@ -170,13 +167,12 @@ model Wave {
   quotaNum          Int?     @map("quota_num")
   // クリアしたか
   isClear           Boolean  @map("is_clear")
-  // バックリンク
-  Result            Result?  @relation(fields: [resultId], references: [resultId])
   // 作成日
   createdAt         DateTime @default(now())
   // 更新日
   updatedAt         DateTime @updatedAt()
+  Result            Result?  @relation(fields: [resultId], references: [id])
+  resultId          String?
 
-  @@unique([resultId, waveId])
   @@map("waves")
 }

@@ -12,6 +12,8 @@
     "start": "nest start",
     "start:dev": "dotenv -e .env.local -- nest start --watch",
     "start:prod": "dotenv -e .env.prod -- nest start --watch",
+    "studio:dev": "dotenv -e .env.local -- yarn prisma studio",
+    "studio:prod": "dotenv -e .env.prod -- yarn prisma studio",
     "migrate:dev": "dotenv -e .env.local -- yarn prisma migrate reset && yarn prisma migrate dev --name init",
     "migrate:prod": "dotenv -e .env.prod -- yarn prisma migrate dev --name init",
     "test": "jest",
