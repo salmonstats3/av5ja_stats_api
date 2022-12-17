@@ -11,7 +11,7 @@ import {
 import { EnemyResult } from '../dto/splatnet3/enemy.dto';
 import { Player } from '../dto/splatnet3/player.dto';
 import { IntegerId } from '../dto/splatnet3/rawvalue.dto';
-import { Result } from '../dto/splatnet3/result.dto';
+import { CustomCoopResult, Result } from '../dto/splatnet3/result.dto';
 import {
   CustomResultRequest,
   ResultRequest,
@@ -226,7 +226,7 @@ export class ResultsService {
       const data: CustomResult = new CustomResult(
         result.data.coopHistoryDetail
       );
-      return this.prisma.result.upsert(this.query(data));
+      return this.prisma.result.upsert(this.queryV1(data));
     });
     return (await this.prisma.$transaction([...query])).map(
       (result) => new CoopResultCreateResponse(result.resultId, result.salmonId)
@@ -236,19 +236,15 @@ export class ResultsService {
   async upsertManyV2(
     request: CustomResultRequest
   ): Promise<CoopResultCreateResponse[]> {
-    // const query = request.results.map((result) => {
-    //   const data: CustomResult = new CustomResult(
-    //     result.data.coopHistoryDetail
-    //   );
-    //   return this.prisma.result.upsert(this.query(data));
-    // });
-    // return (await this.prisma.$transaction([...query])).map(
-    //   (result) => new CoopResultCreateResponse(result.resultId, result.salmonId)
-    // );
-    return;
+    const query = request.results.map((result) => {
+      return this.prisma.result.upsert(this.queryV2(result));
+    });
+    return (await this.prisma.$transaction([...query])).map(
+      (result) => new CoopResultCreateResponse(result.resultId, result.salmonId)
+    );
   }
 
-  query(result: CustomResult): Prisma.ResultUpsertArgs {
+  queryV1(result: CustomResult): Prisma.ResultUpsertArgs {
     return {
       update: {},
       where: {
@@ -339,6 +335,131 @@ export class ResultsService {
                 weaponList: result.weaponList,
                 mode: result.mode,
                 rule: result.rule,
+              },
+            },
+          },
+        },
+      },
+    };
+  }
+
+  queryV2(result: CustomCoopResult): Prisma.ResultUpsertArgs {
+    const members: string[] = [result.myResult]
+      .concat(result.otherResults)
+      .map((player) => player.id);
+    const nightLess: boolean = result.waveDetails.every(
+      (wave) => wave.eventType == 0
+    );
+    return {
+      update: {
+        players: {
+          update: {
+            where: {
+              resultId_pid: {
+                resultId: result.id,
+                pid: result.myResult.id,
+              },
+            },
+            data: {
+              jobBonus: result.jobBonus,
+              jobScore: result.jobScore,
+              kumaPoint: result.kumaPoint,
+              jobRate: result.jobRate,
+              smellMeter: result.smellMeter,
+              gradeId: result.gradeId,
+              gradePoint: result.gradePoint,
+            },
+          },
+        },
+      },
+      where: {
+        resultId: result.id,
+      },
+      create: {
+        resultId: result.id,
+        bossCounts: result.bossCounts,
+        bossKillCounts: result.bossKillCounts,
+        ikuraNum: result.ikuraNum,
+        goldenIkuraNum: result.goldenIkuraNum,
+        goldenIkuraAssistNum: result.goldenIkuraAssistNum,
+        nightLess: nightLess,
+        dangerRate: result.dangerRate,
+        playTime: result.playTime,
+        members: members,
+        isClear: result.jobResult.isClear,
+        failureWave: result.jobResult.failureWave,
+        isBossDefeated: result.jobResult.isBossDefeated,
+        bossId: result.jobResult.bossId,
+        waves: {
+          createMany: {
+            data: result.waveDetails.map((wave) => {
+              return {
+                waveId: wave.id,
+                waterLevel: wave.waterLevel,
+                eventType: wave.eventType,
+                goldenIkuraNum: wave.goldenIkuraNum,
+                goldenIkuraPopNum: wave.goldenIkuraPopNum,
+                quotaNum: wave.quotaNum,
+                isClear: wave.isClear,
+              };
+            }),
+          },
+        },
+        players: {
+          createMany: {
+            data: [result.myResult]
+              .concat(result.otherResults)
+              .map((player) => {
+                return {
+                  pid: player.id,
+                  name: player.name,
+                  byname: player.byname,
+                  nameId: player.nameId,
+                  badges: player.nameplate.badges.map((badge) => badge ?? -1),
+                  nameplate: player.nameplate.background.id,
+                  textColor: [
+                    player.nameplate.background.textColor.r,
+                    player.nameplate.background.textColor.g,
+                    player.nameplate.background.textColor.b,
+                    player.nameplate.background.textColor.a,
+                  ],
+                  uniform: player.uniform,
+                  bossKillCountsTotal: player.bossKillCountsTotal,
+                  bossKillCounts: player.bossKillCounts,
+                  deadCount: player.deadCount,
+                  helpCount: player.helpCount,
+                  ikuraNum: player.ikuraNum,
+                  goldenIkuraNum: player.goldenIkuraNum,
+                  goldenIkuraAssistNum: player.goldenIkuraAssistNum,
+                  species: player.species,
+                  specialId: player.specialId,
+                  jobRate: player.isMyself ? result.jobRate : null,
+                  jobBonus: player.isMyself ? result.jobBonus : null,
+                  jobScore: player.isMyself ? result.jobScore : null,
+                  kumaPoint: player.isMyself ? result.kumaPoint : null,
+                  gradeId: player.isMyself ? result.gradeId : null,
+                  gradePoint: player.isMyself ? result.gradePoint : null,
+                  smellMeter: player.isMyself ? result.smellMeter : null,
+                  weaponList: player.weaponList,
+                  specialCounts: player.specialCounts,
+                };
+              }),
+          },
+        },
+        schedule: {
+          connectOrCreate: {
+            create: {
+              stageId: result.schedule.stageId,
+              weaponList: result.schedule.weaponList,
+              mode: result.schedule.mode,
+              rule: result.schedule.rule,
+            },
+            where: {
+              stageId_weaponList_mode_rule: {
+                stageId: result.schedule.stageId,
+                weaponList: result.schedule.weaponList,
+                mode: result.schedule.mode,
+                rule: result.schedule.rule,
               },
             },
           },

@@ -32,7 +32,7 @@ class Special {
   weaponId: number;
 }
 
-enum Species {
+export enum Species {
   INKLING = 'INKLING',
   OCTOLING = 'OCTOLING',
 }

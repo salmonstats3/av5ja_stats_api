@@ -18,8 +18,8 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { Species } from '../result.request.dto';
 import { Data } from './data.dto';
+import { Species } from './player.dto';
 import { Schedule } from './schedule.dto';
 
 export class Result {
@@ -115,10 +115,6 @@ class PlayerResult {
   nameId: string;
 
   @ApiProperty()
-  @IsInt()
-  goldenIkuraAssistNum: number;
-
-  @ApiProperty()
   @IsEnum(Species)
   species: Species;
 
@@ -128,7 +124,40 @@ class PlayerResult {
 
   @ApiProperty()
   @IsInt()
+  @Min(0)
   goldenIkuraNum: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  ikuraNum: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  goldenIkuraAssistNum: number;
+}
+
+class JobResult {
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  isClear: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  isBossDefeated: boolean | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  bossId: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  failureWave: number | null;
 }
 
 class WaveResult {
@@ -153,7 +182,6 @@ class WaveResult {
   @ApiProperty()
   @IsInt()
   @Min(0)
-  @Max(35)
   goldenIkuraNum: number;
 
   @ApiProperty()
@@ -172,20 +200,20 @@ class WaveResult {
   isClear: boolean;
 }
 
-export class CustomResult {
+export class CustomCoopResult {
   @ApiProperty()
   @ValidateNested()
   @Type(() => Schedule)
   schedule: Schedule;
 
   @ApiProperty()
-  @ArrayMinSize(0)
+  @ArrayMinSize(14)
   @ArrayMaxSize(14)
   @Transform((param) => param.value.slice(0, -1))
   bossKillCounts: number[];
 
   @ApiProperty()
-  @ArrayMinSize(0)
+  @ArrayMinSize(14)
   @ArrayMaxSize(14)
   @Transform((param) => param.value.slice(0, -1))
   bossCounts: number[];
@@ -272,4 +300,16 @@ export class CustomResult {
   @ArrayMinSize(3)
   @ArrayMaxSize(3)
   scale: (number | null)[];
+
+  @ApiProperty()
+  @ValidateNested()
+  @Type(() => JobResult)
+  jobResult: JobResult;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(5)
+  smellMeter: number | null;
 }

@@ -18,11 +18,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import * as dayjs from 'dayjs';
-
-export enum Species {
-  INKLING,
-  OCTOLING,
-}
+import { Species } from './splatnet3/player.dto';
 
 enum Rule {
   RULE_PRIVATE,
