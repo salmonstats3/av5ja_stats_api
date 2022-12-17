@@ -19,7 +19,7 @@ import {
 } from 'class-validator';
 import * as dayjs from 'dayjs';
 
-enum Species {
+export enum Species {
   INKLING,
   OCTOLING,
 }

@@ -1,4 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsDateString,
@@ -26,7 +30,7 @@ export enum Mode {
   PRIVATE_SCENARIO = 'PRIVATE_SCENARIO',
 }
 
-enum Rule {
+export enum Rule {
   REGULAR = 'REGULAR',
   BIG_RUN = 'BIG_RUN',
 }
@@ -102,9 +106,10 @@ export class CoopHistoryDetail extends StringId {
   memberResults: Player[];
 
   @ApiProperty()
+  @IsOptional()
   @ValidateNested()
   @Type(() => BossResult)
-  bossResult: BossResult;
+  bossResult: BossResult | null;
 
   @ApiProperty()
   @ValidateNested({ each: true })

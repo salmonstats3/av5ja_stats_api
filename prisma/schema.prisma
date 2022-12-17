@@ -69,9 +69,16 @@ model Schedule {
   rareWeapon Int?     @map("rare_weapon")
   // 支給ブキID
   weaponList Int[]    @map("weapon_list")
+  // モード
   mode       String   @default("REGULAR")
+  // ルール
   rule       String   @default("REGULAR")
+  // バックリンク
   results    Result[]
+  // 作成日
+  createdAt  DateTime @default(now())
+  // 更新日
+  updatedAt  DateTime @updatedAt()
 
   @@unique([stageId, weaponList, mode, rule])
   @@index([stageId, mode, rule])
@@ -134,31 +141,41 @@ model Player {
   specialCounts        Int[]     @map("special_count")
   // 支給されたブキのリスト
   weaponList           Int[]     @map("weapon_list")
+  // バックリンク
   Result               Result?   @relation(fields: [resultId], references: [resultId])
+  // 作成日
+  createdAt            DateTime  @default(now())
+  // 更新日
+  updatedAt            DateTime  @updatedAt()
 
   @@unique([resultId, pid])
   @@map("players")
 }
 
 model Wave {
-  id                Int     @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   // リザルトID
-  resultId          String? @map("result_id")
+  resultId          String?  @map("result_id")
   // WAVE数
-  waveId            Int     @map("wave_id")
+  waveId            Int      @map("wave_id")
   // イベント
-  eventType         Int     @map("event_type")
+  eventType         Int      @map("event_type")
   // 潮位
-  waterLevel        Int     @map("water_level")
+  waterLevel        Int      @map("water_level")
   // 金イクラ数
-  goldenIkuraNum    Int?    @map("golden_ikura_num")
+  goldenIkuraNum    Int?     @map("golden_ikura_num")
   // 金イクラドロップ数
-  goldenIkuraPopNum Int     @map("golden_ikura_pop_num")
+  goldenIkuraPopNum Int      @map("golden_ikura_pop_num")
   // 金イクラドロップ数
-  quotaNum          Int?    @map("quota_num")
+  quotaNum          Int?     @map("quota_num")
   // クリアしたか
-  isClear           Boolean @map("is_clear")
-  Result            Result? @relation(fields: [resultId], references: [resultId])
+  isClear           Boolean  @map("is_clear")
+  // バックリンク
+  Result            Result?  @relation(fields: [resultId], references: [resultId])
+  // 作成日
+  createdAt         DateTime @default(now())
+  // 更新日
+  updatedAt         DateTime @updatedAt()
 
   @@unique([resultId, waveId])
   @@map("waves")

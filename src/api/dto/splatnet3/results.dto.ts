@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { ArrayMaxSize, IsArray, ValidateNested } from 'class-validator';
-import { Result } from './result.dto';
+import { CustomResult, Result } from './result.dto';
 
 export class ResultRequest {
   @ApiProperty()
@@ -10,4 +10,13 @@ export class ResultRequest {
   @ValidateNested({ each: true })
   @Type(() => Result)
   results: Result[];
+}
+
+export class CustomResultRequest {
+  @ApiProperty()
+  @IsArray()
+  @ArrayMaxSize(50)
+  @ValidateNested({ each: true })
+  @Type(() => CustomResult)
+  results: CustomResult[];
 }

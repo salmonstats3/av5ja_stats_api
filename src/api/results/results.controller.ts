@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
+  Headers,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -12,6 +14,7 @@ import {
   Query,
   UseInterceptors,
   ValidationPipe,
+  Version,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -30,8 +33,12 @@ import {
 import { ResultsService } from './results.service';
 import { Status, UploadStatus, UploadStatuses } from './results.status';
 import snakecaseKeys from 'snakecase-keys';
-import { ResultRequest } from '../dto/splatnet3/results.dto';
+import {
+  CustomResultRequest,
+  ResultRequest,
+} from '../dto/splatnet3/results.dto';
 import { Result } from '../dto/splatnet3/result.dto';
+import { CoopResultCreateResponse } from '../dto/response.dto';
 
 @Controller('results')
 @ApiExtraModels(PaginatedDto)
@@ -61,6 +68,7 @@ export class ResultsController {
   // }
 
   @Post('')
+  @Version('1')
   @HttpCode(201)
   @ApiTags('リザルト')
   @ApiOperation({ operationId: '登録' })
@@ -68,7 +76,24 @@ export class ResultsController {
     type: UploadStatuses,
   })
   @ApiBadRequestResponse()
-  create(@Body() request: ResultRequest) {
-    return this.service.upsertMany(request);
+  createMany(
+    @Body() request: ResultRequest
+  ): Promise<CoopResultCreateResponse[]> {
+    return this.service.upsertManyV1(request);
+  }
+
+  @Post('')
+  @Version('2')
+  @HttpCode(201)
+  @ApiTags('リザルト')
+  @ApiOperation({ operationId: '登録' })
+  @ApiCreatedResponse({
+    type: UploadStatuses,
+  })
+  @ApiBadRequestResponse()
+  upsertMany(
+    @Body() request: CustomResultRequest
+  ): Promise<CoopResultCreateResponse[]> {
+    return this.service.upsertManyV2(request);
   }
 }

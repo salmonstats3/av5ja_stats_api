@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { re } from 'mathjs';
 import { PrismaService } from 'src/prisma.service';
+import { CoopResultCreateResponse } from '../dto/response.dto';
 import { BossResult } from '../dto/splatnet3/boss.dto';
 import {
   CoopHistoryDetail,
@@ -11,7 +12,10 @@ import { EnemyResult } from '../dto/splatnet3/enemy.dto';
 import { Player } from '../dto/splatnet3/player.dto';
 import { IntegerId } from '../dto/splatnet3/rawvalue.dto';
 import { Result } from '../dto/splatnet3/result.dto';
-import { ResultRequest } from '../dto/splatnet3/results.dto';
+import {
+  CustomResultRequest,
+  ResultRequest,
+} from '../dto/splatnet3/results.dto';
 import { WaveResult } from '../dto/splatnet3/wave.dto';
 import { ResultsModule } from './results.module';
 
@@ -27,6 +31,7 @@ class CustomWave extends WaveResult {
     this.waterLevel = wave.waterLevel;
     this.teamDeliverCount = wave.teamDeliverCount;
     this.waveNumber = wave.waveNumber;
+    this.deliverNorm = wave.deliverNorm;
     this.isClear =
       resultWave == 0
         ? true
@@ -152,7 +157,11 @@ class CustomResult extends CoopHistoryDetail {
     const enemyResults: EnemyResult[] = this.enemies(result.enemyResults);
     this.waves = result.waveResults.map(
       (wave) =>
-        new CustomWave(wave, result.resultWave, result.bossResult.hasDefeatBoss)
+        new CustomWave(
+          wave,
+          result.resultWave,
+          result.bossResult?.hasDefeatBoss ?? false
+        )
     );
 
     const specialUsage: number[][] = this.waves.map(
@@ -176,8 +185,8 @@ class CustomResult extends CoopHistoryDetail {
     this.nightLess = result.waveResults.every((wave) => wave.eventWave == null);
     this.isClear = result.resultWave == 0;
     this.failureWave = result.resultWave == 0 ? null : result.resultWave;
-    this.isBossDefeated = result.bossResult.hasDefeatBoss;
-    this.bossId = result.bossResult.boss.id;
+    this.isBossDefeated = result.bossResult?.hasDefeatBoss;
+    this.bossId = result.bossResult?.boss.id;
     this.stageId = result.coopStage.id;
     this.weaponList = result.weapons.map((weapon) => weapon.image.url);
     this.mode =
@@ -210,15 +219,33 @@ class CustomResult extends CoopHistoryDetail {
 export class ResultsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async upsertMany(request: ResultRequest) {
+  async upsertManyV1(
+    request: ResultRequest
+  ): Promise<CoopResultCreateResponse[]> {
     const query = request.results.map((result) => {
       const data: CustomResult = new CustomResult(
         result.data.coopHistoryDetail
       );
       return this.prisma.result.upsert(this.query(data));
     });
-    const result = await this.prisma.$transaction([...query]);
-    return result;
+    return (await this.prisma.$transaction([...query])).map(
+      (result) => new CoopResultCreateResponse(result.resultId, result.salmonId)
+    );
+  }
+
+  async upsertManyV2(
+    request: CustomResultRequest
+  ): Promise<CoopResultCreateResponse[]> {
+    // const query = request.results.map((result) => {
+    //   const data: CustomResult = new CustomResult(
+    //     result.data.coopHistoryDetail
+    //   );
+    //   return this.prisma.result.upsert(this.query(data));
+    // });
+    // return (await this.prisma.$transaction([...query])).map(
+    //   (result) => new CoopResultCreateResponse(result.resultId, result.salmonId)
+    // );
+    return;
   }
 
   query(result: CustomResult): Prisma.ResultUpsertArgs {
