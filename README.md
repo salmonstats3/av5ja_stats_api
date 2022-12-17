@@ -47,5 +47,5 @@ yarn start:dev
 git clone https://github.com/SalmonStats3/salmonstats-api.git
 cd salmonstats-api
 yarn install
-yarn start:dev
+yarn start:prod
 ```
