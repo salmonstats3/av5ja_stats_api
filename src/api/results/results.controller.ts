@@ -68,7 +68,7 @@ export class ResultsController {
     type: UploadStatuses,
   })
   @ApiBadRequestResponse()
-  create(@Body() request: Result): Promise<ResultRequest> {
-    return this.service.create(request);
+  create(@Body() request: ResultRequest) {
+    return this.service.upsertMany(request);
   }
 }

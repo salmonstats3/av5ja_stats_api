@@ -29,13 +29,9 @@ model Result {
   // 夜イベントを含むかどうか
   nightLess            Boolean   @map("night_less")
   // キケン度
-  dangerRate           Float     @map("danger_rate")
-  // 遊んだ時間
-  startTime            DateTime? @map("start_time")
+  dangerRate           Decimal   @map("danger_rate")
   // 遊んだ時間
   playTime             DateTime  @map("play_time")
-  // バイト終了時刻
-  endTime              DateTime? @map("end_time")
   // プレイヤーのID配列
   members              String[]
   // プレイヤー
@@ -59,7 +55,7 @@ model Result {
   // 更新日
   updatedAt            DateTime  @updatedAt()
 
-  // @@unique([playTime, members])
+  @@unique([playTime, members])
   // @@index([ikuraNum, goldenIkuraNum, goldenIkuraAssistNum, members])
   @@map("results")
 }
@@ -83,9 +79,9 @@ model Schedule {
 }
 
 model Player {
-  id                   Int     @id @default(autoincrement())
+  id                   Int       @id @default(autoincrement())
   // リザルトID
-  resultId             String? @map("result_id")
+  resultId             String?   @map("result_id")
   // ID
   pid                  String
   // 名前
@@ -93,50 +89,52 @@ model Player {
   // 称号
   byname               String
   // 名前ID
-  nameId               String  @map("name_id")
+  nameId               String    @map("name_id")
   // バッジ
   badges               Int[]
   // ネームプレート
   nameplate            Int
+  // ネームプレート
+  textColor            Decimal[] @map("text_color")
   // ユニフォーム
   uniform              Int
   // オオモノ討伐数合計
-  bossKillCountsTotal  Int     @map("boss_kill_counts_total")
+  bossKillCountsTotal  Int       @map("boss_kill_counts_total")
   // オオモノ討伐数
-  bossKillCounts       Int[]   @map("boss_kill_counts")
+  bossKillCounts       Int[]     @map("boss_kill_counts")
   // 被救助数
-  deadCount            Int     @map("dead_count")
+  deadCount            Int       @map("dead_count")
   // 救助数
-  helpCount            Int     @map("help_count")
+  helpCount            Int       @map("help_count")
   // イクラ数
-  ikuraNum             Int     @map("ikura_num")
+  ikuraNum             Int       @map("ikura_num")
   // 金イクラ数
-  goldenIkuraNum       Int     @map("golden_ikura_num")
+  goldenIkuraNum       Int       @map("golden_ikura_num")
   // 金イクラアシスト数
-  goldenIkuraAssistNum Int     @map("golden_ikura_assist_num")
+  goldenIkuraAssistNum Int       @map("golden_ikura_assist_num")
   // バイトボーナス
-  jobBonus             Int?    @map("job_bonus")
+  jobBonus             Int?      @map("job_bonus")
   // バイトレート
-  jobRate              Int?    @map("job_rate")
+  jobRate              Decimal?  @map("job_rate")
   // バイトスコア
-  jobScore             Int?    @map("job_score")
+  jobScore             Int?      @map("job_score")
   // クマサンポイント
-  kumaPoint            Int?    @map("kuma_point")
+  kumaPoint            Int?      @map("kuma_point")
   // 称号
-  gradeId              Int?    @map("grade_id")
+  gradeId              Int?      @map("grade_id")
   // 評価レート
-  gradePoint           Int?    @map("grade_point")
+  gradePoint           Int?      @map("grade_point")
   // オカシラメーター
-  smellMeter           Int?    @map("smell_meter")
+  smellMeter           Int?      @map("smell_meter")
   // 種族
   species              String
   // スペシャルID
-  specialId            Int     @map("special_id")
+  specialId            Int       @map("special_id")
   // スペシャル使用数
-  specialCounts        Int[]   @map("special_count")
+  specialCounts        Int[]     @map("special_count")
   // 支給されたブキのリスト
-  weaponList           Int[]   @map("weapon_list")
-  Result               Result? @relation(fields: [resultId], references: [resultId])
+  weaponList           Int[]     @map("weapon_list")
+  Result               Result?   @relation(fields: [resultId], references: [resultId])
 
   @@unique([resultId, pid])
   @@map("players")

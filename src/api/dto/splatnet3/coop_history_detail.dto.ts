@@ -20,9 +20,15 @@ import { IntegerId, StringId } from './rawvalue.dto';
 import { WaveResult } from './wave.dto';
 import { Image, Weapon } from './weapon.dto';
 
+export enum Mode {
+  REGULAR = 'REGULAR',
+  PRIVATE_CUSTOM = 'PRIVATE_CUSTOM',
+  PRIVATE_SCENARIO = 'PRIVATE_SCENARIO',
+}
+
 enum Rule {
-  REGULAR,
-  BIG_RUN,
+  REGULAR = 'REGULAR',
+  BIG_RUN = 'BIG_RUN',
 }
 
 class Scale {
@@ -147,6 +153,13 @@ export class CoopHistoryDetail extends StringId {
   @Min(0)
   @Max(100)
   jobBonus: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(5)
+  smellMeter: number | null;
 
   @ApiProperty()
   @IsOptional()

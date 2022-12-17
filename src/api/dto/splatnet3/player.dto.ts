@@ -33,8 +33,8 @@ class Special {
 }
 
 enum Species {
-  INKLING,
-  OCTOLING,
+  INKLING = 'INKLING',
+  OCTOLING = 'OCTOLING',
 }
 
 class Background extends IntegerId {
@@ -59,7 +59,7 @@ class NamePlate {
   background: Background;
 }
 
-class PlayerResult extends StringId {
+export class PlayerResult extends StringId {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -120,6 +120,11 @@ export class Player {
   @IsInt()
   @Min(0)
   rescueCount: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  rescuedCount: number;
 
   @ApiProperty()
   @ValidateNested({ each: true })

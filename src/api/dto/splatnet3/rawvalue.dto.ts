@@ -24,8 +24,7 @@ export class StringId {
   @IsString()
   @IsNotEmpty()
   @Transform((param) => {
-    const rawValue: string = Buffer.from(param.value, 'base64').toString();
-    return rawValue;
+    return Buffer.from(param.value, 'base64').toString();
   })
   id: string;
 }

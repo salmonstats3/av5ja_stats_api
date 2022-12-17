@@ -23,4 +23,12 @@ export class EnemyResult {
   @ValidateNested()
   @Type(() => IntegerId)
   enemy: IntegerId;
+
+  constructor(enemy: EnemyResult | undefined, id: number) {
+    this.defeatCount = enemy?.defeatCount ?? 0;
+    this.teamDefeatCount = enemy?.teamDefeatCount ?? 0;
+    this.popCount = enemy?.popCount ?? 0;
+    this.enemy = new IntegerId();
+    this.enemy.id = enemy?.enemy.id ?? id;
+  }
 }

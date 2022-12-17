@@ -33,7 +33,7 @@ export class WaveResult {
   teamDeliverCount: number | null;
 
   @ApiProperty()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => IntegerId)
-  specialWeapons: IntegerId;
+  specialWeapons: IntegerId[];
 }
