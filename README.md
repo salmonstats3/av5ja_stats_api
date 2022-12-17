@@ -1,6 +1,13 @@
 # API for Salmon Stats+
 
+## Requirements
+
+- Docker
+- NodeJS(16.15.0)
+
 ## Configuration
+
+Create `.env` and `.env.local`, `.env.prod` according to the following format.
 
 ```.env
 NODE_PORT=
@@ -20,4 +27,25 @@ POSTGRES_USER=tkgstrator
 POSTGRES_PASSWORD=1234
 POSTGRES_DB=splatoon3
 API_VER=1.0.0
+```
+
+## Launch
+
+### Development
+
+```
+git clone https://github.com/SalmonStats3/salmonstats-api.git
+cd salmonstats-api
+make db
+yarn install
+yarn start:dev
+```
+
+### Production
+
+```
+git clone https://github.com/SalmonStats3/salmonstats-api.git
+cd salmonstats-api
+yarn install
+yarn start:dev
 ```
