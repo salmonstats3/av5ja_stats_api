@@ -27,9 +27,11 @@ import {
   PaginatedDto,
   PaginatedRequestDtoForResult,
 } from '../dto/pagination.dto';
-import { Results as UploadedResultsModel } from '../dto/result.base.request.dto';
 import { ResultsService } from './results.service';
 import { Status, UploadStatus, UploadStatuses } from './results.status';
+import snakecaseKeys from 'snakecase-keys';
+import { ResultRequest } from '../dto/splatnet3/results.dto';
+import { Result } from '../dto/splatnet3/result.dto';
 
 @Controller('results')
 @ApiExtraModels(PaginatedDto)
@@ -59,17 +61,14 @@ export class ResultsController {
   // }
 
   @Post('')
-  @HttpCode(200)
+  @HttpCode(201)
   @ApiTags('リザルト')
   @ApiOperation({ operationId: '登録' })
   @ApiCreatedResponse({
     type: UploadStatuses,
   })
   @ApiBadRequestResponse()
-  create(
-    @Body(new ValidationPipe({ transform: true }))
-    request: UploadedResultsModel
-  ): Promise<UploadStatuses> {
-    return;
+  create(@Body() request: Result): Promise<ResultRequest> {
+    return this.service.create(request);
   }
 }

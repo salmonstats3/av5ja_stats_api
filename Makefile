@@ -1,4 +1,4 @@
-include .env.production
+include .env.local
 
 .PHONY: serve
 serve:
@@ -6,23 +6,23 @@ serve:
 
 .PHONY: up
 up:
-	docker-compose --env-file .env.development up
+	docker-compose --env-file .env.local up
 
 .PHONY: start
 start:
-	docker-compose --env-file .env.development up -d
+	docker-compose --env-file .env.local up -d
 
 .PHONY: down
 down:
-	docker-compose --env-file .env.development down -v
+	docker-compose --env-file .env.local down -v
 
 .PHONY: build
 build:
-	docker build -t tkgling/salmon-stats-app:${API_VER} .
+	docker build -t tkgling/salmon-stats-plus-app:${API_VER} .
 
 .PHONY: push
 push:
-	docker push tkgling/salmon-stats-app:${API_VER}
+	docker push tkgling/salmon-stats-plus-app:${API_VER}
 
 .PHONY: db
 db:

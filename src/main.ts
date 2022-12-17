@@ -25,9 +25,13 @@ async function bootstrap() {
     defaultVersion: '1',
   });
   if (process.env.NODE_ENV === 'production') {
-    app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({ disableErrorMessages: true, transform: true })
+    );
   } else {
-    app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: false }));
+    app.useGlobalPipes(
+      new ValidationPipe({ disableErrorMessages: false, transform: true })
+    );
   }
   const options = new DocumentBuilder()
     .setTitle('Salmon Stats NEXT WAVE API Documents')
