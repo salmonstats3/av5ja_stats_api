@@ -38,7 +38,10 @@ import {
   ResultRequest,
 } from '../dto/splatnet3/results.dto';
 import { Result } from '../dto/splatnet3/result.dto';
-import { CoopResultCreateResponse } from '../dto/response.dto';
+import {
+  CoopResultCreateResponse,
+  CoopResultResponse,
+} from '../dto/response.dto';
 
 @Controller('results')
 @ApiExtraModels(PaginatedDto)
@@ -51,7 +54,9 @@ export class ResultsController {
   @ApiOperation({ operationId: '取得' })
   @ApiNotFoundResponse()
   @ApiOkResponse({ type: Result })
-  find(@Param('salmon_id', ParseIntPipe) salmonId: number) {
+  find(
+    @Param('salmon_id', ParseIntPipe) salmonId: number
+  ): Promise<CoopResultResponse> {
     return this.service.getResults(salmonId);
   }
 

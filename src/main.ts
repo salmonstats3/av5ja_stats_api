@@ -24,7 +24,7 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: '1',
   });
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'PRODUCTION') {
     app.useGlobalPipes(
       new ValidationPipe({ disableErrorMessages: true, transform: true })
     );
@@ -38,7 +38,7 @@ async function bootstrap() {
     .setVersion(process.env.API_VER)
     .build();
   const documents = SwaggerModule.createDocument(app, options);
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'PRODUCTION') {
     const build = path.resolve(process.cwd(), 'docs');
     const output = path.resolve(build, 'index');
     mkdir(build, { recursive: true }, (_) => {});
