@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { plainToClass } from 'class-transformer';
 import snakecaseKeys from 'snakecase-keys';
 import { PrismaService } from 'src/prisma.service';
-import { CoopResultCreateResponse } from '../dto/response.dto';
+import {
+  CoopResultCreateResponse,
+  CoopResultResponse,
+} from '../dto/response.dto';
 import { CustomPlayer, CustomResult } from '../dto/splatnet3/custom.dto';
 import { CustomCoopResult, Result } from '../dto/splatnet3/result.dto';
 import {
@@ -51,29 +55,31 @@ export class ResultsService {
     );
   }
 
-  async getResults(salmonId: number) {
-    return await this.prisma.result.findUnique({
-      where: {
-        salmonId: salmonId,
-      },
-      include: {
-        players: true,
-        waves: true,
-        schedule: true,
-      },
-    });
-    return snakecaseKeys(
-      await this.prisma.result.findUnique({
-        where: {
-          salmonId: salmonId,
-        },
-        include: {
-          players: true,
-          waves: true,
-          schedule: true,
-        },
-      })
-    );
+  async getResults(salmonId: number): Promise<CoopResultResponse> {
+    try {
+      const result: CoopResultResponse = plainToClass(
+        CoopResultResponse,
+        await this.prisma.result.findUniqueOrThrow({
+          where: {
+            salmonId: salmonId,
+          },
+          include: {
+            players: true,
+            waves: true,
+            schedule: true,
+          },
+        }),
+        {
+          exposeUnsetFields: false,
+          excludeExtraneousValues: true,
+          exposeDefaultValues: true,
+          enableCircularCheck: true,
+        }
+      );
+      return result;
+    } catch {
+      throw new NotFoundException();
+    }
   }
 
   queryV1(result: CustomResult): Prisma.ResultUpsertArgs {
@@ -194,6 +200,7 @@ export class ResultsService {
               },
             },
             data: {
+              bossKillCounts: result.myResult.bossKillCounts,
               jobBonus: result.jobBonus,
               jobScore: result.jobScore,
               kumaPoint: result.kumaPoint,
@@ -259,7 +266,9 @@ export class ResultsService {
                   ],
                   uniform: player.uniform,
                   bossKillCountsTotal: player.bossKillCountsTotal,
-                  bossKillCounts: player.bossKillCounts,
+                  bossKillCounts: player.isMyself
+                    ? player.bossKillCounts
+                    : player.bossKillCounts.map((count) => -1),
                   deadCount: player.deadCount,
                   helpCount: player.helpCount,
                   ikuraNum: player.ikuraNum,

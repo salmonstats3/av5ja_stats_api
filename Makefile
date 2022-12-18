@@ -1,16 +1,16 @@
-include .env.local
+include .env
 
 .PHONY: serve
 serve:
 	yarn start:local
 
-.PHONY: up
+.PHmskerONY: up
 up:
-	docker-compose up
+	docker-compose --env-file .env.prod up
 
 .PHONY: start
 start:
-	docker-compose up -d
+	docker-compose --env-file .env.local up -d
 
 .PHONY: down
 down:
