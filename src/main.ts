@@ -4,7 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import * as path from 'path';
 import { mkdir, writeFileSync } from 'fs';
-import { dump } from 'js-yaml';
+// import { dump } from 'js-yaml';
 import { exec } from 'child_process';
 import * as bodyParser from 'body-parser';
 import { config } from 'dotenv';
@@ -45,6 +45,7 @@ async function bootstrap() {
     writeFileSync(`${output}.json`, JSON.stringify(documents), {
       encoding: 'utf8',
     });
+    const dump = require('js-yaml').dump;
     writeFileSync(`${output}.yaml`, dump(documents, {}));
     exec(`npx redoc-cli build ${output}.json -o ${output}.html`);
   }
