@@ -12,7 +12,7 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "yarn nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "dotenv -e .env.local -- nest start --watch",
@@ -29,7 +29,6 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/cli": "^8.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^8.0.0",
@@ -41,20 +40,15 @@
     "class-validator": "^0.13.2",
     "dayjs": "^1.11.5",
     "dotenv-cli": "^6.0.0",
-    "firebase": "^9.11.0",
-    "firebase-admin": "^11.1.0",
-    "firebase-functions": "^3.24.1",
-    "firebase-tools": "^11.14.1",
-    "helmet": "^6.0.0",
     "prisma": "^3.13.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "snake-case": "^3.0.4",
     "snakecase-keys": "^5.4.4",
     "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
+    "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/express": "^4.17.13",
