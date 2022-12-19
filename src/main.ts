@@ -24,7 +24,7 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: '1',
   });
-  if (process.env.NODE_ENV === 'PRODUCTION') {
+  if (process.env.NODE_ENV === 'production') {
     app.useGlobalPipes(
       new ValidationPipe({ disableErrorMessages: true, transform: true })
     );
@@ -38,7 +38,7 @@ async function bootstrap() {
     .setVersion(process.env.API_VER)
     .build();
   const documents = SwaggerModule.createDocument(app, options);
-  if (process.env.NODE_ENV !== 'PRODUCTION') {
+  if (process.env.NODE_ENV !== 'production') {
     const build = path.resolve(process.cwd(), 'docs');
     const output = path.resolve(build, 'index');
     mkdir(build, { recursive: true }, (_) => {});
@@ -49,6 +49,6 @@ async function bootstrap() {
     exec(`npx redoc-cli build ${output}.json -o ${output}.html`);
   }
   SwaggerModule.setup('documents', app, documents);
-  await app.listen(process.env.NODE_PORT || 3030);
+  await app.listen(process.env.NODE_PORT || 3000);
 }
 bootstrap();
