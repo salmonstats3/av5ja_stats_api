@@ -17,14 +17,18 @@ import {
 import { IntegerId, StringId } from './rawvalue.dto';
 import { Weapon } from './weapon.dto';
 
-class TextColor {
+class TextColorRequest {
+  @ApiProperty()
   r: number;
+  @ApiProperty()
   g: number;
+  @ApiProperty()
   b: number;
+  @ApiProperty()
   a: number;
 }
 
-class Special {
+class SpecialRequest {
   @ApiProperty()
   @IsInt()
   @Min(-1)
@@ -37,29 +41,28 @@ export enum Species {
   OCTOLING = 'OCTOLING',
 }
 
-class Background extends IntegerId {
-  @ApiProperty()
+class BackgroundRequest extends IntegerId {
+  @ApiProperty({ type: TextColorRequest })
   @ValidateNested()
-  @Type(() => TextColor)
-  textColor: TextColor;
+  @Type(() => TextColorRequest)
+  textColor: TextColorRequest;
 }
 
-class NamePlate {
-  @ApiProperty()
+class NamePlateRequest {
+  @ApiProperty({ type: [IntegerId], maxItems: 3, minItems: 3 })
   @IsArray()
   @ArrayMinSize(3)
   @ArrayMaxSize(3)
-  // @ValidateNested({ each: true })
   @Type(() => IntegerId)
   badges: (IntegerId | null)[];
 
-  @ApiProperty()
+  @ApiProperty({ type: BackgroundRequest })
   @ValidateNested()
-  @Type(() => Background)
-  background: Background;
+  @Type(() => BackgroundRequest)
+  background: BackgroundRequest;
 }
 
-export class PlayerResult extends StringId {
+export class PlayerResultRequest extends StringId {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -77,24 +80,24 @@ export class PlayerResult extends StringId {
 
   @ApiProperty()
   @ValidateNested()
-  @Type(() => NamePlate)
-  nameplate: NamePlate;
+  @Type(() => NamePlateRequest)
+  nameplate: NamePlateRequest;
 
-  @ApiProperty()
+  @ApiProperty({ type: IntegerId })
   @ValidateNested()
   @Type(() => IntegerId)
   uniform: IntegerId;
 
-  @ApiProperty()
+  @ApiProperty({ enum: Species })
   @IsEnum(Species)
   species: Species;
 }
 
-export class Player {
-  @ApiProperty()
+export class PlayerRequest {
+  @ApiProperty({ type: PlayerResultRequest })
   @ValidateNested()
-  @Type(() => PlayerResult)
-  player: PlayerResult;
+  @Type(() => PlayerResultRequest)
+  player: PlayerResultRequest;
 
   @ApiProperty()
   @IsInt()
@@ -126,13 +129,13 @@ export class Player {
   @Min(0)
   rescuedCount: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: [Weapon], maxItems: 4, minItems: 4 })
   @ValidateNested({ each: true })
   @Type(() => Weapon)
   weapons: Weapon[];
 
-  @ApiProperty()
+  @ApiProperty({ type: SpecialRequest })
   @ValidateNested()
-  @Type(() => Special)
-  specialWeapon: Special;
+  @Type(() => SpecialRequest)
+  specialWeapon: SpecialRequest;
 }

@@ -1,4 +1,4 @@
-include .env
+include .env.prod
 
 .PHONY: up
 db:

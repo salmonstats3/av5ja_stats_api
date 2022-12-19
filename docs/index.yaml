@@ -17,14 +17,54 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Result'
+                $ref: '#/components/schemas/CoopResultResponse'
         '404':
           description: ''
       tags:
         - リザルト
   /v1/results:
+    get:
+      operationId: 一括取得
+      summary: ''
+      parameters:
+        - name: offset
+          required: false
+          in: query
+          description: オフセット
+          schema:
+            minimum: 0
+            title: offset
+            default: 0
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: 上限値
+          schema:
+            minimum: 0
+            maximum: 200
+            title: limit
+            default: 25
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedDto'
+                  - properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CoopResultResponse'
+        '404':
+          description: ''
+      tags:
+        - リザルト
     post:
-      operationId: 登録
+      operationId: 登録(SplatNet3)
       summary: ''
       parameters: []
       requestBody:
@@ -39,14 +79,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadStatuses'
+                $ref: '#/components/schemas/CoopResultsCreateResponse'
         '400':
           description: ''
       tags:
         - リザルト
   /v2/results:
     post:
-      operationId: 登録
+      operationId: 登録(Salmonia3+)
       summary: ''
       parameters: []
       requestBody:
@@ -61,7 +101,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadStatuses'
+                $ref: '#/components/schemas/CoopResultsCreateResponse'
         '400':
           description: ''
       tags:
@@ -69,6 +109,7 @@ paths:
 info:
   title: Salmon Stats NEXT WAVE API Documents
   description: ''
+  version: 0.0.1
   contact: {}
 tags: []
 servers: []
@@ -90,6 +131,204 @@ components:
         - total
         - limit
         - offset
+    CoopPlayerResultResponse:
+      type: object
+      properties:
+        pid:
+          type: string
+        name:
+          type: string
+        byname:
+          type: string
+        nameId:
+          type: string
+        badges:
+          maxItems: 3
+          minItems: 3
+          type: array
+          items:
+            type: number
+        nameplate:
+          type: number
+        textColor:
+          maxItems: 4
+          minItems: 4
+          type: array
+          items:
+            type: number
+        uniform:
+          type: number
+        bossKillCountsTotal:
+          type: number
+        bossKillCounts:
+          maxItems: 14
+          minItems: 14
+          type: array
+          items:
+            type: number
+        deadCount:
+          type: number
+        helpCount:
+          type: number
+        ikuraNum:
+          type: number
+        goldenIkuraNum:
+          type: number
+        goldenIkuraAssistNum:
+          type: number
+        jobBonus:
+          type: number
+        jobRate:
+          type: number
+        jobScore:
+          type: number
+        kumaPoint:
+          type: number
+        gradeId:
+          type: number
+        gradePoint:
+          type: number
+        smellMeter:
+          type: number
+        species:
+          type: string
+          enum:
+            - INKLING
+            - OCTOLING
+        specialId:
+          type: number
+        specialCounts:
+          maxItems: 4
+          minItems: 3
+          type: array
+          items:
+            type: number
+        weaponList:
+          maxItems: 4
+          minItems: 3
+          type: array
+          items:
+            type: number
+      required:
+        - pid
+        - name
+        - byname
+        - nameId
+        - badges
+        - nameplate
+        - textColor
+        - uniform
+        - bossKillCountsTotal
+        - bossKillCounts
+        - deadCount
+        - helpCount
+        - ikuraNum
+        - goldenIkuraNum
+        - goldenIkuraAssistNum
+        - jobBonus
+        - jobRate
+        - jobScore
+        - kumaPoint
+        - gradeId
+        - gradePoint
+        - smellMeter
+        - species
+        - specialId
+        - specialCounts
+        - weaponList
+    CoopWaveResultResponse:
+      type: object
+      properties:
+        waveId:
+          type: number
+        eventType:
+          type: number
+        waterLevel:
+          type: number
+        goldenIkuraNum:
+          type: number
+        goldenIkuarPopNum:
+          type: number
+        quotaNum:
+          type: number
+        isClear:
+          type: boolean
+      required:
+        - waveId
+        - eventType
+        - waterLevel
+        - goldenIkuraNum
+        - goldenIkuarPopNum
+        - quotaNum
+        - isClear
+    CoopResultResponse:
+      type: object
+      properties:
+        salmonId:
+          type: number
+        uuid:
+          type: string
+          format: uuid
+        bossCounts:
+          maxItems: 14
+          minItems: 14
+          type: array
+          items:
+            type: number
+        bossKillCounts:
+          maxItems: 14
+          minItems: 14
+          type: array
+          items:
+            type: number
+        ikuraNum:
+          type: number
+        goldenIkuraNum:
+          type: number
+        goldenIkuraAssistNum:
+          type: number
+        nightLess:
+          type: boolean
+        dangerRate:
+          type: number
+        playTime:
+          format: date-time
+          type: string
+        isClear:
+          type: boolean
+        failureWave:
+          type: number
+        isBossDefeated:
+          type: boolean
+        bossId:
+          type: number
+        players:
+          minItems: 4
+          type: array
+          items:
+            $ref: '#/components/schemas/CoopPlayerResultResponse'
+        waves:
+          minItems: 3
+          type: array
+          items:
+            $ref: '#/components/schemas/CoopWaveResultResponse'
+      required:
+        - salmonId
+        - uuid
+        - bossCounts
+        - bossKillCounts
+        - ikuraNum
+        - goldenIkuraNum
+        - goldenIkuraAssistNum
+        - nightLess
+        - dangerRate
+        - playTime
+        - isClear
+        - failureWave
+        - isBossDefeated
+        - bossId
+        - players
+        - waves
     IntegerId:
       type: object
       properties:
@@ -97,32 +336,47 @@ components:
           type: number
       required:
         - id
-    TextColor:
+    TextColorRequest:
       type: object
-      properties: {}
-    Background:
+      properties:
+        r:
+          type: number
+        g:
+          type: number
+        b:
+          type: number
+        a:
+          type: number
+      required:
+        - r
+        - g
+        - b
+        - a
+    BackgroundRequest:
       type: object
       properties:
         id:
           type: number
         textColor:
-          $ref: '#/components/schemas/TextColor'
+          $ref: '#/components/schemas/TextColorRequest'
       required:
         - id
         - textColor
-    NamePlate:
+    NamePlateRequest:
       type: object
       properties:
         badges:
+          maxItems: 3
+          minItems: 3
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/IntegerId'
         background:
-          $ref: '#/components/schemas/Background'
+          $ref: '#/components/schemas/BackgroundRequest'
       required:
         - badges
         - background
-    PlayerResult:
+    PlayerResultRequest:
       type: object
       properties:
         id:
@@ -134,11 +388,14 @@ components:
         nameId:
           type: string
         nameplate:
-          $ref: '#/components/schemas/NamePlate'
+          $ref: '#/components/schemas/NamePlateRequest'
         uniform:
           $ref: '#/components/schemas/IntegerId'
         species:
           type: string
+          enum:
+            - INKLING
+            - OCTOLING
       required:
         - id
         - byname
@@ -147,18 +404,32 @@ components:
         - nameplate
         - uniform
         - species
-    Special:
+    WeaponURL:
+      type: object
+      properties:
+        url:
+          type: number
+      required:
+        - url
+    Weapon:
+      type: object
+      properties:
+        image:
+          $ref: '#/components/schemas/WeaponURL'
+      required:
+        - image
+    SpecialRequest:
       type: object
       properties:
         weaponId:
           type: number
       required:
         - weaponId
-    Player:
+    PlayerRequest:
       type: object
       properties:
         player:
-          $ref: '#/components/schemas/PlayerResult'
+          $ref: '#/components/schemas/PlayerResultRequest'
         defeatEnemyCount:
           type: number
         deliverCount:
@@ -172,11 +443,13 @@ components:
         rescuedCount:
           type: number
         weapons:
+          maxItems: 4
+          minItems: 4
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Weapon'
         specialWeapon:
-          $ref: '#/components/schemas/Special'
+          $ref: '#/components/schemas/SpecialRequest'
       required:
         - player
         - defeatEnemyCount
@@ -197,6 +470,49 @@ components:
       required:
         - hasDefeatBoss
         - boss
+    EnemyResult:
+      type: object
+      properties:
+        defeatCount:
+          type: number
+        teamDefeatCount:
+          type: number
+        popCount:
+          type: number
+        enemy:
+          $ref: '#/components/schemas/IntegerId'
+      required:
+        - defeatCount
+        - teamDefeatCount
+        - popCount
+        - enemy
+    WaveResult:
+      type: object
+      properties:
+        waveNumber:
+          type: number
+        waterLevel:
+          type: number
+        eventWave:
+          $ref: '#/components/schemas/IntegerId'
+        deliverNorm:
+          type: number
+        goldenPopCount:
+          type: number
+        teamDeliverCount:
+          type: number
+        specialWeapons:
+          type: array
+          items:
+            type: string
+      required:
+        - waveNumber
+        - waterLevel
+        - eventWave
+        - deliverNorm
+        - goldenPopCount
+        - teamDeliverCount
+        - specialWeapons
     Scale:
       type: object
       properties:
@@ -213,7 +529,7 @@ components:
           type: string
       required:
         - id
-    CoopHistoryDetail:
+    CoopHistoryDetailRequest:
       type: object
       properties:
         id:
@@ -225,33 +541,43 @@ components:
         resultWave:
           type: number
         playedTime:
+          format: date-time
           type: string
         rule:
           type: string
+          enum:
+            - REGULAR
+            - BIG_RUN
         coopStage:
           $ref: '#/components/schemas/IntegerId'
         scenarioCode:
           type: string
         myResult:
-          $ref: '#/components/schemas/Player'
+          $ref: '#/components/schemas/PlayerRequest'
         memberResults:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/PlayerRequest'
         bossResult:
           $ref: '#/components/schemas/BossResult'
         enemyResults:
+          maxItems: 14
+          minItems: 14
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/EnemyResult'
         waveResults:
+          maxItems: 3
+          minItems: 3
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/WaveResult'
         weapons:
+          maxItems: 3
+          minItems: 3
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Weapon'
         afterGradePoint:
           type: number
         jobPoint:
@@ -292,18 +618,18 @@ components:
         - scale
         - nextHistoryDetail
         - previousHistoryDetail
-    Data:
+    CoopDataRequest:
       type: object
       properties:
         coopHistoryDetail:
-          $ref: '#/components/schemas/CoopHistoryDetail'
+          $ref: '#/components/schemas/CoopHistoryDetailRequest'
       required:
         - coopHistoryDetail
-    Result:
+    CoopResultRequest:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/Data'
+          $ref: '#/components/schemas/CoopDataRequest'
       required:
         - data
     ResultRequest:
@@ -312,39 +638,303 @@ components:
         results:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/CoopResultRequest'
       required:
         - results
-    UploadStatus:
+    CoopResultCreateResponse:
       type: object
       properties:
-        salmon_id:
-          type: number
-          description: リザルトID
-        status:
+        uuid:
           type: string
-          enum:
-            - created
-            - updated
-            - not allowed
+          format: uuid
+        salmonId:
+          type: number
       required:
-        - salmon_id
-        - status
-    UploadStatuses:
+        - uuid
+        - salmonId
+    CoopResultsCreateResponse:
       type: object
       properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/UploadStatus'
+            $ref: '#/components/schemas/CoopResultCreateResponse'
       required:
         - results
+    CustomCoopScheduleRequest:
+      type: object
+      properties:
+        startTime:
+          format: date-time
+          type: string
+        rule:
+          type: string
+          enum:
+            - REGULAR
+            - BIG_RUN
+        mode:
+          type: string
+          enum:
+            - REGULAR
+            - PRIVATE_CUSTOM
+            - PRIVATE_SCENARIO
+        stageId:
+          type: number
+        weaponList:
+          maxItems: 4
+          minItems: 4
+          type: array
+          items:
+            type: number
+      required:
+        - startTime
+        - rule
+        - mode
+        - stageId
+        - weaponList
+    CustomCoopTextColorRequest:
+      type: object
+      properties:
+        r:
+          type: number
+        g:
+          type: number
+        b:
+          type: number
+        a:
+          type: number
+      required:
+        - r
+        - g
+        - b
+        - a
+    CustomCoopNameBackgroundRequest:
+      type: object
+      properties:
+        id:
+          type: number
+        textColor:
+          $ref: '#/components/schemas/CustomCoopTextColorRequest'
+      required:
+        - id
+        - textColor
+    CustomCoopNamePlateRequest:
+      type: object
+      properties:
+        badges:
+          maxItems: 3
+          minItems: 3
+          type: array
+          items:
+            type: number
+        background:
+          $ref: '#/components/schemas/CustomCoopNameBackgroundRequest'
+      required:
+        - badges
+        - background
+    CustomCoopPlayerRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        bossKillCountsTotal:
+          type: number
+        bossKillCounts:
+          minItems: 14
+          maxItems: 14
+          type: array
+          items:
+            type: number
+        name:
+          type: string
+        byname:
+          type: string
+        specialCounts:
+          minItems: 3
+          maxItems: 4
+          type: array
+          items:
+            type: number
+        isMyself:
+          type: boolean
+        nameplate:
+          $ref: '#/components/schemas/CustomCoopNamePlateRequest'
+        specialId:
+          type: number
+        helpCount:
+          type: number
+        deadCount:
+          type: number
+        weaponList:
+          minItems: 3
+          maxItems: 4
+          type: array
+          items:
+            type: number
+        nameId:
+          type: string
+        species:
+          type: string
+        uniform:
+          type: number
+        goldenIkuraNum:
+          type: number
+        ikuraNum:
+          type: number
+        goldenIkuraAssistNum:
+          type: number
+      required:
+        - id
+        - bossKillCountsTotal
+        - bossKillCounts
+        - name
+        - byname
+        - specialCounts
+        - isMyself
+        - nameplate
+        - specialId
+        - helpCount
+        - deadCount
+        - weaponList
+        - nameId
+        - species
+        - uniform
+        - goldenIkuraNum
+        - ikuraNum
+        - goldenIkuraAssistNum
+    CustomCoopWaveRequest:
+      type: object
+      properties:
+        id:
+          type: number
+        eventType:
+          type: number
+        quotaNum:
+          type: number
+        goldenIkuraNum:
+          type: number
+        waterLevel:
+          type: number
+        goldenIkuraPopNum:
+          type: number
+        isClear:
+          type: boolean
+      required:
+        - id
+        - eventType
+        - quotaNum
+        - goldenIkuraNum
+        - waterLevel
+        - goldenIkuraPopNum
+        - isClear
+    CustomCoopJobResultRequest:
+      type: object
+      properties:
+        isClear:
+          type: boolean
+        isBossDefeated:
+          type: boolean
+        bossId:
+          type: number
+        failureWave:
+          type: number
+      required:
+        - isClear
+        - isBossDefeated
+        - bossId
+        - failureWave
+    CustomCoopResultRequest:
+      type: object
+      properties:
+        schedule:
+          $ref: '#/components/schemas/CustomCoopScheduleRequest'
+        bossKillCounts:
+          minItems: 14
+          maxItems: 14
+          type: array
+          items:
+            type: number
+        bossCounts:
+          minItems: 14
+          maxItems: 14
+          type: array
+          items:
+            type: number
+        ikuraNum:
+          type: number
+        jobRate:
+          type: number
+        jobBonus:
+          type: number
+        jobScore:
+          type: number
+        gradeId:
+          type: number
+        gradePoint:
+          type: number
+        kumaPoint:
+          type: number
+        otherResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomCoopPlayerRequest'
+        myResult:
+          $ref: '#/components/schemas/CustomCoopPlayerRequest'
+        id:
+          type: string
+        uuid:
+          type: string
+          format: uuid
+        waveDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomCoopWaveRequest'
+        goldenIkuraNum:
+          type: number
+        dangerRate:
+          type: number
+        playTime:
+          format: date-time
+          type: string
+        goldenIkuraAssistNum:
+          type: number
+        scale:
+          type: array
+          items:
+            type: number
+        jobResult:
+          $ref: '#/components/schemas/CustomCoopJobResultRequest'
+        smellMeter:
+          type: number
+      required:
+        - schedule
+        - bossKillCounts
+        - bossCounts
+        - ikuraNum
+        - jobRate
+        - jobBonus
+        - jobScore
+        - gradeId
+        - gradePoint
+        - kumaPoint
+        - otherResults
+        - myResult
+        - id
+        - uuid
+        - waveDetails
+        - goldenIkuraNum
+        - dangerRate
+        - playTime
+        - goldenIkuraAssistNum
+        - scale
+        - jobResult
+        - smellMeter
     CustomResultRequest:
       type: object
       properties:
         results:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/CustomCoopResultRequest'
       required:
         - results

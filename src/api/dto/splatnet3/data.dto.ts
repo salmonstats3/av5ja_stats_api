@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
-import { CoopHistoryDetail } from './coop_history_detail.dto';
+import { CoopHistoryDetailRequest } from './coop_history_detail.dto';
 
-export class Data {
+export class CoopDataRequest {
   @ApiProperty()
   @ValidateNested()
-  @Type(() => CoopHistoryDetail)
-  coopHistoryDetail: CoopHistoryDetail;
+  @Type(() => CoopHistoryDetailRequest)
+  coopHistoryDetail: CoopHistoryDetailRequest;
 }

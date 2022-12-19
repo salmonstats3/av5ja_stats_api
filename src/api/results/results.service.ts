@@ -7,8 +7,11 @@ import {
   CoopResultCreateResponse,
   CoopResultResponse,
 } from '../dto/response.dto';
-import { CustomPlayer, CustomResult } from '../dto/splatnet3/custom.dto';
-import { CustomCoopResult, Result } from '../dto/splatnet3/result.dto';
+import {
+  CustomCoopHistoryDetailRequest,
+  CustomPlayerRequest,
+} from '../dto/splatnet3/custom.dto';
+import { CustomCoopResultRequest } from '../dto/splatnet3/result.dto';
 import {
   CustomResultRequest,
   ResultRequest,
@@ -22,9 +25,8 @@ export class ResultsService {
     request: ResultRequest
   ): Promise<CoopResultCreateResponse[]> {
     const query = request.results.map((result) => {
-      const data: CustomResult = new CustomResult(
-        result.data.coopHistoryDetail
-      );
+      const data: CustomCoopHistoryDetailRequest =
+        new CustomCoopHistoryDetailRequest(result.data.coopHistoryDetail);
       return this.prisma.result.upsert(this.queryV1(data));
     });
     return (await this.prisma.$transaction([...query])).map(
@@ -82,7 +84,7 @@ export class ResultsService {
     }
   }
 
-  queryV1(result: CustomResult): Prisma.ResultUpsertArgs {
+  queryV1(result: CustomCoopHistoryDetailRequest): Prisma.ResultUpsertArgs {
     return {
       update: {},
       where: {
@@ -121,7 +123,7 @@ export class ResultsService {
         },
         players: {
           createMany: {
-            data: result.players.map((player: CustomPlayer) => {
+            data: result.players.map((player: CustomPlayerRequest) => {
               return {
                 pid: player.pid,
                 name: player.player.name,
@@ -182,7 +184,7 @@ export class ResultsService {
     };
   }
 
-  queryV2(result: CustomCoopResult): Prisma.ResultUpsertArgs {
+  queryV2(result: CustomCoopResultRequest): Prisma.ResultUpsertArgs {
     const members: string[] = [result.myResult]
       .concat(result.otherResults)
       .map((player) => player.id);

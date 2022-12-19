@@ -1,18 +1,12 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
-  Delete,
   Get,
-  Header,
-  Headers,
   HttpCode,
   Param,
   ParseIntPipe,
   Post,
-  Put,
   Query,
-  UseInterceptors,
   ValidationPipe,
   Version,
 } from '@nestjs/common';
@@ -27,21 +21,21 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  ApiOkResponsePaginated,
   PaginatedDto,
+  PaginatedRequestDto,
   PaginatedRequestDtoForResult,
 } from '../dto/pagination.dto';
 import { ResultsService } from './results.service';
-import { Status, UploadStatus, UploadStatuses } from './results.status';
-import snakecaseKeys from 'snakecase-keys';
 import {
   CustomResultRequest,
   ResultRequest,
 } from '../dto/splatnet3/results.dto';
-import { Result } from '../dto/splatnet3/result.dto';
 import {
   CoopResultCreateResponse,
   CoopResultResponse,
 } from '../dto/response.dto';
+import { CoopResultsCreateResponse } from './results.status';
 
 @Controller('results')
 @ApiExtraModels(PaginatedDto)
@@ -53,33 +47,31 @@ export class ResultsController {
   @ApiTags('リザルト')
   @ApiOperation({ operationId: '取得' })
   @ApiNotFoundResponse()
-  @ApiOkResponse({ type: Result })
+  @ApiOkResponse({ type: CoopResultResponse })
   find(
     @Param('salmon_id', ParseIntPipe) salmonId: number
   ): Promise<CoopResultResponse> {
     return this.service.getResults(salmonId);
   }
 
-  // @Get('')
-  // @ApiTags('リザルト')
-  // @ApiOperation({ operationId: '一括取得' })
-  // @ApiOkResponse()
-  // @ApiNotFoundResponse()
-  // findMany(
-  //   @Query(new ValidationPipe({ transform: true }))
-  //   request: PaginatedRequestDtoForResult
-  // ): Promise<PaginatedDto<Result>> {
-  //   return;
-  // }
+  @Get('')
+  @ApiTags('リザルト')
+  @ApiOperation({ operationId: '一括取得' })
+  @ApiOkResponsePaginated({ type: CoopResultResponse })
+  @ApiNotFoundResponse()
+  findMany(
+    @Query(new ValidationPipe({ transform: true }))
+    request: PaginatedRequestDto
+  ): Promise<PaginatedDto<CoopResultResponse>> {
+    return;
+  }
 
   @Post('')
   @Version('1')
   @HttpCode(201)
   @ApiTags('リザルト')
-  @ApiOperation({ operationId: '登録' })
-  @ApiCreatedResponse({
-    type: UploadStatuses,
-  })
+  @ApiOperation({ operationId: '登録(SplatNet3)' })
+  @ApiCreatedResponse({ type: CoopResultsCreateResponse })
   @ApiBadRequestResponse()
   createMany(
     @Body() request: ResultRequest
@@ -91,10 +83,8 @@ export class ResultsController {
   @Version('2')
   @HttpCode(201)
   @ApiTags('リザルト')
-  @ApiOperation({ operationId: '登録' })
-  @ApiCreatedResponse({
-    type: UploadStatuses,
-  })
+  @ApiOperation({ operationId: '登録(Salmonia3+)' })
+  @ApiCreatedResponse({ type: CoopResultsCreateResponse })
   @ApiBadRequestResponse()
   upsertMany(
     @Body() request: CustomResultRequest
