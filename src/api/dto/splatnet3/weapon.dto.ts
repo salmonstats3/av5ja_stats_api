@@ -85,13 +85,14 @@ class URL<T> {
 }
 
 export class Image<T> {
-  @ApiProperty()
+  @ApiProperty({ type: URL })
   @ValidateNested()
   @Type(() => URL)
   url: URL<T>;
 }
 
 class WeaponURL {
+  @ApiProperty()
   @Transform((param) => {
     const re: RegExp = new RegExp('[a-f0-9]{64}');
     if (!re.test(param.value)) {
@@ -104,7 +105,7 @@ class WeaponURL {
 }
 
 export class Weapon {
-  @ApiProperty()
+  @ApiProperty({ type: WeaponURL })
   @ValidateNested()
   @Type(() => WeaponURL)
   image: WeaponURL;

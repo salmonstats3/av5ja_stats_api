@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
-import { CoopHistoryDetail, Mode } from './coop_history_detail.dto';
+import { CoopHistoryDetailRequest, Mode } from './coop_history_detail.dto';
 import { EnemyResult } from './enemy.dto';
-import { Player } from './player.dto';
+import { PlayerRequest } from './player.dto';
 import { WaveResult } from './wave.dto';
 
 class CustomWave extends WaveResult {
@@ -27,7 +27,7 @@ class CustomWave extends WaveResult {
   }
 }
 
-export class CustomPlayer extends Player {
+export class CustomPlayerRequest extends PlayerRequest {
   isMyself: boolean;
   pid: string;
   bossKillCounts: number[];
@@ -45,8 +45,8 @@ export class CustomPlayer extends Player {
   specialUsage: number[];
 
   constructor(
-    player: Player,
-    result: CoopHistoryDetail,
+    player: PlayerRequest,
+    result: CoopHistoryDetailRequest,
     specialUsage: number[][]
   ) {
     super();
@@ -115,7 +115,7 @@ export class CustomPlayer extends Player {
   }
 }
 
-export class CustomResult extends CoopHistoryDetail {
+export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
   uuid: string;
   ikuraNum: number;
   goldenIkuraNum: number;
@@ -124,7 +124,7 @@ export class CustomResult extends CoopHistoryDetail {
   bossKillCounts: number[];
   nightLess: boolean;
   members: string[];
-  players: CustomPlayer[];
+  players: CustomPlayerRequest[];
   isClear: boolean;
   failureWave: number | null;
   isBossDefeated: boolean | null;
@@ -134,7 +134,7 @@ export class CustomResult extends CoopHistoryDetail {
   weaponList: number[];
   mode: Mode;
 
-  constructor(result: CoopHistoryDetail) {
+  constructor(result: CoopHistoryDetailRequest) {
     super();
     this.id = result.id;
     this.uuid = this.resultId(result.id);
@@ -156,7 +156,7 @@ export class CustomResult extends CoopHistoryDetail {
     );
     this.players = [result.myResult]
       .concat(result.memberResults)
-      .map((player) => new CustomPlayer(player, result, specialUsage));
+      .map((player) => new CustomPlayerRequest(player, result, specialUsage));
 
     this.goldenIkuraAssistNum = this.players
       .map((player) => player.goldenAssistCount)

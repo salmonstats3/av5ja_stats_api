@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Decimal } from '@prisma/client/runtime';
 import { Transform, Type } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -18,41 +17,56 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { Data } from './data.dto';
+import { CoopDataRequest } from './data.dto';
 import { Species } from './player.dto';
-import { Schedule } from './schedule.dto';
+import { CustomCoopScheduleRequest } from './schedule.dto';
 
-export class Result {
-  @ApiProperty()
+export class CoopResultRequest {
+  @ApiProperty({ type: CoopDataRequest })
   @ValidateNested()
-  @Type(() => Data)
-  data: Data;
+  @Type(() => CoopDataRequest)
+  data: CoopDataRequest;
 }
 
-class TextColor {
+class CustomCoopTextColorRequest {
+  @ApiProperty()
   r: number;
+  @ApiProperty()
   g: number;
+  @ApiProperty()
   b: number;
+  @ApiProperty()
   a: number;
 }
 
-class Background {
+class CustomCoopNameBackgroundRequest {
+  @ApiProperty()
   id: number;
-  textColor: TextColor;
+
+  @ApiProperty({ type: CustomCoopTextColorRequest })
+  textColor: CustomCoopTextColorRequest;
 }
 
-class NamePlate {
+class CustomCoopNamePlateRequest {
+  @ApiProperty({ type: [Number], maxItems: 3, minItems: 3 })
   badges: (number | null)[];
-  background: Background;
+
+  @ApiProperty({ type: CustomCoopNameBackgroundRequest })
+  background: CustomCoopNameBackgroundRequest;
 }
 
-class PlayerResult {
+class CustomCoopPlayerRequest {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   id: string;
 
   @ApiProperty()
+  @IsInt()
+  @Min(0)
+  bossKillCountsTotal: number;
+
+  @ApiProperty({ type: [Number], minItems: 14, maxItems: 14 })
   @IsArray()
   @ArrayMaxSize(14)
   @ArrayMinSize(14)
@@ -69,12 +83,7 @@ class PlayerResult {
   @IsNotEmpty()
   byname: string;
 
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  bossKillCountsTotal: number;
-
-  @ApiProperty()
+  @ApiProperty({ type: [Number], minItems: 3, maxItems: 4 })
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(4)
@@ -84,10 +93,10 @@ class PlayerResult {
   @IsBoolean()
   isMyself: boolean;
 
-  @ApiProperty()
+  @ApiProperty({ type: CustomCoopNamePlateRequest })
   @ValidateNested()
-  @Type(() => NamePlate)
-  nameplate: NamePlate;
+  @Type(() => CustomCoopNamePlateRequest)
+  nameplate: CustomCoopNamePlateRequest;
 
   @ApiProperty()
   @IsInt()
@@ -103,7 +112,7 @@ class PlayerResult {
   @Min(0)
   deadCount: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number], minItems: 3, maxItems: 4 })
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(4)
@@ -138,7 +147,7 @@ class PlayerResult {
   goldenIkuraAssistNum: number;
 }
 
-class JobResult {
+class CustomCoopJobResultRequest {
   @ApiProperty()
   @IsOptional()
   @IsBoolean()
@@ -160,7 +169,7 @@ class JobResult {
   failureWave: number | null;
 }
 
-class WaveResult {
+class CustomCoopWaveRequest {
   @ApiProperty()
   @IsInt()
   @Min(1)
@@ -202,19 +211,19 @@ class WaveResult {
   isClear: boolean;
 }
 
-export class CustomCoopResult {
-  @ApiProperty()
+export class CustomCoopResultRequest {
+  @ApiProperty({ type: CustomCoopScheduleRequest })
   @ValidateNested()
-  @Type(() => Schedule)
-  schedule: Schedule;
+  @Type(() => CustomCoopScheduleRequest)
+  schedule: CustomCoopScheduleRequest;
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number], minItems: 14, maxItems: 14 })
   @ArrayMinSize(14)
   @ArrayMaxSize(14)
   @Transform((param) => param.value.slice(0, -1))
   bossKillCounts: number[];
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number], minItems: 14, maxItems: 14 })
   @ArrayMinSize(14)
   @ArrayMaxSize(14)
   @Transform((param) => param.value.slice(0, -1))
@@ -258,30 +267,30 @@ export class CustomCoopResult {
   @IsInt()
   kumaPoint: number | null;
 
-  @ApiProperty()
+  @ApiProperty({ type: [CustomCoopPlayerRequest] })
   @ValidateNested({ each: true })
-  @Type(() => PlayerResult)
-  otherResults: PlayerResult[];
+  @Type(() => CustomCoopPlayerRequest)
+  otherResults: CustomCoopPlayerRequest[];
 
-  @ApiProperty()
+  @ApiProperty({ type: CustomCoopPlayerRequest })
   @ValidateNested()
-  @Type(() => PlayerResult)
-  myResult: PlayerResult;
+  @Type(() => CustomCoopPlayerRequest)
+  myResult: CustomCoopPlayerRequest;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   id: string;
 
-  @ApiProperty()
+  @ApiProperty({ format: 'uuid' })
   @IsString()
   @IsNotEmpty()
   uuid: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: [CustomCoopWaveRequest] })
   @ValidateNested({ each: true })
-  @Type(() => WaveResult)
-  waveDetails: WaveResult[];
+  @Type(() => CustomCoopWaveRequest)
+  waveDetails: CustomCoopWaveRequest[];
 
   @ApiProperty()
   @IsInt()
@@ -294,7 +303,7 @@ export class CustomCoopResult {
   @Max(3.33)
   dangerRate: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Date })
   @IsDateString()
   playTime: string;
 
@@ -302,16 +311,16 @@ export class CustomCoopResult {
   @IsInt()
   goldenIkuraAssistNum: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number] })
   @IsArray()
   @ArrayMinSize(3)
   @ArrayMaxSize(3)
   scale: (number | null)[];
 
-  @ApiProperty()
+  @ApiProperty({ type: CustomCoopJobResultRequest })
   @ValidateNested()
-  @Type(() => JobResult)
-  jobResult: JobResult;
+  @Type(() => CustomCoopJobResultRequest)
+  jobResult: CustomCoopJobResultRequest;
 
   @ApiProperty()
   @IsOptional()

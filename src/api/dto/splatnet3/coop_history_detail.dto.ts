@@ -1,15 +1,9 @@
-import {
-  ApiOperation,
-  ApiProperty,
-  ApiPropertyOptional,
-} from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsDateString,
   IsEnum,
-  IsIn,
   IsInt,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -19,10 +13,10 @@ import {
 } from 'class-validator';
 import { BossResult } from './boss.dto';
 import { EnemyResult } from './enemy.dto';
-import { Player } from './player.dto';
+import { PlayerRequest } from './player.dto';
 import { IntegerId, StringId } from './rawvalue.dto';
 import { WaveResult } from './wave.dto';
-import { Image, Weapon } from './weapon.dto';
+import { Weapon } from './weapon.dto';
 
 export enum Mode {
   REGULAR = 'REGULAR',
@@ -58,14 +52,14 @@ class Scale {
   bronze: number | null;
 }
 
-export class CoopHistoryDetail extends StringId {
+export class CoopHistoryDetailRequest extends StringId {
   @ApiProperty()
   @IsNumber()
   @Min(0)
   @Max(3.33)
   dangerRate: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ type: IntegerId })
   @IsOptional()
   @ValidateNested()
   @Type(() => IntegerId)
@@ -77,15 +71,15 @@ export class CoopHistoryDetail extends StringId {
   @Max(3)
   resultWave: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Date })
   @IsDateString()
   playedTime: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: Rule })
   @IsEnum(Rule)
   rule: Rule;
 
-  @ApiProperty()
+  @ApiProperty({ type: IntegerId })
   @ValidateNested()
   @Type(() => IntegerId)
   coopStage: IntegerId;
@@ -95,33 +89,33 @@ export class CoopHistoryDetail extends StringId {
   @IsString()
   scenarioCode: string | null;
 
-  @ApiProperty()
+  @ApiProperty({ type: PlayerRequest })
   @ValidateNested()
-  @Type(() => Player)
-  myResult: Player;
+  @Type(() => PlayerRequest)
+  myResult: PlayerRequest;
 
-  @ApiProperty()
+  @ApiProperty({ type: [PlayerRequest] })
   @ValidateNested({ each: true })
-  @Type(() => Player)
-  memberResults: Player[];
+  @Type(() => PlayerRequest)
+  memberResults: PlayerRequest[];
 
-  @ApiProperty()
+  @ApiProperty({ type: BossResult })
   @IsOptional()
   @ValidateNested()
   @Type(() => BossResult)
   bossResult: BossResult | null;
 
-  @ApiProperty()
+  @ApiProperty({ type: [EnemyResult], maxItems: 14, minItems: 14 })
   @ValidateNested({ each: true })
   @Type(() => EnemyResult)
   enemyResults: EnemyResult[];
 
-  @ApiProperty()
+  @ApiProperty({ type: [WaveResult], maxItems: 3, minItems: 3 })
   @ValidateNested({ each: true })
   @Type(() => WaveResult)
   waveResults: WaveResult[];
 
-  @ApiProperty()
+  @ApiProperty({ type: [Weapon], maxItems: 3, minItems: 3 })
   @ValidateNested({ each: true })
   @Type(() => Weapon)
   weapons: Weapon[];

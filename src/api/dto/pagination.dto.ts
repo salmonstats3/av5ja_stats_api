@@ -6,6 +6,7 @@
 
 import { applyDecorators, Type } from '@nestjs/common';
 import {
+  ApiExtraModels,
   ApiOkResponse,
   ApiProperty,
   ApiPropertyOptional,
@@ -23,7 +24,6 @@ import {
   Min,
 } from 'class-validator';
 import dayjs from 'dayjs';
-import { arrayBuffer } from 'stream/consumers';
 
 export class PaginatedRequestDto {
   @Expose()
@@ -234,20 +234,20 @@ export class PaginatedDto<T> {
   results: T[];
 }
 
-export const ApiPaginatedResponse = <TModel extends Type<any>>(
-  model: TModel
-) => {
-  return applyDecorators(
+export const ApiOkResponsePaginated = <DataDto extends Type<unknown>>({
+  type: DataDto,
+}) =>
+  applyDecorators(
+    ApiExtraModels(PaginatedDto, DataDto),
     ApiOkResponse({
       schema: {
-        title: `PaginatedResponseOf${model.name}`,
         allOf: [
           { $ref: getSchemaPath(PaginatedDto) },
           {
             properties: {
               results: {
                 type: 'array',
-                items: { $ref: getSchemaPath(model) },
+                items: { $ref: getSchemaPath(DataDto) },
               },
             },
           },
@@ -255,4 +255,3 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(
       },
     })
   );
-};
