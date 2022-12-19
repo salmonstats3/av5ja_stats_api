@@ -45,7 +45,11 @@ export class ResultsController {
   @Get(':salmon_id')
   @ApiParam({ name: 'salmon_id', type: 'integer', description: 'リザルトID' })
   @ApiTags('リザルト')
-  @ApiOperation({ operationId: '取得' })
+  @ApiOperation({
+    operationId: '取得',
+    description:
+      '内部IDを指定してリザルトを一件取得します。存在しない場合は404エラーを返します。',
+  })
   @ApiNotFoundResponse()
   @ApiOkResponse({ type: CoopResultResponse })
   find(
@@ -70,7 +74,11 @@ export class ResultsController {
   @Version('1')
   @HttpCode(201)
   @ApiTags('リザルト')
-  @ApiOperation({ operationId: '登録(SplatNet3)' })
+  @ApiOperation({
+    operationId: '登録(SplatNet3)',
+    description:
+      'イカリング3のデータを最大同時に50件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。',
+  })
   @ApiCreatedResponse({ type: CoopResultsCreateResponse })
   @ApiBadRequestResponse()
   createMany(
@@ -83,7 +91,11 @@ export class ResultsController {
   @Version('2')
   @HttpCode(201)
   @ApiTags('リザルト')
-  @ApiOperation({ operationId: '登録(Salmonia3+)' })
+  @ApiOperation({
+    operationId: '登録(Salmonia3+)',
+    description:
+      'Salmonia3+形式のデータを最大同時に50件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。',
+  })
   @ApiCreatedResponse({ type: CoopResultsCreateResponse })
   @ApiBadRequestResponse()
   upsertMany(

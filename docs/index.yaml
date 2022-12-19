@@ -4,6 +4,7 @@ paths:
     get:
       operationId: 取得
       summary: ''
+      description: 内部IDを指定してリザルトを一件取得します。存在しない場合は404エラーを返します。
       parameters:
         - name: salmon_id
           required: true
@@ -66,6 +67,7 @@ paths:
     post:
       operationId: 登録(SplatNet3)
       summary: ''
+      description: イカリング3のデータを最大同時に50件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。
       parameters: []
       requestBody:
         required: true
@@ -88,6 +90,7 @@ paths:
     post:
       operationId: 登録(Salmonia3+)
       summary: ''
+      description: Salmonia3+形式のデータを最大同時に50件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。
       parameters: []
       requestBody:
         required: true
