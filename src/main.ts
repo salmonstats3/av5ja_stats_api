@@ -49,6 +49,6 @@ async function bootstrap() {
     exec(`npx redoc-cli build ${output}.json -o ${output}.html`);
   }
   SwaggerModule.setup('documents', app, documents);
-  await app.listen(process.env.NODE_PORT || 3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
