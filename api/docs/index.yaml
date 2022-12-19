@@ -69,7 +69,6 @@ paths:
 info:
   title: Salmon Stats NEXT WAVE API Documents
   description: ''
-  version: 1.0.0
   contact: {}
 tags: []
 servers: []
