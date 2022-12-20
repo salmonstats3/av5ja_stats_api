@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
+import { response } from 'express';
 import snakecaseKeys from 'snakecase-keys';
 import { PrismaService } from 'src/prisma.service';
+import { PaginatedDto, PaginatedRequestDto } from '../dto/pagination.dto';
 import {
   CoopResultCreateResponse,
   CoopResultResponse,
@@ -57,7 +59,32 @@ export class ResultsService {
     );
   }
 
-  async getResults(salmonId: number): Promise<CoopResultResponse> {
+  async getResults(
+    request: PaginatedRequestDto
+  ): Promise<PaginatedDto<CoopResultResponse>> {
+    const results: CoopResultResponse[] = (
+      await this.prisma.result.findMany({
+        take: request.limit,
+        skip: request.offset,
+        orderBy: {
+          salmonId: 'desc',
+        },
+        include: {
+          players: true,
+          waves: true,
+          schedule: true,
+        },
+      })
+    ).map((result) => plainToClass(CoopResultResponse, result));
+    const response = new PaginatedDto<CoopResultResponse>();
+    response.results = results;
+    response.limit = request.limit;
+    response.offset = request.offset;
+    response.total = await this.prisma.result.count();
+    return response;
+  }
+
+  async getResult(salmonId: number): Promise<CoopResultResponse> {
     try {
       const result: CoopResultResponse = plainToClass(
         CoopResultResponse,

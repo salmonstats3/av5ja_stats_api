@@ -48,14 +48,14 @@ export class ResultsController {
   @ApiOperation({
     operationId: '取得',
     description:
-      '内部IDを指定してリザルトを一件取得します。存在しない場合は404エラーを返します。',
+      '内部IDを指定してリザルトを一件取得します。存在しない場合は404エラーを返します。オオモノシャケ、イベント、潮位、バッジ、ネームプレート、ユニフォーム、スペシャル、ブキ、ステージ等のEnumの対応する値については https://github.com/tkgstrator/SplatNet3/tree/v2.x/Sources/SplatNet3/Enum/Ids をご参照ください。',
   })
   @ApiNotFoundResponse()
   @ApiOkResponse({ type: CoopResultResponse })
   find(
     @Param('salmon_id', ParseIntPipe) salmonId: number
   ): Promise<CoopResultResponse> {
-    return this.service.getResults(salmonId);
+    return this.service.getResult(salmonId);
   }
 
   @Get('')

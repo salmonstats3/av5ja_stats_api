@@ -4,7 +4,10 @@ paths:
     get:
       operationId: 取得
       summary: ''
-      description: 内部IDを指定してリザルトを一件取得します。存在しない場合は404エラーを返します。
+      description: >-
+        内部IDを指定してリザルトを一件取得します。存在しない場合は404エラーを返します。オオモノシャケ、イベント、潮位、バッジ、ネームプレート、ユニフォーム、スペシャル、ブキ、ステージ等のEnumの対応する値については
+        https://github.com/tkgstrator/SplatNet3/tree/v2.x/Sources/SplatNet3/Enum/Ids
+        をご参照ください。
       parameters:
         - name: salmon_id
           required: true
@@ -148,24 +151,29 @@ components:
         badges:
           maxItems: 3
           minItems: 3
+          description: バッジのIDが返りますがつけていない場合は`null`が入ります
           type: array
           items:
             type: number
         nameplate:
           type: number
+          description: ネームプレートのIDが入ります
         textColor:
           maxItems: 4
           minItems: 4
+          description: RGBAが入ります
           type: array
           items:
             type: number
         uniform:
           type: number
+          description: ユニフォームIDが入ります
         bossKillCountsTotal:
           type: number
         bossKillCounts:
           maxItems: 14
           minItems: 14
+          description: わからない場合は`null`が入ります
           type: array
           items:
             type: number
@@ -177,22 +185,37 @@ components:
           type: number
         goldenIkuraNum:
           type: number
+          description: コンテナに入れた金イクラの数です
         goldenIkuraAssistNum:
           type: number
         jobBonus:
           type: number
+          nullable: true
         jobRate:
           type: number
+          nullable: true
         jobScore:
           type: number
+          nullable: true
         kumaPoint:
           type: number
+          nullable: true
         gradeId:
           type: number
+          nullable: true
+          minimum: 0
+          maximum: 8
         gradePoint:
           type: number
+          nullable: true
+          minimum: 0
+          maximum: 999
         smellMeter:
           type: number
+          nullable: true
+          minimum: 0
+          maximum: 5
+          description: オカシラメーター
         species:
           type: string
           enum:
@@ -202,13 +225,13 @@ components:
           type: number
         specialCounts:
           maxItems: 4
-          minItems: 3
+          minItems: 0
           type: array
           items:
             type: number
         weaponList:
           maxItems: 4
-          minItems: 3
+          minItems: 0
           type: array
           items:
             type: number
@@ -239,23 +262,46 @@ components:
         - specialId
         - specialCounts
         - weaponList
+    EventId:
+      type: string
+      enum:
+        - WATER_LEVELS
+        - RUSH
+        - GOLDIE_SEEKING
+        - GRILLER
+        - FOG
+        - THE_MOTHERSHIP
+        - COHOCK_CHARGE
+        - GIANT_TORNADO
+        - MUDMOUTH
+    WaterId:
+      type: string
+      enum:
+        - LOW_TIDE
+        - NORMAL
+        - HIGH_TIDE
     CoopWaveResultResponse:
       type: object
       properties:
         waveId:
           type: number
+          description: 1~4の値が入ります
         eventType:
-          type: number
+          $ref: '#/components/schemas/EventId'
         waterLevel:
-          type: number
+          $ref: '#/components/schemas/WaterId'
         goldenIkuraNum:
           type: number
+          nullable: true
+          description: EX-WAVEでは常に`null`が入ります
         goldenIkuarPopNum:
           type: number
         quotaNum:
           type: number
+          nullable: true
         isClear:
           type: boolean
+          description: オカシラシャケを討伐できなかった場合は`false`が入ります
       required:
         - waveId
         - eventType
@@ -269,9 +315,11 @@ components:
       properties:
         salmonId:
           type: number
+          description: 固有のID
         uuid:
           type: string
           format: uuid
+          description: リザルトに紐付けられたUUID
         bossCounts:
           maxItems: 14
           minItems: 14
@@ -292,6 +340,7 @@ components:
           type: number
         nightLess:
           type: boolean
+          description: 夜イベントを含むかどうか
         dangerRate:
           type: number
         playTime:
@@ -299,12 +348,19 @@ components:
           type: string
         isClear:
           type: boolean
+          description: WAVE3をクリアすればオカシラ失敗しても`true`が返ります
         failureWave:
           type: number
+          nullable: true
+          description: 失敗したWAVEのidが返ります
         isBossDefeated:
           type: boolean
+          nullable: true
+          description: オカシラシャケを討伐できたかが返ります
         bossId:
           type: number
+          nullable: true
+          description: オカシラシャケのIDが返ります
         players:
           minItems: 4
           type: array
