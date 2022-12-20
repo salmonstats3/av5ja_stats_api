@@ -67,7 +67,7 @@ export class ResultsService {
         take: request.limit,
         skip: request.offset,
         orderBy: {
-          salmonId: 'desc',
+          salmonId: 'asc',
         },
         include: {
           players: true,
@@ -75,7 +75,14 @@ export class ResultsService {
           schedule: true,
         },
       })
-    ).map((result) => plainToClass(CoopResultResponse, result));
+    ).map((result) =>
+      plainToClass(CoopResultResponse, result, {
+        exposeUnsetFields: false,
+        excludeExtraneousValues: true,
+        exposeDefaultValues: true,
+        enableCircularCheck: true,
+      })
+    );
     const response = new PaginatedDto<CoopResultResponse>();
     response.results = results;
     response.limit = request.limit;

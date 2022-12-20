@@ -67,7 +67,7 @@ export class ResultsController {
     @Query(new ValidationPipe({ transform: true }))
     request: PaginatedRequestDto
   ): Promise<PaginatedDto<CoopResultResponse>> {
-    return;
+    return this.service.getResults(request);
   }
 
   @Post('')
