@@ -43,8 +43,16 @@ async function bootstrap() {
     })
   );
   const options = new DocumentBuilder()
-    .setTitle('Salmon Stats NEXT WAVE API Documents')
+    .setTitle('Salmon Stats+')
+    .setDescription(
+      `Salmon Stats for Splatoon 3 API documents. (${process.env.NODE_ENV})`
+    )
     .setVersion(process.env.API_VER)
+    .setContact(
+      '@Salmonia3Dev',
+      'https://twitter.com/Salmonia3Dev',
+      'nasawake.am@gmail.com'
+    )
     .build();
   const documents = SwaggerModule.createDocument(app, options);
   SwaggerModule.createDocument;
