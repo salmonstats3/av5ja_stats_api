@@ -113,10 +113,13 @@ paths:
       tags:
         - リザルト
 info:
-  title: Salmon Stats NEXT WAVE API Documents
-  description: ''
+  title: Salmon Stats+
+  description: Salmon Stats for Splatoon 3 API documents. (development)
   version: 0.0.1
-  contact: {}
+  contact:
+    name: '@Salmonia3Dev'
+    url: https://twitter.com/Salmonia3Dev
+    email: nasawake.am@gmail.com
 tags: []
 servers: []
 components:
