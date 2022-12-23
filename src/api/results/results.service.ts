@@ -288,7 +288,7 @@ export class ResultsService {
               .concat(result.otherResults)
               .map((player) => {
                 return {
-                  pid: player.id,
+                  pid: player.pid,
                   name: player.name,
                   byname: player.byname,
                   nameId: player.nameId,
