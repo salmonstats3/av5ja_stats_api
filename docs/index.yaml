@@ -50,6 +50,42 @@ paths:
             title: limit
             default: 25
             type: number
+        - name: member
+          required: false
+          in: query
+          schema:
+            nullable: true
+            type: string
+        - name: nightLess
+          required: false
+          in: query
+          schema:
+            nullable: true
+            type: boolean
+        - name: ikuraNum
+          required: false
+          in: query
+          schema:
+            nullable: true
+            type: number
+        - name: goldenIkuraNum
+          required: false
+          in: query
+          schema:
+            nullable: true
+            type: number
+        - name: isClear
+          required: false
+          in: query
+          schema:
+            nullable: true
+            type: boolean
+        - name: isBossDefeated
+          required: false
+          in: query
+          schema:
+            nullable: true
+            type: boolean
       responses:
         '200':
           description: ''

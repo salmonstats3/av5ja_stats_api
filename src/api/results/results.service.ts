@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
-import { response } from 'express';
-import snakecaseKeys from 'snakecase-keys';
 import { PrismaService } from 'src/prisma.service';
 import { PaginatedDto, PaginatedRequestDto } from '../dto/pagination.dto';
+import { CoopResultFindManyArgsPaginatedRequest } from '../dto/request.dto';
 import {
   CoopResultCreateResponse,
   CoopResultResponse,
@@ -59,9 +58,33 @@ export class ResultsService {
     );
   }
 
-  async getResults(
-    request: PaginatedRequestDto
+  async findMany(
+    request: CoopResultFindManyArgsPaginatedRequest
   ): Promise<PaginatedDto<CoopResultResponse>> {
+    const where: Prisma.ResultWhereInput = {
+      isClear: {
+        equals: request.isClear,
+      },
+      isBossDefeated: {
+        equals: request.isBossDefeated,
+      },
+      nightLess: {
+        equals: request.nightLess,
+      },
+      goldenIkuraNum: {
+        gte: request.goldenIkuraNum,
+      },
+      ikuraNum: {
+        gte: request.ikuraNum,
+      },
+      ...(request.member === undefined
+        ? {}
+        : {
+            members: {
+              has: request.member,
+            },
+          }),
+    };
     const results: CoopResultResponse[] = (
       await this.prisma.result.findMany({
         take: request.limit,
@@ -69,6 +92,7 @@ export class ResultsService {
         orderBy: {
           salmonId: 'asc',
         },
+        where: where,
         include: {
           players: true,
           waves: true,
@@ -84,10 +108,10 @@ export class ResultsService {
       })
     );
     const response = new PaginatedDto<CoopResultResponse>();
-    response.results = results;
     response.limit = request.limit;
     response.offset = request.offset;
-    response.total = await this.prisma.result.count();
+    response.total = await this.prisma.result.count({ where: where });
+    response.results = results;
     return response;
   }
 
@@ -118,7 +142,9 @@ export class ResultsService {
     }
   }
 
-  queryV1(result: CustomCoopHistoryDetailRequest): Prisma.ResultUpsertArgs {
+  private queryV1(
+    result: CustomCoopHistoryDetailRequest
+  ): Prisma.ResultUpsertArgs {
     return {
       update: {},
       where: {
@@ -218,10 +244,10 @@ export class ResultsService {
     };
   }
 
-  queryV2(result: CustomCoopResultRequest): Prisma.ResultUpsertArgs {
+  private queryV2(result: CustomCoopResultRequest): Prisma.ResultUpsertArgs {
     const members: string[] = [result.myResult]
       .concat(result.otherResults)
-      .map((player) => player.id);
+      .map((player) => player.pid);
     const nightLess: boolean = result.waveDetails.every(
       (wave) => wave.eventType == 0
     );
@@ -232,7 +258,7 @@ export class ResultsService {
             where: {
               resultId_pid: {
                 resultId: result.id,
-                pid: result.myResult.id,
+                pid: result.myResult.pid,
               },
             },
             data: {
@@ -343,6 +369,39 @@ export class ResultsService {
             },
           },
         },
+      },
+    };
+  }
+
+  findManyArgs(
+    request: CoopResultFindManyArgsPaginatedRequest
+  ): Prisma.ResultFindManyArgs {
+    return {
+      where: {
+        ...(request.member === undefined
+          ? {
+              members: {
+                has: request.member,
+              },
+            }
+          : {}),
+        nightLess: request.nightLess,
+        ikuraNum: {
+          gte: request.ikuraNum,
+        },
+        goldenIkuraNum: {
+          gte: request.goldenIkuraNum,
+        },
+        isBossDefeated: {
+          equals: request.isBossDefeated,
+        },
+        isClear: {
+          equals: request.isClear,
+        },
+      },
+      select: {
+        players: true,
+        waves: true,
       },
     };
   }

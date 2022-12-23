@@ -36,6 +36,7 @@ import {
   CoopResultResponse,
 } from '../dto/response.dto';
 import { CoopResultsCreateResponse } from './results.status';
+import { CoopResultFindManyArgsPaginatedRequest } from '../dto/request.dto';
 
 @Controller('results')
 @ApiExtraModels(PaginatedDto)
@@ -65,9 +66,9 @@ export class ResultsController {
   @ApiNotFoundResponse()
   findMany(
     @Query(new ValidationPipe({ transform: true }))
-    request: PaginatedRequestDto
+    request: CoopResultFindManyArgsPaginatedRequest
   ): Promise<PaginatedDto<CoopResultResponse>> {
-    return this.service.getResults(request);
+    return this.service.findMany(request);
   }
 
   @Post('')
