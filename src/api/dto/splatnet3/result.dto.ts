@@ -62,6 +62,11 @@ class CustomCoopPlayerRequest {
   id: string;
 
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  pid: string;
+
+  @ApiProperty()
   @IsInt()
   @Min(0)
   bossKillCountsTotal: number;

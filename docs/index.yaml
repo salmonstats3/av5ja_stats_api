@@ -115,7 +115,7 @@ paths:
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents. (development)
-  version: 0.0.1
+  version: development
   contact:
     name: '@Salmonia3Dev'
     url: https://twitter.com/Salmonia3Dev
@@ -799,6 +799,8 @@ components:
       properties:
         id:
           type: string
+        pid:
+          type: string
         bossKillCountsTotal:
           type: number
         bossKillCounts:
@@ -847,6 +849,7 @@ components:
           type: number
       required:
         - id
+        - pid
         - bossKillCountsTotal
         - bossKillCounts
         - name

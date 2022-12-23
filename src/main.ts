@@ -47,7 +47,7 @@ async function bootstrap() {
     .setDescription(
       `Salmon Stats for Splatoon 3 API documents. (${process.env.NODE_ENV})`
     )
-    .setVersion(process.env.API_VER)
+    .setVersion(process.env.ENVIRONMENT)
     .setContact(
       '@Salmonia3Dev',
       'https://twitter.com/Salmonia3Dev',
@@ -56,7 +56,7 @@ async function bootstrap() {
     .build();
   const documents = SwaggerModule.createDocument(app, options);
   SwaggerModule.createDocument;
-  if (process.env.NODE_ENV !== 'production') {
+  if (!disableErrorMessages) {
     build(documents);
   }
   SwaggerModule.setup('documents', app, documents);
