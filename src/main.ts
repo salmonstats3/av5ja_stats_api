@@ -47,7 +47,7 @@ async function bootstrap() {
     .setDescription(
       `Salmon Stats for Splatoon 3 API documents. (${process.env.NODE_ENV})`
     )
-    .setVersion(process.env.ENVIRONMENT)
+    .setVersion(process.env.API_VER)
     .setContact(
       '@Salmonia3Dev',
       'https://twitter.com/Salmonia3Dev',
