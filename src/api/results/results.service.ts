@@ -3,7 +3,10 @@ import { Prisma } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from 'src/prisma.service';
 import { PaginatedDto, PaginatedRequestDto } from '../dto/pagination.dto';
-import { CoopResultFindManyArgsPaginatedRequest } from '../dto/request.dto';
+import {
+  CoopResultFindManyArgsPaginatedRequest,
+  OrderKey,
+} from '../dto/request.dto';
 import {
   CoopResultCreateResponse,
   CoopResultResponse,
@@ -90,7 +93,15 @@ export class ResultsService {
         take: request.limit,
         skip: request.offset,
         orderBy: {
-          salmonId: 'asc',
+          goldenIkuraNum:
+            request.order === OrderKey.GoldenIkuraNum
+              ? request.sort
+              : undefined,
+          ikuraNum:
+            request.order === OrderKey.IkuraNum ? request.sort : undefined,
+          playTime:
+            request.order === OrderKey.PlayTime ? request.sort : undefined,
+          salmonId: request.sort,
         },
         where: where,
         include: {
@@ -398,6 +409,12 @@ export class ResultsService {
         isClear: {
           equals: request.isClear,
         },
+      },
+      orderBy: {
+        salmonId: request.sort,
+        // playTime: request.sort,
+        // ikuraNum: request.sort,
+        // goldenIkuraNum: request.sort,
       },
       select: {
         players: true,
