@@ -1,15 +1,47 @@
 import { ParseBoolPipe } from '@nestjs/common';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ToBoolean, ToInteger } from './decorator';
 import { PaginatedRequestDto } from './pagination.dto';
 
+enum SortKey {
+  DESC = 'desc',
+  ASC = 'asc',
+}
+
+export enum OrderKey {
+  SalmonId = 'salmonId',
+  PlayTime = 'playTime',
+  GoldenIkuraNum = 'goldenIkuraNum',
+  IkuraNum = 'ikuraNum',
+}
+
 export class CoopResultFindManyArgsPaginatedRequest extends PaginatedRequestDto {
+  @ApiPropertyOptional({
+    enum: SortKey,
+    default: SortKey.ASC,
+  })
+  @IsEnum(SortKey)
+  sort: SortKey;
+
+  @ApiPropertyOptional({
+    enum: OrderKey,
+    default: OrderKey.SalmonId,
+  })
+  @IsEnum(OrderKey)
+  order: OrderKey;
+
   @ApiPropertyOptional({ nullable: true })
   @IsOptional()
   @IsString()
-  member?: string | null;
+  member: string | null;
 
   @ApiPropertyOptional({ nullable: true })
   @ToBoolean()

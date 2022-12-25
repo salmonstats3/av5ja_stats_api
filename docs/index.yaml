@@ -50,6 +50,26 @@ paths:
             title: limit
             default: 25
             type: number
+        - name: sort
+          required: false
+          in: query
+          schema:
+            default: asc
+            enum:
+              - desc
+              - asc
+            type: string
+        - name: order
+          required: false
+          in: query
+          schema:
+            default: salmonId
+            enum:
+              - salmonId
+              - playTime
+              - goldenIkuraNum
+              - ikuraNum
+            type: string
         - name: member
           required: false
           in: query
