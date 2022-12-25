@@ -134,7 +134,7 @@ model Player {
   // 種族
   species              String
   // スペシャルID
-  specialId            Int      @map("special_id")
+  specialId            Int?     @map("special_id")
   // スペシャル使用数
   specialCounts        Int[]    @map("special_count")
   // 支給されたブキのリスト

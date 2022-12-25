@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -103,9 +103,10 @@ class CustomCoopPlayerRequest {
   @Type(() => CustomCoopNamePlateRequest)
   nameplate: CustomCoopNamePlateRequest;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsInt()
-  specialId: number;
+  specialId: number | null;
 
   @ApiProperty()
   @IsInt()
