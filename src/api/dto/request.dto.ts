@@ -28,6 +28,7 @@ export class CoopResultFindManyArgsPaginatedRequest extends PaginatedRequestDto 
     enum: SortKey,
     default: SortKey.ASC,
   })
+  @IsOptional()
   @IsEnum(SortKey)
   sort: SortKey;
 
@@ -35,6 +36,7 @@ export class CoopResultFindManyArgsPaginatedRequest extends PaginatedRequestDto 
     enum: OrderKey,
     default: OrderKey.SalmonId,
   })
+  @IsOptional()
   @IsEnum(OrderKey)
   order: OrderKey;
 
