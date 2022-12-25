@@ -333,7 +333,7 @@ components:
           type: number
           nullable: true
           description: EX-WAVEでは常に`null`が入ります
-        goldenIkuarPopNum:
+        goldenIkuraPopNum:
           type: number
         quotaNum:
           type: number
@@ -346,7 +346,7 @@ components:
         - eventType
         - waterLevel
         - goldenIkuraNum
-        - goldenIkuarPopNum
+        - goldenIkuraPopNum
         - quotaNum
         - isClear
     CoopResultResponse:
