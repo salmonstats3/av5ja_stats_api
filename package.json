@@ -18,7 +18,7 @@
     "start:dev": "dotenv -e .env.local -- nest start --watch",
     "start:prod": "node dist/main",
     "migrate:dev": "dotenv -e .env.local -- yarn prisma migrate reset && yarn prisma migrate dev --name init",
-    "migrate:prod": "dotenv -e .env.prod -- yarn prisma migrate reset && yarn prisma migrate dev --name init",
+    "migrate:prod": "dotenv -e .env -- yarn prisma migrate reset && yarn prisma migrate dev --name init",
     "push:prod": "dotenv -e .env.prod -- yarn prisma db push",
     "heroku": "git push heroku master",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

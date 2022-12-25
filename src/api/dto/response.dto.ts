@@ -66,7 +66,7 @@ class CoopWaveResultResponse {
 
   @ApiProperty()
   @Expose()
-  goldenIkuarPopNum: number;
+  goldenIkuraPopNum: number;
 
   @ApiProperty({ nullable: true })
   @Expose()
