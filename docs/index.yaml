@@ -893,7 +893,6 @@ components:
         - specialCounts
         - isMyself
         - nameplate
-        - specialId
         - helpCount
         - deadCount
         - weaponList

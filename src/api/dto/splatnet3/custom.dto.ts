@@ -39,7 +39,7 @@ export class CustomPlayerRequest extends PlayerRequest {
   gradePoint: number | null;
   textColor: number[];
   badges: number[];
-  specialId: number;
+  specialId: number | null;
   weaponList: number[];
   smellMeter: number | null;
   specialUsage: number[];
