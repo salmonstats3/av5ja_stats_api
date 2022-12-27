@@ -6,6 +6,7 @@ import { PaginatedDto, PaginatedRequestDto } from '../dto/pagination.dto';
 import {
   CoopResultFindManyArgsPaginatedRequest,
   OrderKey,
+  SortKey,
 } from '../dto/request.dto';
 import {
   CoopResultCreateResponse,
@@ -94,14 +95,13 @@ export class ResultsService {
         skip: request.offset,
         orderBy: {
           goldenIkuraNum:
-            request.order === OrderKey.GoldenIkuraNum
-              ? request.sort
-              : undefined,
+            request.sort === SortKey.GoldenIkuraNum ? request.order : undefined,
           ikuraNum:
-            request.order === OrderKey.IkuraNum ? request.sort : undefined,
+            request.sort === SortKey.IkuraNum ? request.order : undefined,
           playTime:
-            request.order === OrderKey.PlayTime ? request.sort : undefined,
-          salmonId: request.sort,
+            request.sort === SortKey.PlayTime ? request.order : undefined,
+          salmonId:
+            request.sort === SortKey.SalmonId ? request.order : undefined,
         },
         where: where,
         include: {
@@ -380,45 +380,6 @@ export class ResultsService {
             },
           },
         },
-      },
-    };
-  }
-
-  findManyArgs(
-    request: CoopResultFindManyArgsPaginatedRequest
-  ): Prisma.ResultFindManyArgs {
-    return {
-      where: {
-        ...(request.member === undefined
-          ? {
-              members: {
-                has: request.member,
-              },
-            }
-          : {}),
-        nightLess: request.nightLess,
-        ikuraNum: {
-          gte: request.ikuraNum,
-        },
-        goldenIkuraNum: {
-          gte: request.goldenIkuraNum,
-        },
-        isBossDefeated: {
-          equals: request.isBossDefeated,
-        },
-        isClear: {
-          equals: request.isClear,
-        },
-      },
-      orderBy: {
-        salmonId: request.sort,
-        // playTime: request.sort,
-        // ikuraNum: request.sort,
-        // goldenIkuraNum: request.sort,
-      },
-      select: {
-        players: true,
-        waves: true,
       },
     };
   }

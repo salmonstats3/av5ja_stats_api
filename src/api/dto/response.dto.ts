@@ -299,6 +299,11 @@ export class CoopResultResponse {
   @Expose()
   bossId: number | null;
 
+  @ApiProperty({ type: CoopScheduleResponse })
+  @Expose()
+  @Type(() => CoopScheduleResponse)
+  schedule: CoopScheduleResponse;
+
   @ApiProperty({ type: [CoopPlayerResultResponse], minItems: 4 })
   @Expose()
   @Type(() => CoopPlayerResultResponse)

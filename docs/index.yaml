@@ -54,21 +54,21 @@ paths:
           required: false
           in: query
           schema:
-            default: asc
-            enum:
-              - desc
-              - asc
-            type: string
-        - name: order
-          required: false
-          in: query
-          schema:
             default: salmonId
             enum:
               - salmonId
               - playTime
               - goldenIkuraNum
               - ikuraNum
+            type: string
+        - name: order
+          required: false
+          in: query
+          schema:
+            default: asc
+            enum:
+              - desc
+              - asc
             type: string
         - name: member
           required: false
@@ -196,6 +196,31 @@ components:
         - total
         - limit
         - offset
+    CoopScheduleResponse:
+      type: object
+      properties:
+        stageId:
+          type: number
+        rareWeapon:
+          type: number
+          nullable: true
+        weaponList:
+          type: array
+          items:
+            type: string
+        mode:
+          type: string
+        rule:
+          type: string
+          enum:
+            - REGULAR
+            - BIG_RUN
+      required:
+        - stageId
+        - rareWeapon
+        - weaponList
+        - mode
+        - rule
     CoopPlayerResultResponse:
       type: object
       properties:
@@ -420,6 +445,8 @@ components:
           type: number
           nullable: true
           description: オカシラシャケのIDが返ります
+        schedule:
+          $ref: '#/components/schemas/CoopScheduleResponse'
         players:
           minItems: 4
           type: array
@@ -445,6 +472,7 @@ components:
         - failureWave
         - isBossDefeated
         - bossId
+        - schedule
         - players
         - waves
     IntegerId:
