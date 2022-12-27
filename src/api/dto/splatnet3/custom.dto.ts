@@ -63,7 +63,7 @@ export class CustomPlayerRequest extends PlayerRequest {
     this.jobScore = this.isMyself ? result.jobScore : null;
     this.jobRate = this.isMyself ? result.jobRate : null;
     this.kumaPoint = this.isMyself ? result.jobPoint : null;
-    this.gradeId = this.isMyself ? result.afterGrade.id : null;
+    this.gradeId = this.isMyself ? result.afterGrade?.id : null;
     this.gradePoint = this.isMyself ? result.afterGradePoint : null;
     this.textColor = [
       player.player.nameplate.background.textColor.r,

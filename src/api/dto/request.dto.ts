@@ -11,12 +11,12 @@ import {
 import { ToBoolean, ToInteger } from './decorator';
 import { PaginatedRequestDto } from './pagination.dto';
 
-enum SortKey {
+export enum OrderKey {
   DESC = 'desc',
   ASC = 'asc',
 }
 
-export enum OrderKey {
+export enum SortKey {
   SalmonId = 'salmonId',
   PlayTime = 'playTime',
   GoldenIkuraNum = 'goldenIkuraNum',
@@ -26,7 +26,7 @@ export enum OrderKey {
 export class CoopResultFindManyArgsPaginatedRequest extends PaginatedRequestDto {
   @ApiPropertyOptional({
     enum: SortKey,
-    default: SortKey.ASC,
+    default: SortKey.SalmonId,
   })
   @IsOptional()
   @IsEnum(SortKey)
@@ -34,7 +34,7 @@ export class CoopResultFindManyArgsPaginatedRequest extends PaginatedRequestDto 
 
   @ApiPropertyOptional({
     enum: OrderKey,
-    default: OrderKey.SalmonId,
+    default: OrderKey.ASC,
   })
   @IsOptional()
   @IsEnum(OrderKey)
