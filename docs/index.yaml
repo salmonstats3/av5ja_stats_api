@@ -168,6 +168,25 @@ paths:
           description: ''
       tags:
         - リザルト
+  /v1/schedules:
+    get:
+      operationId: 取得
+      summary: ''
+      description: スケジュールを一括で取得します
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomCoopScheduleResponse'
+        '404':
+          description: ''
+      tags:
+        - スケジュール
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents. (development)
@@ -1086,3 +1105,35 @@ components:
             $ref: '#/components/schemas/CustomCoopResultRequest'
       required:
         - results
+    CustomCoopScheduleResponse:
+      type: object
+      properties:
+        stageId:
+          type: number
+        startTime:
+          format: date-time
+          type: string
+        endTime:
+          format: date-time
+          type: string
+        weaponList:
+          type: array
+          items:
+            type: string
+        rareWeapon:
+          type: number
+        mode:
+          type: string
+        rule:
+          type: string
+        setting:
+          type: string
+      required:
+        - stageId
+        - startTime
+        - endTime
+        - weaponList
+        - rareWeapon
+        - mode
+        - rule
+        - setting
