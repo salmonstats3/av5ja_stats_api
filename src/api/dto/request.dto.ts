@@ -30,7 +30,7 @@ export class CoopResultFindManyArgsPaginatedRequest extends PaginatedRequestDto 
   })
   @IsOptional()
   @IsEnum(SortKey)
-  sort: SortKey;
+  sort: SortKey = SortKey.SalmonId;
 
   @ApiPropertyOptional({
     enum: OrderKey,
@@ -38,7 +38,7 @@ export class CoopResultFindManyArgsPaginatedRequest extends PaginatedRequestDto 
   })
   @IsOptional()
   @IsEnum(OrderKey)
-  order: OrderKey;
+  order: OrderKey = OrderKey.ASC;
 
   @ApiPropertyOptional({ nullable: true })
   @IsOptional()
