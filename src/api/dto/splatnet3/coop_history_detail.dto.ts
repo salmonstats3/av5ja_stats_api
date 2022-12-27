@@ -29,6 +29,11 @@ export enum Rule {
   BIG_RUN = 'BIG_RUN',
 }
 
+export enum Setting {
+  NORMAL = 'CoopNormalSetting',
+  BIG_RUN = 'CoopBigRunSetting',
+}
+
 class Scale {
   @ApiPropertyOptional()
   @IsOptional()

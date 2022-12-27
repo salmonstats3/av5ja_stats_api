@@ -20,12 +20,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  ApiOkResponsePaginated,
-  PaginatedDto,
-  PaginatedRequestDto,
-  PaginatedRequestDtoForResult,
-} from '../dto/pagination.dto';
+import { ApiOkResponsePaginated, PaginatedDto } from '../dto/pagination.dto';
 import { ResultsService } from './results.service';
 import {
   CustomResultRequest,
