@@ -1,85 +1,76 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { plainToClass } from 'class-transformer';
-import { PrismaService } from 'src/prisma.service';
-import { PaginatedDto, PaginatedRequestDto } from '../dto/pagination.dto';
-import {
-  CoopResultFindManyArgsPaginatedRequest,
-  OrderKey,
-  SortKey,
-} from '../dto/request.dto';
-import {
-  CoopResultCreateResponse,
-  CoopResultResponse,
-} from '../dto/response.dto';
-import {
-  CustomCoopHistoryDetailRequest,
-  CustomPlayerRequest,
-} from '../dto/splatnet3/custom.dto';
-import { CustomCoopResultRequest } from '../dto/splatnet3/result.dto';
-import {
-  CustomResultRequest,
-  ResultRequest,
-} from '../dto/splatnet3/results.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
+import { plainToClass } from "class-transformer";
+import { PrismaService } from "src/prisma.service";
+
+import { PaginatedDto } from "../dto/pagination.dto";
+import { CoopResultFindManyArgsPaginatedRequest, SortKey } from "../dto/request.dto";
+import { CoopResultCreateResponse, CoopResultResponse } from "../dto/response.dto";
+import { Mode, Rule } from "../dto/splatnet3/coop_history_detail.dto";
+import { CustomCoopHistoryDetailRequest, CustomPlayerRequest } from "../dto/splatnet3/custom.dto";
+import { CustomCoopResultRequest } from "../dto/splatnet3/result.dto";
+import { CustomResultRequest, ResultRequest } from "../dto/splatnet3/results.dto";
 
 @Injectable()
 export class ResultsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async upsertManyV1(
-    request: ResultRequest
-  ): Promise<CoopResultCreateResponse[]> {
+  // イカリング3リザルト書き込み
+  async upsertManyV1(request: ResultRequest): Promise<CoopResultCreateResponse[]> {
     const query = request.results.map((result) => {
-      const data: CustomCoopHistoryDetailRequest =
-        new CustomCoopHistoryDetailRequest(result.data.coopHistoryDetail);
+      const data: CustomCoopHistoryDetailRequest = new CustomCoopHistoryDetailRequest(
+        result.data.coopHistoryDetail,
+      );
       return this.prisma.result.upsert(this.queryV1(data));
     });
     return (await this.prisma.$transaction([...query])).map(
-      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId)
+      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId),
     );
   }
 
-  async upsertManyV2(
-    request: CustomResultRequest
-  ): Promise<CoopResultCreateResponse[]> {
-    const results: CoopResultCreateResponse[] = await Promise.all(
-      request.results.map(async (result) => {
-        const res = await this.prisma.result.upsert(this.queryV2(result));
-        return new CoopResultCreateResponse(res.uuid, res.salmonId);
-      })
-    );
-    return results;
-  }
-
-  async upsertManyV2All(
-    request: CustomResultRequest
-  ): Promise<CoopResultCreateResponse[]> {
+  // Salmonia3+リザルト書き込み
+  async upsertManyV2(request: CustomResultRequest): Promise<CoopResultCreateResponse[]> {
     const query = request.results.map((result) => {
       return this.prisma.result.upsert(this.queryV2(result));
     });
     return (await this.prisma.$transaction([...query])).map(
-      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId)
+      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId),
     );
   }
 
+  // リザルト検索
   async findMany(
-    request: CoopResultFindManyArgsPaginatedRequest
+    request: CoopResultFindManyArgsPaginatedRequest,
   ): Promise<PaginatedDto<CoopResultResponse>> {
     const where: Prisma.ResultWhereInput = {
-      isClear: {
-        equals: request.isClear,
-      },
-      isBossDefeated: {
-        equals: request.isBossDefeated,
-      },
-      nightLess: {
-        equals: request.nightLess,
-      },
       goldenIkuraNum: {
         gte: request.goldenIkuraNum,
       },
       ikuraNum: {
         gte: request.ikuraNum,
+      },
+      isBossDefeated: {
+        equals: request.isBossDefeated,
+      },
+      isClear: {
+        equals: request.isClear,
+      },
+      nightLess: {
+        equals: request.nightLess,
+      },
+      schedule: {
+        mode: {
+          equals: request.mode ?? Mode.REGULAR,
+        },
+        rule: {
+          equals: request.rule ?? Rule.REGULAR,
+        },
+        stageId: {
+          equals: request.stageId,
+        },
+        weaponList: {
+          equals: request.weaponList,
+        },
       },
       ...(request.member === undefined
         ? {}
@@ -91,32 +82,28 @@ export class ResultsService {
     };
     const results: CoopResultResponse[] = (
       await this.prisma.result.findMany({
-        take: request.limit,
-        skip: request.offset,
-        orderBy: {
-          goldenIkuraNum:
-            request.sort === SortKey.GoldenIkuraNum ? request.order : undefined,
-          ikuraNum:
-            request.sort === SortKey.IkuraNum ? request.order : undefined,
-          playTime:
-            request.sort === SortKey.PlayTime ? request.order : undefined,
-          salmonId:
-            request.sort === SortKey.SalmonId ? request.order : undefined,
-        },
-        where: where,
         include: {
           players: true,
-          waves: true,
           schedule: true,
+          waves: true,
         },
+        orderBy: {
+          goldenIkuraNum: request.sort === SortKey.GoldenIkuraNum ? request.order : undefined,
+          ikuraNum: request.sort === SortKey.IkuraNum ? request.order : undefined,
+          playTime: request.sort === SortKey.PlayTime ? request.order : undefined,
+          salmonId: request.sort === SortKey.SalmonId ? request.order : undefined,
+        },
+        skip: request.offset,
+        take: request.limit,
+        where: where,
       })
     ).map((result) =>
       plainToClass(CoopResultResponse, result, {
-        exposeUnsetFields: false,
+        enableCircularCheck: true,
         excludeExtraneousValues: true,
         exposeDefaultValues: true,
-        enableCircularCheck: true,
-      })
+        exposeUnsetFields: false,
+      }),
     );
     const response = new PaginatedDto<CoopResultResponse>();
     response.limit = request.limit;
@@ -126,26 +113,26 @@ export class ResultsService {
     return response;
   }
 
-  async getResult(salmonId: number): Promise<CoopResultResponse> {
+  async find(salmonId: number): Promise<CoopResultResponse> {
     try {
       const result: CoopResultResponse = plainToClass(
         CoopResultResponse,
         await this.prisma.result.findUniqueOrThrow({
+          include: {
+            players: true,
+            schedule: true,
+            waves: true,
+          },
           where: {
             salmonId: salmonId,
           },
-          include: {
-            players: true,
-            waves: true,
-            schedule: true,
-          },
         }),
         {
-          exposeUnsetFields: false,
+          enableCircularCheck: true,
           excludeExtraneousValues: true,
           exposeDefaultValues: true,
-          enableCircularCheck: true,
-        }
+          exposeUnsetFields: false,
+        },
       );
       return result;
     } catch {
@@ -153,57 +140,51 @@ export class ResultsService {
     }
   }
 
-  private queryV1(
-    result: CustomCoopHistoryDetailRequest
-  ): Prisma.ResultUpsertArgs {
+  // 書き込みのためのクエリ
+  private queryV1(result: CustomCoopHistoryDetailRequest): Prisma.ResultUpsertArgs {
     return {
-      update: {},
-      where: {
-        id: result.id,
-      },
       create: {
-        id: result.id,
-        uuid: result.uuid,
         bossCounts: result.bossCounts,
-        bossKillCounts: result.bossKillCounts,
-        ikuraNum: result.ikuraNum,
-        goldenIkuraNum: result.goldenIkuraNum,
-        goldenIkuraAssistNum: result.goldenIkuraAssistNum,
-        nightLess: result.nightLess,
-        dangerRate: result.dangerRate,
-        playTime: result.playedTime,
-        members: result.members,
-        isClear: result.isClear,
-        failureWave: result.failureWave,
-        isBossDefeated: result.isBossDefeated,
         bossId: result.bossId,
-        waves: {
-          createMany: {
-            data: result.waves.map((wave) => {
-              return {
-                waveId: wave.waveNumber,
-                waterLevel: wave.waterLevel,
-                eventType: wave.eventType,
-                goldenIkuraNum: wave.teamDeliverCount,
-                goldenIkuraPopNum: wave.goldenPopCount,
-                quotaNum: wave.deliverNorm,
-                isClear: wave.isClear,
-              };
-            }),
-          },
-        },
+        bossKillCounts: result.bossKillCounts,
+        dangerRate: result.dangerRate,
+        failureWave: result.failureWave,
+        goldenIkuraAssistNum: result.goldenIkuraAssistNum,
+        goldenIkuraNum: result.goldenIkuraNum,
+        id: result.id,
+        ikuraNum: result.ikuraNum,
+        isBossDefeated: result.isBossDefeated,
+        isClear: result.isClear,
+        members: result.members,
+        nightLess: result.nightLess,
+        playTime: result.playedTime,
         players: {
           createMany: {
             data: result.players.map((player: CustomPlayerRequest) => {
               return {
-                pid: player.pid,
-                name: player.player.name,
+                badges: player.player.nameplate.badges.map((badge) => badge?.id ?? -1),
+                bossKillCounts: player.bossKillCounts,
+                bossKillCountsTotal: player.defeatEnemyCount,
                 byname: player.player.byname,
+                deadCount: player.rescuedCount,
+                goldenIkuraAssistNum: player.goldenAssistCount,
+                goldenIkuraNum: player.goldenDeliverCount,
+                gradeId: player.gradeId,
+                gradePoint: player.gradePoint,
+                helpCount: player.rescueCount,
+                ikuraNum: player.deliverCount,
+                jobBonus: player.jobBonus,
+                jobRate: player.jobRate,
+                jobScore: player.jobScore,
+                kumaPoint: player.kumaPoint,
+                name: player.player.name,
                 nameId: player.player.nameId,
-                badges: player.player.nameplate.badges.map(
-                  (badge) => badge?.id ?? -1
-                ),
                 nameplate: player.player.nameplate.background.id,
+                pid: player.pid,
+                smellMeter: player.smellMeter,
+                specialCounts: player.specialUsage,
+                specialId: player.specialId,
+                species: player.player.species,
                 textColor: [
                   player.player.nameplate.background.textColor.a,
                   player.player.nameplate.background.textColor.b,
@@ -211,24 +192,7 @@ export class ResultsService {
                   player.player.nameplate.background.textColor.r,
                 ],
                 uniform: player.player.uniform.id,
-                bossKillCountsTotal: player.defeatEnemyCount,
-                bossKillCounts: player.bossKillCounts,
-                deadCount: player.rescuedCount,
-                helpCount: player.rescueCount,
-                ikuraNum: player.deliverCount,
-                goldenIkuraNum: player.goldenDeliverCount,
-                goldenIkuraAssistNum: player.goldenAssistCount,
-                species: player.player.species,
-                specialId: player.specialId,
-                jobRate: player.jobRate,
-                jobBonus: player.jobBonus,
-                jobScore: player.jobScore,
-                kumaPoint: player.kumaPoint,
-                gradeId: player.gradeId,
-                gradePoint: player.gradePoint,
-                smellMeter: player.smellMeter,
                 weaponList: player.weaponList,
-                specialCounts: player.specialUsage,
               };
             }),
           },
@@ -236,150 +200,167 @@ export class ResultsService {
         schedule: {
           connectOrCreate: {
             create: {
-              stageId: result.stageId,
-              weaponList: result.weaponList,
               mode: result.mode,
               rule: result.rule,
+              stageId: result.stageId,
+              weaponList: result.weaponList,
             },
             where: {
               stageId_weaponList_mode_rule: {
-                stageId: result.stageId,
-                weaponList: result.weaponList,
                 mode: result.mode,
                 rule: result.rule,
+                stageId: result.stageId,
+                weaponList: result.weaponList,
               },
             },
           },
         },
+        uuid: result.uuid,
+        waves: {
+          createMany: {
+            data: result.waves.map((wave) => {
+              return {
+                eventType: wave.eventType,
+                goldenIkuraNum: wave.teamDeliverCount,
+                goldenIkuraPopNum: wave.goldenPopCount,
+                isClear: wave.isClear,
+                quotaNum: wave.deliverNorm,
+                waterLevel: wave.waterLevel,
+                waveId: wave.waveNumber,
+              };
+            }),
+          },
+        },
+      },
+      update: {},
+      where: {
+        id: result.id,
       },
     };
   }
 
+  // 書き込みのためのクエリ
   private queryV2(result: CustomCoopResultRequest): Prisma.ResultUpsertArgs {
     const members: string[] = [result.myResult]
       .concat(result.otherResults)
       .map((player) => player.pid);
-    const nightLess: boolean = result.waveDetails.every(
-      (wave) => wave.eventType == 0
-    );
+    const nightLess: boolean = result.waveDetails.every((wave) => wave.eventType == 0);
     return {
+      create: {
+        bossCounts: result.bossCounts,
+        bossId: result.jobResult.bossId,
+        bossKillCounts: result.bossKillCounts,
+        dangerRate: result.dangerRate,
+        failureWave: result.jobResult.failureWave,
+        goldenIkuraAssistNum: result.goldenIkuraAssistNum,
+        goldenIkuraNum: result.goldenIkuraNum,
+        id: result.id,
+        ikuraNum: result.ikuraNum,
+        isBossDefeated: result.jobResult.isBossDefeated,
+        isClear: result.jobResult.isClear,
+        members: members,
+        nightLess: nightLess,
+        playTime: result.playTime,
+        players: {
+          createMany: {
+            data: [result.myResult].concat(result.otherResults).map((player) => {
+              return {
+                badges: player.nameplate.badges.map((badge) => badge ?? -1),
+                bossKillCounts: player.isMyself
+                  ? player.bossKillCounts
+                  : player.bossKillCounts.map((count) => -1),
+                bossKillCountsTotal: player.bossKillCountsTotal,
+                byname: player.byname,
+                deadCount: player.deadCount,
+                goldenIkuraAssistNum: player.goldenIkuraAssistNum,
+                goldenIkuraNum: player.goldenIkuraNum,
+                gradeId: player.isMyself ? result.gradeId : null,
+                gradePoint: player.isMyself ? result.gradePoint : null,
+                helpCount: player.helpCount,
+                ikuraNum: player.ikuraNum,
+                jobBonus: player.isMyself ? result.jobBonus : null,
+                jobRate: player.isMyself ? result.jobRate : null,
+                jobScore: player.isMyself ? result.jobScore : null,
+                kumaPoint: player.isMyself ? result.kumaPoint : null,
+                name: player.name,
+                nameId: player.nameId,
+                nameplate: player.nameplate.background.id,
+                pid: player.pid,
+                smellMeter: player.isMyself ? result.smellMeter : null,
+                specialCounts: player.specialCounts,
+                specialId: player.specialId,
+                species: player.species,
+                textColor: [
+                  player.nameplate.background.textColor.r,
+                  player.nameplate.background.textColor.g,
+                  player.nameplate.background.textColor.b,
+                  player.nameplate.background.textColor.a,
+                ],
+                uniform: player.uniform,
+                weaponList: player.weaponList,
+              };
+            }),
+          },
+        },
+        schedule: {
+          connectOrCreate: {
+            create: {
+              mode: result.schedule.mode,
+              rule: result.schedule.rule,
+              stageId: result.schedule.stageId,
+              weaponList: result.schedule.weaponList,
+            },
+            where: {
+              stageId_weaponList_mode_rule: {
+                mode: result.schedule.mode,
+                rule: result.schedule.rule,
+                stageId: result.schedule.stageId,
+                weaponList: result.schedule.weaponList,
+              },
+            },
+          },
+        },
+        uuid: result.uuid,
+        waves: {
+          createMany: {
+            data: result.waveDetails.map((wave) => {
+              return {
+                eventType: wave.eventType,
+                goldenIkuraNum: wave.goldenIkuraNum,
+                goldenIkuraPopNum: wave.goldenIkuraPopNum,
+                isClear: wave.isClear,
+                quotaNum: wave.quotaNum,
+                waterLevel: wave.waterLevel,
+                waveId: wave.id,
+              };
+            }),
+          },
+        },
+      },
       update: {
         players: {
           update: {
-            where: {
-              resultId_pid: {
-                resultId: result.id,
-                pid: result.myResult.pid,
-              },
-            },
             data: {
               bossKillCounts: result.myResult.bossKillCounts,
-              jobBonus: result.jobBonus,
-              jobScore: result.jobScore,
-              kumaPoint: result.kumaPoint,
-              jobRate: result.jobRate,
-              smellMeter: result.smellMeter,
               gradeId: result.gradeId,
               gradePoint: result.gradePoint,
+              jobBonus: result.jobBonus,
+              jobRate: result.jobRate,
+              jobScore: result.jobScore,
+              kumaPoint: result.kumaPoint,
+              smellMeter: result.smellMeter,
+            },
+            where: {
+              resultId_pid: {
+                pid: result.myResult.pid,
+                resultId: result.id,
+              },
             },
           },
         },
       },
       where: {
         id: result.id,
-      },
-      create: {
-        id: result.id,
-        uuid: result.uuid,
-        bossCounts: result.bossCounts,
-        bossKillCounts: result.bossKillCounts,
-        ikuraNum: result.ikuraNum,
-        goldenIkuraNum: result.goldenIkuraNum,
-        goldenIkuraAssistNum: result.goldenIkuraAssistNum,
-        nightLess: nightLess,
-        dangerRate: result.dangerRate,
-        playTime: result.playTime,
-        members: members,
-        isClear: result.jobResult.isClear,
-        failureWave: result.jobResult.failureWave,
-        isBossDefeated: result.jobResult.isBossDefeated,
-        bossId: result.jobResult.bossId,
-        waves: {
-          createMany: {
-            data: result.waveDetails.map((wave) => {
-              return {
-                waveId: wave.id,
-                waterLevel: wave.waterLevel,
-                eventType: wave.eventType,
-                goldenIkuraNum: wave.goldenIkuraNum,
-                goldenIkuraPopNum: wave.goldenIkuraPopNum,
-                quotaNum: wave.quotaNum,
-                isClear: wave.isClear,
-              };
-            }),
-          },
-        },
-        players: {
-          createMany: {
-            data: [result.myResult]
-              .concat(result.otherResults)
-              .map((player) => {
-                return {
-                  pid: player.pid,
-                  name: player.name,
-                  byname: player.byname,
-                  nameId: player.nameId,
-                  badges: player.nameplate.badges.map((badge) => badge ?? -1),
-                  nameplate: player.nameplate.background.id,
-                  textColor: [
-                    player.nameplate.background.textColor.r,
-                    player.nameplate.background.textColor.g,
-                    player.nameplate.background.textColor.b,
-                    player.nameplate.background.textColor.a,
-                  ],
-                  uniform: player.uniform,
-                  bossKillCountsTotal: player.bossKillCountsTotal,
-                  bossKillCounts: player.isMyself
-                    ? player.bossKillCounts
-                    : player.bossKillCounts.map((count) => -1),
-                  deadCount: player.deadCount,
-                  helpCount: player.helpCount,
-                  ikuraNum: player.ikuraNum,
-                  goldenIkuraNum: player.goldenIkuraNum,
-                  goldenIkuraAssistNum: player.goldenIkuraAssistNum,
-                  species: player.species,
-                  specialId: player.specialId,
-                  jobRate: player.isMyself ? result.jobRate : null,
-                  jobBonus: player.isMyself ? result.jobBonus : null,
-                  jobScore: player.isMyself ? result.jobScore : null,
-                  kumaPoint: player.isMyself ? result.kumaPoint : null,
-                  gradeId: player.isMyself ? result.gradeId : null,
-                  gradePoint: player.isMyself ? result.gradePoint : null,
-                  smellMeter: player.isMyself ? result.smellMeter : null,
-                  weaponList: player.weaponList,
-                  specialCounts: player.specialCounts,
-                };
-              }),
-          },
-        },
-        schedule: {
-          connectOrCreate: {
-            create: {
-              stageId: result.schedule.stageId,
-              weaponList: result.schedule.weaponList,
-              mode: result.schedule.mode,
-              rule: result.schedule.rule,
-            },
-            where: {
-              stageId_weaponList_mode_rule: {
-                stageId: result.schedule.stageId,
-                weaponList: result.schedule.weaponList,
-                mode: result.schedule.mode,
-                rule: result.schedule.rule,
-              },
-            },
-          },
-        },
       },
     };
   }

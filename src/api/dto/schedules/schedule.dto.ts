@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum } from 'class-validator';
-import { Mode, Rule, Setting } from '../splatnet3/coop_history_detail.dto';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEnum } from "class-validator";
+
+import { Mode, Rule, Setting } from "../splatnet3/coop_history_detail.dto";
 
 export class CustomCoopScheduleResponse {
   @ApiProperty()

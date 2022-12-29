@@ -1,8 +1,9 @@
-import { BadRequestException } from '@nestjs/common';
-import { CoopHistoryDetailRequest, Mode } from './coop_history_detail.dto';
-import { EnemyResult } from './enemy.dto';
-import { PlayerRequest } from './player.dto';
-import { WaveResult } from './wave.dto';
+import { BadRequestException } from "@nestjs/common";
+
+import { CoopHistoryDetailRequest, Mode } from "./coop_history_detail.dto";
+import { EnemyResult } from "./enemy.dto";
+import { PlayerRequest } from "./player.dto";
+import { WaveResult } from "./wave.dto";
 
 class CustomWave extends WaveResult {
   isClear: boolean;
@@ -44,11 +45,7 @@ export class CustomPlayerRequest extends PlayerRequest {
   smellMeter: number | null;
   specialUsage: number[];
 
-  constructor(
-    player: PlayerRequest,
-    result: CoopHistoryDetailRequest,
-    specialUsage: number[][]
-  ) {
+  constructor(player: PlayerRequest, result: CoopHistoryDetailRequest, specialUsage: number[][]) {
     super();
     this.player = player.player;
     this.defeatEnemyCount = player.defeatEnemyCount;
@@ -71,26 +68,22 @@ export class CustomPlayerRequest extends PlayerRequest {
       player.player.nameplate.background.textColor.b,
       player.player.nameplate.background.textColor.a,
     ];
-    this.badges = player.player.nameplate.badges.map(
-      (badge) => badge?.id ?? -1
-    );
+    this.badges = player.player.nameplate.badges.map((badge) => badge?.id ?? -1);
     const bossKillCounts: number[] = this.enemies(result.enemyResults).map(
-      (enemy) => enemy.defeatCount
+      (enemy) => enemy.defeatCount,
     );
     this.specialId = player.specialWeapon.weaponId;
     this.specialUsage = specialUsage.map(
-      (waves) => waves.filter((special) => special == this.specialId).length
+      (waves) => waves.filter((special) => special == this.specialId).length,
     );
 
-    this.bossKillCounts = this.isMyself
-      ? bossKillCounts
-      : [...Array(14)].map(() => -1);
+    this.bossKillCounts = this.isMyself ? bossKillCounts : [...Array(14)].map(() => -1);
     this.weaponList = player.weapons.map((weapon) => weapon.image.url);
     this.smellMeter = this.isMyself ? result.smellMeter : null;
   }
 
   private isMyResult(playerId: string): boolean {
-    const regexp: RegExp = /u-[a-z\d]{20}/g;
+    const regexp = /u-[a-z\d]{20}/g;
     const match: string[] | null = playerId.match(regexp);
 
     if (match.length != 2) {
@@ -100,16 +93,14 @@ export class CustomPlayerRequest extends PlayerRequest {
   }
 
   private playerId(playerId: string): string {
-    const regexp: RegExp = /u-([a-z\d]{20})$/;
+    const regexp = /u-([a-z\d]{20})$/;
     const match: string[] | null = regexp.exec(playerId);
     return match[1];
   }
 
   private enemies(results: EnemyResult[]): EnemyResult[] {
     return [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 20].map((enemyId) => {
-      const enemy: EnemyResult = results.find(
-        (result) => result.enemy.id == enemyId
-      );
+      const enemy: EnemyResult = results.find((result) => result.enemy.id == enemyId);
       return new EnemyResult(enemy, enemyId);
     });
   }
@@ -143,17 +134,10 @@ export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
       .reduce((a, b) => a + b);
     const enemyResults: EnemyResult[] = this.enemies(result.enemyResults);
     this.waves = result.waveResults.map(
-      (wave) =>
-        new CustomWave(
-          wave,
-          result.resultWave,
-          result.bossResult?.hasDefeatBoss ?? false
-        )
+      (wave) => new CustomWave(wave, result.resultWave, result.bossResult?.hasDefeatBoss ?? false),
     );
 
-    const specialUsage: number[][] = this.waves.map(
-      (wave) => wave.specialUsage
-    );
+    const specialUsage: number[][] = this.waves.map((wave) => wave.specialUsage);
     this.players = [result.myResult]
       .concat(result.memberResults)
       .map((player) => new CustomPlayerRequest(player, result, specialUsage));
@@ -161,9 +145,7 @@ export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
     this.goldenIkuraAssistNum = this.players
       .map((player) => player.goldenAssistCount)
       .reduce((a, b) => a + b);
-    this.ikuraNum = this.players
-      .map((player) => player.deliverCount)
-      .reduce((a, b) => a + b);
+    this.ikuraNum = this.players.map((player) => player.deliverCount).reduce((a, b) => a + b);
     this.members = this.players.map((player) => player.pid);
     this.playedTime = result.playedTime;
     this.dangerRate = result.dangerRate;
@@ -186,17 +168,14 @@ export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
   }
 
   private resultId(resultId: string): string {
-    const regexp: RegExp =
-      /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
+    const regexp = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
     const match: string[] | null = resultId.match(regexp);
     return match[0];
   }
 
   private enemies(results: EnemyResult[]): EnemyResult[] {
     return [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 20].map((enemyId) => {
-      const enemy: EnemyResult = results.find(
-        (result) => result.enemy.id == enemyId
-      );
+      const enemy: EnemyResult = results.find((result) => result.enemy.id == enemyId);
       return new EnemyResult(enemy, enemyId);
     });
   }

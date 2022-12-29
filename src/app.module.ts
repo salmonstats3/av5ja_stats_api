@@ -1,19 +1,13 @@
-import { CacheInterceptor, CacheModule, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ApiModule } from './api/api.module';
-import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheInterceptor, CacheModule, Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+
+import { ApiModule } from "./api/api.module";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
 
 @Module({
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-  ],
   imports: [
     ApiModule,
     CacheModule.registerAsync({
@@ -22,8 +16,15 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       }),
     }),
     ConfigModule.forRoot({
-      envFilePath: ['.env'],
+      envFilePath: [".env"],
     }),
+  ],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
   ],
 })
 export class AppModule {}

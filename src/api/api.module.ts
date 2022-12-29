@@ -1,16 +1,17 @@
-import { CacheInterceptor, Module } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { ApiController } from './api.controller';
-import { ApiService } from './api.service';
-import { ResultsModule } from './results/results.module';
-import { SchedulesModule } from './schedules/schedules.module';
-import { ResultsService } from './results/results.service';
-import { SchedulesService } from './schedules/schedules.service';
-import { HttpModule } from '@nestjs/axios';
+import { HttpModule } from "@nestjs/axios";
+import { Module } from "@nestjs/common";
+import { PrismaService } from "src/prisma.service";
+
+import { ApiController } from "./api.controller";
+import { ApiService } from "./api.service";
+import { ResultsModule } from "./results/results.module";
+import { ResultsService } from "./results/results.service";
+import { SchedulesModule } from "./schedules/schedules.module";
+import { SchedulesService } from "./schedules/schedules.service";
 
 @Module({
   controllers: [ApiController],
-  providers: [PrismaService, ApiService, ResultsService, SchedulesService],
   imports: [ResultsModule, SchedulesModule, HttpModule],
+  providers: [PrismaService, ApiService, ResultsService, SchedulesService],
 })
 export class ApiModule {}

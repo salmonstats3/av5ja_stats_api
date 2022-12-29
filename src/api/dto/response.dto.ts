@@ -1,12 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Transform, Type } from 'class-transformer';
-import { isUUID, ValidateNested } from 'class-validator';
-import { randomUUID } from 'crypto';
-import { Mode, Rule } from './splatnet3/coop_history_detail.dto';
-import { Species } from './splatnet3/player.dto';
+import { ApiProperty } from "@nestjs/swagger";
+import { Expose, Transform, Type } from "class-transformer";
+
+import { Mode, Rule } from "./splatnet3/coop_history_detail.dto";
+import { Species } from "./splatnet3/player.dto";
 
 export class CoopResultCreateResponse {
-  @ApiProperty({ format: 'uuid' })
+  @ApiProperty({ format: "uuid" })
   uuid: string;
 
   @ApiProperty()
@@ -37,29 +36,29 @@ enum EventId {
 }
 
 enum EnemyId {
-  'オカシラシャケ' = 23,
+  "オカシラシャケ" = 23,
 }
 
 class CoopWaveResultResponse {
-  @ApiProperty({ description: '1~4の値が入ります' })
+  @ApiProperty({ description: "1~4の値が入ります" })
   @Expose()
   waveId: number;
 
   @ApiProperty({
-    type: Number,
     enum: EventId,
-    enumName: 'EventId',
+    enumName: "EventId",
+    type: Number,
   })
   @Expose()
   eventType: EventId;
 
-  @ApiProperty({ type: Number, enum: WaterId, enumName: 'WaterId' })
+  @ApiProperty({ enum: WaterId, enumName: "WaterId", type: Number })
   @Expose()
   waterLevel: number;
 
   @ApiProperty({
+    description: "EX-WAVEでは常に`null`が入ります",
     nullable: true,
-    description: 'EX-WAVEでは常に`null`が入ります',
   })
   @Expose()
   goldenIkuraNum: number | null;
@@ -73,7 +72,7 @@ class CoopWaveResultResponse {
   quotaNum: number | null;
 
   @ApiProperty({
-    description: 'オカシラシャケを討伐できなかった場合は`false`が入ります',
+    description: "オカシラシャケを討伐できなかった場合は`false`が入ります",
   })
   @Expose()
   isClear: boolean;
@@ -97,31 +96,29 @@ class CoopPlayerResultResponse {
   nameId: string;
 
   @ApiProperty({
-    type: [Number],
+    description: "バッジのIDが返りますがつけていない場合は`null`が入ります",
     maxItems: 3,
     minItems: 3,
-    description: 'バッジのIDが返りますがつけていない場合は`null`が入ります',
+    type: [Number],
   })
   @Expose()
-  @Transform((param) =>
-    param.value.map((badge) => (badge === -1 ? null : badge))
-  )
+  @Transform((param) => param.value.map((badge) => (badge === -1 ? null : badge)))
   badges: number[];
 
-  @ApiProperty({ description: 'ネームプレートのIDが入ります' })
+  @ApiProperty({ description: "ネームプレートのIDが入ります" })
   @Expose()
   nameplate: number;
 
   @ApiProperty({
-    type: [Number],
+    description: "RGBAが入ります",
     maxItems: 4,
     minItems: 4,
-    description: 'RGBAが入ります',
+    type: [Number],
   })
   @Expose()
   textColor: number[];
 
-  @ApiProperty({ description: 'ユニフォームIDが入ります' })
+  @ApiProperty({ description: "ユニフォームIDが入ります" })
   @Expose()
   uniform: number;
 
@@ -130,15 +127,13 @@ class CoopPlayerResultResponse {
   bossKillCountsTotal: number;
 
   @ApiProperty({
-    type: [Number],
+    description: "わからない場合は`null`が入ります",
     maxItems: 14,
     minItems: 14,
-    description: 'わからない場合は`null`が入ります',
+    type: [Number],
   })
   @Expose()
-  @Transform((param) =>
-    param.value.map((count) => (count === -1 ? null : count))
-  )
+  @Transform((param) => param.value.map((count) => (count === -1 ? null : count)))
   bossKillCounts: number[];
 
   @ApiProperty()
@@ -153,7 +148,7 @@ class CoopPlayerResultResponse {
   @Expose()
   ikuraNum: number;
 
-  @ApiProperty({ description: 'コンテナに入れた金イクラの数です' })
+  @ApiProperty({ description: "コンテナに入れた金イクラの数です" })
   @Expose()
   goldenIkuraNum: number;
 
@@ -177,19 +172,19 @@ class CoopPlayerResultResponse {
   @Expose()
   kumaPoint: number | null;
 
-  @ApiProperty({ nullable: true, minimum: 0, maximum: 8 })
+  @ApiProperty({ maximum: 8, minimum: 0, nullable: true })
   @Expose()
   gradeId: number | null;
 
-  @ApiProperty({ nullable: true, minimum: 0, maximum: 999 })
+  @ApiProperty({ maximum: 999, minimum: 0, nullable: true })
   @Expose()
   gradePoint: number | null;
 
   @ApiProperty({
-    nullable: true,
-    minimum: 0,
+    description: "オカシラメーター",
     maximum: 5,
-    description: 'オカシラメーター',
+    minimum: 0,
+    nullable: true,
   })
   @Expose()
   smellMeter: number | null;
@@ -202,11 +197,11 @@ class CoopPlayerResultResponse {
   @Expose()
   specialId: number;
 
-  @ApiProperty({ type: [Number], maxItems: 4, minItems: 0 })
+  @ApiProperty({ maxItems: 4, minItems: 0, type: [Number] })
   @Expose()
   specialCounts: number[];
 
-  @ApiProperty({ type: [Number], maxItems: 4, minItems: 0 })
+  @ApiProperty({ maxItems: 4, minItems: 0, type: [Number] })
   @Expose()
   weaponList: number[];
 }
@@ -234,23 +229,23 @@ export class CoopScheduleResponse {
 }
 
 export class CoopResultResponse {
-  @ApiProperty({ description: '固有のID' })
+  @ApiProperty({ description: "固有のID" })
   @Expose()
   salmonId: number;
 
   @ApiProperty({
+    description: "リザルトに紐付けられたUUID",
+    format: "uuid",
     type: String,
-    format: 'uuid',
-    description: 'リザルトに紐付けられたUUID',
   })
   @Expose()
   uuid: string;
 
-  @ApiProperty({ type: [Number], maxItems: 14, minItems: 14 })
+  @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
   @Expose()
   bossCounts: number[];
 
-  @ApiProperty({ type: [Number], maxItems: 14, minItems: 14 })
+  @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
   @Expose()
   bossKillCounts: number[];
 
@@ -266,7 +261,7 @@ export class CoopResultResponse {
   @Expose()
   goldenIkuraAssistNum: number;
 
-  @ApiProperty({ description: '夜イベントを含むかどうか' })
+  @ApiProperty({ description: "夜イベントを含むかどうか" })
   @Expose()
   nightLess: boolean;
 
@@ -279,23 +274,23 @@ export class CoopResultResponse {
   playTime: Date;
 
   @ApiProperty({
-    description: 'WAVE3をクリアすればオカシラ失敗しても`true`が返ります',
+    description: "WAVE3をクリアすればオカシラ失敗しても`true`が返ります",
   })
   @Expose()
   isClear: boolean;
 
-  @ApiProperty({ nullable: true, description: '失敗したWAVEのidが返ります' })
+  @ApiProperty({ description: "失敗したWAVEのidが返ります", nullable: true })
   @Expose()
   failureWave: number | null;
 
   @ApiProperty({
+    description: "オカシラシャケを討伐できたかが返ります",
     nullable: true,
-    description: 'オカシラシャケを討伐できたかが返ります',
   })
   @Expose()
   isBossDefeated: boolean | null;
 
-  @ApiProperty({ nullable: true, description: 'オカシラシャケのIDが返ります' })
+  @ApiProperty({ description: "オカシラシャケのIDが返ります", nullable: true })
   @Expose()
   bossId: number | null;
 
@@ -304,12 +299,12 @@ export class CoopResultResponse {
   @Type(() => CoopScheduleResponse)
   schedule: CoopScheduleResponse;
 
-  @ApiProperty({ type: [CoopPlayerResultResponse], minItems: 4 })
+  @ApiProperty({ minItems: 4, type: [CoopPlayerResultResponse] })
   @Expose()
   @Type(() => CoopPlayerResultResponse)
   players: CoopPlayerResultResponse[];
 
-  @ApiProperty({ type: [CoopWaveResultResponse], minItems: 3 })
+  @ApiProperty({ minItems: 3, type: [CoopWaveResultResponse] })
   @Expose()
   @Type(() => CoopWaveResultResponse)
   waves: CoopWaveResultResponse[];

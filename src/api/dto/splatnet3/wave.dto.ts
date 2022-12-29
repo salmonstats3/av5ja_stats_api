@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Max, Min, ValidateNested } from 'class-validator';
-import { IntegerId } from './rawvalue.dto';
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
+import { IsInt, IsOptional, ValidateNested } from "class-validator";
+
+import { IntegerId } from "./rawvalue.dto";
 
 export class WaveResult {
   @ApiProperty()
