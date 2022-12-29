@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Transform, Type } from "class-transformer";
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -7,7 +7,6 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
-  IsIn,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -16,10 +15,11 @@ import {
   Max,
   Min,
   ValidateNested,
-} from 'class-validator';
-import { CoopDataRequest } from './data.dto';
-import { Species } from './player.dto';
-import { CustomCoopScheduleRequest } from './schedule.dto';
+} from "class-validator";
+
+import { CoopDataRequest } from "./data.dto";
+import { Species } from "./player.dto";
+import { CustomCoopScheduleRequest } from "./schedule.dto";
 
 export class CoopResultRequest {
   @ApiProperty({ type: CoopDataRequest })
@@ -48,7 +48,7 @@ class CustomCoopNameBackgroundRequest {
 }
 
 class CustomCoopNamePlateRequest {
-  @ApiProperty({ type: [Number], maxItems: 3, minItems: 3 })
+  @ApiProperty({ maxItems: 3, minItems: 3, type: [Number] })
   badges: (number | null)[];
 
   @ApiProperty({ type: CustomCoopNameBackgroundRequest })
@@ -71,7 +71,7 @@ class CustomCoopPlayerRequest {
   @Min(0)
   bossKillCountsTotal: number;
 
-  @ApiProperty({ type: [Number], minItems: 14, maxItems: 14 })
+  @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
   @IsArray()
   @ArrayMaxSize(14)
   @ArrayMinSize(14)
@@ -88,7 +88,7 @@ class CustomCoopPlayerRequest {
   @IsNotEmpty()
   byname: string;
 
-  @ApiProperty({ type: [Number], minItems: 3, maxItems: 4 })
+  @ApiProperty({ maxItems: 4, minItems: 3, type: [Number] })
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(4)
@@ -118,7 +118,7 @@ class CustomCoopPlayerRequest {
   @Min(0)
   deadCount: number;
 
-  @ApiProperty({ type: [Number], minItems: 3, maxItems: 4 })
+  @ApiProperty({ maxItems: 4, minItems: 3, type: [Number] })
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(4)
@@ -223,13 +223,13 @@ export class CustomCoopResultRequest {
   @Type(() => CustomCoopScheduleRequest)
   schedule: CustomCoopScheduleRequest;
 
-  @ApiProperty({ type: [Number], minItems: 14, maxItems: 14 })
+  @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
   @ArrayMinSize(14)
   @ArrayMaxSize(14)
   @Transform((param) => param.value.slice(0, -1))
   bossKillCounts: number[];
 
-  @ApiProperty({ type: [Number], minItems: 14, maxItems: 14 })
+  @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
   @ArrayMinSize(14)
   @ArrayMaxSize(14)
   @Transform((param) => param.value.slice(0, -1))
@@ -288,7 +288,7 @@ export class CustomCoopResultRequest {
   @IsNotEmpty()
   id: string;
 
-  @ApiProperty({ format: 'uuid' })
+  @ApiProperty({ format: "uuid" })
   @IsString()
   @IsNotEmpty()
   uuid: string;

@@ -4,36 +4,27 @@
  * @date 2020-10-11
  */
 
-import { applyDecorators, Type } from '@nestjs/common';
+import { applyDecorators, Type } from "@nestjs/common";
 import {
   ApiExtraModels,
   ApiOkResponse,
   ApiProperty,
   ApiPropertyOptional,
   getSchemaPath,
-} from '@nestjs/swagger';
-import { Expose, Transform } from 'class-transformer';
-import {
-  IsBoolean,
-  IsDate,
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator';
-import dayjs from 'dayjs';
+} from "@nestjs/swagger";
+import { Expose, Transform } from "class-transformer";
+import { IsBoolean, IsDate, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
+import dayjs from "dayjs";
 
 export class PaginatedRequestDto {
   @Expose()
   @Transform((params) => parseInt(params.value || 0, 10))
   @IsInt()
   @ApiPropertyOptional({
-    title: 'offset',
-    minimum: 0,
     default: 0,
-    description: 'オフセット',
+    description: "オフセット",
+    minimum: 0,
+    title: "offset",
   })
   readonly offset: number;
 
@@ -41,19 +32,19 @@ export class PaginatedRequestDto {
   @Transform((params) => parseInt(params.value || 25, 10))
   @IsInt()
   @ApiPropertyOptional({
-    title: 'limit',
-    minimum: 0,
-    maximum: 200,
     default: 25,
-    description: '上限値',
+    description: "上限値",
+    maximum: 200,
+    minimum: 0,
+    title: "limit",
   })
   readonly limit: number;
 }
 
 export class PaginatedRequestDtoForUser extends PaginatedRequestDto {
   @ApiPropertyOptional({
-    title: 'nickname',
-    description: 'ニックネーム',
+    description: "ニックネーム",
+    title: "nickname",
   })
   @IsString()
   nickname: string;
@@ -61,10 +52,10 @@ export class PaginatedRequestDtoForUser extends PaginatedRequestDto {
 
 export class PaginatedRequestDtoForWave extends PaginatedRequestDto {
   @ApiProperty({
-    title: '',
     default: 0,
+    description: "イベントID",
     example: 0,
-    description: 'イベントID',
+    title: "",
   })
   @IsInt()
   @Max(6)
@@ -72,10 +63,10 @@ export class PaginatedRequestDtoForWave extends PaginatedRequestDto {
   event_type: number;
 
   @ApiProperty({
-    title: '',
     default: 0,
+    description: "潮位ID",
     example: 0,
-    description: '潮位ID',
+    title: "",
   })
   @IsInt()
   @Max(2)
@@ -83,10 +74,10 @@ export class PaginatedRequestDtoForWave extends PaginatedRequestDto {
   water_level: number;
 
   @ApiProperty({
-    title: '',
     default: 0,
+    description: "スケジュールID",
     example: 1655899200,
-    description: 'スケジュールID',
+    title: "",
   })
   @IsInt()
   start_time: number;
@@ -94,16 +85,16 @@ export class PaginatedRequestDtoForWave extends PaginatedRequestDto {
 
 export class PaginatedRequestDtoForSchedule extends PaginatedRequestDto {
   @ApiProperty({
-    title: 'include_futures',
     default: false,
-    description: '未リリースのデータを含むかどうか',
+    description: "未リリースのデータを含むかどうか",
+    title: "include_futures",
   })
   @Expose()
   @Transform((params) => {
     if (params.value === undefined) {
       return undefined;
     }
-    return params.value === 'true';
+    return params.value === "true";
   })
   @IsOptional()
   @IsBoolean()
@@ -112,25 +103,25 @@ export class PaginatedRequestDtoForSchedule extends PaginatedRequestDto {
 
 export class PaginatedRequestDtoForResult extends PaginatedRequestDto {
   @ApiPropertyOptional({
-    title: '',
     default: false,
-    description: '詳細データを含むかどうか',
+    description: "詳細データを含むかどうか",
+    title: "",
   })
   @Expose()
   @Transform((params) => {
     if (params.value === undefined) {
       return false;
     }
-    return params.value === 'true';
+    return params.value === "true";
   })
   @IsOptional()
   @IsBoolean()
   readonly include_details: boolean;
 
   @ApiPropertyOptional({
-    title: '',
+    description: "スケジュールID",
+    title: "",
     type: Number,
-    description: 'スケジュールID',
   })
   @Expose()
   @Transform((params) => {
@@ -144,8 +135,8 @@ export class PaginatedRequestDtoForResult extends PaginatedRequestDto {
   readonly start_time?: Date;
 
   @ApiPropertyOptional({
-    title: '',
-    description: 'プレイヤーID',
+    description: "プレイヤーID",
+    title: "",
   })
   @Expose()
   @Transform((params) => {
@@ -159,38 +150,38 @@ export class PaginatedRequestDtoForResult extends PaginatedRequestDto {
   readonly nsaid?: string;
 
   @ApiPropertyOptional({
-    title: '',
-    description: 'クリアしたリザルトのみ',
+    description: "クリアしたリザルトのみ",
+    title: "",
   })
   @Expose()
   @Transform((params) => {
     if (params.value === undefined) {
       return undefined;
     }
-    return params.value === 'true';
+    return params.value === "true";
   })
   @IsOptional()
   @IsBoolean()
   readonly is_clear?: boolean;
 
   @ApiPropertyOptional({
-    title: '',
-    description: '夜イベントを含まないかどうか',
+    description: "夜イベントを含まないかどうか",
+    title: "",
   })
   @Expose()
   @Transform((params) => {
     if (params.value === undefined) {
       return undefined;
     }
-    return params.value === 'true';
+    return params.value === "true";
   })
   @IsOptional()
   @IsBoolean()
   readonly night_less?: boolean;
 
   @ApiPropertyOptional({
-    title: '',
-    description: '最小納品金イクラ数',
+    description: "最小納品金イクラ数",
+    title: "",
   })
   @Expose()
   @Transform((params) => {
@@ -205,8 +196,8 @@ export class PaginatedRequestDtoForResult extends PaginatedRequestDto {
   readonly golden_ikura_num?: number;
 
   @ApiPropertyOptional({
-    title: '',
-    description: '最小取得赤イクラ数',
+    description: "最小取得赤イクラ数",
+    title: "",
   })
   @Expose()
   @Transform((params) => {
@@ -222,21 +213,19 @@ export class PaginatedRequestDtoForResult extends PaginatedRequestDto {
 }
 
 export class PaginatedDto<T> {
-  @ApiProperty({ type: 'integer', description: '総数' })
+  @ApiProperty({ description: "総数", type: "integer" })
   total: number;
 
-  @ApiProperty({ type: 'integer', description: '上限数' })
+  @ApiProperty({ description: "上限数", type: "integer" })
   limit: number;
 
-  @ApiProperty({ type: 'integer', description: 'オフセット' })
+  @ApiProperty({ description: "オフセット", type: "integer" })
   offset: number;
 
   results: T[];
 }
 
-export const ApiOkResponsePaginated = <DataDto extends Type<unknown>>({
-  type: DataDto,
-}) =>
+export const ApiOkResponsePaginated = <DataDto extends Type<unknown>>({ type: DataDto }) =>
   applyDecorators(
     ApiExtraModels(PaginatedDto, DataDto),
     ApiOkResponse({
@@ -246,12 +235,12 @@ export const ApiOkResponsePaginated = <DataDto extends Type<unknown>>({
           {
             properties: {
               results: {
-                type: 'array',
                 items: { $ref: getSchemaPath(DataDto) },
+                type: "array",
               },
             },
           },
         ],
       },
-    })
+    }),
   );

@@ -1,15 +1,15 @@
-import { BadRequestException, ConsoleLogger } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { BadRequestException } from "@nestjs/common";
+import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
+import { IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class IntegerId {
   @ApiProperty()
   @IsOptional()
   @IsInt()
   @Transform((param) => {
-    const rawValue: string = Buffer.from(param.value, 'base64').toString();
-    const re: RegExp = new RegExp('([0-9]*)$');
+    const rawValue: string = Buffer.from(param.value, "base64").toString();
+    const re = new RegExp("([0-9]*)$");
 
     if (!re.test(rawValue)) {
       throw new BadRequestException();
@@ -24,7 +24,7 @@ export class StringId {
   @IsString()
   @IsNotEmpty()
   @Transform((param) => {
-    return Buffer.from(param.value, 'base64').toString();
+    return Buffer.from(param.value, "base64").toString();
   })
   id: string;
 }

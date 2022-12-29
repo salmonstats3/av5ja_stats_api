@@ -53,6 +53,7 @@ paths:
         - name: sort
           required: false
           in: query
+          description: ソートする項目
           schema:
             default: salmonId
             enum:
@@ -64,6 +65,7 @@ paths:
         - name: order
           required: false
           in: query
+          description: 降順または昇順
           schema:
             default: asc
             enum:
@@ -73,39 +75,86 @@ paths:
         - name: member
           required: false
           in: query
+          description: プレイヤーID
           schema:
             nullable: true
             type: string
         - name: nightLess
           required: false
           in: query
+          description: 夜イベントを含むかどうか
           schema:
             nullable: true
             type: boolean
         - name: ikuraNum
           required: false
           in: query
+          description: 最小獲得イクラ数
           schema:
             nullable: true
             type: number
         - name: goldenIkuraNum
           required: false
           in: query
+          description: 最小納品金イクラ数
           schema:
             nullable: true
             type: number
         - name: isClear
           required: false
           in: query
+          description: クリアしたかどうか
           schema:
             nullable: true
             type: boolean
         - name: isBossDefeated
           required: false
           in: query
+          description: オカシラシャケをたおしたかどうか
           schema:
             nullable: true
             type: boolean
+        - name: stageId
+          required: false
+          in: query
+          description: ステージのID
+          schema:
+            nullable: true
+            type: number
+        - name: weaponList
+          required: false
+          in: query
+          description: 支給されるブキ
+          schema:
+            minItems: 0
+            maxItems: 4
+            nullable: true
+            type: array
+            items:
+              type: number
+        - name: rule
+          required: false
+          in: query
+          description: ルール
+          schema:
+            nullable: true
+            default: REGULAR
+            enum:
+              - REGULAR
+              - BIG_RUN
+            type: string
+        - name: mode
+          required: false
+          in: query
+          description: モード
+          schema:
+            nullable: true
+            default: REGULAR
+            enum:
+              - REGULAR
+              - PRIVATE_CUSTOM
+              - PRIVATE_SCENARIO
+            type: string
       responses:
         '200':
           description: ''
@@ -116,9 +165,9 @@ paths:
                   - $ref: '#/components/schemas/PaginatedDto'
                   - properties:
                       results:
-                        type: array
                         items:
                           $ref: '#/components/schemas/CoopResultResponse'
+                        type: array
         '404':
           description: ''
       tags:
@@ -252,9 +301,9 @@ components:
         nameId:
           type: string
         badges:
+          description: バッジのIDが返りますがつけていない場合は`null`が入ります
           maxItems: 3
           minItems: 3
-          description: バッジのIDが返りますがつけていない場合は`null`が入ります
           type: array
           items:
             type: number
@@ -262,9 +311,9 @@ components:
           type: number
           description: ネームプレートのIDが入ります
         textColor:
+          description: RGBAが入ります
           maxItems: 4
           minItems: 4
-          description: RGBAが入ります
           type: array
           items:
             type: number
@@ -274,9 +323,9 @@ components:
         bossKillCountsTotal:
           type: number
         bossKillCounts:
+          description: わからない場合は`null`が入ります
           maxItems: 14
           minItems: 14
-          description: わからない場合は`null`が入ります
           type: array
           items:
             type: number
@@ -305,20 +354,20 @@ components:
           nullable: true
         gradeId:
           type: number
-          nullable: true
-          minimum: 0
           maximum: 8
+          minimum: 0
+          nullable: true
         gradePoint:
           type: number
-          nullable: true
-          minimum: 0
           maximum: 999
+          minimum: 0
+          nullable: true
         smellMeter:
           type: number
-          nullable: true
-          minimum: 0
-          maximum: 5
           description: オカシラメーター
+          maximum: 5
+          minimum: 0
+          nullable: true
         species:
           type: string
           enum:
@@ -395,8 +444,8 @@ components:
           $ref: '#/components/schemas/WaterId'
         goldenIkuraNum:
           type: number
-          nullable: true
           description: EX-WAVEでは常に`null`が入ります
+          nullable: true
         goldenIkuraPopNum:
           type: number
         quotaNum:
@@ -421,8 +470,8 @@ components:
           description: 固有のID
         uuid:
           type: string
-          format: uuid
           description: リザルトに紐付けられたUUID
+          format: uuid
         bossCounts:
           maxItems: 14
           minItems: 14
@@ -454,16 +503,16 @@ components:
           description: WAVE3をクリアすればオカシラ失敗しても`true`が返ります
         failureWave:
           type: number
-          nullable: true
           description: 失敗したWAVEのidが返ります
+          nullable: true
         isBossDefeated:
           type: boolean
-          nullable: true
           description: オカシラシャケを討伐できたかが返ります
+          nullable: true
         bossId:
           type: number
-          nullable: true
           description: オカシラシャケのIDが返ります
+          nullable: true
         schedule:
           $ref: '#/components/schemas/CoopScheduleResponse'
         players:
@@ -907,8 +956,8 @@ components:
         bossKillCountsTotal:
           type: number
         bossKillCounts:
-          minItems: 14
           maxItems: 14
+          minItems: 14
           type: array
           items:
             type: number
@@ -917,8 +966,8 @@ components:
         byname:
           type: string
         specialCounts:
-          minItems: 3
           maxItems: 4
+          minItems: 3
           type: array
           items:
             type: number
@@ -933,8 +982,8 @@ components:
         deadCount:
           type: number
         weaponList:
-          minItems: 3
           maxItems: 4
+          minItems: 3
           type: array
           items:
             type: number
@@ -1016,14 +1065,14 @@ components:
         schedule:
           $ref: '#/components/schemas/CustomCoopScheduleRequest'
         bossKillCounts:
-          minItems: 14
           maxItems: 14
+          minItems: 14
           type: array
           items:
             type: number
         bossCounts:
-          minItems: 14
           maxItems: 14
+          minItems: 14
           type: array
           items:
             type: number

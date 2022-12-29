@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   IsDateString,
   IsEnum,
@@ -10,28 +10,29 @@ import {
   Max,
   Min,
   ValidateNested,
-} from 'class-validator';
-import { BossResult } from './boss.dto';
-import { EnemyResult } from './enemy.dto';
-import { PlayerRequest } from './player.dto';
-import { IntegerId, StringId } from './rawvalue.dto';
-import { WaveResult } from './wave.dto';
-import { Weapon } from './weapon.dto';
+} from "class-validator";
+
+import { BossResult } from "./boss.dto";
+import { EnemyResult } from "./enemy.dto";
+import { PlayerRequest } from "./player.dto";
+import { IntegerId, StringId } from "./rawvalue.dto";
+import { WaveResult } from "./wave.dto";
+import { Weapon } from "./weapon.dto";
 
 export enum Mode {
-  REGULAR = 'REGULAR',
-  PRIVATE_CUSTOM = 'PRIVATE_CUSTOM',
-  PRIVATE_SCENARIO = 'PRIVATE_SCENARIO',
+  REGULAR = "REGULAR",
+  PRIVATE_CUSTOM = "PRIVATE_CUSTOM",
+  PRIVATE_SCENARIO = "PRIVATE_SCENARIO",
 }
 
 export enum Rule {
-  REGULAR = 'REGULAR',
-  BIG_RUN = 'BIG_RUN',
+  REGULAR = "REGULAR",
+  BIG_RUN = "BIG_RUN",
 }
 
 export enum Setting {
-  NORMAL = 'CoopNormalSetting',
-  BIG_RUN = 'CoopBigRunSetting',
+  NORMAL = "CoopNormalSetting",
+  BIG_RUN = "CoopBigRunSetting",
 }
 
 class Scale {
@@ -110,17 +111,17 @@ export class CoopHistoryDetailRequest extends StringId {
   @Type(() => BossResult)
   bossResult: BossResult | null;
 
-  @ApiProperty({ type: [EnemyResult], maxItems: 14, minItems: 14 })
+  @ApiProperty({ maxItems: 14, minItems: 14, type: [EnemyResult] })
   @ValidateNested({ each: true })
   @Type(() => EnemyResult)
   enemyResults: EnemyResult[];
 
-  @ApiProperty({ type: [WaveResult], maxItems: 3, minItems: 3 })
+  @ApiProperty({ maxItems: 3, minItems: 3, type: [WaveResult] })
   @ValidateNested({ each: true })
   @Type(() => WaveResult)
   waveResults: WaveResult[];
 
-  @ApiProperty({ type: [Weapon], maxItems: 3, minItems: 3 })
+  @ApiProperty({ maxItems: 3, minItems: 3, type: [Weapon] })
   @ValidateNested({ each: true })
   @Type(() => Weapon)
   weapons: Weapon[];

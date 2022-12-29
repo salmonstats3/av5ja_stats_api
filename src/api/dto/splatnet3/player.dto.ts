@@ -1,6 +1,5 @@
-import { BadRequestException } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -8,14 +7,14 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsOptional,
   IsString,
   Max,
   Min,
   ValidateNested,
-} from 'class-validator';
-import { IntegerId, StringId } from './rawvalue.dto';
-import { Weapon } from './weapon.dto';
+} from "class-validator";
+
+import { IntegerId, StringId } from "./rawvalue.dto";
+import { Weapon } from "./weapon.dto";
 
 class TextColorRequest {
   @ApiProperty()
@@ -37,8 +36,8 @@ class SpecialRequest {
 }
 
 export enum Species {
-  INKLING = 'INKLING',
-  OCTOLING = 'OCTOLING',
+  INKLING = "INKLING",
+  OCTOLING = "OCTOLING",
 }
 
 class BackgroundRequest extends IntegerId {
@@ -49,7 +48,7 @@ class BackgroundRequest extends IntegerId {
 }
 
 class NamePlateRequest {
-  @ApiProperty({ type: [IntegerId], maxItems: 3, minItems: 3 })
+  @ApiProperty({ maxItems: 3, minItems: 3, type: [IntegerId] })
   @IsArray()
   @ArrayMinSize(3)
   @ArrayMaxSize(3)
@@ -129,7 +128,7 @@ export class PlayerRequest {
   @Min(0)
   rescuedCount: number;
 
-  @ApiProperty({ type: [Weapon], maxItems: 4, minItems: 4 })
+  @ApiProperty({ maxItems: 4, minItems: 4, type: [Weapon] })
   @ValidateNested({ each: true })
   @Type(() => Weapon)
   weapons: Weapon[];

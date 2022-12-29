@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { ArrayMaxSize, IsArray, ValidateNested } from 'class-validator';
-import { CoopResultRequest, CustomCoopResultRequest } from './result.dto';
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
+import { ArrayMaxSize, IsArray, ValidateNested } from "class-validator";
+
+import { CoopResultRequest, CustomCoopResultRequest } from "./result.dto";
 
 export class ResultRequest {
   @ApiProperty({ type: [CoopResultRequest] })
