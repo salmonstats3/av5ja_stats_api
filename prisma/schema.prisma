@@ -37,6 +37,12 @@ model Result {
   playTime             DateTime  @map("play_time")
   // プレイヤーのID配列
   members              String[]
+  // ドウウロコの枚数
+  bronze               Int?
+  // ギンウロコの枚数
+  silver               Int?
+  // キンウロコの枚数
+  gold                 Int?
   // クリアしたかどうか
   isClear              Boolean   @map("is_clear")
   // 失敗したWAVE
@@ -53,7 +59,7 @@ model Result {
   updatedAt            DateTime  @updatedAt()
   // リレーション
   schedule             Schedule? @relation(fields: [scheduleId], references: [id])
-  scheduleId           Int?
+  scheduleId           Int?      @map("schedule_id")
   waves                Wave[]
   players              Player[]
 
@@ -173,7 +179,7 @@ model Wave {
   // 更新日
   updatedAt         DateTime @updatedAt()
   Result            Result?  @relation(fields: [resultId], references: [id])
-  resultId          String?
+  resultId          String?  @map("result_id")
 
   @@map("waves")
 }

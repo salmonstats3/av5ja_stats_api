@@ -10,7 +10,7 @@ import { config } from "dotenv";
 import { dump } from "js-yaml";
 
 import { AppModule } from "./app.module";
-config({ path: ".env.sandbox" });
+config({ path: ".env.local" });
 
 async function build(documents: OpenAPIObject) {
   const build = path.resolve(process.cwd(), "docs");

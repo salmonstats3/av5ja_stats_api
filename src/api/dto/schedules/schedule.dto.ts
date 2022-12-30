@@ -30,3 +30,5 @@ export class CustomCoopScheduleResponse {
   @ApiProperty()
   setting: Setting;
 }
+
+export class CoopScheduleStatsResponse {}
