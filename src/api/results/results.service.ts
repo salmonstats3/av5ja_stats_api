@@ -6,7 +6,7 @@ import { PrismaService } from "src/prisma.service";
 import { PaginatedDto } from "../dto/pagination.dto";
 import { CoopResultFindManyArgsPaginatedRequest, SortKey } from "../dto/request.dto";
 import { CoopResultCreateResponse, CoopResultResponse } from "../dto/response.dto";
-import { Mode, Rule } from "../dto/splatnet3/coop_history_detail.dto";
+import { Mode } from "../dto/splatnet3/coop_history_detail.dto";
 import { CustomCoopHistoryDetailRequest, CustomPlayerRequest } from "../dto/splatnet3/custom.dto";
 import { CustomCoopResultRequest } from "../dto/splatnet3/result.dto";
 import { CustomResultRequest, ResultRequest } from "../dto/splatnet3/results.dto";
@@ -63,7 +63,7 @@ export class ResultsService {
           equals: request.mode ?? Mode.REGULAR,
         },
         rule: {
-          equals: request.rule ?? Rule.REGULAR,
+          equals: request.rule,
         },
         ...(request.stageId === undefined
           ? {}
