@@ -65,12 +65,16 @@ export class ResultsService {
         rule: {
           equals: request.rule ?? Rule.REGULAR,
         },
-        stageId: {
-          equals: request.stageId,
-        },
-        weaponList: {
-          equals: request.weaponList,
-        },
+        ...(request.stageId === undefined
+          ? {}
+          : {
+              equals: request.stageId,
+            }),
+        ...(request.weaponList === undefined
+          ? {}
+          : {
+              equals: request.weaponList,
+            }),
       },
       ...(request.member === undefined
         ? {}
@@ -147,8 +151,10 @@ export class ResultsService {
         bossCounts: result.bossCounts,
         bossId: result.bossId,
         bossKillCounts: result.bossKillCounts,
+        bronze: result.scale.bronze,
         dangerRate: result.dangerRate,
         failureWave: result.failureWave,
+        gold: result.scale.gold,
         goldenIkuraAssistNum: result.goldenIkuraAssistNum,
         goldenIkuraNum: result.goldenIkuraNum,
         id: result.id,
@@ -215,6 +221,7 @@ export class ResultsService {
             },
           },
         },
+        silver: result.scale.silver,
         uuid: result.uuid,
         waves: {
           createMany: {
@@ -243,15 +250,18 @@ export class ResultsService {
   private queryV2(result: CustomCoopResultRequest): Prisma.ResultUpsertArgs {
     const members: string[] = [result.myResult]
       .concat(result.otherResults)
-      .map((player) => player.pid);
+      .map((player) => player.pid)
+      .sort();
     const nightLess: boolean = result.waveDetails.every((wave) => wave.eventType == 0);
     return {
       create: {
         bossCounts: result.bossCounts,
         bossId: result.jobResult.bossId,
         bossKillCounts: result.bossKillCounts,
+        bronze: result.scale[0],
         dangerRate: result.dangerRate,
         failureWave: result.jobResult.failureWave,
+        gold: result.scale[2],
         goldenIkuraAssistNum: result.goldenIkuraAssistNum,
         goldenIkuraNum: result.goldenIkuraNum,
         id: result.id,
@@ -268,7 +278,7 @@ export class ResultsService {
                 badges: player.nameplate.badges.map((badge) => badge ?? -1),
                 bossKillCounts: player.isMyself
                   ? player.bossKillCounts
-                  : player.bossKillCounts.map((count) => -1),
+                  : player.bossKillCounts.map(() => -1),
                 bossKillCountsTotal: player.bossKillCountsTotal,
                 byname: player.byname,
                 deadCount: player.deadCount,
@@ -320,6 +330,7 @@ export class ResultsService {
             },
           },
         },
+        silver: result.scale[1],
         uuid: result.uuid,
         waves: {
           createMany: {

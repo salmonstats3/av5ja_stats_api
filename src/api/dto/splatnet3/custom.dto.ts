@@ -146,7 +146,7 @@ export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
       .map((player) => player.goldenAssistCount)
       .reduce((a, b) => a + b);
     this.ikuraNum = this.players.map((player) => player.deliverCount).reduce((a, b) => a + b);
-    this.members = this.players.map((player) => player.pid);
+    this.members = this.players.map((player) => player.pid).sort();
     this.playedTime = result.playedTime;
     this.dangerRate = result.dangerRate;
     this.bossCounts = enemyResults.map((enemy) => enemy.popCount);

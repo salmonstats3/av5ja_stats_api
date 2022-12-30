@@ -11,7 +11,7 @@ import {
 import { PaginatedDto } from "../dto/pagination.dto";
 import { CustomCoopScheduleResponse } from "../dto/schedules/schedule.dto";
 
-import { SchedulesService } from "./schedules.service";
+import { ScheduleResult, SchedulesService } from "./schedules.service";
 
 @Controller("schedules")
 @ApiExtraModels(PaginatedDto)
@@ -39,7 +39,7 @@ export class SchedulesController {
   @ApiParam({ name: "schedule_id", type: "integer" })
   @ApiNotFoundResponse()
   @ApiOkResponse({ type: [CustomCoopScheduleResponse] })
-  find(@Param("schedule_id") scheduleId: number) {
+  find(@Param("schedule_id") scheduleId: number): Promise<ScheduleResult> {
     return this.service.find(scheduleId);
   }
 }
