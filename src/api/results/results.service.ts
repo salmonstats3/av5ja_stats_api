@@ -24,7 +24,7 @@ export class ResultsService {
       return this.prisma.result.upsert(this.queryV1(data));
     });
     return (await this.prisma.$transaction([...query])).map(
-      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId),
+      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId, result.id),
     );
   }
 
@@ -34,7 +34,7 @@ export class ResultsService {
       return this.prisma.result.upsert(this.queryV2(result));
     });
     return (await this.prisma.$transaction([...query])).map(
-      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId),
+      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId, result.id),
     );
   }
 
