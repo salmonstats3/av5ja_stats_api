@@ -909,11 +909,11 @@ components:
       type: object
       properties:
         startTime:
-          format: date-time
           type: string
+          nullable: true
         endTime:
-          format: date-time
           type: string
+          nullable: true
         rule:
           type: string
           enum:

@@ -16,7 +16,7 @@ export class ResultRequest {
 export class CustomResultRequest {
   @ApiProperty({ type: [CustomCoopResultRequest] })
   @IsArray()
-  @ArrayMaxSize(50)
+  @ArrayMaxSize(200)
   @ValidateNested({ each: true })
   @Type(() => CustomCoopResultRequest)
   results: CustomCoopResultRequest[];

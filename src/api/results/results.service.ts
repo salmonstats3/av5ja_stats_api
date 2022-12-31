@@ -341,20 +341,20 @@ export class ResultsService {
         schedule: {
           connectOrCreate: {
             create: {
-              endTime: result.schedule.startTime,
+              endTime: result.schedule.endTime ?? "1970-01-01T00:00:00Z",
               mode: result.schedule.mode,
               rule: result.schedule.rule,
               stageId: result.schedule.stageId,
-              startTime: result.schedule.endTime,
+              startTime: result.schedule.startTime ?? "1970-01-01T00:00:00Z",
               weaponList: result.schedule.weaponList,
             },
             where: {
               startTime_endTime_stageId_weaponList_mode_rule: {
-                endTime: result.schedule.startTime,
+                endTime: result.schedule.endTime ?? "1970-01-01T00:00:00Z",
                 mode: result.schedule.mode,
                 rule: result.schedule.rule,
                 stageId: result.schedule.stageId,
-                startTime: result.schedule.endTime,
+                startTime: result.schedule.startTime ?? "1970-01-01T00:00:00Z",
                 weaponList: result.schedule.weaponList,
               },
             },

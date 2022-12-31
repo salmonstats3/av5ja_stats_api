@@ -16,7 +16,7 @@ import { AppService } from "./app.service";
       }),
     }),
     ConfigModule.forRoot({
-      envFilePath: [".env"],
+      envFilePath: [".env.prod"],
     }),
   ],
   providers: [
