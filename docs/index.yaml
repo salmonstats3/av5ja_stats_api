@@ -911,6 +911,9 @@ components:
         startTime:
           format: date-time
           type: string
+        endTime:
+          format: date-time
+          type: string
         rule:
           type: string
           enum:
@@ -932,6 +935,7 @@ components:
             type: number
       required:
         - startTime
+        - endTime
         - rule
         - mode
         - stageId
