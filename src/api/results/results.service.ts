@@ -151,10 +151,10 @@ export class ResultsService {
         bossCounts: result.bossCounts,
         bossId: result.bossId,
         bossKillCounts: result.bossKillCounts,
-        bronze: result.scale.bronze,
+        bronze: result.scale?.bronze,
         dangerRate: result.dangerRate,
         failureWave: result.failureWave,
-        gold: result.scale.gold,
+        gold: result.scale?.gold,
         goldenIkuraAssistNum: result.goldenIkuraAssistNum,
         goldenIkuraNum: result.goldenIkuraNum,
         id: result.id,
@@ -221,7 +221,7 @@ export class ResultsService {
             },
           },
         },
-        silver: result.scale.silver,
+        silver: result.scale?.silver,
         uuid: result.uuid,
         waves: {
           createMany: {
