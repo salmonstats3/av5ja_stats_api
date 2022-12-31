@@ -17,15 +17,20 @@ export class ResultsService {
 
   // イカリング3リザルト書き込み
   async upsertManyV1(request: ResultRequest): Promise<CoopResultCreateResponse[]> {
-    const query: Prisma.Prisma__ResultClient<Result, never>[] = request.results.map((result) => {
-      const data: CustomCoopHistoryDetailRequest = new CustomCoopHistoryDetailRequest(
-        result.data.coopHistoryDetail,
-      );
-      return this.prisma.result.upsert(this.queryV1(data));
-    });
-    return (await this.prisma.$transaction([...query])).map(
-      (result) => new CoopResultCreateResponse(result.uuid, result.salmonId, result.id),
+    const results: CoopResultCreateResponse[] = await Promise.all(
+      request.results.map(async (result) => {
+        const data: CustomCoopHistoryDetailRequest = new CustomCoopHistoryDetailRequest(
+          result.data.coopHistoryDetail,
+        );
+        try {
+          const schedule: Schedule = await this.findFirst(data.playedTime);
+          return await this.prisma.result.upsert(this.queryV1(data, schedule));
+        } catch {
+          throw new NotFoundException({ description: "Schedule Not Found.", statusCode: 404 });
+        }
+      }),
     );
+    return results;
   }
 
   // Salmonia3+リザルト書き込み
@@ -159,7 +164,10 @@ export class ResultsService {
   }
 
   // 書き込みのためのクエリ
-  private queryV1(result: CustomCoopHistoryDetailRequest): Prisma.ResultUpsertArgs {
+  private queryV1(
+    result: CustomCoopHistoryDetailRequest,
+    schedule: Schedule,
+  ): Prisma.ResultUpsertArgs {
     return {
       create: {
         bossCounts: result.bossCounts,
@@ -220,20 +228,20 @@ export class ResultsService {
         schedule: {
           connectOrCreate: {
             create: {
-              endTime: undefined,
+              endTime: schedule.endTime,
               mode: result.mode,
               rule: result.rule,
               stageId: result.stageId,
-              startTime: undefined,
+              startTime: schedule.startTime,
               weaponList: result.weaponList,
             },
             where: {
               startTime_endTime_stageId_weaponList_mode_rule: {
-                endTime: undefined,
+                endTime: schedule.endTime,
                 mode: result.mode,
                 rule: result.rule,
                 stageId: result.stageId,
-                startTime: undefined,
+                startTime: schedule.startTime,
                 weaponList: result.weaponList,
               },
             },
