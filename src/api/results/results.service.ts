@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Prisma, Result, Schedule } from "@prisma/client";
 import { plainToClass } from "class-transformer";
 import { PrismaService } from "src/prisma.service";
 
@@ -17,7 +17,7 @@ export class ResultsService {
 
   // イカリング3リザルト書き込み
   async upsertManyV1(request: ResultRequest): Promise<CoopResultCreateResponse[]> {
-    const query = request.results.map((result) => {
+    const query: Prisma.Prisma__ResultClient<Result, never>[] = request.results.map((result) => {
       const data: CustomCoopHistoryDetailRequest = new CustomCoopHistoryDetailRequest(
         result.data.coopHistoryDetail,
       );
@@ -30,7 +30,7 @@ export class ResultsService {
 
   // Salmonia3+リザルト書き込み
   async upsertManyV2(request: CustomResultRequest): Promise<CoopResultCreateResponse[]> {
-    const query = request.results.map((result) => {
+    const query: Prisma.Prisma__ResultClient<Result, never>[] = request.results.map((result) => {
       return this.prisma.result.upsert(this.queryV2(result));
     });
     return (await this.prisma.$transaction([...query])).map(
@@ -144,6 +144,20 @@ export class ResultsService {
     }
   }
 
+  // リザルトのスケジュールを取得
+  private async findFirst(playTime: string): Promise<Schedule> {
+    return await this.prisma.schedule.findFirstOrThrow({
+      where: {
+        endTime: {
+          gte: playTime,
+        },
+        startTime: {
+          lte: playTime,
+        },
+      },
+    });
+  }
+
   // 書き込みのためのクエリ
   private queryV1(result: CustomCoopHistoryDetailRequest): Prisma.ResultUpsertArgs {
     return {
@@ -212,10 +226,12 @@ export class ResultsService {
               weaponList: result.weaponList,
             },
             where: {
-              stageId_weaponList_mode_rule: {
+              startTime_endTime_stageId_weaponList_mode_rule: {
+                endTime: undefined,
                 mode: result.mode,
                 rule: result.rule,
                 stageId: result.stageId,
+                startTime: undefined,
                 weaponList: result.weaponList,
               },
             },
@@ -321,10 +337,12 @@ export class ResultsService {
               weaponList: result.schedule.weaponList,
             },
             where: {
-              stageId_weaponList_mode_rule: {
+              startTime_endTime_stageId_weaponList_mode_rule: {
+                endTime: undefined,
                 mode: result.schedule.mode,
                 rule: result.schedule.rule,
                 stageId: result.schedule.stageId,
+                startTime: undefined,
                 weaponList: result.schedule.weaponList,
               },
             },
