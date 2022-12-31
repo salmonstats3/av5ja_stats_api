@@ -884,12 +884,18 @@ components:
       properties:
         uuid:
           type: string
+          description: 固有っぽいのに固有じゃないID
           format: uuid
         salmonId:
           type: number
+          description: Salmon Stats+のID
+        id:
+          type: string
+          description: 多分固有のID
       required:
         - uuid
         - salmonId
+        - id
     CoopResultsCreateResponse:
       type: object
       properties:

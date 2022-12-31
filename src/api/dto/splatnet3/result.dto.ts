@@ -335,3 +335,117 @@ export class CustomCoopResultRequest {
   @Max(5)
   smellMeter: number | null;
 }
+
+export class RealmCoopResultRequest {
+  @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
+  @ArrayMinSize(14)
+  @ArrayMaxSize(14)
+  @Transform((param) => param.value.slice(0, -1))
+  bossKillCounts: number[];
+
+  @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
+  @ArrayMinSize(14)
+  @ArrayMaxSize(14)
+  @Transform((param) => param.value.slice(0, -1))
+  bossCounts: number[];
+
+  @ApiProperty()
+  @IsInt()
+  ikuraNum: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(3.25)
+  jobRate: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  jobBonus: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  jobScore: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  gradeId: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  gradePoint: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  kumaPoint: number | null;
+
+  @ApiProperty({ type: [CustomCoopPlayerRequest] })
+  @ValidateNested({ each: true })
+  @Type(() => CustomCoopPlayerRequest)
+  otherResults: CustomCoopPlayerRequest[];
+
+  @ApiProperty({ type: CustomCoopPlayerRequest })
+  @ValidateNested()
+  @Type(() => CustomCoopPlayerRequest)
+  myResult: CustomCoopPlayerRequest;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty({ format: "uuid" })
+  @IsString()
+  @IsNotEmpty()
+  uuid: string;
+
+  @ApiProperty({ type: [CustomCoopWaveRequest] })
+  @ValidateNested({ each: true })
+  @Type(() => CustomCoopWaveRequest)
+  waveDetails: CustomCoopWaveRequest[];
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  goldenIkuraNum: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @Min(0)
+  @Max(3.33)
+  dangerRate: number;
+
+  @ApiProperty({ type: Date })
+  @IsDateString()
+  playTime: string;
+
+  @ApiProperty()
+  @IsInt()
+  goldenIkuraAssistNum: number;
+
+  @ApiProperty({ type: [Number] })
+  @IsArray()
+  @ArrayMinSize(3)
+  @ArrayMaxSize(3)
+  scale: (number | null)[];
+
+  @ApiProperty({ type: CustomCoopJobResultRequest })
+  @ValidateNested()
+  @Type(() => CustomCoopJobResultRequest)
+  jobResult: CustomCoopJobResultRequest;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(5)
+  smellMeter: number | null;
+}

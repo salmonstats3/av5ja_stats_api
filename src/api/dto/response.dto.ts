@@ -5,15 +5,19 @@ import { Mode, Rule } from "./splatnet3/coop_history_detail.dto";
 import { Species } from "./splatnet3/player.dto";
 
 export class CoopResultCreateResponse {
-  @ApiProperty({ format: "uuid" })
+  @ApiProperty({ description: "固有っぽいのに固有じゃないID", format: "uuid" })
   uuid: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: "Salmon Stats+のID" })
   salmonId: number;
 
-  constructor(uuid: string, salmonId: number) {
+  @ApiProperty({ description: "多分固有のID" })
+  id: string;
+
+  constructor(uuid: string, salmonId: number, id: string) {
     this.uuid = uuid;
     this.salmonId = salmonId;
+    this.id = id;
   }
 }
 
