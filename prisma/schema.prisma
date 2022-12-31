@@ -68,25 +68,29 @@ model Result {
 
 model Schedule {
   // ユニークID
-  id         Int      @id @default(autoincrement()) @map("schedule_id")
+  id         Int       @id @default(autoincrement()) @map("schedule_id")
   // ステージID
-  stageId    Int      @map("stage_id")
+  stageId    Int       @map("stage_id")
   // レアブキID
-  rareWeapon Int?     @map("rare_weapon")
+  rareWeapon Int?      @map("rare_weapon")
   // 支給ブキID
-  weaponList Int[]    @map("weapon_list")
+  weaponList Int[]     @map("weapon_list")
   // モード
-  mode       String   @default("REGULAR")
+  mode       String    @default("REGULAR")
   // ルール
-  rule       String   @default("REGULAR")
+  rule       String    @default("REGULAR")
   // 作成日
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
   // 更新日
-  updatedAt  DateTime @updatedAt()
+  updatedAt  DateTime  @updatedAt()
+  // 開始時刻
+  startTime  DateTime?
+  // 終了時刻
+  endTime    DateTime?
 
   results Result[]
 
-  @@unique([stageId, weaponList, mode, rule])
+  @@unique([startTime, endTime, stageId, weaponList, mode, rule])
   @@map("schedules")
 }
 

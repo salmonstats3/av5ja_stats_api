@@ -5,6 +5,8 @@ import { Mode, Rule } from "./coop_history_detail.dto";
 export class CustomCoopScheduleRequest {
   @ApiProperty({ type: Date })
   startTime: string;
+  @ApiProperty({ type: Date })
+  endTime: string;
   @ApiProperty({ enum: Rule })
   rule: Rule;
   @ApiProperty({ enum: Mode })

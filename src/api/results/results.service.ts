@@ -220,9 +220,11 @@ export class ResultsService {
         schedule: {
           connectOrCreate: {
             create: {
+              endTime: undefined,
               mode: result.mode,
               rule: result.rule,
               stageId: result.stageId,
+              startTime: undefined,
               weaponList: result.weaponList,
             },
             where: {
@@ -331,18 +333,20 @@ export class ResultsService {
         schedule: {
           connectOrCreate: {
             create: {
+              endTime: result.schedule.startTime,
               mode: result.schedule.mode,
               rule: result.schedule.rule,
               stageId: result.schedule.stageId,
+              startTime: result.schedule.endTime,
               weaponList: result.schedule.weaponList,
             },
             where: {
               startTime_endTime_stageId_weaponList_mode_rule: {
-                endTime: undefined,
+                endTime: result.schedule.startTime,
                 mode: result.schedule.mode,
                 rule: result.schedule.rule,
                 stageId: result.schedule.stageId,
-                startTime: undefined,
+                startTime: result.schedule.endTime,
                 weaponList: result.schedule.weaponList,
               },
             },
