@@ -57,9 +57,10 @@ model Result {
   createdAt            DateTime  @default(now())
   // 更新日
   updatedAt            DateTime  @updatedAt()
+  // スケジュールID
+  scheduleId           Int?      @map("schedule_id")
   // リレーション
   schedule             Schedule? @relation(fields: [scheduleId], references: [id])
-  scheduleId           Int?      @map("schedule_id")
   waves                Wave[]
   players              Player[]
 
