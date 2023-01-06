@@ -1,7 +1,9 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { Schedule } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import { plainToClass } from "class-transformer";
+import dayjs from "dayjs";
 import { firstValueFrom } from "rxjs";
 import { PrismaService } from "src/prisma.service";
 
@@ -117,73 +119,91 @@ export class SchedulesService {
   }
 
   // 指定されたスケジュールの統計取得
-  async find(scheduleId: number): Promise<ScheduleResult> {
-    const enemyResult: EnemyResult[] = await this.queryBuilderEnemyResult(scheduleId);
-    const failureResult: FailureResult[] = await this.queryBuilderFailureWave(scheduleId);
-    const gradeResult: GradeResult[] = await this.queryBuilderGradePoint(scheduleId);
-    const waveResult: WaveResult[] = await this.queryBuilderWaveResult(scheduleId);
-    const jobResult: JobResult = await this.queryBuilderJobResult(scheduleId);
+  async find(timestamp: number): Promise<ScheduleResult> {
+    // スケジュールが存在しなければ404エラーを返す
+    try {
+      const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
+        where: {
+          startTime: dayjs(timestamp).toDate(),
+        },
+      });
+      const enemyResult: EnemyResult[] = await this.queryBuilderEnemyResult(schedule.startTime);
+      const failureResult: FailureResult[] = await this.queryBuilderFailureWave(schedule.startTime);
+      const gradeResult: GradeResult[] = await this.queryBuilderGradePoint(schedule.startTime);
+      const waveResult: WaveResult[] = await this.queryBuilderWaveResult(schedule.startTime);
+      const jobResult: JobResult = await this.queryBuilderJobResult(schedule.startTime);
 
-    const response: ScheduleResult = new ScheduleResult();
-    response.jobResults = jobResult;
-    response.enemyResults = enemyResult;
-    response.failureResults = failureResult;
-    response.gradeResults = gradeResult;
-    response.waveResults = waveResult;
-    return response;
+      const response: ScheduleResult = new ScheduleResult();
+      response.jobResults = jobResult;
+      response.enemyResults = enemyResult;
+      response.failureResults = failureResult;
+      response.gradeResults = gradeResult;
+      response.waveResults = waveResult;
+      return response;
+    } catch {
+      throw new NotFoundException();
+    }
   }
 
-  private async queryBuilderWaveResult(scheduleId: number): Promise<WaveResult[]> {
+  private async queryBuilderWaveResult(startTime: Date): Promise<WaveResult[]> {
     const results = await this.prisma.$queryRaw<WaveResult[]>`
     WITH results AS (
       SELECT
-      MAX(waves.golden_ikura_num)::INT AS golden_ikura_num,
-      water_level,
-      event_type,
-      COUNT(*)::INT
+        MAX(waves.golden_ikura_num)::INT AS golden_ikura_num,
+        water_level,
+        event_type,
+        COUNT(*)::INT
       FROM
-      waves
+        waves
       INNER JOIN
-      results
+        results
       ON
-      waves.result_id = results.id
+        waves.result_id = results.id
+      INNER JOIN
+        schedules
+      ON
+        results.schedule_id = schedules.schedule_id
       WHERE
-      results.schedule_id = ${scheduleId}
+        schedules.start_time = ${startTime}
       GROUP BY
-      event_type,
-      water_level
+        event_type,
+        water_level
       ORDER BY
-      water_level,
-      event_type
-    )   
+        water_level,
+        event_type
+    )
     SELECT
-    *   
+    *
     FROM
     results;
   `;
     return results.map((result) => plainToClass(WaveResult, camelcaseKeys(result)));
   }
 
-  private async queryBuilderGradePoint(scheduleId: number): Promise<GradeResult[]> {
+  private async queryBuilderGradePoint(startTime: Date): Promise<GradeResult[]> {
     const result: GradeResult[] = await this.prisma.$queryRaw<GradeResult[]>`
     WITH results AS (
       SELECT
-      pid,
-	    MIN(name) AS name,
-	    MAX(grade_point) AS grade_point,
-	    MAX(grade_id) AS grade_id
+        pid,
+	      MIN(name) AS name,
+	      MAX(grade_point) AS grade_point,
+	      MAX(grade_id) AS grade_id
 	    FROM
-	    players
-	    INNER JOIN
-	    results
-	    ON
-	    players.result_id = results.id
+	      players
+      INNER JOIN
+        results 
+      ON
+        results.id = players.result_id
+      INNER JOIN
+        schedules
+      ON
+        results.schedule_id = schedules.schedule_id
 	    WHERE
-	    schedule_id = ${scheduleId}
+	      schedules.start_time = ${startTime}
 	    AND
-	    grade_id IS NOT NULL
+	      grade_id IS NOT NULL
 	    GROUP BY
-	    pid
+	      pid
     )
     SELECT
     RANK() OVER(ORDER BY grade_id DESC, grade_point DESC)::INT,
@@ -195,7 +215,7 @@ export class SchedulesService {
     return result;
   }
 
-  private async queryBuilderFailureWave(scheduleId: number): Promise<FailureResult[]> {
+  private async queryBuilderFailureWave(startTime: Date): Promise<FailureResult[]> {
     const result: TmpFailureWave = (
       await this.prisma.$queryRaw<TmpFailureWave>`
     WITH results AS (
@@ -211,8 +231,12 @@ export class SchedulesService {
       COUNT(*)::INT count
       FROM
       results
-      WHERE
-      results.schedule_id= ${scheduleId}
+      INNER JOIN
+        schedules
+      ON
+        results.schedule_id = schedules.schedule_id
+      WHERE 
+        schedules.start_time = ${startTime}
     )
     SELECT
     *
@@ -252,7 +276,7 @@ export class SchedulesService {
     ];
   }
 
-  private async queryBuilderEnemyResult(scheduleId: number): Promise<EnemyResult[]> {
+  private async queryBuilderEnemyResult(startTime: Date): Promise<EnemyResult[]> {
     const result = (
       await this.prisma.$queryRaw<TmpEnemyResult[]>`
       WITH results AS (
@@ -287,8 +311,12 @@ export class SchedulesService {
           SUM(boss_kill_counts[14])::INT as boss_kill_counts_20
         FROM 
           results 
+        INNER JOIN
+          schedules
+        ON
+          results.schedule_id = schedules.schedule_id
         WHERE 
-          results.schedule_id = ${scheduleId}
+          schedules.start_time = ${startTime}
       ) 
       SELECT 
         * 
@@ -371,21 +399,25 @@ export class SchedulesService {
     ];
   }
 
-  private async queryBuilderJobResult(scheduleId: number): Promise<JobResult> {
+  private async queryBuilderJobResult(startTime: Date): Promise<JobResult> {
     const result: JobResult = await this.prisma.$queryRaw<JobResult>`
     WITH results AS (
       SELECT
-      COUNT(*)::INT shifts_worked,
-      COUNT(is_clear = true OR null)::Float / COUNT(*)::Float clear_ratio,
-      SUM(results.ikura_num)::INT ikura_num,
-      SUM(results.golden_ikura_num)::INT golden_ikura_num,
-      SUM(results.golden_ikura_assist_num)::INT golden_ikura_assist_num,
-      COUNT(is_boss_defeated = true OR null)::INT boss_defeated_num,
-      COUNT(is_boss_defeated IS NOT NULL OR null)::INT boss_appear_num
+        COUNT(*)::INT shifts_worked,
+        COUNT(is_clear = true OR null)::Float / COUNT(*)::Float clear_ratio,
+        SUM(results.ikura_num)::INT ikura_num,
+        SUM(results.golden_ikura_num)::INT golden_ikura_num,
+        SUM(results.golden_ikura_assist_num)::INT golden_ikura_assist_num,
+        COUNT(is_boss_defeated = true OR null)::INT boss_defeated_num,
+        COUNT(is_boss_defeated IS NOT NULL OR null)::INT boss_appear_num
       FROM
-      results
+        results
+      INNER JOIN
+        schedules
+      ON
+        results.schedule_id = schedules.schedule_id
       WHERE
-      schedule_id = ${scheduleId}
+        schedules.start_time = ${startTime}
     )
     SELECT
     *
