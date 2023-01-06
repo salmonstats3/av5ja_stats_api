@@ -96,9 +96,9 @@ model Schedule {
   // 更新日
   updatedAt  DateTime @updatedAt()
   // 開始時刻
-  startTime  DateTime @default(dbgenerated("('1970-01-01T00:00:00Z')")) @db.Timestamp(0)
+  startTime  DateTime @default(dbgenerated("('1970-01-01T00:00:00Z')")) @map("start_time") @db.Timestamp(0)
   // 終了時刻
-  endTime    DateTime @default(dbgenerated("('1970-01-01T00:00:00Z')")) @db.Timestamp(0)
+  endTime    DateTime @default(dbgenerated("('1970-01-01T00:00:00Z')")) @map("end_time") @db.Timestamp(0)
 
   results Result[]
 
