@@ -1,6 +1,6 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Schedule } from "@prisma/client";
+import { Prisma, Schedule } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import { plainToClass } from "class-transformer";
 import dayjs from "dayjs";
@@ -114,6 +114,29 @@ export class SchedulesService {
     const url = "https://asia-northeast1-tkgstratorwork.cloudfunctions.net/api/schedules/all";
     const response = await firstValueFrom(this.axios.get(url));
     return response.data.map((schedule) =>
+      plainToClass(CustomCoopScheduleResponse, camelcaseKeys(schedule)),
+    );
+  }
+
+  // スケジュール一括登録
+  async create(): Promise<CustomCoopScheduleResponse[]> {
+    const schedules: CustomCoopScheduleResponse[] = await this.findAll();
+    const query: Prisma.ScheduleCreateInput[] = schedules.map((schedule) => {
+      return {
+        endTime: schedule.endTime,
+        mode: schedule.mode,
+        rareWeapon: schedule.rareWeapon,
+        rule: schedule.rule,
+        stageId: schedule.stageId,
+        startTime: schedule.startTime,
+        weaponList: schedule.weaponList,
+      };
+    });
+    await this.prisma.schedule.createMany({
+      data: query,
+      skipDuplicates: true,
+    });
+    return schedules.map((schedule) =>
       plainToClass(CustomCoopScheduleResponse, camelcaseKeys(schedule)),
     );
   }
