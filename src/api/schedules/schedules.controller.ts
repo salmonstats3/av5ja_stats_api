@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Param, Put } from "@nestjs/common";
 import {
   ApiExtraModels,
   ApiNotFoundResponse,
@@ -28,6 +28,18 @@ export class SchedulesController {
   @ApiOkResponse({ type: [CustomCoopScheduleResponse] })
   findAll(): Promise<CustomCoopScheduleResponse[]> {
     return this.service.findAll();
+  }
+
+  @Put("")
+  @ApiTags("スケジュール")
+  @ApiOperation({
+    description: "スケジュールを一括で登録します",
+    operationId: "一括登録",
+  })
+  @ApiNotFoundResponse()
+  @ApiOkResponse({ type: [CustomCoopScheduleResponse] })
+  create(): Promise<CustomCoopScheduleResponse[]> {
+    return this.service.create();
   }
 
   @Get(":schedule_id")

@@ -236,6 +236,24 @@ paths:
           description: ''
       tags:
         - スケジュール
+    put:
+      operationId: 一括登録
+      summary: ''
+      description: スケジュールを一括で登録します
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomCoopScheduleResponse'
+        '404':
+          description: ''
+      tags:
+        - スケジュール
   /v1/schedules/{schedule_id}:
     get:
       operationId: 統計取得
