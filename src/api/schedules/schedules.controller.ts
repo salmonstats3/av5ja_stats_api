@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Put } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Put } from "@nestjs/common";
 import {
   ApiExtraModels,
   ApiNotFoundResponse,
@@ -51,7 +51,7 @@ export class SchedulesController {
   @ApiParam({ name: "schedule_id", type: "integer" })
   @ApiNotFoundResponse()
   @ApiOkResponse({ type: [CustomCoopScheduleResponse] })
-  find(@Param("schedule_id") scheduleId: number): Promise<ScheduleResult> {
+  find(@Param("schedule_id", ParseIntPipe) scheduleId: number): Promise<ScheduleResult> {
     return this.service.find(scheduleId);
   }
 }
