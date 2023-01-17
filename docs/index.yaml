@@ -263,6 +263,7 @@ paths:
         - name: schedule_id
           required: true
           in: path
+          description: UNIXTIMESTAMP(UTC準拠)
           schema:
             type: integer
       responses:
