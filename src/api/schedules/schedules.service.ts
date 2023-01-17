@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConsoleLogger, Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma, Schedule } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import { plainToClass } from "class-transformer";
@@ -145,16 +145,24 @@ export class SchedulesService {
   async find(timestamp: number): Promise<ScheduleResult> {
     // スケジュールが存在しなければ404エラーを返す
     try {
+      const startTime: Date = dayjs.unix(timestamp).toDate();
+      console.log(timestamp, startTime);
       const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
         where: {
-          startTime: dayjs(timestamp).toDate(),
+          startTime: dayjs.unix(timestamp).toDate(),
         },
       });
+      console.log(schedule);
       const enemyResult: EnemyResult[] = await this.queryBuilderEnemyResult(schedule.startTime);
+      console.log(enemyResult);
       const failureResult: FailureResult[] = await this.queryBuilderFailureWave(schedule.startTime);
+      console.log(failureResult);
       const gradeResult: GradeResult[] = await this.queryBuilderGradePoint(schedule.startTime);
+      console.log(gradeResult);
       const waveResult: WaveResult[] = await this.queryBuilderWaveResult(schedule.startTime);
+      console.log(waveResult);
       const jobResult: JobResult = await this.queryBuilderJobResult(schedule.startTime);
+      console.log(jobResult);
 
       const response: ScheduleResult = new ScheduleResult();
       response.jobResults = jobResult;
@@ -163,7 +171,8 @@ export class SchedulesService {
       response.gradeResults = gradeResult;
       response.waveResults = waveResult;
       return response;
-    } catch {
+    } catch (error) {
+      console.log(error);
       throw new NotFoundException();
     }
   }
@@ -243,15 +252,15 @@ export class SchedulesService {
       await this.prisma.$queryRaw<TmpFailureWave>`
     WITH results AS (
       SELECT
-      COUNT(is_clear=true OR null)::INT is_clear,
-      COUNT(is_clear=false OR null)::INT is_failure,
-      COUNT(is_boss_defeated IS NOT NULL OR null)::INT is_boss_appear,
-      COUNT(is_boss_defeated=true OR null)::INT is_boss_defeated,
-      COUNT(failure_wave=1 OR null)::INT is_failure_wave1,
-      COUNT(failure_wave=2 OR null)::INT is_failure_wave2,
-      COUNT(failure_wave=3 OR null)::INT is_failure_wave3,
-      COUNT(is_boss_defeated=false OR null)::INT is_failure_wave4,
-      COUNT(*)::INT count
+      COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
+      COALESCE(COUNT(is_clear=false OR null)::INT, 0) is_failure,
+      COALESCE(COUNT(is_boss_defeated IS NOT NULL OR null)::INT, 0) is_boss_appear,
+      COALESCE(COUNT(is_boss_defeated=true OR null)::INT, 0) is_boss_defeated,
+      COALESCE(COUNT(failure_wave=1 OR null)::INT, 0) is_failure_wave1,
+      COALESCE(COUNT(failure_wave=2 OR null)::INT, 0) is_failure_wave2,
+      COALESCE(COUNT(failure_wave=3 OR null)::INT, 0) is_failure_wave3,
+      COALESCE(COUNT(is_boss_defeated=false OR null)::INT, 0) is_failure_wave4,
+      COALESCE(COUNT(*)::INT, 0) count
       FROM
       results
       INNER JOIN
@@ -304,34 +313,34 @@ export class SchedulesService {
       await this.prisma.$queryRaw<TmpEnemyResult[]>`
       WITH results AS (
         SELECT 
-          SUM(boss_counts[1])::INT as boss_counts_4, 
-          SUM(boss_counts[2])::INT as boss_counts_5, 
-          SUM(boss_counts[3])::INT as boss_counts_6, 
-          SUM(boss_counts[4])::INT as boss_counts_7, 
-          SUM(boss_counts[5])::INT as boss_counts_8, 
-          SUM(boss_counts[6])::INT as boss_counts_9, 
-          SUM(boss_counts[7])::INT as boss_counts_10, 
-          SUM(boss_counts[8])::INT as boss_counts_11, 
-          SUM(boss_counts[9])::INT as boss_counts_12, 
-          SUM(boss_counts[10])::INT as boss_counts_13, 
-          SUM(boss_counts[11])::INT as boss_counts_14, 
-          SUM(boss_counts[12])::INT as boss_counts_15, 
-          SUM(boss_counts[13])::INT as boss_counts_17, 
-          SUM(boss_counts[14])::INT as boss_counts_20, 
-          SUM(boss_kill_counts[1])::INT as boss_kill_counts_4, 
-          SUM(boss_kill_counts[2])::INT as boss_kill_counts_5, 
-          SUM(boss_kill_counts[3])::INT as boss_kill_counts_6, 
-          SUM(boss_kill_counts[4])::INT as boss_kill_counts_7, 
-          SUM(boss_kill_counts[5])::INT as boss_kill_counts_8, 
-          SUM(boss_kill_counts[6])::INT as boss_kill_counts_9, 
-          SUM(boss_kill_counts[7])::INT as boss_kill_counts_10, 
-          SUM(boss_kill_counts[8])::INT as boss_kill_counts_11, 
-          SUM(boss_kill_counts[9])::INT as boss_kill_counts_12,
-          SUM(boss_kill_counts[10])::INT as boss_kill_counts_13,
-          SUM(boss_kill_counts[11])::INT as boss_kill_counts_14,
-          SUM(boss_kill_counts[12])::INT as boss_kill_counts_15,
-          SUM(boss_kill_counts[13])::INT as boss_kill_counts_17,
-          SUM(boss_kill_counts[14])::INT as boss_kill_counts_20
+          COALESCE(SUM(boss_counts[1])::INT, 0)  as boss_counts_4, 
+          COALESCE(SUM(boss_counts[2])::INT, 0)  as boss_counts_5, 
+          COALESCE(SUM(boss_counts[3])::INT, 0)  as boss_counts_6, 
+          COALESCE(SUM(boss_counts[4])::INT, 0)  as boss_counts_7, 
+          COALESCE(SUM(boss_counts[5])::INT, 0)  as boss_counts_8, 
+          COALESCE(SUM(boss_counts[6])::INT, 0)  as boss_counts_9, 
+          COALESCE(SUM(boss_counts[7])::INT, 0)  as boss_counts_10, 
+          COALESCE(SUM(boss_counts[8])::INT, 0)  as boss_counts_11, 
+          COALESCE(SUM(boss_counts[9])::INT, 0)  as boss_counts_12, 
+          COALESCE(SUM(boss_counts[10])::INT, 0) as boss_counts_13, 
+          COALESCE(SUM(boss_counts[11])::INT, 0) as boss_counts_14, 
+          COALESCE(SUM(boss_counts[12])::INT, 0) as boss_counts_15, 
+          COALESCE(SUM(boss_counts[13])::INT, 0) as boss_counts_17, 
+          COALESCE(SUM(boss_counts[14])::INT, 0) as boss_counts_20, 
+          COALESCE(SUM(boss_kill_counts[1])::INT, 0) as boss_kill_counts_4, 
+          COALESCE(SUM(boss_kill_counts[2])::INT, 0) as boss_kill_counts_5, 
+          COALESCE(SUM(boss_kill_counts[3])::INT, 0) as boss_kill_counts_6, 
+          COALESCE(SUM(boss_kill_counts[4])::INT, 0) as boss_kill_counts_7, 
+          COALESCE(SUM(boss_kill_counts[5])::INT, 0) as boss_kill_counts_8, 
+          COALESCE(SUM(boss_kill_counts[6])::INT, 0) as boss_kill_counts_9, 
+          COALESCE(SUM(boss_kill_counts[7])::INT, 0) as boss_kill_counts_10, 
+          COALESCE(SUM(boss_kill_counts[8])::INT, 0) as boss_kill_counts_11, 
+          COALESCE(SUM(boss_kill_counts[9])::INT, 0) as boss_kill_counts_12,
+          COALESCE(SUM(boss_kill_counts[10])::INT, 0) as boss_kill_counts_13,
+          COALESCE(SUM(boss_kill_counts[11])::INT, 0) as boss_kill_counts_14,
+          COALESCE(SUM(boss_kill_counts[12])::INT, 0) as boss_kill_counts_15,
+          COALESCE(SUM(boss_kill_counts[13])::INT, 0) as boss_kill_counts_17,
+          COALESCE(SUM(boss_kill_counts[14])::INT, 0) as boss_kill_counts_20
         FROM 
           results 
         INNER JOIN
@@ -427,10 +436,10 @@ export class SchedulesService {
     WITH results AS (
       SELECT
         COUNT(*)::INT shifts_worked,
-        COUNT(is_clear = true OR null)::Float / COUNT(*)::Float clear_ratio,
-        SUM(results.ikura_num)::INT ikura_num,
-        SUM(results.golden_ikura_num)::INT golden_ikura_num,
-        SUM(results.golden_ikura_assist_num)::INT golden_ikura_assist_num,
+        COALESCE(COUNT(is_clear = true OR null)::Float / NULLIF(COUNT(*), 0)::Float, 0) clear_ratio,
+        COALESCE(SUM(results.ikura_num)::INT, 0) ikura_num,
+        COALESCE(SUM(results.golden_ikura_num)::INT, 0) golden_ikura_num,
+        COALESCE(SUM(results.golden_ikura_assist_num)::INT, 0) golden_ikura_assist_num,
         COUNT(is_boss_defeated = true OR null)::INT boss_defeated_num,
         COUNT(is_boss_defeated IS NOT NULL OR null)::INT boss_appear_num
       FROM
