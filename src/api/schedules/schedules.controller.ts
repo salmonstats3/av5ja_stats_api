@@ -48,7 +48,7 @@ export class SchedulesController {
     description: "指定されたスケジュールの統計を取得します",
     operationId: "統計取得",
   })
-  @ApiParam({ name: "schedule_id", type: "integer" })
+  @ApiParam({ name: "schedule_id", type: "integer", description: "UNIXTIMESTAMP(UTC準拠)" })
   @ApiNotFoundResponse()
   @ApiOkResponse({ type: [CustomCoopScheduleResponse] })
   find(@Param("schedule_id", ParseIntPipe) scheduleId: number): Promise<ScheduleResult> {

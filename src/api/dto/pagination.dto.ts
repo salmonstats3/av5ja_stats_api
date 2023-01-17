@@ -20,6 +20,7 @@ export class PaginatedRequestDto {
   @Expose()
   @Transform((params) => parseInt(params.value || 0, 10))
   @IsInt()
+  @Min(0)
   @ApiPropertyOptional({
     default: 0,
     description: "オフセット",
@@ -31,6 +32,8 @@ export class PaginatedRequestDto {
   @Expose()
   @Transform((params) => parseInt(params.value || 25, 10))
   @IsInt()
+  @Min(25)
+  @Max(200)
   @ApiPropertyOptional({
     default: 25,
     description: "上限値",
