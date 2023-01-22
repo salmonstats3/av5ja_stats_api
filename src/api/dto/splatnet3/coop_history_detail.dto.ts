@@ -36,21 +36,21 @@ export enum Setting {
 }
 
 class Scale {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: "キンウロコ", nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   @Max(13)
   gold: number | null;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: "ギンウロコ", nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   @Max(13)
   silver: number | null;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: "ドウウロコ", nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
@@ -59,126 +59,135 @@ class Scale {
 }
 
 export class CoopHistoryDetailRequest extends StringId {
-  @ApiProperty()
+  @ApiProperty({ description: "キケン度" })
   @IsNumber()
   @Min(0)
   @Max(3.33)
   dangerRate: number;
 
-  @ApiPropertyOptional({ type: IntegerId })
+  @ApiPropertyOptional({ type: IntegerId, description: "バイト後の称号", nullable: true })
   @IsOptional()
   @ValidateNested()
   @Type(() => IntegerId)
   afterGrade: IntegerId | null;
 
-  @ApiProperty()
+  @ApiProperty({ description: "0でクリア、-1で回線落ち、それ以外は失敗したWAVE" })
   @IsInt()
   @Min(-1)
   @Max(3)
   resultWave: number;
 
-  @ApiProperty({ type: Date })
+  @ApiProperty({ type: Date, description: "遊んだ時間" })
   @IsDateString()
   playedTime: string;
 
-  @ApiProperty({ enum: Rule })
+  @ApiProperty({ enum: Rule, description: "ルール" })
   @IsEnum(Rule)
   rule: Rule;
 
-  @ApiProperty({ type: IntegerId })
+  @ApiProperty({ type: IntegerId, description: "ステージ" })
   @ValidateNested()
   @Type(() => IntegerId)
   coopStage: IntegerId;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: "シナリオコード",
+    example: "XXXX-XXXX-XXXX-XXXX",
+    nullable: true,
+  })
   @IsOptional()
   @IsString()
   scenarioCode: string | null;
 
-  @ApiProperty({ type: PlayerRequest })
+  @ApiProperty({ type: PlayerRequest, description: "自身のリザルト" })
   @ValidateNested()
   @Type(() => PlayerRequest)
   myResult: PlayerRequest;
 
-  @ApiProperty({ type: [PlayerRequest] })
+  @ApiProperty({ type: [PlayerRequest], description: "仲間のリザルト" })
   @ValidateNested({ each: true })
   @Type(() => PlayerRequest)
   memberResults: PlayerRequest[];
 
-  @ApiProperty({ type: BossResult })
+  @ApiProperty({ type: BossResult, description: "オカシラのリザルト" })
   @IsOptional()
   @ValidateNested()
   @Type(() => BossResult)
   bossResult: BossResult | null;
 
-  @ApiProperty({ maxItems: 14, minItems: 14, type: [EnemyResult] })
+  @ApiProperty({
+    maxItems: 14,
+    minItems: 14,
+    type: [EnemyResult],
+    description: "オオモノのリザルト",
+  })
   @ValidateNested({ each: true })
   @Type(() => EnemyResult)
   enemyResults: EnemyResult[];
 
-  @ApiProperty({ maxItems: 3, minItems: 3, type: [WaveResult] })
+  @ApiProperty({ maxItems: 3, minItems: 3, type: [WaveResult], description: "WAVEのリザルト" })
   @ValidateNested({ each: true })
   @Type(() => WaveResult)
   waveResults: WaveResult[];
 
-  @ApiProperty({ maxItems: 3, minItems: 3, type: [Weapon] })
+  @ApiProperty({ maxItems: 3, minItems: 3, type: [Weapon], description: "ブキ一覧" })
   @ValidateNested({ each: true })
   @Type(() => Weapon)
   weapons: Weapon[];
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: "バイト後の評価ポイント", nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   @Max(999)
   afterGradePoint: number | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: "バイトポイント", nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   jobPoint: number | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: "バイトスコア", nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   jobScore: number | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: "バイトレート", nullable: true })
   @IsOptional()
   @IsNumber()
   @Min(0)
   @Max(3.25)
   jobRate: number | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: "バイトボーナス", nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   @Max(100)
   jobBonus: number | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: "オカシラメーター", nullable: true })
   @IsOptional()
   @IsInt()
   @Min(0)
   @Max(5)
   smellMeter: number | null;
 
-  @ApiProperty()
+  @ApiProperty({ description: "ウロコ" })
   @IsOptional()
   @ValidateNested()
   @Type(() => Scale)
   scale: Scale;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: "バイトID", nullable: true })
   @IsOptional()
   @ValidateNested()
   @Type(() => StringId)
   nextHistoryDetail: StringId | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: "バイトID", nullable: true })
   @IsOptional()
   @ValidateNested()
   @Type(() => StringId)

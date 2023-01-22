@@ -289,7 +289,7 @@ export class ResultsService {
             },
             where: {
               resultId_pid: {
-                pid: player.id,
+                pid: player.pid,
                 resultId: result.id,
               },
             },

@@ -22,7 +22,7 @@ import { Species } from "./player.dto";
 import { CustomCoopScheduleRequest } from "./schedule.dto";
 
 export class CoopResultRequest {
-  @ApiProperty({ type: CoopDataRequest })
+  @ApiProperty({ type: CoopDataRequest, description: "データ" })
   @ValidateNested()
   @Type(() => CoopDataRequest)
   data: CoopDataRequest;
@@ -283,12 +283,24 @@ export class CustomCoopResultRequest {
   @Type(() => CustomCoopPlayerRequest)
   myResult: CustomCoopPlayerRequest;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: "20230122T152648_be77aee0-e3fe-48f9-9b1e-5bf68f535a02",
+    description: "固有のID",
+  })
   @IsString()
   @IsNotEmpty()
+  @Transform((params) => {
+    const regexp = /\d{8}T\d{6}_[a-f0-9\-]{36}/;
+    const match: string[] | null = params.value.match(regexp);
+    return match[0];
+  })
   id: string;
 
-  @ApiProperty({ format: "uuid" })
+  @ApiProperty({
+    format: "uuid",
+    example: "be77aee0-e3fe-48f9-9b1e-5bf68f535a02",
+    description: "ホストのUUID?",
+  })
   @IsString()
   @IsNotEmpty()
   uuid: string;
@@ -313,10 +325,10 @@ export class CustomCoopResultRequest {
   @IsDateString()
   playTime: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: "シナリオコード", example: "XXXX-XXXX-XXXX-XXXX" })
   @IsOptional()
   @IsString()
-  scenarioCode: string;
+  scenarioCode: string | null;
 
   @ApiProperty()
   @IsInt()

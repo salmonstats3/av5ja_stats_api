@@ -638,6 +638,8 @@ components:
       properties:
         id:
           type: string
+          description: 固有ID
+          example: 20230113T053227_0687f606-9322-4c17-b49f-558b7aab26e1
         byname:
           type: string
         name:
@@ -775,15 +777,23 @@ components:
       properties:
         gold:
           type: number
+          description: キンウロコ
+          nullable: true
         silver:
           type: number
+          description: ギンウロコ
+          nullable: true
         bronze:
           type: number
+          description: ドウウロコ
+          nullable: true
     StringId:
       type: object
       properties:
         id:
           type: string
+          description: 固有ID
+          example: 20230113T053227_0687f606-9322-4c17-b49f-558b7aab26e1
       required:
         - id
     CoopHistoryDetailRequest:
@@ -791,68 +801,110 @@ components:
       properties:
         id:
           type: string
+          description: 固有ID
+          example: 20230113T053227_0687f606-9322-4c17-b49f-558b7aab26e1
         dangerRate:
           type: number
+          description: キケン度
         afterGrade:
-          $ref: '#/components/schemas/IntegerId'
+          description: バイト後の称号
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/IntegerId'
         resultWave:
           type: number
+          description: 0でクリア、-1で回線落ち、それ以外は失敗したWAVE
         playedTime:
           format: date-time
           type: string
+          description: 遊んだ時間
         rule:
           type: string
           enum:
             - REGULAR
             - BIG_RUN
+          description: ルール
         coopStage:
-          $ref: '#/components/schemas/IntegerId'
+          description: ステージ
+          allOf:
+            - $ref: '#/components/schemas/IntegerId'
         scenarioCode:
           type: string
+          description: シナリオコード
+          example: XXXX-XXXX-XXXX-XXXX
+          nullable: true
         myResult:
-          $ref: '#/components/schemas/PlayerRequest'
+          description: 自身のリザルト
+          allOf:
+            - $ref: '#/components/schemas/PlayerRequest'
         memberResults:
+          description: 仲間のリザルト
           type: array
           items:
             $ref: '#/components/schemas/PlayerRequest'
         bossResult:
-          $ref: '#/components/schemas/BossResult'
+          description: オカシラのリザルト
+          allOf:
+            - $ref: '#/components/schemas/BossResult'
         enemyResults:
           maxItems: 14
           minItems: 14
+          description: オオモノのリザルト
           type: array
           items:
             $ref: '#/components/schemas/EnemyResult'
         waveResults:
           maxItems: 3
           minItems: 3
+          description: WAVEのリザルト
           type: array
           items:
             $ref: '#/components/schemas/WaveResult'
         weapons:
           maxItems: 3
           minItems: 3
+          description: ブキ一覧
           type: array
           items:
             $ref: '#/components/schemas/Weapon'
         afterGradePoint:
           type: number
+          description: バイト後の評価ポイント
+          nullable: true
         jobPoint:
           type: number
+          description: バイトポイント
+          nullable: true
         jobScore:
           type: number
+          description: バイトスコア
+          nullable: true
         jobRate:
           type: number
+          description: バイトレート
+          nullable: true
         jobBonus:
           type: number
+          description: バイトボーナス
+          nullable: true
         smellMeter:
           type: number
+          description: オカシラメーター
+          nullable: true
         scale:
-          $ref: '#/components/schemas/Scale'
+          description: ウロコ
+          allOf:
+            - $ref: '#/components/schemas/Scale'
         nextHistoryDetail:
-          $ref: '#/components/schemas/StringId'
+          description: バイトID
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/StringId'
         previousHistoryDetail:
-          $ref: '#/components/schemas/StringId'
+          description: バイトID
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/StringId'
       required:
         - id
         - dangerRate
@@ -866,33 +918,30 @@ components:
         - enemyResults
         - waveResults
         - weapons
-        - afterGradePoint
-        - jobPoint
-        - jobScore
-        - jobRate
-        - jobBonus
-        - smellMeter
         - scale
-        - nextHistoryDetail
-        - previousHistoryDetail
     CoopDataRequest:
       type: object
       properties:
         coopHistoryDetail:
-          $ref: '#/components/schemas/CoopHistoryDetailRequest'
+          description: バイト詳細
+          allOf:
+            - $ref: '#/components/schemas/CoopHistoryDetailRequest'
       required:
         - coopHistoryDetail
     CoopResultRequest:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/CoopDataRequest'
+          description: データ
+          allOf:
+            - $ref: '#/components/schemas/CoopDataRequest'
       required:
         - data
     ResultRequest:
       type: object
       properties:
         results:
+          description: リザルト一覧
           type: array
           items:
             $ref: '#/components/schemas/CoopResultRequest'
@@ -1151,9 +1200,13 @@ components:
           $ref: '#/components/schemas/CustomCoopPlayerRequest'
         id:
           type: string
+          example: 20230122T152648_be77aee0-e3fe-48f9-9b1e-5bf68f535a02
+          description: 固有のID
         uuid:
           type: string
           format: uuid
+          example: be77aee0-e3fe-48f9-9b1e-5bf68f535a02
+          description: ホストのUUID?
         waveDetails:
           type: array
           items:
@@ -1165,6 +1218,10 @@ components:
         playTime:
           format: date-time
           type: string
+        scenarioCode:
+          type: string
+          description: シナリオコード
+          example: XXXX-XXXX-XXXX-XXXX
         goldenIkuraAssistNum:
           type: number
         scale:
