@@ -168,6 +168,14 @@ export class ResultsService {
     result: CustomCoopHistoryDetailRequest,
     schedule: Schedule,
   ): Prisma.ResultUpsertArgs {
+    const players: CustomPlayerRequest[] = result.players.filter(
+      (player: CustomPlayerRequest) => player.isMyself,
+    );
+    if (players.length === 0) {
+      throw new NotFoundException();
+    }
+    const player: CustomPlayerRequest = players[0];
+
     return {
       create: {
         bossCounts: result.bossCounts,
@@ -225,6 +233,7 @@ export class ResultsService {
             }),
           },
         },
+        scenarioCode: result.scenarioCode,
         schedule: {
           connectOrCreate: {
             create: {
@@ -265,7 +274,28 @@ export class ResultsService {
           },
         },
       },
-      update: {},
+      update: {
+        players: {
+          update: {
+            data: {
+              bossKillCounts: player.bossKillCounts,
+              gradeId: player.gradeId,
+              gradePoint: player.gradePoint,
+              jobBonus: player.jobBonus,
+              jobRate: player.jobRate,
+              jobScore: player.jobScore,
+              kumaPoint: player.kumaPoint,
+              smellMeter: player.smellMeter,
+            },
+            where: {
+              resultId_pid: {
+                pid: player.id,
+                resultId: result.id,
+              },
+            },
+          },
+        },
+      },
       where: {
         id: result.id,
       },
@@ -338,6 +368,7 @@ export class ResultsService {
             }),
           },
         },
+        scenarioCode: result.scenarioCode,
         schedule: {
           connectOrCreate: {
             create: {
