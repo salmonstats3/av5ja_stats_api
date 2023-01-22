@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { ConsoleLogger, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma, Schedule } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import { plainToClass } from "class-transformer";

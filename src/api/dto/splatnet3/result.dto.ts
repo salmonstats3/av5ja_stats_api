@@ -313,6 +313,11 @@ export class CustomCoopResultRequest {
   @IsDateString()
   playTime: string;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  scenarioCode: string;
+
   @ApiProperty()
   @IsInt()
   goldenIkuraAssistNum: number;
