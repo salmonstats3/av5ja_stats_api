@@ -5,7 +5,7 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, ValidateNested } from "class-valid
 import { CoopResultRequest, CustomCoopResultRequest } from "./result.dto";
 
 export class ResultRequest {
-  @ApiProperty({ type: [CoopResultRequest] })
+  @ApiProperty({ type: [CoopResultRequest], description: "リザルト一覧" })
   @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(50)

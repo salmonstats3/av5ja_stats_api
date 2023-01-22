@@ -168,9 +168,12 @@ export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
   }
 
   private resultId(resultId: string): string {
-    const regexp = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
-    const match: string[] | null = resultId.match(regexp);
-    return match[0];
+    const regexp = /\d{8}T\d{6}_[a-f0-9\-]{36}/;
+    const matches: string[] | null = resultId.match(regexp);
+    if (matches.length === 0 || matches === null) {
+      throw new BadRequestException();
+    }
+    return matches[0];
   }
 
   private enemies(results: EnemyResult[]): EnemyResult[] {

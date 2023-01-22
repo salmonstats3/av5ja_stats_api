@@ -20,11 +20,20 @@ export class IntegerId {
 }
 
 export class StringId {
-  @ApiProperty()
+  @ApiProperty({
+    description: "固有ID",
+    example: "20230113T053227_0687f606-9322-4c17-b49f-558b7aab26e1",
+  })
   @IsString()
   @IsNotEmpty()
   @Transform((param) => {
-    return Buffer.from(param.value, "base64").toString();
+    const id: string = Buffer.from(param.value, "base64").toString();
+    const regexp = /\d{8}T\d{6}_[a-f0-9\-]{36}/;
+    const matches: string[] | null = id.match(regexp);
+    if (matches.length === 0 || matches === null) {
+      throw new BadRequestException();
+    }
+    return matches[0];
   })
   id: string;
 }
