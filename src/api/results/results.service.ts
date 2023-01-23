@@ -173,11 +173,9 @@ export class ResultsService {
       (player: CustomPlayerRequest) => player.isMyself,
     );
     if (players.length === 0) {
-      console.log("Error");
       throw new NotFoundException();
     }
     const player: CustomPlayerRequest = players[0];
-    console.log(player);
 
     return {
       create: {
