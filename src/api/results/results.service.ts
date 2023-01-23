@@ -25,7 +25,8 @@ export class ResultsService {
         try {
           const schedule: Schedule = await this.findFirst(data.playedTime);
           return await this.prisma.result.upsert(this.queryV1(data, schedule));
-        } catch {
+        } catch (error) {
+          console.log(error);
           throw new NotFoundException({ description: "Schedule Not Found.", statusCode: 404 });
         }
       }),
@@ -172,9 +173,11 @@ export class ResultsService {
       (player: CustomPlayerRequest) => player.isMyself,
     );
     if (players.length === 0) {
+      console.log("Error");
       throw new NotFoundException();
     }
     const player: CustomPlayerRequest = players[0];
+    console.log(player);
 
     return {
       create: {
@@ -308,7 +311,7 @@ export class ResultsService {
       .concat(result.otherResults)
       .map((player) => player.pid)
       .sort();
-    const nightLess: boolean = result.waveDetails.every((wave) => wave.eventType == 0);
+    const nightLess: boolean = result.waveDetails.every((wave) => wave.eventType === 0);
     return {
       create: {
         bossCounts: result.bossCounts,

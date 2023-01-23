@@ -1,9 +1,11 @@
+import { BadRequestException } from "@nestjs/common";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
   IsDateString,
   IsEnum,
   IsInt,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -58,14 +60,32 @@ class Scale {
   bronze: number | null;
 }
 
-export class CoopHistoryDetailRequest extends StringId {
+export class CoopHistoryDetailRequest {
+  @ApiProperty({
+    description: "固有ID",
+    example: "20230113T053227_0687f606-9322-4c17-b49f-558b7aab26e1",
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Transform((params) => {
+    const id: string = Buffer.from(params.value, "base64").toString();
+    const regexp = /(\d{8}T\d{6}_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/;
+    const matches: string[] | null = id.match(regexp);
+    console.log(id, matches);
+    if (matches === null) {
+      throw new BadRequestException();
+    }
+    return matches[0];
+  })
+  id: string;
+
   @ApiProperty({ description: "キケン度" })
   @IsNumber()
   @Min(0)
   @Max(3.33)
   dangerRate: number;
 
-  @ApiPropertyOptional({ type: IntegerId, description: "バイト後の称号", nullable: true })
+  @ApiPropertyOptional({ description: "バイト後の称号", nullable: true, type: IntegerId })
   @IsOptional()
   @ValidateNested()
   @Type(() => IntegerId)
@@ -77,15 +97,15 @@ export class CoopHistoryDetailRequest extends StringId {
   @Max(3)
   resultWave: number;
 
-  @ApiProperty({ type: Date, description: "遊んだ時間" })
+  @ApiProperty({ description: "遊んだ時間", type: Date })
   @IsDateString()
   playedTime: string;
 
-  @ApiProperty({ enum: Rule, description: "ルール" })
+  @ApiProperty({ description: "ルール", enum: Rule })
   @IsEnum(Rule)
   rule: Rule;
 
-  @ApiProperty({ type: IntegerId, description: "ステージ" })
+  @ApiProperty({ description: "ステージ", type: IntegerId })
   @ValidateNested()
   @Type(() => IntegerId)
   coopStage: IntegerId;
@@ -99,38 +119,38 @@ export class CoopHistoryDetailRequest extends StringId {
   @IsString()
   scenarioCode: string | null;
 
-  @ApiProperty({ type: PlayerRequest, description: "自身のリザルト" })
+  @ApiProperty({ description: "自身のリザルト", type: PlayerRequest })
   @ValidateNested()
   @Type(() => PlayerRequest)
   myResult: PlayerRequest;
 
-  @ApiProperty({ type: [PlayerRequest], description: "仲間のリザルト" })
+  @ApiProperty({ description: "仲間のリザルト", type: [PlayerRequest] })
   @ValidateNested({ each: true })
   @Type(() => PlayerRequest)
   memberResults: PlayerRequest[];
 
-  @ApiProperty({ type: BossResult, description: "オカシラのリザルト" })
+  @ApiProperty({ description: "オカシラのリザルト", type: BossResult })
   @IsOptional()
   @ValidateNested()
   @Type(() => BossResult)
   bossResult: BossResult | null;
 
   @ApiProperty({
+    description: "オオモノのリザルト",
     maxItems: 14,
     minItems: 14,
     type: [EnemyResult],
-    description: "オオモノのリザルト",
   })
   @ValidateNested({ each: true })
   @Type(() => EnemyResult)
   enemyResults: EnemyResult[];
 
-  @ApiProperty({ maxItems: 3, minItems: 3, type: [WaveResult], description: "WAVEのリザルト" })
+  @ApiProperty({ description: "WAVEのリザルト", maxItems: 3, minItems: 3, type: [WaveResult] })
   @ValidateNested({ each: true })
   @Type(() => WaveResult)
   waveResults: WaveResult[];
 
-  @ApiProperty({ maxItems: 3, minItems: 3, type: [Weapon], description: "ブキ一覧" })
+  @ApiProperty({ description: "ブキ一覧", maxItems: 3, minItems: 3, type: [Weapon] })
   @ValidateNested({ each: true })
   @Type(() => Weapon)
   weapons: Weapon[];

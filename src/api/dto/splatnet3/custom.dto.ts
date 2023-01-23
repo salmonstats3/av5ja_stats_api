@@ -54,8 +54,8 @@ export class CustomPlayerRequest extends PlayerRequest {
     this.deliverCount = player.deliverCount;
     this.goldenDeliverCount = player.goldenDeliverCount;
     this.goldenAssistCount = player.goldenAssistCount;
-    this.isMyself = this.isMyResult(player.player.id);
-    this.pid = this.playerId(player.player.id);
+    this.isMyself = player.player.isMyself;
+    this.pid = player.player.pid;
     this.jobBonus = this.isMyself ? result.jobBonus : null;
     this.jobScore = this.isMyself ? result.jobScore : null;
     this.jobRate = this.isMyself ? result.jobRate : null;
@@ -80,16 +80,6 @@ export class CustomPlayerRequest extends PlayerRequest {
     this.bossKillCounts = this.isMyself ? bossKillCounts : [...Array(14)].map(() => -1);
     this.weaponList = player.weapons.map((weapon) => weapon.image.url);
     this.smellMeter = this.isMyself ? result.smellMeter : null;
-  }
-
-  private isMyResult(playerId: string): boolean {
-    const regexp = /u-[a-z\d]{20}/g;
-    const match: string[] | null = playerId.match(regexp);
-
-    if (match.length != 2) {
-      throw new BadRequestException();
-    }
-    return match[0] == match[1];
   }
 
   private playerId(playerId: string): string {
