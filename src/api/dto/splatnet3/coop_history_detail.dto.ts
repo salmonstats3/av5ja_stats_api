@@ -17,7 +17,7 @@ import {
 import { BossResult } from "./boss.dto";
 import { EnemyResult } from "./enemy.dto";
 import { PlayerRequest } from "./player.dto";
-import { IntegerId, StringId } from "./rawvalue.dto";
+import { IntegerId } from "./rawvalue.dto";
 import { WaveResult } from "./wave.dto";
 import { Weapon } from "./weapon.dto";
 
@@ -208,16 +208,4 @@ export class CoopHistoryDetailRequest {
   @ValidateNested()
   @Type(() => Scale)
   scale: Scale;
-
-  @ApiPropertyOptional({ description: "バイトID", nullable: true })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => StringId)
-  nextHistoryDetail: StringId | null;
-
-  @ApiPropertyOptional({ description: "バイトID", nullable: true })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => StringId)
-  previousHistoryDetail: StringId | null;
 }

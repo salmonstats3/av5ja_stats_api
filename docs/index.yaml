@@ -796,15 +796,6 @@ components:
           type: number
           description: ドウウロコ
           nullable: true
-    StringId:
-      type: object
-      properties:
-        id:
-          type: string
-          description: 固有ID
-          example: 20230113T053227_0687f606-9322-4c17-b49f-558b7aab26e1
-      required:
-        - id
     CoopHistoryDetailRequest:
       type: object
       properties:
@@ -904,16 +895,6 @@ components:
           description: ウロコ
           allOf:
             - $ref: '#/components/schemas/Scale'
-        nextHistoryDetail:
-          description: バイトID
-          nullable: true
-          allOf:
-            - $ref: '#/components/schemas/StringId'
-        previousHistoryDetail:
-          description: バイトID
-          nullable: true
-          allOf:
-            - $ref: '#/components/schemas/StringId'
       required:
         - id
         - dangerRate
