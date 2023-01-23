@@ -1,7 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsInt, IsOptional } from "class-validator";
 
 export class IntegerId {
   @ApiProperty()
@@ -17,24 +17,4 @@ export class IntegerId {
     return parseInt(rawValue.match(re)[0], 10);
   })
   id: number;
-}
-
-export class StringId {
-  @ApiProperty({
-    description: "固有ID",
-    example: "20230113T053227_0687f606-9322-4c17-b49f-558b7aab26e1",
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Transform((param) => {
-    const id: string = Buffer.from(param.value, "base64").toString();
-    const regexp = /\d{8}T\d{6}_[a-f0-9\-]{36}/;
-    const matches: string[] | null = id.match(regexp);
-    console.log(id, matches);
-    if (matches.length === 0 || matches === null) {
-      throw new BadRequestException();
-    }
-    return matches[0];
-  })
-  id: string;
 }
