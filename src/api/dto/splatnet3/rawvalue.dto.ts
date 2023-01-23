@@ -30,6 +30,7 @@ export class StringId {
     const id: string = Buffer.from(param.value, "base64").toString();
     const regexp = /\d{8}T\d{6}_[a-f0-9\-]{36}/;
     const matches: string[] | null = id.match(regexp);
+    console.log(id, matches);
     if (matches.length === 0 || matches === null) {
       throw new BadRequestException();
     }

@@ -1,9 +1,11 @@
+import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
   ArrayMaxSize,
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -13,7 +15,7 @@ import {
   ValidateNested,
 } from "class-validator";
 
-import { IntegerId, StringId } from "./rawvalue.dto";
+import { IntegerId } from "./rawvalue.dto";
 import { Weapon } from "./weapon.dto";
 
 class TextColorRequest {
@@ -61,7 +63,44 @@ class NamePlateRequest {
   background: BackgroundRequest;
 }
 
-export class PlayerResultRequest extends StringId {
+export class PlayerResultRequest {
+  @ApiProperty({
+    description: "固有ID",
+    example:
+      "Q29vcFBsYXllci11LWFqeXMzNTdzZTZ0bGs3dmhhbm1tOjIwMjMwMTIzVDEzMDYxMl84NjMzZDM4OC1mMDE4LTQ1NTMtYjFiOC0zNzY4NDIwZDU2NzU6dS1heG1keTdndDJ1NmU0NXJiM2tvbQ==",
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Transform((params) => Buffer.from(params.value, "base64").toString())
+  id: string;
+
+  @ApiProperty({
+    description: "プレイヤー固有ID",
+  })
+  get pid(): string {
+    const regexp = /:u-([a-z0-9]{20})/;
+    const matches: string[] | null = this.id.match(regexp);
+    if (matches === null) {
+      throw new BadRequestException({ description: `Invalid pid ${this.id}` });
+    }
+    return matches[1];
+  }
+
+  @ApiProperty({
+    description: "アップロードした本人かどうか",
+  })
+  @IsBoolean()
+  get isMyself(): boolean {
+    const regexp = /u-[a-z0-9]{20}/g;
+    const matches: string[] | null = this.id.match(regexp);
+    if (matches?.length !== 2 || matches === null) {
+      throw new BadRequestException({
+        description: `Could not determine upload user's id ${this.id}`,
+      });
+    }
+    return matches[0] === matches[1];
+  }
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

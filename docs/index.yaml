@@ -281,8 +281,8 @@ paths:
         - スケジュール
 info:
   title: Salmon Stats+
-  description: Salmon Stats for Splatoon 3 API documents. (development)
-  version: 0.0.1
+  description: Salmon Stats for Splatoon 3 API documents. (PRODUCTION)
+  version: 0.0.3
   contact:
     name: '@Salmonia3Dev'
     url: https://twitter.com/Salmonia3Dev
@@ -639,7 +639,14 @@ components:
         id:
           type: string
           description: 固有ID
-          example: 20230113T053227_0687f606-9322-4c17-b49f-558b7aab26e1
+          example: >-
+            Q29vcFBsYXllci11LWFqeXMzNTdzZTZ0bGs3dmhhbm1tOjIwMjMwMTIzVDEzMDYxMl84NjMzZDM4OC1mMDE4LTQ1NTMtYjFiOC0zNzY4NDIwZDU2NzU6dS1heG1keTdndDJ1NmU0NXJiM2tvbQ==
+        pid:
+          type: string
+          description: プレイヤー固有ID
+        isMyself:
+          type: boolean
+          description: アップロードした本人かどうか
         byname:
           type: string
         name:
@@ -657,6 +664,8 @@ components:
             - OCTOLING
       required:
         - id
+        - pid
+        - isMyself
         - byname
         - name
         - nameId
@@ -820,10 +829,10 @@ components:
           description: 遊んだ時間
         rule:
           type: string
+          description: ルール
           enum:
             - REGULAR
             - BIG_RUN
-          description: ルール
         coopStage:
           description: ステージ
           allOf:
@@ -847,23 +856,23 @@ components:
           allOf:
             - $ref: '#/components/schemas/BossResult'
         enemyResults:
+          description: オオモノのリザルト
           maxItems: 14
           minItems: 14
-          description: オオモノのリザルト
           type: array
           items:
             $ref: '#/components/schemas/EnemyResult'
         waveResults:
+          description: WAVEのリザルト
           maxItems: 3
           minItems: 3
-          description: WAVEのリザルト
           type: array
           items:
             $ref: '#/components/schemas/WaveResult'
         weapons:
+          description: ブキ一覧
           maxItems: 3
           minItems: 3
-          description: ブキ一覧
           type: array
           items:
             $ref: '#/components/schemas/Weapon'
