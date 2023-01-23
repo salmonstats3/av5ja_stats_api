@@ -97,7 +97,6 @@ export class CustomPlayerRequest extends PlayerRequest {
 }
 
 export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
-  uuid: string;
   ikuraNum: number;
   goldenIkuraNum: number;
   goldenIkuraAssistNum: number;
@@ -118,7 +117,6 @@ export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
   constructor(result: CoopHistoryDetailRequest) {
     super();
     this.id = result.id;
-    this.uuid = this.resultId(result.id);
     this.goldenIkuraNum = result.waveResults
       .map((wave) => wave.teamDeliverCount)
       .reduce((a, b) => a + b);

@@ -71,13 +71,21 @@ export class CoopHistoryDetailRequest {
     const id: string = Buffer.from(params.value, "base64").toString();
     const regexp = /(\d{8}T\d{6}_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/;
     const matches: string[] | null = id.match(regexp);
-    console.log(id, matches);
     if (matches === null) {
       throw new BadRequestException();
     }
     return matches[0];
   })
   id: string;
+
+  get uuid(): string {
+    const regexp = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/;
+    const matches: string[] | null = this.id.match(regexp);
+    if (matches === null) {
+      throw new BadRequestException();
+    }
+    return matches[0];
+  }
 
   @ApiProperty({ description: "キケン度" })
   @IsNumber()
