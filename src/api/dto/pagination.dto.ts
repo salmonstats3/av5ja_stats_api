@@ -226,6 +226,13 @@ export class PaginatedDto<T> {
   offset: number;
 
   results: T[];
+
+  constructor(limit: number, offset: number, total: number, results: T[]) {
+    this.limit = limit;
+    this.offset = offset;
+    this.total = total;
+    this.results = results;
+  }
 }
 
 export const ApiOkResponsePaginated = <DataDto extends Type<unknown>>({ type: DataDto }) =>
