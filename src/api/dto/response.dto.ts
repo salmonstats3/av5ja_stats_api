@@ -21,13 +21,13 @@ export class CoopResultCreateResponse {
   }
 }
 
-enum WaterId {
+export enum WaterId {
   LOW_TIDE = 0,
   NORMAL = 1,
   HIGH_TIDE = 2,
 }
 
-enum EventId {
+export enum EventId {
   WATER_LEVELS = 0,
   RUSH = 1,
   GOLDIE_SEEKING = 2,

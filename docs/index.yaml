@@ -279,6 +279,80 @@ paths:
           description: ''
       tags:
         - スケジュール
+  /v1/scenario_codes:
+    get:
+      operationId: 取得
+      summary: ''
+      description: 指定された条件を満たすシナリオコードを取得します
+      parameters:
+        - name: offset
+          required: false
+          in: path
+          description: オフセット
+          schema:
+            minimum: 0
+            title: offset
+            default: 0
+            type: number
+        - name: limit
+          required: false
+          in: path
+          description: 上限値
+          schema:
+            minimum: 0
+            maximum: 200
+            title: limit
+            default: 25
+            type: number
+        - name: stageId
+          required: false
+          in: path
+          description: ステージID
+          schema:
+            type: string
+        - name: weaponList
+          required: false
+          in: path
+          description: ブキ一覧
+          schema:
+            type: array
+            items:
+              type: string
+        - name: dangerRate
+          required: false
+          in: path
+          description: 最低キケン度
+          schema:
+            type: number
+        - name: rule
+          required: false
+          in: path
+          description: ルール
+          schema:
+            enum:
+              - REGULAR
+              - BIG_RUN
+            type: string
+        - name: mode
+          required: false
+          in: path
+          description: モード
+          schema:
+            enum:
+              - REGULAR
+              - PRIVATE
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScenarioCodeResponse'
+        '404':
+          description: ''
+      tags:
+        - シナリオコード
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents. (PRODUCTION)
@@ -1286,3 +1360,6 @@ components:
         - mode
         - rule
         - setting
+    ScenarioCodeResponse:
+      type: object
+      properties: {}

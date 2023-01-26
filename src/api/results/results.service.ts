@@ -115,12 +115,9 @@ export class ResultsService {
         exposeUnsetFields: false,
       }),
     );
-    const response = new PaginatedDto<CoopResultResponse>();
-    response.limit = request.limit;
-    response.offset = request.offset;
-    response.total = await this.prisma.result.count({ where: where });
-    response.results = results;
-    return response;
+
+    const total: number = await this.prisma.result.count({ where: where });
+    return new PaginatedDto<CoopResultResponse>(request.limit, request.offset, total, results);
   }
 
   async find(salmonId: number): Promise<CoopResultResponse> {

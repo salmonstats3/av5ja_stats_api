@@ -67,6 +67,11 @@ model Result {
   @@map("results")
 }
 
+enum Species {
+  INKLING
+  OCTOLING
+}
+
 enum Mode {
   REGULAR
   PRIVATE_CUSTOM
@@ -88,8 +93,10 @@ model Schedule {
   // 支給ブキID
   weaponList Int[]    @map("weapon_list")
   // モード
+  // mode       Mode     @default(REGULAR)
   mode       String   @default("REGULAR")
   // ルール
+  // rule       Rule     @default(REGULAR)
   rule       String   @default("REGULAR")
   // 作成日
   createdAt  DateTime @default(now())
@@ -154,7 +161,8 @@ model Player {
   // オカシラメーター
   smellMeter           Int?     @map("smell_meter")
   // 種族
-  species              String
+  // species              Species  @default(INKLING)
+  species              String   @default("INKLING")
   // スペシャルID
   specialId            Int?     @map("special_id")
   // スペシャル使用数
