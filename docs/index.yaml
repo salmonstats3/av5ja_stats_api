@@ -345,7 +345,7 @@ paths:
         - name: weaponList
           required: false
           in: query
-          description: ブキ一覧
+          description: ブキ一覧(カンマ区切りで入力)
           schema:
             type: array
             items:
