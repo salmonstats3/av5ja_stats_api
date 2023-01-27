@@ -110,7 +110,7 @@ export class ScenarioCodeWhereInput extends PaginatedRequestDto {
   @Expose()
   stageId?: number;
 
-  @ApiPropertyOptional({ description: "ブキ一覧", type: [Number] })
+  @ApiPropertyOptional({ description: "ブキ一覧(カンマ区切りで入力)", type: [Number] })
   @Type(() => Number)
   @Transform((params) => {
     return params.value === undefined || params.value.length === 0
