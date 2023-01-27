@@ -58,6 +58,19 @@ export class ScenarioCodesService {
               hasEvery: request.weaponList,
             },
           },
+          waves: {
+            some: {
+              eventType: {
+                equals: request.eventType,
+              },
+              waterLevel: {
+                equals: request.waterLevel,
+              },
+              waveId: {
+                equals: request.waveId,
+              },
+            },
+          },
         },
       })
     ).map((result) =>

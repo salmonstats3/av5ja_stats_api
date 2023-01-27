@@ -1,7 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Schedule, Wave } from "@prisma/client";
-import { Expose, Transform } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import dayjs from "dayjs";
 
 import { PaginatedRequestDto } from "./pagination.dto";
@@ -86,31 +86,56 @@ export class ScenarioCodeResponse {
 }
 
 export class ScenarioCodeWhereInput extends PaginatedRequestDto {
+  @ApiPropertyOptional({ description: "ID" })
+  @Transform((params) => (params.value === undefined ? undefined : parseInt(params.value, 10)))
+  @Expose()
+  waveId?: number;
+
+  @ApiPropertyOptional({ description: "潮位", enum: WaterId, type: Number })
+  @Transform((params) =>
+    params.value === undefined ? undefined : Object.values(WaterId).indexOf(params.value),
+  )
+  @Expose()
+  waterLevel?: number;
+
+  @ApiPropertyOptional({ description: "イベント", enum: EventId, type: Number })
+  @Transform((params) =>
+    params.value === undefined ? undefined : Object.values(EventId).indexOf(params.value),
+  )
+  @Expose()
+  eventType?: number;
+
   @ApiPropertyOptional({ description: "ステージID" })
   @Transform((params) => (params.value === undefined ? undefined : parseInt(params.value, 10)))
   @Expose()
   stageId?: number;
-  @ApiPropertyOptional({ description: "ブキ一覧" })
-  @Transform((params) =>
-    params.value === undefined
+
+  @ApiPropertyOptional({ description: "ブキ一覧", type: [Number] })
+  @Type(() => Number)
+  @Transform((params) => {
+    return params.value === undefined || params.value.length === 0
       ? []
       : params.value
           .replace(/\s/g, "")
           .split(",")
-          .map((substr: string) => parseInt(substr, 10)),
-  )
+          .map((substr: string) => parseInt(substr, 10));
+  })
   @Expose()
   weaponList?: number[];
+
   @ApiPropertyOptional({ description: "最低キケン度" })
   @Transform((params) => (params.value === undefined ? undefined : parseInt(params.value, 10)))
   @Expose()
   dangerRate?: number;
+
   @ApiPropertyOptional({ description: "ルール", enum: Rule })
   @Expose()
   rule?: Rule;
+
   @ApiPropertyOptional({ description: "モード", enum: ScenarioMode })
   @Expose()
   mode?: ScenarioMode;
+
   @ApiPropertyOptional({ description: "オカシラシャケが出現したかどうか" })
   @Transform((params) => {
     if (params.value === undefined) {
