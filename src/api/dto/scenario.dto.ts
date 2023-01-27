@@ -1,6 +1,7 @@
+import { BadRequestException } from "@nestjs/common";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Schedule, Wave } from "@prisma/client";
-import { Expose } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 import dayjs from "dayjs";
 
 import { PaginatedRequestDto } from "./pagination.dto";
@@ -86,12 +87,22 @@ export class ScenarioCodeResponse {
 
 export class ScenarioCodeWhereInput extends PaginatedRequestDto {
   @ApiPropertyOptional({ description: "ステージID" })
+  @Transform((params) => (params.value === undefined ? undefined : parseInt(params.value, 10)))
   @Expose()
-  stageId?: string;
+  stageId?: number;
   @ApiPropertyOptional({ description: "ブキ一覧" })
+  @Transform((params) =>
+    params.value === undefined
+      ? []
+      : params.value
+          .replace(/\s/g, "")
+          .split(",")
+          .map((substr: string) => parseInt(substr, 10)),
+  )
   @Expose()
   weaponList?: number[];
   @ApiPropertyOptional({ description: "最低キケン度" })
+  @Transform((params) => (params.value === undefined ? undefined : parseInt(params.value, 10)))
   @Expose()
   dangerRate?: number;
   @ApiPropertyOptional({ description: "ルール", enum: Rule })
@@ -100,4 +111,23 @@ export class ScenarioCodeWhereInput extends PaginatedRequestDto {
   @ApiPropertyOptional({ description: "モード", enum: ScenarioMode })
   @Expose()
   mode?: ScenarioMode;
+  @ApiPropertyOptional({ description: "オカシラシャケが出現したかどうか" })
+  @Transform((params) => {
+    if (params.value === undefined) {
+      return undefined;
+    }
+    switch (params.value) {
+      case "true":
+        return true;
+      case "false":
+        return false;
+      default:
+        throw new BadRequestException({
+          description: "hasExtraWave must be boolean type.",
+          status: 400,
+        });
+    }
+  })
+  @Expose()
+  hasExtraWave?: boolean;
 }

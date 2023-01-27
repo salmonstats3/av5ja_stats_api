@@ -1,9 +1,10 @@
-import { Controller, Get, Param, Version } from "@nestjs/common";
+import { Controller, Get, Query, Version } from "@nestjs/common";
 import {
   ApiExtraModels,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from "@nestjs/swagger";
 
@@ -25,8 +26,9 @@ export class ScenarioCodesController {
     operationId: "取得",
   })
   @ApiNotFoundResponse()
+  @ApiQuery({ type: ScenarioCodeWhereInput })
   @ApiOkResponse({ type: ScenarioCodeResponse })
-  find(@Param() request: ScenarioCodeWhereInput): Promise<PaginatedDto<ScenarioCodeResponse>> {
+  find(@Query() request: ScenarioCodeWhereInput): Promise<PaginatedDto<ScenarioCodeResponse>> {
     return this.service.findMany(request);
   }
 }
