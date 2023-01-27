@@ -27,9 +27,36 @@ export class ScenarioCodesService {
           schedule: true,
           waves: true,
         },
+        skip: request.offset,
+        take: request.limit,
         where: {
+          dangerRate: {
+            gte: request.dangerRate,
+          },
+          isBossDefeated: {
+            equals:
+              request.hasExtraWave === undefined
+                ? undefined
+                : request.hasExtraWave
+                ? true || false
+                : null,
+          },
           scenarioCode: {
             not: null,
+          },
+          schedule: {
+            mode: {
+              equals: request.mode,
+            },
+            rule: {
+              equals: request.rule,
+            },
+            stageId: {
+              equals: request.stageId,
+            },
+            weaponList: {
+              hasEvery: request.weaponList,
+            },
           },
         },
       })
