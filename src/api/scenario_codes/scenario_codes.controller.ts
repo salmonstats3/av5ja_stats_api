@@ -4,7 +4,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiQuery,
   ApiTags,
 } from "@nestjs/swagger";
 
@@ -26,9 +25,12 @@ export class ScenarioCodesController {
     operationId: "取得",
   })
   @ApiNotFoundResponse()
-  @ApiQuery({ type: ScenarioCodeWhereInput })
+  // @ApiQuery({ type: ScenarioCodeWhereInput })
   @ApiOkResponse({ type: ScenarioCodeResponse })
-  find(@Query() request: ScenarioCodeWhereInput): Promise<PaginatedDto<ScenarioCodeResponse>> {
+  find(
+    @Query() request: ScenarioCodeWhereInput,
+    // @Query(new ValidationPipe({ transform: true })) request: ScenarioCodeWhereInput,
+  ): Promise<PaginatedDto<ScenarioCodeResponse>> {
     return this.service.findMany(request);
   }
 }

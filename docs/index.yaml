@@ -304,6 +304,38 @@ paths:
             title: limit
             default: 25
             type: number
+        - name: waveId
+          required: false
+          in: query
+          description: ID
+          schema:
+            type: number
+        - name: waterLevel
+          required: false
+          in: query
+          description: 潮位
+          schema:
+            enum:
+              - LOW_TIDE
+              - NORMAL
+              - HIGH_TIDE
+            type: string
+        - name: eventType
+          required: false
+          in: query
+          description: イベント
+          schema:
+            enum:
+              - WATER_LEVELS
+              - RUSH
+              - GOLDIE_SEEKING
+              - GRILLER
+              - FOG
+              - THE_MOTHERSHIP
+              - COHOCK_CHARGE
+              - GIANT_TORNADO
+              - MUDMOUTH
+            type: string
         - name: stageId
           required: false
           in: query
@@ -317,7 +349,7 @@ paths:
           schema:
             type: array
             items:
-              type: string
+              type: number
         - name: dangerRate
           required: false
           in: query
@@ -329,7 +361,7 @@ paths:
           in: query
           description: ルール
           schema:
-            enum: &ref_0
+            enum:
               - REGULAR
               - BIG_RUN
             type: string
@@ -338,7 +370,7 @@ paths:
           in: query
           description: モード
           schema:
-            enum: &ref_1
+            enum:
               - REGULAR
               - PRIVATE
             type: string
@@ -346,63 +378,6 @@ paths:
           required: false
           in: query
           description: オカシラシャケが出現したかどうか
-          schema:
-            type: boolean
-        - description: オフセット
-          required: false
-          name: offset
-          in: query
-          schema:
-            minimum: 0
-            title: offset
-            default: 0
-            type: number
-        - description: 上限値
-          required: false
-          name: limit
-          in: query
-          schema:
-            minimum: 0
-            maximum: 200
-            title: limit
-            default: 25
-            type: number
-        - description: ステージID
-          required: false
-          name: stageId
-          in: query
-          schema:
-            type: number
-        - description: ブキ一覧
-          required: false
-          name: weaponList
-          in: query
-          schema:
-            type: array
-        - description: 最低キケン度
-          required: false
-          name: dangerRate
-          in: query
-          schema:
-            type: number
-        - description: ルール
-          required: false
-          name: rule
-          in: query
-          schema:
-            enum: *ref_0
-            type: string
-        - description: モード
-          required: false
-          name: mode
-          in: query
-          schema:
-            enum: *ref_1
-            type: string
-        - description: オカシラシャケが出現したかどうか
-          required: false
-          name: hasExtraWave
-          in: query
           schema:
             type: boolean
       responses:
