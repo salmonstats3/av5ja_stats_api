@@ -77,11 +77,11 @@ export class PlayerResultRequest {
   @ApiProperty({
     description: "プレイヤー固有ID",
   })
-  get pid(): string {
+  get nplnUserId(): string {
     const regexp = /:u-([a-z0-9]{20})/;
     const matches: string[] | null = this.id.match(regexp);
     if (matches === null) {
-      throw new BadRequestException({ description: `Invalid pid ${this.id}` });
+      throw new BadRequestException({ description: `Invalid nplnUserId ${this.id}` });
     }
     return matches[1];
   }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Transform, Type } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -12,6 +12,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   Max,
   Min,
   ValidateNested,
@@ -22,7 +23,7 @@ import { Species } from "./player.dto";
 import { CustomCoopScheduleRequest } from "./schedule.dto";
 
 export class CoopResultRequest {
-  @ApiProperty({ type: CoopDataRequest, description: "データ" })
+  @ApiProperty({ description: "データ", type: CoopDataRequest })
   @ValidateNested()
   @Type(() => CoopDataRequest)
   data: CoopDataRequest;
@@ -61,10 +62,10 @@ class CustomCoopPlayerRequest {
   @IsNotEmpty()
   id: string;
 
-  @ApiProperty()
+  @ApiProperty({ name: "nplnUserId" })
   @IsString()
   @IsNotEmpty()
-  pid: string;
+  nplnUserId: string;
 
   @ApiProperty()
   @IsInt()
@@ -75,7 +76,6 @@ class CustomCoopPlayerRequest {
   @IsArray()
   @ArrayMaxSize(14)
   @ArrayMinSize(14)
-  @Transform((param) => param.value.slice(0, -1))
   bossKillCounts: number[];
 
   @ApiProperty()
@@ -217,6 +217,29 @@ class CustomCoopWaveRequest {
   isClear: boolean;
 }
 
+export class CustomCoopResultId {
+  @ApiProperty({ name: "nplnUserId" })
+  @IsString()
+  @IsNotEmpty()
+  nplnUserId: string;
+
+  // @ApiProperty({ name: "playTime" })
+  // @IsDateString()
+  // @IsNotEmpty()
+  // @Transform((params) => dayjs(params.value).toDate())
+  // playTime: Date;
+
+  @ApiProperty({ name: "type" })
+  @IsString()
+  @IsNotEmpty()
+  type: string;
+
+  @ApiProperty({ name: "uuid" })
+  @IsUUID()
+  @IsNotEmpty()
+  uuid: string;
+}
+
 export class CustomCoopResultRequest {
   @ApiProperty({ type: CustomCoopScheduleRequest })
   @ValidateNested()
@@ -226,13 +249,13 @@ export class CustomCoopResultRequest {
   @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
   @ArrayMinSize(14)
   @ArrayMaxSize(14)
-  @Transform((param) => param.value.slice(0, -1))
+  @Transform((param) => param.value)
   bossKillCounts: number[];
 
   @ApiProperty({ maxItems: 14, minItems: 14, type: [Number] })
   @ArrayMinSize(14)
   @ArrayMaxSize(14)
-  @Transform((param) => param.value.slice(0, -1))
+  @Transform((param) => param.value)
   bossCounts: number[];
 
   @ApiProperty()
@@ -284,26 +307,22 @@ export class CustomCoopResultRequest {
   myResult: CustomCoopPlayerRequest;
 
   @ApiProperty({
-    example: "20230122T152648_be77aee0-e3fe-48f9-9b1e-5bf68f535a02",
     description: "固有のID",
+    name: "id",
+    type: CustomCoopResultId,
   })
-  @IsString()
-  @IsNotEmpty()
-  @Transform((params) => {
-    const regexp = /\d{8}T\d{6}_[a-f0-9\-]{36}/;
-    const match: string[] | null = params.value.match(regexp);
-    return match[0];
-  })
-  id: string;
+  @Expose({ name: "id" })
+  @ValidateNested()
+  @Type(() => CustomCoopResultId)
+  resultId: CustomCoopResultId;
 
-  @ApiProperty({
-    format: "uuid",
-    example: "be77aee0-e3fe-48f9-9b1e-5bf68f535a02",
-    description: "ホストのUUID?",
-  })
-  @IsString()
-  @IsNotEmpty()
-  uuid: string;
+  get id(): string {
+    return `${this.playTime}:${this.resultId.uuid}`;
+  }
+
+  get uuid(): string {
+    return this.resultId.uuid;
+  }
 
   @ApiProperty({ type: [CustomCoopWaveRequest] })
   @ValidateNested({ each: true })
