@@ -214,7 +214,7 @@ export class ResultsService {
                 name: player.player.name,
                 nameId: player.player.nameId,
                 nameplate: player.player.nameplate.background.id,
-                pid: player.pid,
+                nplnUserId: player.nplnUserId,
                 smellMeter: player.smellMeter,
                 specialCounts: player.specialUsage,
                 specialId: player.specialId,
@@ -286,8 +286,8 @@ export class ResultsService {
               smellMeter: player.smellMeter,
             },
             where: {
-              resultId_pid: {
-                pid: player.pid,
+              resultId_nplnUserId: {
+                nplnUserId: player.nplnUserId,
                 resultId: result.id,
               },
             },
@@ -304,7 +304,7 @@ export class ResultsService {
   private queryV2(result: CustomCoopResultRequest): Prisma.ResultUpsertArgs {
     const members: string[] = [result.myResult]
       .concat(result.otherResults)
-      .map((player) => player.pid)
+      .map((player) => player.nplnUserId)
       .sort();
     const nightLess: boolean = result.waveDetails.every((wave) => wave.eventType === 0);
     return {
@@ -349,7 +349,7 @@ export class ResultsService {
                 name: player.name,
                 nameId: player.nameId,
                 nameplate: player.nameplate.background.id,
-                pid: player.pid,
+                nplnUserId: player.nplnUserId,
                 smellMeter: player.isMyself ? result.smellMeter : null,
                 specialCounts: player.specialCounts,
                 specialId: player.specialId,
@@ -421,8 +421,8 @@ export class ResultsService {
               smellMeter: result.smellMeter,
             },
             where: {
-              resultId_pid: {
-                pid: result.myResult.pid,
+              resultId_nplnUserId: {
+                nplnUserId: result.myResult.nplnUserId,
                 resultId: result.id,
               },
             },

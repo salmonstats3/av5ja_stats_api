@@ -30,7 +30,7 @@ class CustomWave extends WaveResult {
 
 export class CustomPlayerRequest extends PlayerRequest {
   isMyself: boolean;
-  pid: string;
+  nplnUserId: string;
   bossKillCounts: number[];
   jobBonus: number | null;
   jobScore: number | null;
@@ -55,7 +55,7 @@ export class CustomPlayerRequest extends PlayerRequest {
     this.goldenDeliverCount = player.goldenDeliverCount;
     this.goldenAssistCount = player.goldenAssistCount;
     this.isMyself = player.player.isMyself;
-    this.pid = player.player.pid;
+    this.nplnUserId = player.player.nplnUserId;
     this.jobBonus = this.isMyself ? result.jobBonus : null;
     this.jobScore = this.isMyself ? result.jobScore : null;
     this.jobRate = this.isMyself ? result.jobRate : null;
@@ -134,7 +134,7 @@ export class CustomCoopHistoryDetailRequest extends CoopHistoryDetailRequest {
       .map((player) => player.goldenAssistCount)
       .reduce((a, b) => a + b);
     this.ikuraNum = this.players.map((player) => player.deliverCount).reduce((a, b) => a + b);
-    this.members = this.players.map((player) => player.pid).sort();
+    this.members = this.players.map((player) => player.nplnUserId).sort();
     this.playedTime = result.playedTime;
     this.dangerRate = result.dangerRate;
     this.bossCounts = enemyResults.map((enemy) => enemy.popCount);

@@ -117,7 +117,7 @@ model Player {
   // 内部的なID
   id                   Int      @id @default(autoincrement()) @map("id")
   // プレイヤーID
-  pid                  String
+  nplnUserId           String   @map("npln_user_id")
   // 名前
   name                 String
   // 称号
@@ -178,7 +178,7 @@ model Player {
   // リザルトID
   resultId             String?  @map("result_id")
 
-  @@unique([resultId, pid])
+  @@unique([resultId, nplnUserId])
   @@map("players")
 }
 

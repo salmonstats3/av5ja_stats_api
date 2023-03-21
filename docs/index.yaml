@@ -753,7 +753,7 @@ components:
           description: 固有ID
           example: >-
             Q29vcFBsYXllci11LWFqeXMzNTdzZTZ0bGs3dmhhbm1tOjIwMjMwMTIzVDEzMDYxMl84NjMzZDM4OC1mMDE4LTQ1NTMtYjFiOC0zNzY4NDIwZDU2NzU6dS1heG1keTdndDJ1NmU0NXJiM2tvbQ==
-        pid:
+        nplnUserId:
           type: string
           description: プレイヤー固有ID
         isMyself:
@@ -776,7 +776,7 @@ components:
             - OCTOLING
       required:
         - id
-        - pid
+        - nplnUserId
         - isMyself
         - byname
         - name
@@ -1155,7 +1155,7 @@ components:
       properties:
         id:
           type: string
-        pid:
+        nplnUserId:
           type: string
         bossKillCountsTotal:
           type: number
@@ -1205,7 +1205,7 @@ components:
           type: number
       required:
         - id
-        - pid
+        - nplnUserId
         - bossKillCountsTotal
         - bossKillCounts
         - name
@@ -1222,6 +1222,19 @@ components:
         - goldenIkuraNum
         - ikuraNum
         - goldenIkuraAssistNum
+    CustomCoopResultId:
+      type: object
+      properties:
+        nplnUserId:
+          type: string
+        type:
+          type: string
+        uuid:
+          type: string
+      required:
+        - nplnUserId
+        - type
+        - uuid
     CustomCoopWaveRequest:
       type: object
       properties:
@@ -1301,14 +1314,9 @@ components:
         myResult:
           $ref: '#/components/schemas/CustomCoopPlayerRequest'
         id:
-          type: string
-          example: 20230122T152648_be77aee0-e3fe-48f9-9b1e-5bf68f535a02
           description: 固有のID
-        uuid:
-          type: string
-          format: uuid
-          example: be77aee0-e3fe-48f9-9b1e-5bf68f535a02
-          description: ホストのUUID?
+          allOf:
+            - $ref: '#/components/schemas/CustomCoopResultId'
         waveDetails:
           type: array
           items:
@@ -1348,7 +1356,6 @@ components:
         - otherResults
         - myResult
         - id
-        - uuid
         - waveDetails
         - goldenIkuraNum
         - dangerRate
