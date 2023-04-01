@@ -393,8 +393,13 @@ paths:
         - シナリオコード
 info:
   title: Salmon Stats+
+<<<<<<< HEAD
   description: Salmon Stats for Splatoon 3 API documents. (PRODUCTION)
   version: 0.1.0
+=======
+  description: Salmon Stats for Splatoon 3 API documents. (development)
+  version: 0.0.1
+>>>>>>> a02ee1c (fix: field name issue)
   contact:
     name: '@Salmonia3Dev'
     url: https://twitter.com/Salmonia3Dev
