@@ -148,7 +148,7 @@ export class SchedulesService {
     // スケジュールが存在しなければ404エラーを返す
     try {
       dayjs.extend(utc);
-      const startTime: Date = dayjs.unix(timestamp).utc(true).toDate();
+      const startTime: Date = dayjs.unix(timestamp).utc(false).toDate();
       const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
         where: {
           startTime: startTime,
