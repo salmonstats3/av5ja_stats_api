@@ -64,6 +64,8 @@ model Result {
   waves                Wave[]
   players              Player[]
 
+  @@index([salmonId, scheduleId, nightLess, scenarioCode])
+  @@index([scheduleId])
   @@map("results")
 }
 
@@ -108,6 +110,7 @@ model Schedule {
   results Result[]
 
   @@unique([startTime, endTime, stageId, weaponList, mode, rule])
+  @@index([startTime])
   @@map("schedules")
 }
 
@@ -177,6 +180,9 @@ model Player {
   resultId             String?  @map("result_id")
 
   @@unique([resultId, nplnUserId])
+  @@index([nplnUserId])
+  @@index([nplnUserId, name])
+  @@index([nplnUserId, gradePoint])
   @@map("players")
 }
 
@@ -203,5 +209,9 @@ model Wave {
   Result            Result?  @relation(fields: [resultId], references: [id])
   resultId          String?  @map("result_id")
 
+  @@index([waterLevel])
+  @@index([eventType])
+  @@index([eventType, waterLevel])
+  @@index([eventType, waterLevel, waveId])
   @@map("waves")
 }
