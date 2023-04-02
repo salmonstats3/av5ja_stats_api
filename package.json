@@ -11,19 +11,20 @@
     "yarn": "1.22.19"
   },
   "scripts": {
-    "prebuild": "rimraf dist",
     "build": "yarn nest build",
     "dev": "dotenv -e .env -- nest start --watch",
-    "migrate": "dotenv -e .env -- yarn prisma migrate dev --name init",
+    "format": "prettier --write --ignore-path .gitignore './**/*.{js,ts,json}'",
     "heroku": "git push heroku master",
     "lint": "eslint --ignore-path .gitignore './**/*.{js,ts}'",
     "lint:fix": "eslint --ignore-path .gitignore './**/*.{js,ts}' --fix",
-    "format": "prettier --write --ignore-path .gitignore './**/*.{js,ts,json}'",
+    "migrate": "dotenv -e .env -- yarn prisma migrate dev --name init",
+    "prebuild": "rimraf dist",
+    "start:prod": "node dist/main",
     "test": "jest",
-    "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@nestjs/axios": "^1.0.1",
