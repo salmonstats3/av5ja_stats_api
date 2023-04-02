@@ -394,7 +394,7 @@ paths:
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents. (PRODUCTION)
-  version: 0.0.3
+  version: 0.1.0
   contact:
     name: '@Salmonia3Dev'
     url: https://twitter.com/Salmonia3Dev
