@@ -4,16 +4,18 @@ import { Prisma, Schedule } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import { plainToClass } from "class-transformer";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { firstValueFrom } from "rxjs";
+import snakecaseKeys from "snakecase-keys";
 import { PrismaService } from "src/prisma.service";
 
 import { CustomCoopScheduleResponse } from "../dto/schedules/schedule.dto";
 
 class WaveResult {
   count: number;
-  eventType: number;
-  goldenIkuraNum: number;
-  waterLevel: number;
+  event_type: number;
+  golden_ikura_num: number;
+  water_level: number;
 }
 
 class TmpFailureWave {
@@ -29,9 +31,9 @@ class TmpFailureWave {
 
 class FailureResult {
   count: number;
-  isClear: number;
-  isFailure: number;
-  waveId: number;
+  is_clear: number;
+  is_failure: number;
+  wave_id: number;
 }
 
 class TmpEnemyResult {
@@ -67,35 +69,35 @@ class TmpEnemyResult {
 
 class EnemyResult {
   count: number;
-  killCount: number;
-  enemyId: number;
+  kill_count: number;
+  enemy_id: number;
 }
 
 class GradeResult {
   rank: number;
   npln_user_id: string;
   name: string;
-  gradePoint: number;
-  gradeId: number;
+  grade_point: number;
+  grade_dd: number;
 }
 
 export class ScheduleResult {
-  jobResults: JobResult;
-  enemyResults: EnemyResult[];
-  waveResults: WaveResult[];
-  gradeResults: GradeResult[];
-  failureResults: FailureResult[];
+  job_results: JobResult;
+  enemy_results: EnemyResult[];
+  wave_results: WaveResult[];
+  grade_results: GradeResult[];
+  failure_results: FailureResult[];
 }
 
 class JobResult {
-  shiftsWorked: number;
-  averageClearedWaves: number;
-  clearRatio: number;
-  bossDefeatedRatio: number;
-  ikuraNum: number;
-  goldenIkuraNum: number;
-  bossDefeatedNum: number;
-  deathCount: number;
+  shifts_worked: number;
+  average_cleared_waves: number;
+  clear_ratio: number;
+  boss_defeated_ratio: number;
+  ikura_num: number;
+  golden_ikura_num: number;
+  boss_defeated_num: number;
+  death_count: number;
   scales: ScaleResult;
 }
 
@@ -145,9 +147,11 @@ export class SchedulesService {
   async find(timestamp: number): Promise<ScheduleResult> {
     // スケジュールが存在しなければ404エラーを返す
     try {
+      dayjs.extend(utc);
+      const startTime: Date = dayjs.unix(timestamp).utc(true).toDate();
       const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
         where: {
-          startTime: dayjs.unix(timestamp).toDate(),
+          startTime: startTime,
         },
       });
       const data = await Promise.all([
@@ -158,12 +162,12 @@ export class SchedulesService {
         // this.queryBuilderGradePoint(schedule.id),
       ]);
       const response: ScheduleResult = new ScheduleResult();
-      response.jobResults = data[0];
-      response.enemyResults = data[1];
-      response.failureResults = data[2];
-      response.waveResults = data[3];
+      response.job_results = data[0];
+      response.enemy_results = data[1];
+      response.failure_results = data[2];
+      response.wave_results = data[3];
       // response.gradeResults = data[3];
-      return response;
+      return snakecaseKeys(response);
     } catch (error) {
       throw new NotFoundException();
     }
@@ -269,31 +273,31 @@ export class SchedulesService {
     return [
       {
         count: result.count,
-        isClear: result.count - result.is_failure_wave1,
-        isFailure: result.is_failure_wave1,
-        waveId: 1,
+        is_clear: result.count - result.is_failure_wave1,
+        is_failure: result.is_failure_wave1,
+        wave_id: 1,
       },
       {
         count: result.count - result.is_failure_wave1,
-        isClear: result.count - result.is_failure_wave1 - result.is_failure_wave2,
-        isFailure: result.is_failure_wave2,
-        waveId: 2,
+        is_clear: result.count - result.is_failure_wave1 - result.is_failure_wave2,
+        is_failure: result.is_failure_wave2,
+        wave_id: 2,
       },
       {
         count: result.count - result.is_failure_wave1 - result.is_failure_wave2,
-        isClear:
+        is_clear:
           result.count -
           result.is_failure_wave1 -
           result.is_failure_wave2 -
           result.is_failure_wave3,
-        isFailure: result.is_failure_wave3,
-        waveId: 3,
+        is_failure: result.is_failure_wave3,
+        wave_id: 3,
       },
       {
         count: result.is_boss_appear,
-        isClear: result.is_boss_appear - result.is_failure_wave4,
-        isFailure: result.is_failure_wave4,
-        waveId: 4,
+        is_clear: result.is_boss_appear - result.is_failure_wave4,
+        is_failure: result.is_failure_wave4,
+        wave_id: 4,
       },
     ];
   }
@@ -350,73 +354,73 @@ export class SchedulesService {
     return [
       {
         count: result.boss_counts_4,
-        enemyId: 4,
-        killCount: result.boss_kill_counts_4,
+        enemy_id: 4,
+        kill_count: result.boss_kill_counts_4,
       },
       {
         count: result.boss_counts_5,
-        enemyId: 5,
-        killCount: result.boss_kill_counts_5,
+        enemy_id: 5,
+        kill_count: result.boss_kill_counts_5,
       },
       {
         count: result.boss_counts_6,
-        enemyId: 6,
-        killCount: result.boss_kill_counts_6,
+        enemy_id: 6,
+        kill_count: result.boss_kill_counts_6,
       },
       {
         count: result.boss_counts_7,
-        enemyId: 7,
-        killCount: result.boss_kill_counts_7,
+        enemy_id: 7,
+        kill_count: result.boss_kill_counts_7,
       },
       {
         count: result.boss_counts_8,
-        enemyId: 8,
-        killCount: result.boss_kill_counts_8,
+        enemy_id: 8,
+        kill_count: result.boss_kill_counts_8,
       },
       {
         count: result.boss_counts_9,
-        enemyId: 9,
-        killCount: result.boss_kill_counts_9,
+        enemy_id: 9,
+        kill_count: result.boss_kill_counts_9,
       },
       {
         count: result.boss_counts_10,
-        enemyId: 10,
-        killCount: result.boss_kill_counts_10,
+        enemy_id: 10,
+        kill_count: result.boss_kill_counts_10,
       },
       {
         count: result.boss_counts_11,
-        enemyId: 11,
-        killCount: result.boss_kill_counts_11,
+        enemy_id: 11,
+        kill_count: result.boss_kill_counts_11,
       },
       {
         count: result.boss_counts_12,
-        enemyId: 12,
-        killCount: result.boss_kill_counts_12,
+        enemy_id: 12,
+        kill_count: result.boss_kill_counts_12,
       },
       {
         count: result.boss_counts_13,
-        enemyId: 13,
-        killCount: result.boss_kill_counts_13,
+        enemy_id: 13,
+        kill_count: result.boss_kill_counts_13,
       },
       {
         count: result.boss_counts_14,
-        enemyId: 14,
-        killCount: result.boss_kill_counts_14,
+        enemy_id: 14,
+        kill_count: result.boss_kill_counts_14,
       },
       {
         count: result.boss_counts_15,
-        enemyId: 15,
-        killCount: result.boss_kill_counts_15,
+        enemy_id: 15,
+        kill_count: result.boss_kill_counts_15,
       },
       {
         count: result.boss_counts_17,
-        enemyId: 17,
-        killCount: result.boss_kill_counts_17,
+        enemy_id: 17,
+        kill_count: result.boss_kill_counts_17,
       },
       {
         count: result.boss_counts_20,
-        enemyId: 20,
-        killCount: result.boss_kill_counts_20,
+        enemy_id: 20,
+        kill_count: result.boss_kill_counts_20,
       },
     ];
   }

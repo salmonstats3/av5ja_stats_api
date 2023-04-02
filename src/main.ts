@@ -6,10 +6,13 @@ import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { SwaggerModule, DocumentBuilder, OpenAPIObject } from "@nestjs/swagger";
 import * as bodyParser from "body-parser";
+import dayjs from "dayjs";
 import { config } from "dotenv";
 import { dump } from "js-yaml";
 
 import { AppModule } from "./app.module";
+
+export default dayjs;
 config({ path: ".env.local" });
 
 async function build(documents: OpenAPIObject) {

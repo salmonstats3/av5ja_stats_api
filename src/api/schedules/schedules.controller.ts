@@ -52,6 +52,7 @@ export class SchedulesController {
   @ApiNotFoundResponse()
   @ApiOkResponse({ type: [CustomCoopScheduleResponse] })
   find(@Param("schedule_id", ParseIntPipe) scheduleId: number): Promise<ScheduleResult> {
-    return this.service.find(scheduleId);
+    const response: Promise<ScheduleResult> = this.service.find(scheduleId);
+    return response;
   }
 }
