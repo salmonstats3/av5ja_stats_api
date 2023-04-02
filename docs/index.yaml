@@ -447,7 +447,7 @@ components:
     CoopPlayerResultResponse:
       type: object
       properties:
-        pid:
+        npln_user_id:
           type: string
         name:
           type: string
@@ -543,7 +543,7 @@ components:
           items:
             type: number
       required:
-        - pid
+        - npln_user_id
         - name
         - byname
         - nameId

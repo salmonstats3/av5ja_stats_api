@@ -39,10 +39,6 @@ export enum EventId {
   MUDMOUTH = 8,
 }
 
-enum EnemyId {
-  "オカシラシャケ" = 23,
-}
-
 class CoopWaveResultResponse {
   @ApiProperty({ description: "1~4の値が入ります" })
   @Expose()
@@ -85,7 +81,7 @@ class CoopWaveResultResponse {
 class CoopPlayerResultResponse {
   @ApiProperty()
   @Expose()
-  pid: string;
+  npln_user_id: string;
 
   @ApiProperty()
   @Expose()
@@ -106,7 +102,7 @@ class CoopPlayerResultResponse {
     type: [Number],
   })
   @Expose()
-  @Transform((param) => param.value.map((badge) => (badge === -1 ? null : badge)))
+  @Transform((param) => param.value.map((badge: number) => (badge === -1 ? null : badge)))
   badges: number[];
 
   @ApiProperty({ description: "ネームプレートのIDが入ります" })
@@ -137,7 +133,7 @@ class CoopPlayerResultResponse {
     type: [Number],
   })
   @Expose()
-  @Transform((param) => param.value.map((count) => (count === -1 ? null : count)))
+  @Transform((param) => param.value.map((count: number) => (count === -1 ? null : count)))
   bossKillCounts: number[];
 
   @ApiProperty()
