@@ -66,14 +66,14 @@ class TmpEnemyResult {
 }
 
 class EnemyResult {
-  bossCounts: number;
-  bossKillCounts: number;
+  count: number;
+  killCount: number;
   enemyId: number;
 }
 
 class GradeResult {
   rank: number;
-  pid: string;
+  npln_user_id: string;
   name: string;
   gradePoint: number;
   gradeId: number;
@@ -146,33 +146,43 @@ export class SchedulesService {
     // スケジュールが存在しなければ404エラーを返す
     try {
       const startTime: Date = dayjs.unix(timestamp).toDate();
-      console.log(timestamp, startTime);
+      // console.log(timestamp, startTime);
       const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
         where: {
           startTime: dayjs.unix(timestamp).toDate(),
         },
       });
-      console.log(schedule);
-      const enemyResult: EnemyResult[] = await this.queryBuilderEnemyResult(schedule.startTime);
-      console.log(enemyResult);
-      const failureResult: FailureResult[] = await this.queryBuilderFailureWave(schedule.startTime);
-      console.log(failureResult);
-      const gradeResult: GradeResult[] = await this.queryBuilderGradePoint(schedule.startTime);
-      console.log(gradeResult);
-      const waveResult: WaveResult[] = await this.queryBuilderWaveResult(schedule.startTime);
-      console.log(waveResult);
-      const jobResult: JobResult = await this.queryBuilderJobResult(schedule.startTime);
-      console.log(jobResult);
+      console.log(startTime);
+      const data = await Promise.all([
+        this.queryBuilderJobResult(schedule.startTime),
+        this.queryBuilderEnemyResult(schedule.startTime),
+        this.queryBuilderFailureWave(schedule.startTime),
+        // this.queryBuilderGradePoint(schedule.startTime),
+        // this.queryBuilderWaveResult(schedule.startTime),
+      ]);
+      // ]);
+      // console.log(data);
+      // console.log(schedule);
+      // const enemyResult: EnemyResult[] = await this.queryBuilderEnemyResult(schedule.startTime);
+      // // console.log(enemyResult);
+      // const failureResult: FailureResult[] = await this.queryBuilderFailureWave(schedule.startTime);
+      // // console.log(failureResult);
+      // const gradeResult: GradeResult[] = await this.queryBuilderGradePoint(schedule.startTime);
+      // // console.log(gradeResult);
+      console.log(await this.queryBuilderWaveResult(schedule.startTime));
+      // const waveResult: WaveResult[] = await this.queryBuilderWaveResult(schedule.startTime);
+      // // console.log(waveResult);
+      // const jobResult: JobResult = await this.queryBuilderJobResult(schedule.startTime);
+      // console.log(jobResult);
 
       const response: ScheduleResult = new ScheduleResult();
-      response.jobResults = jobResult;
-      response.enemyResults = enemyResult;
-      response.failureResults = failureResult;
-      response.gradeResults = gradeResult;
-      response.waveResults = waveResult;
+      response.jobResults = data[0];
+      response.enemyResults = data[1];
+      response.failureResults = data[2];
+      // response.gradeResults = gradeResult;
+      // response.waveResults = waveResult;
       return response;
     } catch (error) {
-      console.log(error);
       throw new NotFoundException();
     }
   }
@@ -216,7 +226,7 @@ export class SchedulesService {
     const result: GradeResult[] = await this.prisma.$queryRaw<GradeResult[]>`
     WITH results AS (
       SELECT
-        pid,
+        npln_user_id,
 	      MIN(name) AS name,
 	      MAX(grade_point) AS grade_point,
 	      MAX(grade_id) AS grade_id
@@ -235,15 +245,13 @@ export class SchedulesService {
 	    AND
 	      grade_id IS NOT NULL
 	    GROUP BY
-	      pid
+	      npln_user_id
     )
     SELECT
     RANK() OVER(ORDER BY grade_id DESC, grade_point DESC)::INT,
     *
     FROM
-    results
-    LIMIT
-    100`;
+    results`;
     return result;
   }
 
@@ -359,74 +367,74 @@ export class SchedulesService {
 
     return [
       {
-        bossCounts: result.boss_counts_4,
-        bossKillCounts: result.boss_kill_counts_4,
+        count: result.boss_counts_4,
         enemyId: 4,
+        killCount: result.boss_kill_counts_4,
       },
       {
-        bossCounts: result.boss_counts_5,
-        bossKillCounts: result.boss_kill_counts_5,
+        count: result.boss_counts_5,
         enemyId: 5,
+        killCount: result.boss_kill_counts_5,
       },
       {
-        bossCounts: result.boss_counts_6,
-        bossKillCounts: result.boss_kill_counts_6,
+        count: result.boss_counts_6,
         enemyId: 6,
+        killCount: result.boss_kill_counts_6,
       },
       {
-        bossCounts: result.boss_counts_7,
-        bossKillCounts: result.boss_kill_counts_7,
+        count: result.boss_counts_7,
         enemyId: 7,
+        killCount: result.boss_kill_counts_7,
       },
       {
-        bossCounts: result.boss_counts_8,
-        bossKillCounts: result.boss_kill_counts_8,
+        count: result.boss_counts_8,
         enemyId: 8,
+        killCount: result.boss_kill_counts_8,
       },
       {
-        bossCounts: result.boss_counts_9,
-        bossKillCounts: result.boss_kill_counts_9,
+        count: result.boss_counts_9,
         enemyId: 9,
+        killCount: result.boss_kill_counts_9,
       },
       {
-        bossCounts: result.boss_counts_10,
-        bossKillCounts: result.boss_kill_counts_10,
+        count: result.boss_counts_10,
         enemyId: 10,
+        killCount: result.boss_kill_counts_10,
       },
       {
-        bossCounts: result.boss_counts_11,
-        bossKillCounts: result.boss_kill_counts_11,
+        count: result.boss_counts_11,
         enemyId: 11,
+        killCount: result.boss_kill_counts_11,
       },
       {
-        bossCounts: result.boss_counts_12,
-        bossKillCounts: result.boss_kill_counts_12,
+        count: result.boss_counts_12,
         enemyId: 12,
+        killCount: result.boss_kill_counts_12,
       },
       {
-        bossCounts: result.boss_counts_13,
-        bossKillCounts: result.boss_kill_counts_13,
+        count: result.boss_counts_13,
         enemyId: 13,
+        killCount: result.boss_kill_counts_13,
       },
       {
-        bossCounts: result.boss_counts_14,
-        bossKillCounts: result.boss_kill_counts_14,
+        count: result.boss_counts_14,
         enemyId: 14,
+        killCount: result.boss_kill_counts_14,
       },
       {
-        bossCounts: result.boss_counts_15,
-        bossKillCounts: result.boss_kill_counts_15,
+        count: result.boss_counts_15,
         enemyId: 15,
+        killCount: result.boss_kill_counts_15,
       },
       {
-        bossCounts: result.boss_counts_17,
-        bossKillCounts: result.boss_kill_counts_17,
+        count: result.boss_counts_17,
         enemyId: 17,
+        killCount: result.boss_kill_counts_17,
       },
       {
-        bossCounts: result.boss_counts_20,
-        bossKillCounts: result.boss_kill_counts_20,
+        count: result.boss_counts_20,
         enemyId: 20,
+        killCount: result.boss_kill_counts_20,
       },
     ];
   }
