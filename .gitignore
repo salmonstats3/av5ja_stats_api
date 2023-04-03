@@ -35,10 +35,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Prisma
-migrations
-.env*
-docker-compose.yml
+.env
 
 # Python
-
 __pycache__
