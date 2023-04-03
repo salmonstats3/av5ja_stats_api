@@ -1,9 +1,9 @@
-include .env.local
+include .env
 
 .PHONY: up
 up:
-	docker-compose --env-file .env.local up
+	docker-compose up -d
 
 .PHONY: down
 down:
-	docker-compose --env-file .env.local down -v
+	docker-compose up -d

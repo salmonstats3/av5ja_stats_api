@@ -7,9 +7,8 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgres"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider = "postgres"
+  url      = env("DATABASE_URL")
 }
 
 model Result {
@@ -111,6 +110,7 @@ model Schedule {
 
   @@unique([startTime, endTime, stageId, weaponList, mode, rule])
   @@index([startTime])
+  @@index([id])
   @@map("schedules")
 }
 
@@ -211,7 +211,7 @@ model Wave {
 
   @@index([waterLevel])
   @@index([eventType])
-  @@index([eventType, waterLevel])
-  @@index([eventType, waterLevel, waveId])
+  @@index([waterLevel, eventType])
+  @@index([waterLevel, eventType, waveId])
   @@map("waves")
 }
