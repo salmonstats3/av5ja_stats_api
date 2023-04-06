@@ -1,0 +1,61 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { Prisma } from "@prisma/client";
+import { Transform } from "class-transformer";
+import { IsEnum, IsOptional } from "class-validator";
+import dayjs from "dayjs";
+
+import { Mode } from "../enum/mode";
+import { Rule } from "../enum/rule";
+
+export class CoopScheduleRequest {
+  @ApiProperty()
+  stageId: number;
+
+  @ApiProperty()
+  @IsOptional()
+  // @IsDateString()
+  @Transform((param) => (param.value === null ? null : dayjs(param.value).toDate()))
+  startTime: Date | null;
+
+  @ApiProperty()
+  @IsOptional()
+  // @IsDateString()
+  @Transform((param) => (param.value === null ? null : dayjs(param.value).toDate()))
+  endTime: Date | null;
+
+  @ApiProperty()
+  weaponList: number[];
+
+  @ApiProperty()
+  rareWeapon: number | null;
+
+  @ApiProperty()
+  @IsEnum(Mode)
+  mode: Mode;
+
+  @ApiProperty()
+  @IsEnum(Rule)
+  rule: Rule;
+
+  get query(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
+    return {
+      create: {
+        endTime: this.endTime,
+        mode: this.mode,
+        rareWeapon: this.rareWeapon,
+        rule: this.rule,
+        stageId: this.stageId,
+        startTime: this.startTime,
+        weaponList: this.weaponList,
+      },
+      where: {
+        stageId_mode_rule_weaponList: {
+          mode: this.mode,
+          rule: this.rule,
+          stageId: this.stageId,
+          weaponList: this.weaponList,
+        },
+      },
+    };
+  }
+}

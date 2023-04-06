@@ -11,11 +11,12 @@ import { dump } from "js-yaml";
 
 import { AppModule } from "./app.module";
 
-config({ path: ".env.local" });
+config({ path: ".env" });
 
 async function build(documents: OpenAPIObject) {
   const build = path.resolve(process.cwd(), "docs");
   const output = path.resolve(build, "index");
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   mkdir(build, { recursive: true }, () => {});
   writeFileSync(`${output}.json`, JSON.stringify(documents), {
     encoding: "utf8",
