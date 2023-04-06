@@ -9,7 +9,7 @@ export class CoopResultManyRequest {
   @IsArray()
   @IsNotEmpty()
   @ArrayMinSize(1)
-  @ArrayMaxSize(200)
+  @ArrayMaxSize(1000)
   @ValidateNested({ each: true })
   @Type(() => CoopResultRequest)
   results: CoopResultRequest[];
