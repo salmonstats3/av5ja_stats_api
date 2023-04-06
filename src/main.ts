@@ -27,7 +27,7 @@ async function build(documents: OpenAPIObject) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(bodyParser.json({ limit: "5mb" }));
+  app.use(bodyParser.json({ limit: "10mb" }));
   app.enableCors({
     credentials: false,
     maxAge: 86400,
