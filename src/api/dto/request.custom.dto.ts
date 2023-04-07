@@ -163,7 +163,7 @@ export class CustomCoopPlayerRequest {
 
   @ApiProperty()
   @IsOptional()
-  @IsDecimal()
+  @IsNumber()
   @Min(0)
   readonly jobRate: number | null;
 
@@ -201,7 +201,6 @@ export class CustomCoopPlayerRequest {
 
   @ApiProperty()
   @IsEnum(Species)
-  @Min(0)
   readonly species: Species;
 
   @ApiProperty()
@@ -212,13 +211,13 @@ export class CustomCoopPlayerRequest {
 
   @ApiProperty()
   @IsArray()
-  @ArrayMinSize(4)
+  @ArrayMinSize(0)
   @ArrayMaxSize(4)
   readonly specialCounts: number[];
 
   @ApiProperty()
   @IsArray()
-  @ArrayMinSize(4)
+  @ArrayMinSize(0)
   @ArrayMaxSize(4)
   readonly weaponList: number[];
 
@@ -283,6 +282,7 @@ export class CustomCoopWaveRequest {
   readonly waterLevel: number;
 
   @ApiProperty()
+  @IsOptional()
   @IsInt()
   @Min(0)
   readonly goldenIkuraNum: number;
@@ -294,6 +294,7 @@ export class CustomCoopWaveRequest {
 
   @ApiProperty()
   @IsInt()
+  @IsOptional()
   @Min(0)
   readonly quotaNum: number;
 
@@ -315,6 +316,10 @@ export class CustomCoopWaveRequest {
 }
 
 export class CustomCoopResultRequest {
+  @ApiProperty()
+  @IsString()
+  id: string;
+
   @ApiProperty()
   @IsUUID()
   uuid: string;
@@ -356,10 +361,14 @@ export class CustomCoopResultRequest {
   @Max(3.33)
   dangerRate: number;
 
-  @ApiProperty()
-  @IsDateString()
-  @Transform((param) => dayjs(param.value).toDate())
-  playTime: Date;
+  get playTime(): Date {
+    const regexp = new RegExp("^([0-9]{8}T[0-9]{6}):");
+    if (!regexp.test(this.id)) {
+      throw new BadRequestException("playTime must be given by the format of 'YYYYMMDD`T`THHmmss:");
+    }
+    const play_time: string = this.id.match(regexp)[1];
+    return dayjs(play_time).toDate();
+  }
 
   @ApiProperty()
   @IsBoolean()
@@ -377,22 +386,22 @@ export class CustomCoopResultRequest {
 
   @ApiProperty()
   @IsOptional()
-  @IsBoolean()
+  @IsInt()
   bossId: number | null;
 
   @ApiProperty()
   @IsOptional()
-  @IsBoolean()
+  @IsInt()
   bronze: number | null;
 
   @ApiProperty()
   @IsOptional()
-  @IsBoolean()
+  @IsInt()
   silver: number | null;
 
   @ApiProperty()
   @IsOptional()
-  @IsBoolean()
+  @IsInt()
   gold: number | null;
 
   @ApiProperty()
