@@ -25,6 +25,8 @@ import {
 import dayjs from "dayjs";
 
 import { EventType } from "../enum/event_type";
+import { Mode } from "../enum/mode";
+import { Rule } from "../enum/rule";
 import { Species } from "../enum/species";
 import { WaterLevel } from "../enum/water_level";
 import { CoopScheduleRequest } from "../schedules/schedule.request.dto";
@@ -534,6 +536,24 @@ export class CoopResultRequest {
 
   get members(): string[] {
     return this.otherResults.concat(this.myResult).map((player) => player.nplnUserId);
+  }
+
+  get isValid(): boolean {
+    // キケン度が0の場合は無効
+    if (this.dangerRate === 0) {
+      return false;
+    }
+
+    // いつものバイトでオカシラメーターがnullの場合は無効
+    if (this.smellMeter === null && this.schedule.mode === Mode.REGULAR) {
+      return false;
+    }
+
+    // スペシャルIDが全員nullの場合は無効
+    if (this.otherResults.concat(this.myResult).every((player) => player.specialId === null)) {
+      return false;
+    }
+    return true;
   }
 
   get query(): Prisma.ResultUpsertArgs {

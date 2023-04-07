@@ -12,7 +12,7 @@ def upload():
       response = requests.post("http://localhost:8080/v2/results", data=json.dumps(request), headers=headers)
       if response.status_code != 200:
         print(response.text)
-        break
+        # break
 
 def download():
   for offset in range(757000, 780000, 1000):

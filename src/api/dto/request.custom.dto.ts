@@ -79,10 +79,6 @@ export class CustomCoopScheduleRequest {
 export class CustomCoopPlayerRequest {
   @ApiProperty()
   @IsString()
-  readonly id: string;
-
-  @ApiProperty()
-  @IsString()
   readonly nplnUserId: string;
 
   @ApiProperty()
@@ -101,6 +97,7 @@ export class CustomCoopPlayerRequest {
   @IsArray()
   @ArrayMinSize(3)
   @ArrayMaxSize(3)
+  @Transform((param) => param.value.map((value: number | null) => value ?? -1))
   readonly badges: number[];
 
   @ApiProperty()
@@ -128,6 +125,7 @@ export class CustomCoopPlayerRequest {
   @IsArray()
   @ArrayMinSize(14)
   @ArrayMaxSize(14)
+  @Transform((param) => param.value.map((value: number | null) => value ?? -1))
   readonly bossKillCounts: number[];
 
   @ApiProperty()
@@ -207,7 +205,7 @@ export class CustomCoopPlayerRequest {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  readonly speciesId: number | null;
+  readonly specialId: number | null;
 
   @ApiProperty()
   @IsArray()
@@ -221,14 +219,9 @@ export class CustomCoopPlayerRequest {
   @ArrayMaxSize(4)
   readonly weaponList: number[];
 
-  get playTime(): Date {
-    const regexp = new RegExp("^([0-9]{8}T[0-9]{6}):");
-    if (!regexp.test(this.id)) {
-      throw new BadRequestException("playTime must be given by the format of 'YYYYMMDD`T`THHmmss:");
-    }
-    const play_time: string = this.id.match(regexp)[1];
-    return dayjs(play_time).toDate();
-  }
+  @ApiProperty()
+  @IsDateString()
+  playTime: Date;
 
   get query(): Prisma.PlayerCreateWithoutResultInput {
     return {
@@ -253,8 +246,9 @@ export class CustomCoopPlayerRequest {
       nplnUserId: this.nplnUserId,
       playTime: this.playTime,
       smellMeter: this.smellMeter,
+      specialCounts: this.specialCounts,
       species: this.species.toString(),
-      specialId: this.speciesId,
+      specialId: this.specialId,
       textColor: this.textColor,
       uniform: this.uniform,
       weaponList: this.weaponList,
@@ -317,10 +311,6 @@ export class CustomCoopWaveRequest {
 
 export class CustomCoopResultRequest {
   @ApiProperty()
-  @IsString()
-  id: string;
-
-  @ApiProperty()
   @IsUUID()
   uuid: string;
 
@@ -361,14 +351,9 @@ export class CustomCoopResultRequest {
   @Max(3.33)
   dangerRate: number;
 
-  get playTime(): Date {
-    const regexp = new RegExp("^([0-9]{8}T[0-9]{6}):");
-    if (!regexp.test(this.id)) {
-      throw new BadRequestException("playTime must be given by the format of 'YYYYMMDD`T`THHmmss:");
-    }
-    const play_time: string = this.id.match(regexp)[1];
-    return dayjs(play_time).toDate();
-  }
+  @ApiProperty()
+  @IsDateString()
+  playTime: Date;
 
   @ApiProperty()
   @IsBoolean()
@@ -430,9 +415,22 @@ export class CustomCoopResultRequest {
   @Type(() => CustomCoopWaveRequest)
   readonly waves: CustomCoopWaveRequest[];
 
-  get query(): Prisma.ResultCreateArgs {
+  get isValid(): boolean {
+    // プレイヤー全員のスペシャルIDがnullならfalse
+    if (this.players.every((player) => player.specialId === null)) {
+      return false;
+    }
+
+    // キケン度が0ならfalse
+    if (this.dangerRate === 0) {
+      return false;
+    }
+    return true;
+  }
+
+  get query(): Prisma.ResultUpsertArgs {
     return {
-      data: {
+      create: {
         bossCounts: this.bossCounts,
         bossId: this.bossId,
         bossKillCounts: this.bossKillCounts,
@@ -463,6 +461,13 @@ export class CustomCoopResultRequest {
           createMany: {
             data: this.waves.map((wave) => wave.query),
           },
+        },
+      },
+      update: {},
+      where: {
+        playTime_uuid: {
+          playTime: this.playTime,
+          uuid: this.uuid,
         },
       },
     };
