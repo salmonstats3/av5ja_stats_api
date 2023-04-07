@@ -3,17 +3,16 @@ import os
 import json
 
 def upload():
-  try:
-    files = sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))
-    for file in files:
-      with open(f"results/{file}.json", mode="r") as f:
-        request = json.loads(f.read())
-        print(f"Uploading {file}.json")
-        headers = {"Content-Type": "application/json"}
-        response = requests.post("http://localhost:8080/v1/results", data=json.dumps(request), headers=headers)
+  files = sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))
+  for file in files:
+    with open(f"results/{file}.json", mode="r") as f:
+      request = json.loads(f.read())
+      print(f"Uploading {file}.json")
+      headers = {"Content-Type": "application/json"}
+      response = requests.post("http://localhost:8080/v2/results", data=json.dumps(request), headers=headers)
+      if response.status_code != 200:
         print(response.text)
-  except Exception as e:
-    print(e)
+        break
 
 def download():
   for offset in range(757000, 780000, 1000):

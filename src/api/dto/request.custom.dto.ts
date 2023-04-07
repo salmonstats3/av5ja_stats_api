@@ -1,3 +1,4 @@
+import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Prisma } from "@prisma/client";
 import { Transform, Type } from "class-transformer";
@@ -23,14 +24,294 @@ import { Mode } from "./enum/mode";
 import { Rule } from "./enum/rule";
 import { Species } from "./enum/species";
 
-export class CustomCoopResultsRequest {
+export class CustomCoopScheduleRequest {
   @ApiProperty()
-  @ValidateNested({ each: true })
-  @Type(() => CustomCoopResultRequest)
+  @IsInt()
+  stageId: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsDateString()
+  startTime: Date | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsDateString()
+  endTime: Date | null;
+
+  @ApiProperty()
   @IsArray()
-  @ArrayMinSize(1)
-  @ArrayMaxSize(1000)
-  results: CustomCoopResultRequest[];
+  @ArrayMinSize(0)
+  @ArrayMaxSize(4)
+  weaponList: number[];
+
+  @ApiProperty()
+  @IsEnum(Mode)
+  mode: Mode;
+
+  @ApiProperty()
+  @IsEnum(Rule)
+  rule: Rule;
+
+  get query(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
+    return {
+      create: {
+        endTime: this.endTime,
+        mode: this.mode,
+        rareWeapon: null,
+        rule: this.rule,
+        stageId: this.stageId,
+        startTime: this.startTime,
+        weaponList: this.weaponList,
+      },
+      where: {
+        stageId_mode_rule_weaponList: {
+          mode: this.mode,
+          rule: this.rule,
+          stageId: this.stageId,
+          weaponList: this.weaponList,
+        },
+      },
+    };
+  }
+}
+
+export class CustomCoopPlayerRequest {
+  @ApiProperty()
+  @IsString()
+  readonly id: string;
+
+  @ApiProperty()
+  @IsString()
+  readonly nplnUserId: string;
+
+  @ApiProperty()
+  @IsString()
+  readonly name: string;
+
+  @ApiProperty()
+  @IsString()
+  readonly byname: string;
+
+  @ApiProperty()
+  @IsString()
+  readonly nameId: string;
+
+  @ApiProperty()
+  @IsArray()
+  @ArrayMinSize(3)
+  @ArrayMaxSize(3)
+  readonly badges: number[];
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly nameplate: number;
+
+  @ApiProperty()
+  @IsArray()
+  @ArrayMinSize(4)
+  @ArrayMaxSize(4)
+  readonly textColor: number[];
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly uniform: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly bossKillCountsTotal: number;
+
+  @ApiProperty()
+  @IsArray()
+  @ArrayMinSize(14)
+  @ArrayMaxSize(14)
+  readonly bossKillCounts: number[];
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly deadCount: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly helpCount: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly ikuraNum: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly goldenIkuraNum: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly goldenIkuraAssistNum: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  readonly jobBonus: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsDecimal()
+  @Min(0)
+  readonly jobRate: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  readonly jobScore: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  readonly kumaPoint: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  readonly gradeId: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(999)
+  readonly gradePoint: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(5)
+  readonly smellMeter: number | null;
+
+  @ApiProperty()
+  @IsEnum(Species)
+  @Min(0)
+  readonly species: Species;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  readonly speciesId: number | null;
+
+  @ApiProperty()
+  @IsArray()
+  @ArrayMinSize(4)
+  @ArrayMaxSize(4)
+  readonly specialCounts: number[];
+
+  @ApiProperty()
+  @IsArray()
+  @ArrayMinSize(4)
+  @ArrayMaxSize(4)
+  readonly weaponList: number[];
+
+  get playTime(): Date {
+    const regexp = new RegExp("^([0-9]{8}T[0-9]{6}):");
+    if (!regexp.test(this.id)) {
+      throw new BadRequestException("playTime must be given by the format of 'YYYYMMDD`T`THHmmss:");
+    }
+    const play_time: string = this.id.match(regexp)[1];
+    return dayjs(play_time).toDate();
+  }
+
+  get query(): Prisma.PlayerCreateWithoutResultInput {
+    return {
+      badges: this.badges,
+      bossKillCounts: this.bossKillCounts,
+      bossKillCountsTotal: this.bossKillCountsTotal,
+      byname: this.byname,
+      deadCount: this.deadCount,
+      goldenIkuraAssistNum: this.goldenIkuraAssistNum,
+      goldenIkuraNum: this.goldenIkuraNum,
+      gradeId: this.gradeId,
+      gradePoint: this.gradePoint,
+      helpCount: this.helpCount,
+      ikuraNum: this.ikuraNum,
+      jobBonus: this.jobBonus,
+      jobRate: this.jobRate,
+      jobScore: this.jobScore,
+      kumaPoint: this.kumaPoint,
+      name: this.name,
+      nameId: this.nameId,
+      nameplate: this.nameplate,
+      nplnUserId: this.nplnUserId,
+      playTime: this.playTime,
+      smellMeter: this.smellMeter,
+      species: this.species.toString(),
+      specialId: this.speciesId,
+      textColor: this.textColor,
+      uniform: this.uniform,
+      weaponList: this.weaponList,
+    };
+  }
+}
+
+export class CustomCoopWaveRequest {
+  @ApiProperty()
+  @IsInt()
+  @Min(1)
+  @Max(4)
+  readonly waveId: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(8)
+  readonly eventType: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(2)
+  readonly waterLevel: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly goldenIkuraNum: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly goldenIkuraPopNum: number;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  readonly quotaNum: number;
+
+  @ApiProperty()
+  @IsBoolean()
+  readonly isClear: boolean;
+
+  get query(): Prisma.WaveCreateWithoutResultInput {
+    return {
+      eventType: this.eventType,
+      goldenIkuraNum: this.goldenIkuraNum,
+      goldenIkuraPopNum: this.goldenIkuraPopNum,
+      isClear: this.isClear,
+      quotaNum: this.quotaNum,
+      waterLevel: this.waterLevel,
+      waveId: this.waveId,
+    };
+  }
 }
 
 export class CustomCoopResultRequest {
@@ -100,19 +381,45 @@ export class CustomCoopResultRequest {
   bossId: number | null;
 
   @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  bronze: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  silver: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  gold: number | null;
+
+  @ApiProperty()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(4)
+  members: string[];
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  scenarioCode: string | null;
+
+  @ApiProperty()
   @ValidateNested()
   @Type(() => CustomCoopScheduleRequest)
-  schedule: CustomCoopScheduleRequest;
+  readonly schedule: CustomCoopScheduleRequest;
 
   @ApiProperty()
   @ValidateNested({ each: true })
   @Type(() => CustomCoopPlayerRequest)
-  players: CustomCoopPlayerRequest[];
+  readonly players: CustomCoopPlayerRequest[];
 
   @ApiProperty()
   @ValidateNested({ each: true })
   @Type(() => CustomCoopWaveRequest)
-  waves: CustomCoopWaveRequest[];
+  readonly waves: CustomCoopWaveRequest[];
 
   get query(): Prisma.ResultCreateArgs {
     return {
@@ -132,206 +439,33 @@ export class CustomCoopResultRequest {
         members: this.members,
         nightLess: this.nightLess,
         playTime: this.playTime,
-        players: this.players,
+        players: {
+          createMany: {
+            data: this.players.map((player) => player.query),
+          },
+        },
         scenarioCode: this.scenarioCode,
         schedule: {
-          create: {},
+          connectOrCreate: this.schedule.query,
         },
         silver: this.silver,
         uuid: this.uuid,
-        waves: this.waves,
+        waves: {
+          createMany: {
+            data: this.waves.map((wave) => wave.query),
+          },
+        },
       },
     };
   }
 }
 
-export class CustomCoopScheduleRequest {
+export class CustomCoopResultManyRequest {
   @ApiProperty()
-  @IsInt()
-  stageId: number;
-
-  @ApiProperty()
+  @ValidateNested({ each: true })
+  @Type(() => CustomCoopResultRequest)
   @IsArray()
-  @ArrayMinSize(0)
-  @ArrayMaxSize(4)
-  weaponList: number[];
-
-  @ApiProperty()
-  @IsEnum(Mode)
-  mode: Mode;
-
-  @ApiProperty()
-  @IsEnum(Rule)
-  rule: Rule;
-}
-
-export class CustomCoopPlayerRequest {
-  @ApiProperty()
-  @IsString()
-  name: string;
-
-  @ApiProperty()
-  @IsString()
-  byname: string;
-
-  @ApiProperty()
-  @IsString()
-  nameId: string;
-
-  @ApiProperty()
-  @IsArray()
-  @ArrayMinSize(3)
-  @ArrayMaxSize(3)
-  badges: number[];
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  nameplate: number;
-
-  @ApiProperty()
-  @IsArray()
-  @ArrayMinSize(4)
-  @ArrayMaxSize(4)
-  textColor: number[];
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  uniform: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  bossKillCountsTotal: number;
-
-  @ApiProperty()
-  @IsArray()
-  @ArrayMinSize(14)
-  @ArrayMaxSize(14)
-  bossKillCounts: number[];
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  deadCount: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  helpCount: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  ikuraNum: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  goldenIkuraNum: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  goldenIkuraAssistNum: number;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  jobBonus: number | null;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsDecimal()
-  @Min(0)
-  jobRate: number | null;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  jobScore: number | null;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  kumaPoint: number | null;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  gradeId: number | null;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(5)
-  smellMeter: number | null;
-
-  @ApiProperty()
-  @IsEnum(Species)
-  @Min(0)
-  species: Species;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  speciesId: number | null;
-
-  @ApiProperty()
-  @IsArray()
-  @ArrayMinSize(4)
-  @ArrayMaxSize(4)
-  specialCounts: number[];
-
-  @ApiProperty()
-  @IsArray()
-  @ArrayMinSize(4)
-  @ArrayMaxSize(4)
-  weaponList: number[];
-}
-
-export class CustomCoopWaveRequest {
-  @ApiProperty()
-  @IsInt()
-  @Min(1)
-  @Max(4)
-  waveId: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  @Max(8)
-  eventType: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  @Max(2)
-  waterLevel: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  goldenIkuraNum: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  goldenIkuraPopNum: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  quotaNum: number;
-
-  @ApiProperty()
-  @IsBoolean()
-  isClear: boolean;
+  @ArrayMinSize(1)
+  @ArrayMaxSize(1000)
+  results: CustomCoopResultRequest[];
 }
