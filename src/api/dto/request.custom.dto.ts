@@ -482,6 +482,6 @@ export class CustomCoopResultManyRequest {
   @Type(() => CustomCoopResultRequest)
   @IsArray()
   @ArrayMinSize(1)
-  @ArrayMaxSize(1000)
+  @ArrayMaxSize(2000)
   results: CustomCoopResultRequest[];
 }
