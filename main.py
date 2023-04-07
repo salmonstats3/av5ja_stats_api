@@ -10,9 +10,10 @@ def upload():
       print(f"Uploading {file}.json")
       headers = {"Content-Type": "application/json"}
       response = requests.post("http://localhost:8080/v2/results", data=json.dumps(request), headers=headers)
-      if response.status_code != 200:
-        print(response.text)
-        # break
+      if response.status_code != 201:
+        with open(f"status.log", mode="a") as w:
+          w.write(f"{response.status_code}: {file}")
+          print(response.text)
 
 def download():
   for offset in range(757000, 780000, 1000):

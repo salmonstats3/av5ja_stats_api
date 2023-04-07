@@ -204,7 +204,7 @@ export class CustomCoopPlayerRequest {
   @ApiProperty()
   @IsOptional()
   @IsNumber()
-  @Min(0)
+  @Min(-1)
   readonly specialId: number | null;
 
   @ApiProperty()
@@ -449,6 +449,7 @@ export class CustomCoopResultRequest {
         players: {
           createMany: {
             data: this.players.map((player) => player.query),
+            skipDuplicates: true,
           },
         },
         scenarioCode: this.scenarioCode,
@@ -460,6 +461,7 @@ export class CustomCoopResultRequest {
         waves: {
           createMany: {
             data: this.waves.map((wave) => wave.query),
+            skipDuplicates: true,
           },
         },
       },
