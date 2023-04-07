@@ -16,7 +16,6 @@
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,ts,json}'",
     "lint": "eslint --ignore-path .gitignore './**/*.{js,ts}' --fix",
     "postreset": "yarn prisma migrate deploy",
-    "prereset": "yarn prisma migrate dev --name init --create-only",
     "reset": "yarn prisma migrate reset --force",
     "create": "yarn prisma migrate dev --name init --create-only ",
     "deploy": "yarn prisma migrate deploy",
