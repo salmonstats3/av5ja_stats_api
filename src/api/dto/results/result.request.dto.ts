@@ -127,6 +127,7 @@ export class CoopResultIdRequest {
 
   @ApiProperty()
   @IsUUID()
+  @Transform((param) => param.value.toUpperCase())
   readonly uuid: string;
 }
 
