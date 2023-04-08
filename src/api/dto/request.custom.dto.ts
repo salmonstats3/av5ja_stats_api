@@ -312,6 +312,7 @@ export class CustomCoopWaveRequest {
 export class CustomCoopResultRequest {
   @ApiProperty()
   @IsUUID()
+  @Transform((param) => param.value.toUpperCase())
   uuid: string;
 
   @ApiProperty()
