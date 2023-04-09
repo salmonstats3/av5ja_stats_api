@@ -45,6 +45,17 @@ paths:
           description: ''
       tags:
         - スケジュール
+  /v2/schedules/latest:
+    get:
+      operationId: 統計詳細取得
+      summary: ''
+      description: 指定されたスケジュールの統計データ詳細を返します.
+      parameters: []
+      responses:
+        '400':
+          description: ''
+      tags:
+        - 最新スケジュール統計
   /v2/schedules/stage:
     get:
       operationId: 統計詳細取得
