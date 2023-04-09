@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Result } from "@prisma/client";
 import dayjs from "dayjs";
 import { initializeApp } from "firebase/app";
-import { collection, getDocs, getFirestore } from "firebase/firestore/lite";
+import { collection, doc, getDocs, getFirestore, setDoc } from "firebase/firestore/lite";
 import snakecaseKeys from "snakecase-keys";
 import { PrismaService } from "src/prisma.service";
 
@@ -13,6 +13,7 @@ import {
   CoopScheduleStageResponse,
   CoopScheduleStats,
   CoopScheduleStatsBase,
+  CoopScheduleStatsResponse,
 } from "../dto/schedules/schedule.stats.response.dto";
 
 const firebaseConfig = {
@@ -37,6 +38,44 @@ export class SchedulesService {
       doc.data(),
     );
     return schedules.map((schedule) => snakecaseKeys(schedule as CoopScheduleResponse));
+  }
+
+  // スケジュールの統計を更新する
+  async update(): Promise<Result> {
+    const result: CoopScheduleStatsResponse = await this.findManyByDangerRate();
+    await setDoc(doc(this.firestore, "stats", dayjs(result.start_time).toISOString()), {
+      results: result.results.map((result) => {
+        return {
+          boss: {
+            count: result.boss.count,
+            id: result.boss.id,
+            kill_count: result.boss.kill_count,
+          },
+          danger_rete: result.danger_rate,
+          enemies: result.enemies.map((enemy) => {
+            return {
+              count: enemy.count,
+              id: enemy.id,
+              kill_count: enemy.kill_count,
+            };
+          }),
+          golden_ikura_num: {
+            avg: result.golden_ikura_num.avg,
+            max: result.golden_ikura_num.max,
+          },
+          ikura_num: {
+            avg: result.ikura_num.avg,
+            max: result.ikura_num.max,
+          },
+          job_result: {
+            clear: result.job_result.clear,
+            failure: result.job_result.failure,
+          },
+          shifts_worked: result.shifts_worked,
+        };
+      }),
+    });
+    return;
   }
 
   // スケジュールIDを指定して統計データを返す
@@ -95,7 +134,7 @@ export class SchedulesService {
   }
 
   // ステージごとの統計データを返す
-  async findManyByStageId(): Promise<CoopScheduleStageResponse> {
+  private async findManyByStageId(): Promise<CoopScheduleStageResponse> {
     const results: CoopScheduleStageData[] = await this.prisma.$queryRaw<CoopScheduleStageData[]>`
     SELECT
     stage_id,
@@ -123,13 +162,21 @@ export class SchedulesService {
   }
 
   // スケジュールIDを指定して統計データを返す
-  async findManyByDangerRate(startTime: Date | null = null): Promise<CoopScheduleStats[]> {
+  async findManyByDangerRate(): Promise<CoopScheduleStatsResponse> {
     try {
-      const current_time: Date = dayjs().toDate();
-      const result: Result = await this.prisma.result.findFirstOrThrow({
+      // 現在よりも遊んだ時間が新しい、ルールがプレイベートバイトでないリザルトを取得する
+      const result = await this.prisma.result.findFirstOrThrow({
+        select: {
+          schedule: true,
+        },
         where: {
           playTime: {
-            gte: current_time,
+            gte: new Date(),
+          },
+          schedule: {
+            rule: {
+              equals: "REGULAR",
+            },
           },
         },
       });
@@ -188,11 +235,17 @@ export class SchedulesService {
     players
     ON
     players.result_id = results.salmon_id
-    WHERE schedule_id = ${result.scheduleId}
+    WHERE schedule_id = ${result.schedule.scheduleId}
     GROUP BY danger_rate
     ORDER BY danger_rate
     `;
-      return results.map((result: CoopScheduleStatsBase) => CoopScheduleStats.from(result));
+      const response = new CoopScheduleStatsResponse();
+      response.start_time = result.schedule.startTime;
+      response.end_time = result.schedule.endTime;
+      response.results = results.map((result: CoopScheduleStatsBase) =>
+        CoopScheduleStats.from(result),
+      );
+      return response;
     } catch {
       throw new NotFoundException();
     }
