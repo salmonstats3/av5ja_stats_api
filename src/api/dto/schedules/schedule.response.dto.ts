@@ -7,19 +7,19 @@ import { Setting } from "../enum/setting";
 
 export class CoopScheduleResponse {
   @ApiProperty()
-  stage_id: number;
+  stageId: number;
 
   @ApiProperty()
-  start_time: Date;
+  startTime: Date;
 
   @ApiProperty()
-  end_time: Date;
+  endTime: Date;
 
   @ApiProperty()
-  weapon_list: number[];
+  weaponList: number[];
 
   @ApiProperty()
-  rare_weapon: number | null;
+  rareWeapon: number | null;
 
   @ApiProperty()
   @IsEnum(Mode)

@@ -3,7 +3,6 @@ import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@n
 import { Result } from "@prisma/client";
 
 import { PaginatedDto } from "../dto/pagination.dto";
-import { CustomCoopResultManyRequest } from "../dto/request.custom.dto";
 import { CoopResultManyRequest } from "../dto/results/results.request.dto";
 
 import { ResultsService } from "./results.service";

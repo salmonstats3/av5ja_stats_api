@@ -1,10 +1,10 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Result } from "@prisma/client";
+import camelcaseKeys from "camelcase-keys";
 import dayjs from "dayjs";
 import { initializeApp } from "firebase/app";
 import { collection, doc, getDocs, getFirestore, setDoc } from "firebase/firestore/lite";
-import snakecaseKeys from "snakecase-keys";
 import { PrismaService } from "src/prisma.service";
 
 import { CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
@@ -37,7 +37,7 @@ export class SchedulesService {
     const schedules = (await getDocs(collection(this.firestore, "schedules"))).docs.map((doc) =>
       doc.data(),
     );
-    return schedules.map((schedule) => snakecaseKeys(schedule as CoopScheduleResponse));
+    return schedules.map((schedule) => camelcaseKeys(schedule as CoopScheduleResponse));
   }
 
   // スケジュールの統計を更新する

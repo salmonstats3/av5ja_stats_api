@@ -26,7 +26,6 @@ import dayjs from "dayjs";
 
 import { EventType } from "../enum/event_type";
 import { Mode } from "../enum/mode";
-import { Rule } from "../enum/rule";
 import { Species } from "../enum/species";
 import { WaterLevel } from "../enum/water_level";
 import { CoopScheduleRequest } from "../schedules/schedule.request.dto";
@@ -596,14 +595,14 @@ export class CoopResultRequest {
         players: {
           update: {
             data: {
+              bossKillCounts: this.myResult.bossKillCounts,
               gradeId: this.myResult.gradeId,
               gradePoint: this.myResult.gradePoint,
               jobBonus: this.myResult.jobBonus,
               jobRate: this.myResult.jobRate,
               jobScore: this.myResult.jobScore,
-              smellMeter: this.myResult.smellMeter,
               kumaPoint: this.myResult.kumaPoint,
-              bossKillCounts: this.myResult.bossKillCounts,
+              smellMeter: this.myResult.smellMeter,
             },
             where: {
               nplnUserId_playTime: {
