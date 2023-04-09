@@ -58,19 +58,18 @@ export class SchedulesController {
   //   return this.service.findManyByDangerRate(request.start_time);
   // }
 
-  // @Get("latest")
-  // @Version("2")
-  // @HttpCode(200)
-  // @ApiTags("最新スケジュール統計")
-  // @ApiOperation({
-  //   description: "指定されたスケジュールの統計データ詳細を返します.",
-  //   operationId: "統計詳細取得",
-  // })
-  // @ApiBadRequestResponse()
-  // findMany3(): Promise<CoopScheduleStats[]> {
-  //   return;
-  //   // return this.service.findManyByDangerRate(0);
-  // }
+  @Get("latest")
+  @Version("2")
+  @HttpCode(200)
+  @ApiTags("最新スケジュール統計")
+  @ApiOperation({
+    description: "指定されたスケジュールの統計データ詳細を返します.",
+    operationId: "統計詳細取得",
+  })
+  @ApiBadRequestResponse()
+  findMany3(): Promise<CoopScheduleStats[]> {
+    return this.service.findManyByDangerRate();
+  }
 
   @Get("stage")
   @Version("2")

@@ -1,5 +1,6 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
+import { Schedule } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import { plainToClass } from "class-transformer";
 import { firstValueFrom } from "rxjs";
@@ -110,7 +111,14 @@ export class SchedulesService {
   }
 
   // スケジュールIDを指定して統計データを返す
-  async findManyByDangerRate(startTime: Date): Promise<CoopScheduleStats[]> {
+  async findManyByDangerRate(startTime: Date | null = null): Promise<CoopScheduleStats[]> {
+    const schedule: Schedule = this.prisma.schedule.findFirstOrThrow({
+      where: {
+        startTime: {
+          gte: new Date(),
+        },
+      },
+    });
     const results: CoopScheduleStatsBase[] = await this.prisma.$queryRaw<CoopScheduleStatsBase[]>`
     SELECT
     danger_rate,
@@ -166,7 +174,7 @@ export class SchedulesService {
     players
     ON
     players.result_id = results.salmon_id
-    WHERE schedule_id = 799
+    WHERE schedule_id = ${schedule.scheduleId}
     GROUP BY danger_rate
     ORDER BY danger_rate
     `;
