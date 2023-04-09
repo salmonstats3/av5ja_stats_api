@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Schedule } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import { plainToClass } from "class-transformer";
@@ -113,17 +113,18 @@ export class SchedulesService {
   // スケジュールIDを指定して統計データを返す
   async findManyByDangerRate(startTime: Date | null = null): Promise<CoopScheduleStats[]> {
     const current_time: Date = new Date();
-    const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
-      where: {
-        startTime: {
-          gte: current_time,
+    try {
+      const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
+        where: {
+          startTime: {
+            lte: current_time,
+          },
+          endTime: {
+            gte: current_time,
+          },
         },
-        endTime: {
-          lte: current_time,
-        },
-      },
-    });
-    const results: CoopScheduleStatsBase[] = await this.prisma.$queryRaw<CoopScheduleStatsBase[]>`
+      });
+      const results: CoopScheduleStatsBase[] = await this.prisma.$queryRaw<CoopScheduleStatsBase[]>`
     SELECT
     danger_rate,
     COUNT(*)::INT AS shifts_worked,
@@ -182,6 +183,9 @@ export class SchedulesService {
     GROUP BY danger_rate
     ORDER BY danger_rate
     `;
-    return results.map((result: CoopScheduleStatsBase) => CoopScheduleStats.from(result));
+      return results.map((result: CoopScheduleStatsBase) => CoopScheduleStats.from(result));
+    } catch {
+      throw new NotFoundException();
+    }
   }
 }
