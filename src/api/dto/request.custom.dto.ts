@@ -1,4 +1,3 @@
-import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Prisma } from "@prisma/client";
 import { Transform, Type } from "class-transformer";
@@ -8,7 +7,6 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
-  IsDecimal,
   IsEnum,
   IsInt,
   IsNumber,
@@ -19,7 +17,7 @@ import {
   Min,
   ValidateNested,
 } from "class-validator";
-import dayjs from "dayjs";
+
 import { Mode } from "./enum/mode";
 import { Rule } from "./enum/rule";
 import { Species } from "./enum/species";
@@ -247,8 +245,8 @@ export class CustomCoopPlayerRequest {
       playTime: this.playTime,
       smellMeter: this.smellMeter,
       specialCounts: this.specialCounts,
-      species: this.species.toString(),
       specialId: this.specialId,
+      species: this.species.toString(),
       textColor: this.textColor,
       uniform: this.uniform,
       weaponList: this.weaponList,
