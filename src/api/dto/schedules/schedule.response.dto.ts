@@ -1,24 +1,25 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum } from "class-validator";
+
 import { Mode } from "../enum/mode";
 import { Rule } from "../enum/rule";
 import { Setting } from "../enum/setting";
 
 export class CoopScheduleResponse {
   @ApiProperty()
-  stageId: number;
+  stage_id: number;
 
   @ApiProperty()
-  startTime: Date;
+  start_time: Date;
 
   @ApiProperty()
-  endTime: Date;
+  end_time: Date;
 
   @ApiProperty()
-  weaponList: number[];
+  weapon_list: number[];
 
   @ApiProperty()
-  rareWeapon: number | null;
+  rare_weapon: number | null;
 
   @ApiProperty()
   @IsEnum(Mode)

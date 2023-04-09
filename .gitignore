@@ -36,6 +36,7 @@ lerna-debug.log*
 
 # Prisma
 .env
+.env.*
 
 # Python
 __pycache__
