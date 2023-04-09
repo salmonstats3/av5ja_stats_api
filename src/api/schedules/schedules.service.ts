@@ -7,6 +7,8 @@ import { PrismaService } from "src/prisma.service";
 import { CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
 
 import {
+  CoopScheduleStageData,
+  CoopScheduleStageResponse,
   CoopScheduleStats,
   CoopScheduleStatsBase,
 } from "../dto/schedules/schedule.stats.response.dto";
@@ -15,6 +17,7 @@ import {
 export class SchedulesService {
   constructor(private readonly axios: HttpService, private readonly prisma: PrismaService) {}
 
+  // スケジュール一覧を返す
   async find() {
     const url = "https://asia-northeast1-tkgstratorwork.cloudfunctions.net/api/schedules/all";
     const response = await firstValueFrom(this.axios.get(url));
@@ -23,6 +26,7 @@ export class SchedulesService {
     );
   }
 
+  // スケジュールIDを指定して統計データを返す
   async findMany(startTime: Date): Promise<CoopScheduleStats> {
     const result = await this.prisma.$queryRaw<CoopScheduleStatsBase>`
     SELECT
@@ -77,6 +81,35 @@ export class SchedulesService {
     return CoopScheduleStats.from(result[0]);
   }
 
+  // ステージごとの統計データを返す
+  async findManyByStageId(): Promise<CoopScheduleStageResponse> {
+    const results: CoopScheduleStageData[] = await this.prisma.$queryRaw<CoopScheduleStageData[]>`
+    SELECT
+    stage_id,
+    COUNT(*)::INT AS shifts_worked,
+    COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
+    COALESCE(COUNT(is_clear=false OR null)::INT, 0) is_failure
+    FROM
+    results
+    LEFT JOIN
+    schedules
+    ON
+    schedules.schedule_id = results.schedule_id
+    WHERE
+    start_time IS NOT NULL
+    GROUP BY
+    stage_id
+    `;
+
+    return {
+      results: {
+        regular: results.filter((result) => result.stage_id < 100),
+        bigrun: results.filter((result) => result.stage_id >= 100),
+      },
+    };
+  }
+
+  // スケジュールIDを指定して統計データを返す
   async findManyByDangerRate(startTime: Date): Promise<CoopScheduleStats[]> {
     const results: CoopScheduleStatsBase[] = await this.prisma.$queryRaw<CoopScheduleStatsBase[]>`
     SELECT
@@ -84,7 +117,7 @@ export class SchedulesService {
     COUNT(*)::INT AS shifts_worked,
     COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
     COALESCE(COUNT(is_clear=false OR null)::INT, 0) is_failure,
-    MAX(boss_id) AS boss_id,
+    MAX(boss_id)::INT AS boss_id,
     COALESCE(COUNT(is_boss_defeated IS NOT NULL OR null)::INT, 0) boss_count,
     COALESCE(COUNT(is_boss_defeated=true OR null)::INT, 0) boss_kill_count,
     COALESCE(COUNT(failure_wave=1 OR null)::INT, 0) failure_wave_1,
