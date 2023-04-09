@@ -23,65 +23,65 @@ export class EnemyNum {
 
 export interface CoopScheduleStageResponse {
   readonly results: {
-    regular: CoopScheduleStageData[];
     bigrun: CoopScheduleStageData[];
+    regular: CoopScheduleStageData[];
   };
 }
 
 export interface CoopScheduleStageData {
-  readonly stage_id: number;
-  readonly shifts_worked: number;
   readonly is_clear: number;
   readonly is_failure: number;
+  readonly shifts_worked: number;
+  readonly stage_id: number;
 }
 
 export interface CoopScheduleStatsBase {
-  shifts_worked: number;
-  golden_ikura_num: number;
-  golden_ikura_num_max: number;
-  golden_ikura_num_avg: number;
-  ikura_num: number;
-  ikura_num_max: number;
-  ikura_num_avg: number;
-  is_clear: number;
-  is_failure: number;
-  failure_wave_1: number;
-  failure_wave_2: number;
-  failure_wave_3: number;
-  boss_id: number;
   boss_count: number;
-  boss_kill_count: number;
-  boss_count_4: number;
-  boss_kill_count_4: number;
-  boss_count_5: number;
-  boss_kill_count_5: number;
-  boss_count_6: number;
-  boss_kill_count_6: number;
-  boss_count_7: number;
-  boss_kill_count_7: number;
-  boss_count_8: number;
-  boss_kill_count_8: number;
-  boss_count_9: number;
-  boss_kill_count_9: number;
   boss_count_10: number;
-  boss_kill_count_10: number;
   boss_count_11: number;
-  boss_kill_count_11: number;
   boss_count_12: number;
-  boss_kill_count_12: number;
   boss_count_13: number;
-  boss_kill_count_13: number;
   boss_count_14: number;
-  boss_kill_count_14: number;
   boss_count_15: number;
-  boss_kill_count_15: number;
   boss_count_17: number;
-  boss_kill_count_17: number;
   boss_count_20: number;
+  boss_count_4: number;
+  boss_count_5: number;
+  boss_count_6: number;
+  boss_count_7: number;
+  boss_count_8: number;
+  boss_count_9: number;
+  boss_id: number;
+  boss_kill_count: number;
+  boss_kill_count_10: number;
+  boss_kill_count_11: number;
+  boss_kill_count_12: number;
+  boss_kill_count_13: number;
+  boss_kill_count_14: number;
+  boss_kill_count_15: number;
+  boss_kill_count_17: number;
   boss_kill_count_20: number;
+  boss_kill_count_4: number;
+  boss_kill_count_5: number;
+  boss_kill_count_6: number;
+  failure_wave_2: number;
+  boss_kill_count_8: number;
+  boss_kill_count_9: number;
   danger_rate: number | null;
-  grade_point_max: number | null;
+  failure_wave_3: number;
+  ikura_num: number;
+  golden_ikura_num: number;
+  ikura_num_max: number;
+  golden_ikura_num_avg: number;
+  golden_ikura_num_max: number;
   grade_point_avg: number | null;
+  is_clear: number;
+  shifts_worked: number;
+  boss_kill_count_7: number;
+  ikura_num_avg: number;
+  failure_wave_1: number;
+  grade_point_max: number | null;
+  is_failure: number;
   grade_point_min: number | null;
 }
 
@@ -102,9 +102,9 @@ export class CoopScheduleStats {
       clear: stats.is_clear,
       failure: stats.is_failure,
       failure_wave: [
-        { wave_id: 1, count: stats.failure_wave_1 },
-        { wave_id: 2, count: stats.failure_wave_2 },
-        { wave_id: 3, count: stats.failure_wave_3 },
+        { count: stats.failure_wave_1, wave_id: 1 },
+        { count: stats.failure_wave_2, wave_id: 2 },
+        { count: stats.failure_wave_3, wave_id: 3 },
       ],
     };
     result.ikura_num = {

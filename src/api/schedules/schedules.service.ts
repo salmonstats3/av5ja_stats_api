@@ -1,13 +1,13 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Result, Schedule } from "@prisma/client";
-import camelcaseKeys from "camelcase-keys";
-import { plainToClass } from "class-transformer";
+import { Result } from "@prisma/client";
 import dayjs from "dayjs";
-import { firstValueFrom } from "rxjs";
+import { initializeApp } from "firebase/app";
+import { collection, getDocs, getFirestore } from "firebase/firestore/lite";
+import snakecaseKeys from "snakecase-keys";
 import { PrismaService } from "src/prisma.service";
-import { CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
 
+import { CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
 import {
   CoopScheduleStageData,
   CoopScheduleStageResponse,
@@ -15,17 +15,28 @@ import {
   CoopScheduleStatsBase,
 } from "../dto/schedules/schedule.stats.response.dto";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBl8OR-wdFLZ3HnnTUzEq4t4eXce5Xu8gE",
+  appId: "1:245057171773:web:2397fbf88981d07569d554",
+  authDomain: "tkgstratorwork.firebaseapp.com",
+  measurementId: "G-3XC9LXLCNL",
+  messagingSenderId: "245057171773",
+  projectId: "tkgstratorwork",
+  storageBucket: "tkgstratorwork.appspot.com",
+};
+
 @Injectable()
 export class SchedulesService {
   constructor(private readonly axios: HttpService, private readonly prisma: PrismaService) {}
+  readonly app = initializeApp(firebaseConfig);
+  readonly firestore = getFirestore(this.app);
 
   // スケジュール一覧を返す
-  async find() {
-    const url = "https://asia-northeast1-tkgstratorwork.cloudfunctions.net/api/schedules/all";
-    const response = await firstValueFrom(this.axios.get(url));
-    return response.data.map((schedule: any) =>
-      plainToClass(CoopScheduleResponse, camelcaseKeys(schedule)),
+  async find(): Promise<CoopScheduleResponse[]> {
+    const schedules = (await getDocs(collection(this.firestore, "schedules"))).docs.map((doc) =>
+      doc.data(),
     );
+    return schedules.map((schedule) => snakecaseKeys(schedule as CoopScheduleResponse));
   }
 
   // スケジュールIDを指定して統計データを返す
@@ -105,8 +116,8 @@ export class SchedulesService {
 
     return {
       results: {
-        regular: results.filter((result) => result.stage_id < 100),
         bigrun: results.filter((result) => result.stage_id >= 100),
+        regular: results.filter((result) => result.stage_id < 100),
       },
     };
   }
