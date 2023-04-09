@@ -21,6 +21,20 @@ export class EnemyNum {
   readonly kill_count: number;
 }
 
+export interface CoopScheduleStageResponse {
+  readonly results: {
+    regular: CoopScheduleStageData[];
+    bigrun: CoopScheduleStageData[];
+  };
+}
+
+export interface CoopScheduleStageData {
+  readonly stage_id: number;
+  readonly shifts_worked: number;
+  readonly is_clear: number;
+  readonly is_failure: number;
+}
+
 export interface CoopScheduleStatsBase {
   shifts_worked: number;
   golden_ikura_num: number;
