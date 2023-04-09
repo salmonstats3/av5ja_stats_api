@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, Result } from "@prisma/client";
 import { PrismaService } from "src/prisma.service";
+
 import { CustomCoopResultManyRequest, CustomCoopResultRequest } from "../dto/request.custom.dto";
 import { CoopResultRequest } from "../dto/results/result.request.dto";
-
 import { CoopResultManyRequest } from "../dto/results/results.request.dto";
 
 @Injectable()
