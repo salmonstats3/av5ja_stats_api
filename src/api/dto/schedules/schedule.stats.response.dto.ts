@@ -64,25 +64,31 @@ export interface CoopScheduleStatsBase {
   boss_kill_count_4: number;
   boss_kill_count_5: number;
   boss_kill_count_6: number;
-  failure_wave_2: number;
+  boss_kill_count_7: number;
   boss_kill_count_8: number;
   boss_kill_count_9: number;
   danger_rate: number | null;
+  failure_wave_1: number;
+  failure_wave_2: number;
   failure_wave_3: number;
-  ikura_num: number;
   golden_ikura_num: number;
-  ikura_num_max: number;
   golden_ikura_num_avg: number;
   golden_ikura_num_max: number;
   grade_point_avg: number | null;
-  is_clear: number;
-  shifts_worked: number;
-  boss_kill_count_7: number;
-  ikura_num_avg: number;
-  failure_wave_1: number;
   grade_point_max: number | null;
-  is_failure: number;
   grade_point_min: number | null;
+  ikura_num: number;
+  ikura_num_avg: number;
+  ikura_num_max: number;
+  is_clear: number;
+  is_failure: number;
+  shifts_worked: number;
+}
+
+export class CoopScheduleStatsResponse {
+  start_time: Date;
+  end_time: Date;
+  results: CoopScheduleStats[];
 }
 
 export class CoopScheduleStats {

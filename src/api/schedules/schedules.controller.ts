@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@n
 
 import { PaginatedDto } from "../dto/pagination.dto";
 import { CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
-import { CoopScheduleStats } from "../dto/schedules/schedule.stats.response.dto";
+import { CoopScheduleStatsResponse } from "../dto/schedules/schedule.stats.response.dto";
 
 import { SchedulesService } from "./schedules.service";
 
@@ -28,13 +28,13 @@ export class SchedulesController {
   @Get("latest")
   @Version("2")
   @HttpCode(200)
-  @ApiTags("最新スケジュール統計")
+  @ApiTags("スケジュール")
   @ApiOperation({
-    description: "指定されたスケジュールの統計データ詳細を返します.",
-    operationId: "統計詳細取得",
+    description: "指定されたスケジュールの統計データを取得します.",
+    operationId: "統計取得",
   })
   @ApiBadRequestResponse()
-  findMany3(): Promise<CoopScheduleStats[]> {
+  findMany3(): Promise<CoopScheduleStatsResponse> {
     return this.service.findManyByDangerRate();
   }
 }
