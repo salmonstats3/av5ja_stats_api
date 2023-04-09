@@ -112,10 +112,14 @@ export class SchedulesService {
 
   // スケジュールIDを指定して統計データを返す
   async findManyByDangerRate(startTime: Date | null = null): Promise<CoopScheduleStats[]> {
+    const current_time: Date = new Date();
     const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
       where: {
         startTime: {
-          gte: new Date(),
+          gte: current_time,
+        },
+        endTime: {
+          lte: current_time,
         },
       },
     });
