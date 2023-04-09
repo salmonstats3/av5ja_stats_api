@@ -1,8 +1,9 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Schedule } from "@prisma/client";
+import { Result, Schedule } from "@prisma/client";
 import camelcaseKeys from "camelcase-keys";
 import { plainToClass } from "class-transformer";
+import dayjs from "dayjs";
 import { firstValueFrom } from "rxjs";
 import { PrismaService } from "src/prisma.service";
 import { CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
@@ -112,14 +113,11 @@ export class SchedulesService {
 
   // スケジュールIDを指定して統計データを返す
   async findManyByDangerRate(startTime: Date | null = null): Promise<CoopScheduleStats[]> {
-    const current_time: Date = new Date();
     try {
-      const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
+      const current_time: Date = dayjs().toDate();
+      const result: Result = await this.prisma.result.findFirstOrThrow({
         where: {
-          startTime: {
-            lte: current_time,
-          },
-          endTime: {
+          playTime: {
             gte: current_time,
           },
         },
@@ -179,7 +177,7 @@ export class SchedulesService {
     players
     ON
     players.result_id = results.salmon_id
-    WHERE schedule_id = ${schedule.scheduleId}
+    WHERE schedule_id = ${result.scheduleId}
     GROUP BY danger_rate
     ORDER BY danger_rate
     `;
