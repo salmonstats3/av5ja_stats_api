@@ -1,13 +1,13 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Result } from "@prisma/client";
-import camelcaseKeys from "camelcase-keys";
+import { plainToClass } from "class-transformer";
 import dayjs from "dayjs";
 import { initializeApp } from "firebase/app";
-import { collection, doc, getDocs, getFirestore, setDoc } from "firebase/firestore/lite";
+import { collection, getDocs, getFirestore } from "firebase/firestore/lite";
 import { PrismaService } from "src/prisma.service";
 
-import { CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
+import { Setting } from "../dto/enum/setting";
+import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
 import {
   CoopScheduleStageData,
   CoopScheduleStageResponse,
@@ -15,16 +15,7 @@ import {
   CoopScheduleStatsBase,
   CoopScheduleStatsResponse,
 } from "../dto/schedules/schedule.stats.response.dto";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBl8OR-wdFLZ3HnnTUzEq4t4eXce5Xu8gE",
-  appId: "1:245057171773:web:2397fbf88981d07569d554",
-  authDomain: "tkgstratorwork.firebaseapp.com",
-  measurementId: "G-3XC9LXLCNL",
-  messagingSenderId: "245057171773",
-  projectId: "tkgstratorwork",
-  storageBucket: "tkgstratorwork.appspot.com",
-};
+import { firebaseConfig } from "../firebase.config";
 
 @Injectable()
 export class SchedulesService {
@@ -33,49 +24,14 @@ export class SchedulesService {
   readonly firestore = getFirestore(this.app);
 
   // スケジュール一覧を返す
-  async find(): Promise<CoopScheduleResponse[]> {
-    const schedules = (await getDocs(collection(this.firestore, "schedules"))).docs.map((doc) =>
-      doc.data(),
+  async get_schedules(): Promise<CoopScheduleDataResponse[]> {
+    const documents = await Promise.all(
+      Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))),
     );
-    return schedules.map((schedule) => camelcaseKeys(schedule as CoopScheduleResponse));
-  }
-
-  // スケジュールの統計を更新する
-  async update(): Promise<Result> {
-    const result: CoopScheduleStatsResponse = await this.findManyByDangerRate();
-    await setDoc(doc(this.firestore, "stats", dayjs(result.start_time).toISOString()), {
-      results: result.results.map((result) => {
-        return {
-          boss: {
-            count: result.boss.count,
-            id: result.boss.id,
-            kill_count: result.boss.kill_count,
-          },
-          danger_rete: result.danger_rate,
-          enemies: result.enemies.map((enemy) => {
-            return {
-              count: enemy.count,
-              id: enemy.id,
-              kill_count: enemy.kill_count,
-            };
-          }),
-          golden_ikura_num: {
-            avg: result.golden_ikura_num.avg,
-            max: result.golden_ikura_num.max,
-          },
-          ikura_num: {
-            avg: result.ikura_num.avg,
-            max: result.ikura_num.max,
-          },
-          job_result: {
-            clear: result.job_result.clear,
-            failure: result.job_result.failure,
-          },
-          shifts_worked: result.shifts_worked,
-        };
-      }),
-    });
-    return;
+    const schedules: CoopScheduleDataResponse[] = documents.flatMap((document) =>
+      document.docs.map((doc) => plainToClass(CoopScheduleDataResponse, doc.data())),
+    );
+    return schedules.sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
   }
 
   // スケジュールIDを指定して統計データを返す

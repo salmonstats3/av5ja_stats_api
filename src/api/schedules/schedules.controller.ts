@@ -2,7 +2,7 @@ import { Controller, Get, HttpCode, Version } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { PaginatedDto } from "../dto/pagination.dto";
-import { CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
+import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
 import { CoopScheduleStatsResponse } from "../dto/schedules/schedule.stats.response.dto";
 
 import { SchedulesService } from "./schedules.service";
@@ -21,8 +21,8 @@ export class SchedulesController {
     operationId: "統計取得",
   })
   @ApiBadRequestResponse()
-  find(): Promise<CoopScheduleResponse[]> {
-    return this.service.find();
+  find(): Promise<CoopScheduleDataResponse[]> {
+    return this.service.get_schedules();
   }
 
   @Get("latest")

@@ -8,10 +8,12 @@ import { ResultsModule } from "./results/results.module";
 import { ResultsService } from "./results/results.service";
 import { SchedulesModule } from "./schedules/schedules.module";
 import { SchedulesService } from "./schedules/schedules.service";
+import { AuthorizeController } from "./authorize/authorize.controller";
+import { AuthorizeModule } from "./authorize/authorize.module";
 
 @Module({
-  controllers: [ApiController],
-  imports: [ResultsModule, SchedulesModule, HttpModule],
+  controllers: [ApiController, AuthorizeController],
+  imports: [ResultsModule, SchedulesModule, HttpModule, AuthorizeModule],
   providers: [PrismaService, ApiService, ResultsService, SchedulesService],
 })
 export class ApiModule {}
