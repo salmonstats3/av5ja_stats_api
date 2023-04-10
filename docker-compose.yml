@@ -1,13 +1,21 @@
 version: "3.9"
 
 services:
-  db:
-    image: postgres:14.6
-    container_name: salmon_stats_db
-    restart: always
-    environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
+  app:
+    image: tkgling/salmon-stats-app:1.0.0
+    platform: linux/amd64
     ports:
-      - 5432:5432
+      - $PORT:$PORT
+    container_name: salmon_stats_app
+    command: [sh, -c, yarn start:prod]
+
+  # db:
+  #   image: postgres:14.6
+  #   container_name: salmon_stats_db
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: $POSTGRES_USER
+  #     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  #     POSTGRES_DB: $POSTGRES_DB
+  #   ports:
+  #     - 5432:5432
