@@ -592,26 +592,26 @@ export class CoopResultRequest {
         },
       },
       update: {
-        players: {
-          update: {
-            data: {
-              bossKillCounts: this.myResult.bossKillCounts,
-              gradeId: this.myResult.gradeId,
-              gradePoint: this.myResult.gradePoint,
-              jobBonus: this.myResult.jobBonus,
-              jobRate: this.myResult.jobRate,
-              jobScore: this.myResult.jobScore,
-              kumaPoint: this.myResult.kumaPoint,
-              smellMeter: this.myResult.smellMeter,
-            },
-            where: {
-              nplnUserId_playTime: {
-                nplnUserId: this.myResult.nplnUserId,
-                playTime: this.myResult.playTime,
-              },
-            },
-          },
-        },
+        // players: {
+        //   update: {
+        //     data: {
+        //       bossKillCounts: this.myResult.bossKillCounts,
+        //       gradeId: this.myResult.gradeId,
+        //       gradePoint: this.myResult.gradePoint,
+        //       jobBonus: this.myResult.jobBonus,
+        //       jobRate: this.myResult.jobRate,
+        //       jobScore: this.myResult.jobScore,
+        //       kumaPoint: this.myResult.kumaPoint,
+        //       smellMeter: this.myResult.smellMeter,
+        //     },
+        //     where: {
+        //       nplnUserId_playTime: {
+        //         nplnUserId: this.myResult.nplnUserId,
+        //         playTime: this.myResult.playTime,
+        //       },
+        //     },
+        //   },
+        // },
       },
       where: {
         playTime_uuid: {
