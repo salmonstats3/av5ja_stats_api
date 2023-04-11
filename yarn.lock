@@ -1358,6 +1358,11 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/cache-manager@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-4.0.2.tgz#5e76dd9e7881c23f332c2f48e5f326bd05ba9ac9"
+  integrity sha512-fT5FMdzsiSX0AbgnS5gDvHl2Nco0h5zYyjwDQy4yPC7Ww6DeGMVKPRqIZtg9HOXDV2kkc18SL1B0N8f0BecrCA==
+
 "@types/connect@*":
   version "3.4.35"
   resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.35.tgz#5fcf6ae445e4021d1fc2219a4873cc73a3bb2ad1"
@@ -1986,6 +1991,11 @@ asap@^2.0.0:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
+async@3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/async/-/async-3.2.3.tgz#ac53dafd3f4720ee9e8a160628f18ea91df196c9"
+  integrity sha512-spZRyzKL5l5BZQrr/6m/SqFdBN0q3OCI0f9rjfBzCMBIP4p75P620rR3gTmaksNOhmzgdxcaxdNfMy6anrbM0g==
+
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
@@ -2201,13 +2211,14 @@ bytes@3.1.2:
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.1.2.tgz#8b0beeb98605adf1b128fa4386403c009e0221a5"
   integrity sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==
 
-cache-manager@^5.1.4:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/cache-manager/-/cache-manager-5.2.0.tgz#2ea6bd8cf6bfb1bd40690a1fe194327595e3bd8f"
-  integrity sha512-jwXDLtn8tQGS2vGDTKAhee2OhuX/2cgxlh97fqMnWp328VszIn064BFyKZ87dwp9GmlBFuHYfaVQehI85hFwIw==
+cache-manager@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/cache-manager/-/cache-manager-4.1.0.tgz#aa986421f1c975a862d6de88edb9ab1d30f4bd39"
+  integrity sha512-ZGM6dLxrP65bfOZmcviWMadUOCICqpLs92+P/S5tj8onz+k+tB7Gr+SAgOUHCQtfm2gYEQDHiKeul4+tYPOJ8A==
   dependencies:
+    async "3.2.3"
     lodash.clonedeep "^4.5.0"
-    lru-cache "~7.18.3"
+    lru-cache "^7.10.1"
 
 call-bind@^1.0.0, call-bind@^1.0.2:
   version "1.0.2"
@@ -4639,15 +4650,15 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lru-cache@^7.10.1:
+  version "7.18.3"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
+  integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
+
 lru-cache@^9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-9.0.0.tgz#daece36a9fc332e93f8e75f3fcfd17900253567c"
   integrity sha512-9AEKXzvOZc4BMacFnYiTOlDH/197LNnQIK9wZ6iMB5NXPzuv4bWR/Msv7iUMplkiMQ1qQL+KSv/JF1mZAB5Lrg==
-
-lru-cache@~7.18.3:
-  version "7.18.3"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
-  integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
 
 macos-release@^2.5.0:
   version "2.5.1"
