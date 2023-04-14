@@ -9,11 +9,7 @@ export class AccessTokenInvalidGrant {
   error: string;
 
   @ApiProperty({
-    examples: [
-      "The provided grant is invalid",
-      "Client authentication failed",
-      "The request does not satisfy the schema",
-    ],
+    examples: ["The provided grant is invalid", "Client authentication failed", "The request does not satisfy the schema"],
   })
   error_description: string;
 }
