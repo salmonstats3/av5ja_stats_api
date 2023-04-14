@@ -1,456 +1,193 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Prisma, Schedule } from "@prisma/client";
-import camelcaseKeys from "camelcase-keys";
+import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
+import { Result } from "@prisma/client";
+import { Cache } from "cache-manager";
 import { plainToClass } from "class-transformer";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { firstValueFrom } from "rxjs";
-import snakecaseKeys from "snakecase-keys";
+import { initializeApp } from "firebase/app";
+import { collection, getDocs, getFirestore } from "firebase/firestore/lite";
 import { PrismaService } from "src/prisma.service";
 
-import { CustomCoopScheduleResponse } from "../dto/schedules/schedule.dto";
-
-class WaveResult {
-  count: number;
-  event_type: number;
-  golden_ikura_num: number;
-  water_level: number;
-}
-
-class TmpFailureWave {
-  is_boss_appear: number;
-  is_clear: number;
-  is_failure: number;
-  is_failure_wave1: number;
-  is_failure_wave2: number;
-  is_failure_wave3: number;
-  is_failure_wave4: number;
-  count: number;
-}
-
-class FailureResult {
-  count: number;
-  is_clear: number;
-  is_failure: number;
-  wave_id: number;
-}
-
-class TmpEnemyResult {
-  boss_counts_10: number;
-  boss_counts_11: number;
-  boss_counts_12: number;
-  boss_counts_13: number;
-  boss_counts_14: number;
-  boss_counts_15: number;
-  boss_counts_17: number;
-  boss_counts_20: number;
-  boss_counts_4: number;
-  boss_counts_5: number;
-  boss_counts_6: number;
-  boss_counts_7: number;
-  boss_counts_8: number;
-  boss_counts_9: number;
-  boss_kill_counts_10: number;
-  boss_kill_counts_11: number;
-  boss_kill_counts_12: number;
-  boss_kill_counts_13: number;
-  boss_kill_counts_14: number;
-  boss_kill_counts_15: number;
-  boss_kill_counts_17: number;
-  boss_kill_counts_20: number;
-  boss_kill_counts_4: number;
-  boss_kill_counts_5: number;
-  boss_kill_counts_6: number;
-  boss_kill_counts_7: number;
-  boss_kill_counts_8: number;
-  boss_kill_counts_9: number;
-}
-
-class EnemyResult {
-  count: number;
-  kill_count: number;
-  enemy_id: number;
-}
-
-class GradeResult {
-  rank: number;
-  npln_user_id: string;
-  name: string;
-  grade_point: number;
-  grade_dd: number;
-}
-
-export class ScheduleResult {
-  job_results: JobResult;
-  enemy_results: EnemyResult[];
-  wave_results: WaveResult[];
-  grade_results: GradeResult[];
-  failure_results: FailureResult[];
-}
-
-class JobResult {
-  shifts_worked: number;
-  average_cleared_waves: number;
-  clear_ratio: number;
-  boss_defeated_ratio: number;
-  ikura_num: number;
-  golden_ikura_num: number;
-  boss_defeated_num: number;
-  death_count: number;
-  scales: ScaleResult;
-}
-
-class ScaleResult {
-  bronze: number;
-  gold: number;
-  silver: number;
-}
+import { Setting } from "../dto/enum/setting";
+import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
+import {
+  CoopScheduleStageData,
+  CoopScheduleStageResponse,
+  CoopScheduleStats,
+  CoopScheduleStatsBase,
+  CoopScheduleStatsPlayer,
+} from "../dto/schedules/schedule.stats.response.dto";
+import { firebaseConfig } from "../firebase.config";
 
 @Injectable()
 export class SchedulesService {
-  constructor(private readonly axios: HttpService, private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly axios: HttpService,
+    private readonly prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
-  // スケジュール一覧取得
-  async findAll(): Promise<CustomCoopScheduleResponse[]> {
-    const url = "https://asia-northeast1-tkgstratorwork.cloudfunctions.net/api/schedules/all";
-    const response = await firstValueFrom(this.axios.get(url));
-    return response.data.map((schedule) =>
-      plainToClass(CustomCoopScheduleResponse, camelcaseKeys(schedule)),
-    );
-  }
+  readonly app = initializeApp(firebaseConfig);
+  readonly firestore = getFirestore(this.app);
 
-  // スケジュール一括登録
-  async create(): Promise<CustomCoopScheduleResponse[]> {
-    const schedules: CustomCoopScheduleResponse[] = await this.findAll();
-    const query: Prisma.ScheduleCreateInput[] = schedules.map((schedule) => {
-      return {
-        endTime: schedule.endTime,
-        mode: schedule.mode,
-        rareWeapon: schedule.rareWeapon,
-        rule: schedule.rule,
-        stageId: schedule.stageId,
-        startTime: schedule.startTime,
-        weaponList: schedule.weaponList,
-      };
-    });
-    await this.prisma.schedule.createMany({
-      data: query,
-      skipDuplicates: true,
-    });
-    return schedules.map((schedule) =>
-      plainToClass(CustomCoopScheduleResponse, camelcaseKeys(schedule)),
-    );
-  }
-
-  // 指定されたスケジュールの統計取得
-  async find(timestamp: number): Promise<ScheduleResult> {
-    // スケジュールが存在しなければ404エラーを返す
-    try {
-      dayjs.extend(utc);
-      const startTime: Date = dayjs.unix(timestamp).utc(false).toDate();
-      const schedule: Schedule = await this.prisma.schedule.findFirstOrThrow({
-        where: {
-          startTime: startTime,
-        },
-      });
-      const data = await Promise.all([
-        this.queryBuilderJobResult(schedule.id),
-        this.queryBuilderEnemyResult(schedule.id),
-        this.queryBuilderFailureWave(schedule.id),
-        this.queryBuilderWaveResult(schedule.id),
-        // this.queryBuilderGradePoint(schedule.id),
-      ]);
-      const response: ScheduleResult = new ScheduleResult();
-      response.job_results = data[0];
-      response.enemy_results = data[1];
-      response.failure_results = data[2];
-      response.wave_results = data[3];
-      // response.gradeResults = data[3];
-      return snakecaseKeys(response);
-    } catch (error) {
-      throw new NotFoundException();
+  // シフト概要を返す
+  async get_schedule_statistics(): Promise<CoopScheduleStats> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const statistics: CoopScheduleStats = await this.cacheManager.get("statistics");
+    if (statistics !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return statistics;
     }
-  }
-
-  private async queryBuilderWaveResult(scheduleId: number): Promise<WaveResult[]> {
-    const results = await this.prisma.$queryRaw<WaveResult[]>`
-    WITH results AS (
-      SELECT
-        MAX(waves.golden_ikura_num)::INT AS golden_ikura_num,
-        water_level,
-        event_type,
-        COUNT(*)::INT
-      FROM
-        waves
-      INNER JOIN
-        results
-      ON
-        waves.result_id = results.id
-      INNER JOIN
-        schedules
-      ON
-        results.schedule_id = schedules.schedule_id
-      AND
-        schedules.schedule_id = ${scheduleId}
-      GROUP BY
-        event_type,
-        water_level
-      ORDER BY
-        water_level,
-        event_type
-    )
-    SELECT
-    *
-    FROM
-    results;
-  `;
-    return results.map((result) => plainToClass(WaveResult, camelcaseKeys(result)));
-  }
-
-  private async queryBuilderGradePoint(scheduleId: number): Promise<GradeResult[]> {
-    const result: GradeResult[] = await this.prisma.$queryRaw<GradeResult[]>`
-    WITH results AS (
-      SELECT
-        npln_user_id,
-	      MIN(name) AS name,
-	      MAX(grade_point) AS grade_point,
-	      MAX(grade_id) AS grade_id
-	    FROM
-	      players
-      INNER JOIN
-        results 
-      ON
-        results.id = players.result_id
-      INNER JOIN
-        schedules
-      ON
-        results.schedule_id = schedules.schedule_id
-	    WHERE
-        schedules.schedule_id = ${scheduleId}
-	    AND
-	      grade_id IS NOT NULL
-	    GROUP BY
-	      npln_user_id
-    )
-    SELECT
-    RANK() OVER(ORDER BY grade_id DESC, grade_point DESC)::INT,
-    *
-    FROM
-    results`;
+    const schedule_id: number = (await this.get_latest_schedule()).scheduleId;
+    const results = await Promise.all([this.get_statistics(schedule_id), this.get_player_statistics(schedule_id)]);
+    const result: CoopScheduleStats = CoopScheduleStats.from(results[0][0], results[1]);
+    this.cacheManager.set("statistics", result, { ttl: 60 * 60 * 1 });
     return result;
   }
 
-  private async queryBuilderFailureWave(scheduleId: number): Promise<FailureResult[]> {
-    const result: TmpFailureWave = (
-      await this.prisma.$queryRaw<TmpFailureWave>`
+  // スケジュール一覧を返す
+  async get_schedules(): Promise<CoopScheduleDataResponse[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const values: any[] = await this.cacheManager.get("schedules");
+    if (values !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return values.map((value: any) => plainToClass(CoopScheduleDataResponse, value));
+    }
+    const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))));
+    const schedules: CoopScheduleDataResponse[] = documents
+      .flatMap((document) => document.docs.map((doc) => plainToClass(CoopScheduleDataResponse, doc.data())))
+      .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
+    this.cacheManager.set("schedules", schedules, { ttl: 60 * 60 * 1 });
+    return schedules;
+  }
+
+  // 最新のシフトのスケジュールIDを返す
+  private async get_latest_schedule(): Promise<Result> {
+    return await this.prisma.result.findFirstOrThrow({
+      include: {
+        schedule: true,
+      },
+      orderBy: {
+        playTime: "desc",
+      },
+      where: {
+        schedule: {
+          mode: {
+            equals: "REGULAR",
+          },
+        },
+      },
+    });
+  }
+
+  async get_player_statistics(schedule_id: number): Promise<CoopScheduleStatsPlayer> {
+    return this.prisma.$queryRaw<CoopScheduleStatsPlayer>`
     WITH results AS (
       SELECT
-      COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
-      COALESCE(COUNT(is_clear=false OR null)::INT, 0) is_failure,
-      COALESCE(COUNT(is_boss_defeated IS NOT NULL OR null)::INT, 0) is_boss_appear,
-      COALESCE(COUNT(is_boss_defeated=true OR null)::INT, 0) is_boss_defeated,
-      COALESCE(COUNT(failure_wave=1 OR null)::INT, 0) is_failure_wave1,
-      COALESCE(COUNT(failure_wave=2 OR null)::INT, 0) is_failure_wave2,
-      COALESCE(COUNT(failure_wave=3 OR null)::INT, 0) is_failure_wave3,
-      COALESCE(COUNT(is_boss_defeated=false OR null)::INT, 0) is_failure_wave4,
-      COALESCE(COUNT(*)::INT, 0) count
+      npln_user_id,
+      COUNT(*)::INT AS shifts_worked,
+      MAX(grade_id)::INT AS grade_id,
+      MAX(grade_point)::INT AS grade_point
       FROM
+      players
+      LEFT JOIN
       results
-      INNER JOIN
-        schedules
       ON
-        results.schedule_id = schedules.schedule_id
+      players.result_id = results.salmon_id
       WHERE
-        schedules.schedule_id = ${scheduleId}
+      results.schedule_id = ${schedule_id}
+      GROUP BY
+      npln_user_id
+      ORDER BY
+      shifts_worked DESC
     )
     SELECT
-    *
-    FROM
-    results;
-    `
-    )[0];
-    return [
-      {
-        count: result.count,
-        is_clear: result.count - result.is_failure_wave1,
-        is_failure: result.is_failure_wave1,
-        wave_id: 1,
-      },
-      {
-        count: result.count - result.is_failure_wave1,
-        is_clear: result.count - result.is_failure_wave1 - result.is_failure_wave2,
-        is_failure: result.is_failure_wave2,
-        wave_id: 2,
-      },
-      {
-        count: result.count - result.is_failure_wave1 - result.is_failure_wave2,
-        is_clear:
-          result.count -
-          result.is_failure_wave1 -
-          result.is_failure_wave2 -
-          result.is_failure_wave3,
-        is_failure: result.is_failure_wave3,
-        wave_id: 3,
-      },
-      {
-        count: result.is_boss_appear,
-        is_clear: result.is_boss_appear - result.is_failure_wave4,
-        is_failure: result.is_failure_wave4,
-        wave_id: 4,
-      },
-    ];
+    COUNT(*)::INT AS total,
+    COALESCE(COUNT(grade_point IS NOT NULL OR null)::INT, 0) AS active,
+    COALESCE(COUNT(grade_point=999 OR null)::INT, 0) AS maximum
+    FROM results
+    `;
   }
 
-  private async queryBuilderEnemyResult(scheduleId: number): Promise<EnemyResult[]> {
-    const result = (
-      await this.prisma.$queryRaw<TmpEnemyResult[]>`
-      WITH results AS (
-        SELECT 
-          COALESCE(SUM(boss_counts[1])::INT, 0)  as boss_counts_4, 
-          COALESCE(SUM(boss_counts[2])::INT, 0)  as boss_counts_5, 
-          COALESCE(SUM(boss_counts[3])::INT, 0)  as boss_counts_6, 
-          COALESCE(SUM(boss_counts[4])::INT, 0)  as boss_counts_7, 
-          COALESCE(SUM(boss_counts[5])::INT, 0)  as boss_counts_8, 
-          COALESCE(SUM(boss_counts[6])::INT, 0)  as boss_counts_9, 
-          COALESCE(SUM(boss_counts[7])::INT, 0)  as boss_counts_10, 
-          COALESCE(SUM(boss_counts[8])::INT, 0)  as boss_counts_11, 
-          COALESCE(SUM(boss_counts[9])::INT, 0)  as boss_counts_12, 
-          COALESCE(SUM(boss_counts[10])::INT, 0) as boss_counts_13, 
-          COALESCE(SUM(boss_counts[11])::INT, 0) as boss_counts_14, 
-          COALESCE(SUM(boss_counts[12])::INT, 0) as boss_counts_15, 
-          COALESCE(SUM(boss_counts[13])::INT, 0) as boss_counts_17, 
-          COALESCE(SUM(boss_counts[14])::INT, 0) as boss_counts_20, 
-          COALESCE(SUM(boss_kill_counts[1])::INT, 0) as boss_kill_counts_4, 
-          COALESCE(SUM(boss_kill_counts[2])::INT, 0) as boss_kill_counts_5, 
-          COALESCE(SUM(boss_kill_counts[3])::INT, 0) as boss_kill_counts_6, 
-          COALESCE(SUM(boss_kill_counts[4])::INT, 0) as boss_kill_counts_7, 
-          COALESCE(SUM(boss_kill_counts[5])::INT, 0) as boss_kill_counts_8, 
-          COALESCE(SUM(boss_kill_counts[6])::INT, 0) as boss_kill_counts_9, 
-          COALESCE(SUM(boss_kill_counts[7])::INT, 0) as boss_kill_counts_10, 
-          COALESCE(SUM(boss_kill_counts[8])::INT, 0) as boss_kill_counts_11, 
-          COALESCE(SUM(boss_kill_counts[9])::INT, 0) as boss_kill_counts_12,
-          COALESCE(SUM(boss_kill_counts[10])::INT, 0) as boss_kill_counts_13,
-          COALESCE(SUM(boss_kill_counts[11])::INT, 0) as boss_kill_counts_14,
-          COALESCE(SUM(boss_kill_counts[12])::INT, 0) as boss_kill_counts_15,
-          COALESCE(SUM(boss_kill_counts[13])::INT, 0) as boss_kill_counts_17,
-          COALESCE(SUM(boss_kill_counts[14])::INT, 0) as boss_kill_counts_20
-        FROM 
-          results 
-        INNER JOIN
-          schedules
-        ON
-          results.schedule_id = schedules.schedule_id
-        WHERE
-          schedules.schedule_id = ${scheduleId}
-      ) 
-      SELECT 
-        * 
-      FROM 
-        results;
-    `
-    )[0];
-
-    return [
-      {
-        count: result.boss_counts_4,
-        enemy_id: 4,
-        kill_count: result.boss_kill_counts_4,
-      },
-      {
-        count: result.boss_counts_5,
-        enemy_id: 5,
-        kill_count: result.boss_kill_counts_5,
-      },
-      {
-        count: result.boss_counts_6,
-        enemy_id: 6,
-        kill_count: result.boss_kill_counts_6,
-      },
-      {
-        count: result.boss_counts_7,
-        enemy_id: 7,
-        kill_count: result.boss_kill_counts_7,
-      },
-      {
-        count: result.boss_counts_8,
-        enemy_id: 8,
-        kill_count: result.boss_kill_counts_8,
-      },
-      {
-        count: result.boss_counts_9,
-        enemy_id: 9,
-        kill_count: result.boss_kill_counts_9,
-      },
-      {
-        count: result.boss_counts_10,
-        enemy_id: 10,
-        kill_count: result.boss_kill_counts_10,
-      },
-      {
-        count: result.boss_counts_11,
-        enemy_id: 11,
-        kill_count: result.boss_kill_counts_11,
-      },
-      {
-        count: result.boss_counts_12,
-        enemy_id: 12,
-        kill_count: result.boss_kill_counts_12,
-      },
-      {
-        count: result.boss_counts_13,
-        enemy_id: 13,
-        kill_count: result.boss_kill_counts_13,
-      },
-      {
-        count: result.boss_counts_14,
-        enemy_id: 14,
-        kill_count: result.boss_kill_counts_14,
-      },
-      {
-        count: result.boss_counts_15,
-        enemy_id: 15,
-        kill_count: result.boss_kill_counts_15,
-      },
-      {
-        count: result.boss_counts_17,
-        enemy_id: 17,
-        kill_count: result.boss_kill_counts_17,
-      },
-      {
-        count: result.boss_counts_20,
-        enemy_id: 20,
-        kill_count: result.boss_kill_counts_20,
-      },
-    ];
-  }
-
-  private async queryBuilderJobResult(scheduleId: number): Promise<JobResult> {
-    const result: JobResult = await this.prisma.$queryRaw<JobResult>`
-    WITH results AS (
-      SELECT
-        COUNT(*)::INT shifts_worked,
-        COUNT(is_clear = true OR null)::INT is_clear,
-        COUNT(is_clear = false OR null)::INT is_failure,
-        COALESCE(SUM(results.ikura_num)::INT, 0) ikura_num,
-        COALESCE(SUM(results.golden_ikura_num)::INT, 0) golden_ikura_num,
-        COALESCE(SUM(results.golden_ikura_assist_num)::INT, 0) golden_ikura_assist_num,
-        COUNT(is_boss_defeated = true OR null)::INT boss_kill_count,
-        COUNT(is_boss_defeated IS NOT NULL OR null)::INT boss_count
-      FROM
-        results
-      INNER JOIN
-        schedules
-      ON
-        results.schedule_id = schedules.schedule_id
-      WHERE
-        schedules.schedule_id = ${scheduleId}
-    )
+  // スケジュールIDを指定して統計データを返す
+  async get_statistics(schedule_id: number): Promise<CoopScheduleStatsBase> {
+    return this.prisma.$queryRaw<CoopScheduleStatsBase>`
     SELECT
-    *
+    COUNT(*)::INT AS shifts_worked,
+    SUM(ikura_num)::INT AS ikura_num,
+    SUM(golden_ikura_num)::INT AS golden_ikura_num,
+    MAX(ikura_num)::INT AS ikura_num_max,
+    MAX(golden_ikura_num)::INT AS golden_ikura_num_max,
+    AVG(ikura_num)::FLOAT AS ikura_num_avg,
+    AVG(golden_ikura_num)::FLOAT AS golden_ikura_num_avg,
+    COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
+    COALESCE(COUNT(is_clear=false OR null)::INT, 0) is_failure,
+    COALESCE(COUNT(failure_wave=1 OR null)::INT, 0) failure_wave_1,
+    COALESCE(COUNT(failure_wave=2 OR null)::INT, 0) failure_wave_2,
+    COALESCE(COUNT(failure_wave=3 OR null)::INT, 0) failure_wave_3,
+    MAX(boss_id)::INT AS boss_id,
+    COALESCE(COUNT(is_boss_defeated IS NOT NULL OR null)::INT, 0) boss_count,
+    COALESCE(COUNT(is_boss_defeated=true OR null)::INT, 0) boss_kill_count,
+    COALESCE(SUM(boss_counts[1])::INT, 0) AS boss_counts_4,
+    COALESCE(SUM(boss_kill_counts[1])::INT, 0) AS boss_kill_counts_4,
+    COALESCE(SUM(boss_counts[2])::INT, 0) AS boss_counts_5,
+    COALESCE(SUM(boss_kill_counts[2])::INT, 0) AS boss_kill_counts_5,
+    COALESCE(SUM(boss_counts[3])::INT, 0) AS boss_counts_6,
+    COALESCE(SUM(boss_kill_counts[3])::INT, 0) AS boss_kill_counts_6,
+    COALESCE(SUM(boss_counts[4])::INT, 0) AS boss_counts_7,
+    COALESCE(SUM(boss_kill_counts[4])::INT, 0) AS boss_kill_counts_7,
+    COALESCE(SUM(boss_counts[5])::INT, 0) AS boss_counts_8,
+    COALESCE(SUM(boss_kill_counts[5])::INT, 0) AS boss_kill_counts_8,
+    COALESCE(SUM(boss_counts[6])::INT, 0) AS boss_counts_9,
+    COALESCE(SUM(boss_kill_counts[6])::INT, 0) AS boss_kill_counts_9,
+    COALESCE(SUM(boss_counts[7])::INT, 0) AS boss_counts_10,
+    COALESCE(SUM(boss_kill_counts[7])::INT, 0) AS boss_kill_counts_10,
+    COALESCE(SUM(boss_counts[8])::INT, 0) AS boss_counts_11,
+    COALESCE(SUM(boss_kill_counts[8])::INT, 0) AS boss_kill_counts_11,
+    COALESCE(SUM(boss_counts[9])::INT, 0) AS boss_counts_12,
+    COALESCE(SUM(boss_kill_counts[9])::INT, 0) AS boss_kill_counts_12,
+    COALESCE(SUM(boss_counts[10])::INT, 0) AS boss_counts_13,
+    COALESCE(SUM(boss_kill_counts[10])::INT, 0) AS boss_kill_counts_13,
+    COALESCE(SUM(boss_counts[11])::INT, 0) AS boss_counts_14,
+    COALESCE(SUM(boss_kill_counts[11])::INT, 0) AS boss_kill_counts_14,
+    COALESCE(SUM(boss_counts[12])::INT, 0) AS boss_counts_15,
+    COALESCE(SUM(boss_kill_counts[12])::INT, 0) AS boss_kill_counts_15,
+    COALESCE(SUM(boss_counts[13])::INT, 0) AS boss_counts_17,
+    COALESCE(SUM(boss_kill_counts[13])::INT, 0) AS boss_kill_counts_17,
+    COALESCE(SUM(boss_counts[14])::INT, 0) AS boss_counts_20,
+    COALESCE(SUM(boss_kill_counts[14])::INT, 0) AS boss_kill_counts_20
     FROM
     results
+    WHERE
+    schedule_id = ${schedule_id}
     `;
-    return camelcaseKeys(result[0]);
+  }
+
+  // ステージごとの統計データを返す
+  private async findManyByStageId(): Promise<CoopScheduleStageResponse> {
+    const results: CoopScheduleStageData[] = await this.prisma.$queryRaw<CoopScheduleStageData[]>`
+    SELECT
+    stage_id,
+    COUNT(*)::INT AS shifts_worked,
+    COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
+    COALESCE(COUNT(is_clear=false OR null)::INT, 0) is_failure
+    FROM
+    results
+    LEFT JOIN
+    schedules
+    ON
+    schedules.schedule_id = results.schedule_id
+    WHERE
+    start_time IS NOT NULL
+    GROUP BY
+    stage_id
+    `;
+
+    return {
+      results: {
+        bigrun: results.filter((result) => result.stage_id >= 100),
+        regular: results.filter((result) => result.stage_id < 100),
+      },
+    };
   }
 }
