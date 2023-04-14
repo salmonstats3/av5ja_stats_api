@@ -258,7 +258,7 @@ export class CustomCoopWaveRequest {
   @ApiProperty()
   @IsInt()
   @Min(1)
-  @Max(4)
+  @Max(5)
   readonly waveId: number;
 
   @ApiProperty()

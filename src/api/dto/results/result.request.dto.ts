@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 
 import { EventType } from "../enum/event_type";
 import { Mode } from "../enum/mode";
+import { Rule } from "../enum/rule";
 import { Species } from "../enum/species";
 import { WaterLevel } from "../enum/water_level";
 import { CoopScheduleRequest } from "../schedules/schedule.request.dto";
@@ -173,7 +174,7 @@ export class CoopPlayerRequest {
   @IsArray()
   @IsNotEmpty()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   @Type(() => Number)
   readonly specialCounts: number[];
 
@@ -217,7 +218,7 @@ export class CoopPlayerRequest {
   @IsArray()
   @IsNotEmpty()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   @Type(() => Number)
   readonly weaponList: number[];
 
@@ -271,6 +272,7 @@ export class CoopPlayerRequest {
   kumaPoint: number | null;
 
   static fromJSON(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     result: any,
     smellMeter: number | null = null,
     jobScore: number | null = null,
@@ -334,7 +336,7 @@ export class CoopWaveRequest {
   @Expose({ name: "id" })
   @IsInt()
   @Min(1)
-  @Max(4)
+  @Max(5)
   waveId: number;
 
   @ApiProperty({ enum: EventType })
@@ -398,7 +400,7 @@ export class CoopResultRequest {
   @IsArray()
   @IsNotEmpty()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   @ValidateNested({ each: true })
   @Type(() => CoopWaveRequest)
   waveDetails: CoopWaveRequest[];
@@ -518,6 +520,7 @@ export class CoopResultRequest {
   @ArrayMaxSize(3)
   @ValidateNested({ each: true })
   @Type(() => CoopPlayerRequest)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Transform((param) => param.value.map((player: any) => CoopPlayerRequest.fromJSON(player)))
   otherResults: CoopPlayerRequest[];
 
@@ -544,6 +547,12 @@ export class CoopResultRequest {
     if (this.otherResults.concat(this.myResult).every((player) => player.specialId === null)) {
       return false;
     }
+
+    // ルールがバイトチームコンテンストは一時的に無効
+    if (this.schedule.rule === Rule.CONTEST) {
+      return false;
+    }
+
     return true;
   }
 

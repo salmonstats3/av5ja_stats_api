@@ -1,12 +1,4 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  HttpCode,
-  HttpException,
-  Put,
-  Version,
-} from "@nestjs/common";
+import { BadRequestException, Controller, Get, HttpCode, HttpException, Put, Version } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import axios from "axios";
 import { plainToClass } from "class-transformer";
@@ -17,17 +9,10 @@ import { PrismaService } from "src/prisma.service";
 import { AccessTokenRequest, AccessTokenResponse } from "../dto/authorize/access_token.dto";
 import { AppVersionResponse } from "../dto/authorize/app_version.dto";
 import { BulletTokenRequest, BulletTokenResponse } from "../dto/authorize/bullet_token.dto";
-import {
-  GameServiceTokenRequest,
-  GameServiceTokenResponse,
-} from "../dto/authorize/game_service_token.dto";
+import { GameServiceTokenRequest, GameServiceTokenResponse } from "../dto/authorize/game_service_token.dto";
 import { GameWebTokenRequest, GameWebTokenResponse } from "../dto/authorize/game_web_token.dto";
 import { IminkRequest, IminkResponse, IminkType } from "../dto/authorize/imink.dto";
-import {
-  CoopSchedule,
-  CoopScheduleDataResponse,
-  CoopScheduleResponse,
-} from "../dto/schedules/schedule.response.dto";
+import { CoopSchedule, CoopScheduleDataResponse, CoopScheduleResponse } from "../dto/schedules/schedule.response.dto";
 import { firebaseConfig } from "../firebase.config";
 
 import schedules from "./schedules.json";
@@ -49,9 +34,7 @@ export class AuthorizeController {
   })
   @ApiBadRequestResponse()
   async update() {
-    const results: CoopScheduleDataResponse[] = schedules.map((schedule) =>
-      plainToClass(CoopScheduleDataResponse, schedule),
-    );
+    const results: CoopScheduleDataResponse[] = schedules.map((schedule) => plainToClass(CoopScheduleDataResponse, schedule));
 
     results.forEach(async (schedule) => {
       await setDoc(doc(this.firestore, schedule.setting, schedule.startTime), {
@@ -84,9 +67,7 @@ export class AuthorizeController {
     console.log(version);
     const access_token = await this.get_access_token(request);
     console.log(access_token);
-    const imink_nso: IminkResponse = await this.get_imink(
-      new IminkRequest(IminkType.NSO, access_token.access_token),
-    );
+    const imink_nso: IminkResponse = await this.get_imink(new IminkRequest(IminkType.NSO, access_token.access_token));
     console.log(imink_nso);
     const game_service_token = await this.get_game_service_token(
       new GameServiceTokenRequest(imink_nso, version, access_token.access_token),
@@ -97,21 +78,12 @@ export class AuthorizeController {
     );
     console.log(imink_app);
     const game_web_token = await this.get_game_web_token(
-      new GameWebTokenRequest(
-        imink_app,
-        version,
-        game_service_token.result.webApiServerCredential.accessToken,
-      ),
+      new GameWebTokenRequest(imink_app, version, game_service_token.result.webApiServerCredential.accessToken),
     );
     console.log(game_web_token);
-    const bullet_token = await this.get_bullet_token(
-      new BulletTokenRequest(game_web_token.result.accessToken, web_version),
-    );
+    const bullet_token = await this.get_bullet_token(new BulletTokenRequest(game_web_token.result.accessToken, web_version));
     console.log(bullet_token);
-    const schedules: CoopSchedule[] = await this.get_schedules(
-      bullet_token.bulletToken,
-      web_version,
-    );
+    const schedules: CoopSchedule[] = await this.get_schedules(bullet_token.bulletToken, web_version);
 
     schedules.forEach(async (schedule) => {
       await setDoc(doc(this.firestore, schedule.rule, schedule.startTime), {
@@ -155,11 +127,9 @@ export class AuthorizeController {
       "X-Web-View-Ver": web_version,
     };
     try {
-      return plainToClass(
-        CoopScheduleResponse,
-        (await axios.post(url, parameters, { headers: headers })).data,
-        { excludeExtraneousValues: true },
-      ).schedules;
+      return plainToClass(CoopScheduleResponse, (await axios.post(url, parameters, { headers: headers })).data, {
+        excludeExtraneousValues: true,
+      }).schedules;
     } catch (error) {
       throw new HttpException(error.response.data, error.response.status);
     }
