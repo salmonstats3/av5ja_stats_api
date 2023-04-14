@@ -35,6 +35,12 @@ export interface CoopScheduleStageData {
   readonly stage_id: number;
 }
 
+export interface CoopScheduleStatsPlayer {
+  active: number;
+  maximum: number;
+  total: number;
+}
+
 export interface CoopScheduleStatsBase {
   boss_count: number;
   boss_count_10: number;
@@ -99,8 +105,9 @@ export class CoopScheduleStats {
   golden_ikura_num: IkuraNum;
   boss: EnemyNum;
   enemies: EnemyNum[];
+  players: CoopScheduleStatsPlayer;
 
-  static from(stats: CoopScheduleStatsBase): CoopScheduleStats {
+  static from(stats: CoopScheduleStatsBase, player: CoopScheduleStatsPlayer): CoopScheduleStats {
     const result = new CoopScheduleStats();
     result.danger_rate = stats.danger_rate;
     result.shifts_worked = stats.shifts_worked;
@@ -135,6 +142,7 @@ export class CoopScheduleStats {
         kill_count: stats[`boss_kill_counts_${enemy_id}`],
       };
     });
+    result.players = player;
     return result;
   }
 }

@@ -8,6 +8,11 @@ import { weaponLists } from "src/api/constants/weapon";
 import { Mode } from "../enum/mode";
 import { Setting } from "../enum/setting";
 
+export enum KingSalmonId {
+  COHOZUNA = "COHOZUNA",
+  HORROROBOROS = "HORROROBOROS",
+}
+
 export class CoopScheduleDataResponse {
   @Expose()
   weaponList: number[];
@@ -26,6 +31,39 @@ export class CoopScheduleDataResponse {
 
   @Expose()
   setting: Setting;
+
+  @Expose()
+  estimated_king_salmon_id: KingSalmonId | null;
+
+  constructor(
+    weaponList: number[],
+    startTime: string,
+    endTime: string,
+    rareWeapon: number | null,
+    stageId: number,
+    setting: Setting,
+    estimated_king_salmon_id: KingSalmonId | null,
+  ) {
+    this.weaponList = weaponList;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.rareWeapon = rareWeapon;
+    this.stageId = stageId;
+    this.setting = setting;
+    this.estimated_king_salmon_id = estimated_king_salmon_id;
+  }
+
+  static from(schedule: CoopScheduleDataResponse, king_salmon_id: KingSalmonId): CoopScheduleDataResponse {
+    return new CoopScheduleDataResponse(
+      schedule.weaponList,
+      schedule.startTime,
+      schedule.endTime,
+      schedule.rareWeapon,
+      schedule.stageId,
+      schedule.setting,
+      king_salmon_id,
+    );
+  }
 }
 
 class URL {
@@ -57,9 +95,7 @@ class CoopSetting {
 
   @ApiProperty()
   @Expose({ name: "weapons" })
-  @Transform((param) =>
-    param.value.map((value) => weaponLists[plainToClass(WeaponType, value).image.url]),
-  )
+  @Transform((param) => param.value.map((value) => weaponLists[plainToClass(WeaponType, value).image.url]))
   weapons: number[];
 
   @ApiProperty()
