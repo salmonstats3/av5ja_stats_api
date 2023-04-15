@@ -40,7 +40,7 @@ export class CustomCoopScheduleRequest {
   @ApiProperty()
   @IsArray()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   weaponList: number[];
 
   @ApiProperty()
@@ -208,13 +208,13 @@ export class CustomCoopPlayerRequest {
   @ApiProperty()
   @IsArray()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   readonly specialCounts: number[];
 
   @ApiProperty()
   @IsArray()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   readonly weaponList: number[];
 
   @ApiProperty()
