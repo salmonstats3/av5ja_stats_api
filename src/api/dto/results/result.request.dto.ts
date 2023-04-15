@@ -26,7 +26,6 @@ import dayjs from "dayjs";
 
 import { EventType } from "../enum/event_type";
 import { Mode } from "../enum/mode";
-import { Rule } from "../enum/rule";
 import { Species } from "../enum/species";
 import { WaterLevel } from "../enum/water_level";
 import { CoopScheduleRequest } from "../schedules/schedule.request.dto";
@@ -545,11 +544,6 @@ export class CoopResultRequest {
 
     // スペシャルIDが全員nullの場合は無効
     if (this.otherResults.concat(this.myResult).every((player) => player.specialId === null)) {
-      return false;
-    }
-
-    // ルールがバイトチームコンテンストは一時的に無効
-    if (this.schedule.rule === Rule.CONTEST) {
       return false;
     }
 
