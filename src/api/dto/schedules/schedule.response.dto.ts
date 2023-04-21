@@ -9,31 +9,31 @@ import { Mode } from "../enum/mode";
 import { Setting } from "../enum/setting";
 
 export enum KingSalmonId {
-  COHOZUNA = "COHOZUNA",
-  HORROROBOROS = "HORROROBOROS",
+  COHOZUNA = 23,
+  HORROROBOROS = 24,
 }
 
 export class CoopScheduleDataResponse {
   @Expose()
-  weaponList: number[];
+  readonly weaponList: number[];
 
   @Expose()
-  startTime: string;
+  readonly startTime: string;
 
   @Expose()
-  endTime: string;
+  readonly endTime: string;
 
   @Expose()
-  rareWeapon: number | null;
+  readonly rareWeapon: number | null;
 
   @Expose()
-  stageId: number;
+  readonly stageId: number;
 
   @Expose()
-  setting: Setting;
+  readonly setting: Setting;
 
   @Expose()
-  estimated_king_salmon_id: KingSalmonId | null;
+  estimatedKingSalmonId: KingSalmonId | null;
 
   constructor(
     weaponList: number[],
@@ -42,7 +42,7 @@ export class CoopScheduleDataResponse {
     rareWeapon: number | null,
     stageId: number,
     setting: Setting,
-    estimated_king_salmon_id: KingSalmonId | null,
+    estimatedKingSalmonId: KingSalmonId | null,
   ) {
     this.weaponList = weaponList;
     this.startTime = startTime;
@@ -50,7 +50,7 @@ export class CoopScheduleDataResponse {
     this.rareWeapon = rareWeapon;
     this.stageId = stageId;
     this.setting = setting;
-    this.estimated_king_salmon_id = estimated_king_salmon_id;
+    this.estimatedKingSalmonId = estimatedKingSalmonId;
   }
 
   static from(schedule: CoopScheduleDataResponse, king_salmon_id: KingSalmonId): CoopScheduleDataResponse {

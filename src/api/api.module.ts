@@ -6,6 +6,7 @@ import { ApiController } from "./api.controller";
 import { ApiService } from "./api.service";
 import { AuthorizeController } from "./authorize/authorize.controller";
 import { AuthorizeModule } from "./authorize/authorize.module";
+import { AuthorizeService } from "./authorize/authorize.service";
 import { ResultsModule } from "./results/results.module";
 import { ResultsService } from "./results/results.service";
 import { SchedulesModule } from "./schedules/schedules.module";
@@ -14,6 +15,6 @@ import { SchedulesService } from "./schedules/schedules.service";
 @Module({
   controllers: [ApiController, AuthorizeController],
   imports: [ResultsModule, SchedulesModule, HttpModule, AuthorizeModule, CacheModule.register()],
-  providers: [PrismaService, ApiService, ResultsService, SchedulesService],
+  providers: [PrismaService, ApiService, ResultsService, SchedulesService, AuthorizeService],
 })
 export class ApiModule {}
