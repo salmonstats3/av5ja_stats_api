@@ -1,5 +1,5 @@
 import { Controller, Get, HttpCode, Query, ValidationPipe, Version } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { PaginatedDto } from "../dto/pagination.dto";
 import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
@@ -17,10 +17,12 @@ export class SchedulesController {
   @HttpCode(200)
   @ApiTags("スケジュール")
   @ApiOperation({
-    description: "スケジュールを返します",
-    operationId: "スケジュール取得",
+    deprecated: true,
+    description: "スケジュールを全件返します",
+    operationId: "スケジュール全件取得",
   })
   @ApiBadRequestResponse()
+  @ApiOkResponse({ type: [CoopScheduleDataResponse] })
   findManyV1(): Promise<CoopScheduleDataResponse[]> {
     return this.service.get_schedules();
   }
@@ -30,10 +32,11 @@ export class SchedulesController {
   @HttpCode(200)
   @ApiTags("スケジュール")
   @ApiOperation({
-    description: "スケジュールを返します",
+    description: "指定された条件に基づいてスケジュールを返します. skipとtakeがどちらもnullの場合は全件を返します.",
     operationId: "スケジュール取得",
   })
   @ApiBadRequestResponse()
+  @ApiOkResponse({ type: [CoopScheduleDataResponse] })
   findManyV2(@Query(new ValidationPipe({ transform: true })) query: ScheduleRequestQuery): Promise<CoopScheduleDataResponse[]> {
     // return this.service.update_schedules();
     return this.service.get_schedules(query);

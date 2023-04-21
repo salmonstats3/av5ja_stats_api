@@ -1,7 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose, plainToClass, Transform, Type } from "class-transformer";
-import { ValidateNested } from "class-validator";
+import { IsDateString, IsEnum, IsOptional, ValidateNested } from "class-validator";
 import { stageLists } from "src/api/constants/stage";
 import { weaponLists } from "src/api/constants/weapon";
 
@@ -14,24 +14,36 @@ export enum KingSalmonId {
 }
 
 export class CoopScheduleDataResponse {
+  @ApiProperty({ example: [-1, -1, -1, -1] })
+  @IsDateString()
   @Expose()
   readonly weaponList: number[];
 
+  @ApiProperty({ example: "2023-04-26T16:00:00Z" })
+  @IsDateString()
   @Expose()
   readonly startTime: string;
 
+  @ApiProperty({ example: "2023-04-28T08:00:00Z" })
+  @IsDateString()
   @Expose()
   readonly endTime: string;
 
+  @ApiProperty({ example: null, nullable: true })
+  @IsOptional()
   @Expose()
   readonly rareWeapon: number | null;
 
+  @ApiProperty({ example: 1 })
   @Expose()
   readonly stageId: number;
 
+  @ApiProperty({ example: Setting.NORMAL })
+  @IsEnum(Setting)
   @Expose()
   readonly setting: Setting;
 
+  @ApiProperty({ example: 24 })
   @Expose()
   estimatedKingSalmonId: KingSalmonId | null;
 

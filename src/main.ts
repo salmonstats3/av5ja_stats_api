@@ -57,7 +57,7 @@ async function bootstrap() {
   if (!disableErrorMessages) {
     build(documents);
   }
-  SwaggerModule.setup("documents", app, documents);
+  SwaggerModule.setup("", app, documents);
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

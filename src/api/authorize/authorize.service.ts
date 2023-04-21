@@ -106,7 +106,7 @@ export class AuthorizeService {
       game_service_token: game_service_token.result.webApiServerCredential.accessToken,
       game_web_token: game_web_token.result.accessToken,
       name: game_service_token.result.user.name,
-      nsaid: game_service_token.result.user.nsaid,
+      nsa_id: game_service_token.result.user.nsaId,
       session_token: session_token,
       thumbnail_url: game_service_token.result.user.imageUri,
       version: version,
