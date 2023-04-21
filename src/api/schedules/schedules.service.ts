@@ -5,11 +5,11 @@ import { Cache } from "cache-manager";
 import { plainToClass } from "class-transformer";
 import dayjs from "dayjs";
 import { initializeApp } from "firebase/app";
-import { collection, getDocs, getFirestore } from "firebase/firestore/lite";
+import { collection, doc, getDocs, getFirestore, setDoc } from "firebase/firestore/lite";
 import { PrismaService } from "src/prisma.service";
 
 import { Setting } from "../dto/enum/setting";
-import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
+import { CoopScheduleDataResponse, KingSalmonId } from "../dto/schedules/schedule.response.dto";
 import {
   CoopScheduleStageData,
   CoopScheduleStageResponse,
@@ -18,6 +18,8 @@ import {
   CoopScheduleStatsPlayer,
 } from "../dto/schedules/schedule.stats.response.dto";
 import { firebaseConfig } from "../firebase.config";
+
+import { ScheduleRequestQuery } from "./schedules.request.dto";
 
 @Injectable()
 export class SchedulesService {
@@ -45,20 +47,86 @@ export class SchedulesService {
     return result;
   }
 
-  // スケジュール一覧を返す
-  async get_schedules(): Promise<CoopScheduleDataResponse[]> {
+  /**
+   * スケジュールをアップデートする
+   */
+  async update_schedules(): Promise<CoopScheduleDataResponse[]> {
+    const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))));
+    // ソートする
+    const schedules: CoopScheduleDataResponse[] = documents
+      .flatMap((document) => document.docs.map((doc) => plainToClass(CoopScheduleDataResponse, doc.data())))
+      .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
+    let estimatedKingSalmonId: KingSalmonId | null = null;
+    schedules.forEach((schedule) => {
+      if (dayjs(schedule.startTime).toDate() < dayjs("2023-03-02T00:00:00Z").toDate()) {
+        schedule.estimatedKingSalmonId = this.next(null);
+        return;
+      }
+      estimatedKingSalmonId = this.next(estimatedKingSalmonId);
+      schedule.estimatedKingSalmonId = estimatedKingSalmonId;
+      return;
+    });
+    // Firestoreに書き込む
+    schedules.forEach(async (schedule) => {
+      await setDoc(
+        doc(this.firestore, schedule.setting, schedule.startTime),
+        {
+          endTime: schedule.endTime,
+          estimatedKingSalmonId: schedule.estimatedKingSalmonId,
+          rareWeapon: null,
+          setting: schedule.setting,
+          stageId: schedule.stageId,
+          startTime: schedule.startTime,
+          weaponList: schedule.weaponList,
+        },
+        { merge: true },
+      );
+    });
+    return schedules;
+  }
+
+  private next(salmon_id: KingSalmonId | null): KingSalmonId {
+    switch (salmon_id) {
+      case KingSalmonId.COHOZUNA:
+        return KingSalmonId.HORROROBOROS;
+      case KingSalmonId.HORROROBOROS:
+        return KingSalmonId.COHOZUNA;
+      default:
+        return KingSalmonId.COHOZUNA;
+    }
+  }
+
+  /**
+   * スケジュール一覧を返す
+   */
+  async get_schedules(query: ScheduleRequestQuery | undefined = undefined): Promise<CoopScheduleDataResponse[]> {
+    const request: ScheduleRequestQuery = {
+      skip: query?.skip ?? null,
+      take: query?.take ?? null,
+    };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const values: any[] = await this.cacheManager.get("schedules");
     if (values !== undefined) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return values.map((value: any) => plainToClass(CoopScheduleDataResponse, value));
+      const schedules: CoopScheduleDataResponse[] = values.map((value: any) => plainToClass(CoopScheduleDataResponse, value));
+      // どちらもnullなら全件返す
+      if (request.skip === null && request.take === null) return schedules;
+      // どちらもskipがnullなら最後のtake件返す
+      if (request.skip === null && request.take !== null) return schedules.slice(-request.take);
+      return schedules.slice(request.skip, request.skip + request.take);
     }
+    // スケジュール取得
     const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))));
     const schedules: CoopScheduleDataResponse[] = documents
       .flatMap((document) => document.docs.map((doc) => plainToClass(CoopScheduleDataResponse, doc.data())))
       .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
+
     this.cacheManager.set("schedules", schedules, { ttl: 60 * 60 * 1 });
-    return schedules;
+    // どちらもnullなら全件返す
+    if (request.skip === null && request.take === null) return schedules;
+    // どちらもskipがnullなら最後のtake件返す
+    if (request.skip === null && request.take !== null) return schedules.slice(-request.take);
+    return schedules.slice(request.skip, request.skip + request.take);
   }
 
   // 最新のシフトのスケジュールIDを返す

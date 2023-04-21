@@ -1,9 +1,10 @@
-import { Controller, Get, HttpCode, Version } from "@nestjs/common";
+import { Controller, Get, HttpCode, Query, ValidationPipe, Version } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { PaginatedDto } from "../dto/pagination.dto";
 import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
 
+import { ScheduleRequestQuery } from "./schedules.request.dto";
 import { SchedulesService } from "./schedules.service";
 
 @Controller("schedules")
@@ -16,12 +17,26 @@ export class SchedulesController {
   @HttpCode(200)
   @ApiTags("スケジュール")
   @ApiOperation({
-    description: "指定されたスケジュールの統計データを返します.",
-    operationId: "統計取得",
+    description: "スケジュールを返します",
+    operationId: "スケジュール取得",
   })
   @ApiBadRequestResponse()
-  find(): Promise<CoopScheduleDataResponse[]> {
+  findManyV1(): Promise<CoopScheduleDataResponse[]> {
     return this.service.get_schedules();
+  }
+
+  @Get("")
+  @Version("2")
+  @HttpCode(200)
+  @ApiTags("スケジュール")
+  @ApiOperation({
+    description: "スケジュールを返します",
+    operationId: "スケジュール取得",
+  })
+  @ApiBadRequestResponse()
+  findManyV2(@Query(new ValidationPipe({ transform: true })) query: ScheduleRequestQuery): Promise<CoopScheduleDataResponse[]> {
+    // return this.service.update_schedules();
+    return this.service.get_schedules(query);
   }
 
   @Get("statistics")
@@ -29,8 +44,8 @@ export class SchedulesController {
   @HttpCode(200)
   @ApiTags("スケジュール")
   @ApiOperation({
-    description: "指定されたスケジュールの統計データを返します.",
-    operationId: "統計取得",
+    description: "最新のスケジュールの統計データを返します.",
+    operationId: "スケジュール統計取得",
   })
   @ApiBadRequestResponse()
   estimate() {
