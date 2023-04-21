@@ -157,7 +157,7 @@ export class GameServiceTokenUser {
   id: number;
 
   @ApiProperty({ example: "91d160aa84e88da6" })
-  nsaid: string;
+  nsaId: string;
 
   @ApiProperty({
     example: "https://cdn-image-e0d67c509fb203858ebcb2fe3f88c2aa.baas.nintendo.com/1/430d0e57d74d2366",

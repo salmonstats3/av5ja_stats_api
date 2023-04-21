@@ -1,5 +1,5 @@
 import { Controller, Get, HttpCode, Version } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { AuthorizeService } from "./authorize.service";
 import { AuthorizeResponse } from "./autorize.response.dto";
@@ -17,6 +17,7 @@ export class AuthorizeController {
     operationId: "スケジュール書き込み",
   })
   @ApiBadRequestResponse()
+  @ApiOkResponse({ type: AuthorizeResponse })
   async authorize(): Promise<AuthorizeResponse> {
     return this.service.authorize();
   }

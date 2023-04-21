@@ -17,8 +17,9 @@ export class ResultsController {
   @HttpCode(201)
   @ApiTags("リザルト")
   @ApiOperation({
-    description: "Salmonia3+形式のデータを最大同時に200件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。",
-    operationId: "登録(SplatNet3)",
+    deprecated: true,
+    description: "旧API",
+    operationId: "リザルト登録V2(Salmonia3+)",
   })
   @ApiBadRequestResponse()
   upsertManyV1(@Body() request: CoopResultManyRequest): Promise<Result[]> {
@@ -30,8 +31,9 @@ export class ResultsController {
   @HttpCode(201)
   @ApiTags("リザルト")
   @ApiOperation({
-    description: "Salmonia3+形式のデータを最大同時に200件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。",
-    operationId: "登録(SplatNet3)",
+    deprecated: false,
+    description: "新API",
+    operationId: "リザルト登録V2(Salmonia3+)",
   })
   @ApiBadRequestResponse()
   upsertManyV2(@Body() request: CoopResultManyRequest): Promise<Result[]> {
