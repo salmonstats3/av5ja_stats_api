@@ -18,7 +18,6 @@ export class AnalyticsService {
   ) {}
 
   async getAnalytics(): Promise<AnalyticsResponseDto> {
-    console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
     const analytics: AnalyticsResponseDto = await this.cacheManager.get("analytics");
     if (analytics !== undefined) {
       return analytics;
