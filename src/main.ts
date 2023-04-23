@@ -26,7 +26,9 @@ async function build(documents: OpenAPIObject) {
 }
 
 async function bootstrap() {
-  process.env.GOOGLE_APPLICATION_CREDENTIALS = `./credentials.json`;
+  if (process.env.NODE_ENV === "development") {
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = `./credentials.json`;
+  }
 
   const app = await NestFactory.create(AppModule);
   app.use(bodyParser.json({ limit: "50mb" }));
