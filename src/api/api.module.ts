@@ -2,6 +2,9 @@ import { HttpModule } from "@nestjs/axios";
 import { CacheModule, Module } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
 
+import { AnalyticsController } from "./analytics/analytics.controller";
+import { AnalyticsModule } from "./analytics/analytics.module";
+import { AnalyticsService } from "./analytics/analytics.service";
 import { ApiController } from "./api.controller";
 import { ApiService } from "./api.service";
 import { AuthorizeController } from "./authorize/authorize.controller";
@@ -13,8 +16,8 @@ import { SchedulesModule } from "./schedules/schedules.module";
 import { SchedulesService } from "./schedules/schedules.service";
 
 @Module({
-  controllers: [ApiController, AuthorizeController],
-  imports: [ResultsModule, SchedulesModule, HttpModule, AuthorizeModule, CacheModule.register()],
-  providers: [PrismaService, ApiService, ResultsService, SchedulesService, AuthorizeService],
+  controllers: [ApiController, AuthorizeController, AnalyticsController],
+  imports: [ResultsModule, SchedulesModule, HttpModule, AuthorizeModule, CacheModule.register(), AnalyticsModule],
+  providers: [PrismaService, ApiService, ResultsService, SchedulesService, AuthorizeService, AnalyticsService],
 })
 export class ApiModule {}

@@ -10,7 +10,7 @@ import { AppService } from "./app.service";
   imports: [
     ApiModule,
     ConfigModule.forRoot({
-      envFilePath: [".env.prod"],
+      envFilePath: [".env"],
     }),
   ],
   providers: [AppService],

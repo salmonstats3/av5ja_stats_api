@@ -17,6 +17,13 @@ paths:
           description: ''
       tags:
         - スケジュール
+  /v1/analytics:
+    get:
+      operationId: AnalyticsController_getAnalytics
+      parameters: []
+      responses:
+        '200':
+          description: ''
   /v1/results:
     post:
       operationId: リザルト登録V2(Salmonia3+)

@@ -45,3 +45,7 @@ __pycache__
 
 # Results
 results
+
+# Secret
+
+credentials.json
