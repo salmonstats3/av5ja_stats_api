@@ -83,7 +83,7 @@ export class AnalyticsService {
       ON
       schedules.schedule_id = results.schedule_id
       WHERE
-      results.play_time BETWEEN NOW() - INTERVAL '120 HOURS' AND NOW()
+      results.play_time BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
       AND
       players.grade_point IS NOT NULL
       AND
