@@ -1,10 +1,14 @@
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
 import { HttpService } from "@nestjs/axios";
 import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
+import { Schedule } from "@prisma/client";
 import { Cache } from "cache-manager";
+import { plainToInstance } from "class-transformer";
 import { PrismaService } from "src/prisma.service";
 
 import { AnalyticsResponseDto, AnalyticsSummaryResponseDto } from "../dto/analytics/analytics.response.dto";
+
+import { AnalyticsStatusResponseDto } from "./analytics.status.dto";
 
 @Injectable()
 export class AnalyticsService {
@@ -44,10 +48,56 @@ export class AnalyticsService {
     };
 
     const result: AnalyticsResponseDto = AnalyticsResponseDto.fromJSON(await this.analyticsDataClient.runRealtimeReport(request))[0];
-    result.summary = await this.getSummary();
+    const results = await Promise.all([this.getSummary(), this.getStatus(), this.getSchedule()]);
+    result.summary = results[0];
+    result.status = results[1];
+    result.schedule = results[2];
     this.cacheManager.set("analytics", result, { ttl: 60 * 5 });
 
     return result;
+  }
+
+  /**
+   *
+   * @returns 直近24時間のデータ
+   */
+  private async getStatus(): Promise<AnalyticsStatusResponseDto[]> {
+    const status: AnalyticsStatusResponseDto[] = await this.cacheManager.get("statuses");
+    if (status !== undefined) {
+      return status;
+    }
+    const results = await this.prisma.$queryRaw<AnalyticsStatusResponseDto[]>`
+      SELECT
+      DATE_TRUNC('hour', results.play_time) AS play_time,
+      COUNT(*)::INT AS count,
+      COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
+      COALESCE(AVG(grade_point)::FLOAT, 0) grade_point
+      FROM
+      results
+      INNER JOIN
+      players
+      ON
+      players.result_id = results.salmon_id
+      INNER JOIN
+      schedules
+      ON
+      schedules.schedule_id = results.schedule_id
+      WHERE
+      results.play_time BETWEEN NOW() - INTERVAL '120 HOURS' AND NOW()
+      AND
+      players.grade_point IS NOT NULL
+      AND
+      schedules.mode = 'REGULAR'
+      GROUP BY
+      DATE_TRUNC('hour', results.play_time)
+      ORDER BY play_time DESC
+      LIMIT 24
+      `;
+    const statuses = results
+      .map((result) => plainToInstance(AnalyticsStatusResponseDto, result))
+      .sort((a, b) => a.play_time.getTime() - b.play_time.getTime());
+    this.cacheManager.set("statuses", statuses, { ttl: 60 * 60 });
+    return statuses;
   }
 
   /**
@@ -63,6 +113,7 @@ export class AnalyticsService {
         },
         _count: {
           nightLess: true,
+          scenarioCode: true,
         },
         _max: {
           goldenIkuraAssistNum: true,
@@ -81,11 +132,11 @@ export class AnalyticsService {
   /**
    * 最新のスケジュールIDを取得する
    */
-  private async getSchedule(): Promise<number> {
-    const scheduleId: number | undefined = await this.cacheManager.get("scheduleId");
+  private async getSchedule(): Promise<Partial<Schedule>> {
+    const schedule: Partial<Schedule> | undefined = await this.cacheManager.get("schedule");
 
-    if (scheduleId !== undefined) {
-      return scheduleId;
+    if (schedule !== undefined) {
+      return schedule;
     }
 
     const result = await this.prisma.result.findFirst({
@@ -93,7 +144,14 @@ export class AnalyticsService {
         playTime: "desc",
       },
       select: {
-        schedule: true,
+        schedule: {
+          select: {
+            endTime: true,
+            stageId: true,
+            startTime: true,
+            weaponList: true,
+          },
+        },
       },
       where: {
         playTime: {
@@ -109,7 +167,7 @@ export class AnalyticsService {
         },
       },
     });
-    this.cacheManager.set("scheduleId", result.schedule.scheduleId, { ttl: 60 * 5 });
-    return result.schedule.scheduleId;
+    this.cacheManager.set("schedule", result.schedule, { ttl: 60 * 5 });
+    return result.schedule;
   }
 }

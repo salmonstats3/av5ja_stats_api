@@ -14,10 +14,11 @@ import { ResultsModule } from "./results/results.module";
 import { ResultsService } from "./results/results.service";
 import { SchedulesModule } from "./schedules/schedules.module";
 import { SchedulesService } from "./schedules/schedules.service";
+import { ScenarioModule } from './scenario/scenario.module';
 
 @Module({
   controllers: [ApiController, AuthorizeController, AnalyticsController],
-  imports: [ResultsModule, SchedulesModule, HttpModule, AuthorizeModule, CacheModule.register(), AnalyticsModule],
+  imports: [ResultsModule, SchedulesModule, HttpModule, AuthorizeModule, CacheModule.register(), AnalyticsModule, ScenarioModule],
   providers: [PrismaService, ApiService, ResultsService, SchedulesService, AuthorizeService, AnalyticsService],
 })
 export class ApiModule {}
