@@ -43,6 +43,10 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsResponseDto'
       tags:
         - 分析
   /v1/results:
@@ -238,6 +242,9 @@ components:
             type: string
       required:
         - results
+    AnalyticsResponseDto:
+      type: object
+      properties: {}
     PaginatedDto:
       type: object
       properties:
