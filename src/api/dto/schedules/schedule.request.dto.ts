@@ -42,7 +42,6 @@ export class CoopScheduleRequest {
       create: {
         endTime: this.endTime,
         mode: this.mode,
-        rareWeapon: this.rareWeapon,
         rule: this.rule,
         stageId: this.stageId,
         startTime: this.startTime,
