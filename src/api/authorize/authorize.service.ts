@@ -49,7 +49,7 @@ export class AuthorizeService {
 
   async authorize(): Promise<AuthorizeResponse> {
     const session_token: string = process.env.SESSION_TOKEN;
-    const version: string = await this.get_app_version();
+    const version: string = (await this.get_app_version()).results[0].version;
     const web_version: string = process.env.WEB_VIEW_VER;
     const request: AccessTokenRequest = {
       session_token: session_token,
@@ -125,9 +125,9 @@ export class AuthorizeService {
     }
   }
 
-  private async get_app_version(): Promise<string> {
+  async get_app_version(): Promise<AppVersionResponse> {
     const url = "https://itunes.apple.com/lookup?id=1234806557";
-    return plainToClass(AppVersionResponse, (await axios.get(url)).data).results[0].version;
+    return plainToClass(AppVersionResponse, (await axios.get(url)).data);
   }
 
   private async get_access_token(request: AccessTokenRequest): Promise<AccessTokenResponse> {
