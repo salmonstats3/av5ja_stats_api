@@ -49,55 +49,7 @@ paths:
                 $ref: '#/components/schemas/AnalyticsResponseDto'
       tags:
         - 分析
-  /v1/results:
-    get:
-      operationId: リザルト登録V2(Salmonia3+)
-      summary: ''
-      deprecated: true
-      description: 旧API
-      parameters:
-        - name: offset
-          required: false
-          in: query
-          description: オフセット
-          schema:
-            minimum: 0
-            title: offset
-            default: 0
-            type: number
-        - name: limit
-          required: false
-          in: query
-          description: 上限値
-          schema:
-            minimum: 0
-            maximum: 2000
-            title: limit
-            default: 25
-            type: number
-      responses:
-        '400':
-          description: ''
-      tags:
-        - リザルト
-    post:
-      operationId: リザルト登録V2(Salmonia3+)
-      summary: ''
-      deprecated: true
-      description: 旧API
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CoopResultManyRequest'
-      responses:
-        '400':
-          description: ''
-      tags:
-        - リザルト
-  /v2/results:
+  /v3/results:
     post:
       operationId: リザルト登録V2(Salmonia3+)
       summary: ''
@@ -109,7 +61,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CoopResultManyRequest'
+              $ref: '#/components/schemas/PaginatedDto'
       responses:
         '400':
           description: ''
@@ -287,18 +239,14 @@ components:
         offset:
           type: integer
           description: オフセット
-      required:
-        - total
-        - limit
-        - offset
-    CoopResultManyRequest:
-      type: object
-      properties:
         results:
           type: array
           items:
             type: string
       required:
+        - total
+        - limit
+        - offset
         - results
     CoopScheduleDataResponse:
       type: object

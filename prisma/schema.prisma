@@ -36,7 +36,7 @@ enum Client {
 }
 
 model Schedule {
-  scheduleId String    @id @default(dbgenerated("gen_random_uuid()")) @map("schedule_id") @db.Uuid
+  scheduleId String    @id @default(cuid()) @map("schedule_id")
   // 開始時刻
   startTime  DateTime? @map("start_time")
   // 終了時刻
@@ -49,8 +49,6 @@ model Schedule {
   mode       Mode      @default(REGULAR)
   // ルール
   rule       Rule      @default(REGULAR)
-  // レアブキ
-  rareWeapon Int?      @map("rare_weapon")
   // 作成日
   createdAt  DateTime  @default(now()) @map("created_at")
   // 更新日
@@ -68,9 +66,9 @@ model Schedule {
 
 model Result {
   // サーモンID
-  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                   String    @id @default(cuid())
   // スケジュールID
-  scheduleId           String    @map("schedule_id") @db.Uuid
+  scheduleId           String    @map("schedule_id")
   // バイトID
   resultId             String    @map("result_id") @db.Uuid
   // プレイ時刻
@@ -132,7 +130,7 @@ model Result {
 
 model Player {
   // リザルトID
-  id                   String   @map("id") @db.Uuid
+  id                   String   @map("id")
   // プレイヤーID
   nplnUserId           String   @map("npln_user_id")
   // 遊んだ時間
@@ -211,7 +209,7 @@ model Player {
 
 model Wave {
   // リザルトID
-  id                String   @map("id") @db.Uuid
+  id                String   @map("id")
   // WAVE数
   waveId            Int      @map("wave_id")
   // 潮位

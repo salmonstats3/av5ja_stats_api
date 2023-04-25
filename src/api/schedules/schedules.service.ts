@@ -40,7 +40,7 @@ export class SchedulesService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return statistics;
     }
-    const schedule_id: number = (await this.get_latest_schedule()).scheduleId;
+    const schedule_id: string = (await this.get_latest_schedule()).scheduleId;
     const results = await Promise.all([this.get_statistics(schedule_id), this.get_player_statistics(schedule_id)]);
     const result: CoopScheduleStats = CoopScheduleStats.from(results[0][0], results[1]);
     this.cacheManager.set("statistics", result, { ttl: 60 * 60 * 1 });
@@ -148,7 +148,7 @@ export class SchedulesService {
     });
   }
 
-  async get_player_statistics(schedule_id: number): Promise<CoopScheduleStatsPlayer> {
+  async get_player_statistics(schedule_id: string): Promise<CoopScheduleStatsPlayer> {
     return this.prisma.$queryRaw<CoopScheduleStatsPlayer>`
     WITH results AS (
       SELECT
@@ -178,7 +178,7 @@ export class SchedulesService {
   }
 
   // スケジュールIDを指定して統計データを返す
-  async get_statistics(schedule_id: number): Promise<CoopScheduleStatsBase> {
+  async get_statistics(schedule_id: string): Promise<CoopScheduleStatsBase> {
     return this.prisma.$queryRaw<CoopScheduleStatsBase>`
     SELECT
     COUNT(*)::INT AS shifts_worked,
