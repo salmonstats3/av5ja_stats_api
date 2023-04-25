@@ -19,9 +19,9 @@ paths:
         - スケジュール
   /v1/authorize/version:
     get:
-      operationId: スケジュール書き込み
+      operationId: バージョン
       summary: ''
-      description: イカリング3のスケジュールを取得して書き込みます
+      description: バージョンを取得して返します
       parameters: []
       responses:
         '200':
@@ -33,7 +33,7 @@ paths:
         '400':
           description: ''
       tags:
-        - スケジュール
+        - 認証
   /v1/analytics:
     get:
       operationId: Salmon Stats分析
