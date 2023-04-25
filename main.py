@@ -10,19 +10,20 @@ def upload():
         request = json.loads(f.read())
         print(f"Uploading {file}.json")
         headers = {"Content-Type": "application/json"}
-        response = requests.post("http://localhost:8080/v2/results", data=json.dumps(request), headers=headers)
+        response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
         if response.status_code != 201:
           with open(f"status.log", mode="a") as w:
             w.write(f"{response.status_code}: {file}")
             print(response.text)
 
 def download():
-  for offset in range(757000, 780000, 1000):
-    requestURL = f"http://localhost:8080/v1/results?offset={offset}&limit=1000&sort=salmonId&order=asc"
+  limit: int = 5000
+  for offset in range(0, 2060000, limit):
+    requestURL = f"https://localhost:8080/v1/results?offset={offset}&limit={limit}"
     response = requests.get(requestURL)
     with open(f"results/{offset}.json", mode="w") as f:
-      print(f"Downloading {offset} -> {offset + 1000}")
+      print(f"Downloading {offset} -> {offset + 5000}")
       f.write(response.text)
 
 if __name__=="__main__":
-  upload()
+  download()

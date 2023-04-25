@@ -100,7 +100,7 @@ export class AnalyticsService {
     const statuses = results
       .map((result) => plainToInstance(AnalyticsStatusResponseDto, result))
       .sort((a, b) => a.play_time.getTime() - b.play_time.getTime());
-    this.cacheManager.set("statuses", statuses, { ttl: 60 * 60 });
+    this.cacheManager.set("statuses", statuses, { ttl: 60 * 5 });
     return statuses;
   }
 
