@@ -27,10 +27,10 @@ export class AuthorizeController {
   @Get("version")
   @Version("1")
   @HttpCode(200)
-  @ApiTags("スケジュール")
+  @ApiTags("認証")
   @ApiOperation({
-    description: "イカリング3のスケジュールを取得して書き込みます",
-    operationId: "スケジュール書き込み",
+    description: "バージョンを取得して返します",
+    operationId: "バージョン",
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: AppVersionResponse })
