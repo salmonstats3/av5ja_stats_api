@@ -67,31 +67,35 @@ export class AnalyticsService {
       return status;
     }
     const results = await this.prisma.$queryRaw<AnalyticsStatusResponseDto[]>`
+      WITH results AS (
+        SELECT
+	      DATE_TRUNC('HOUR', results.play_time) AS play_time,
+	      is_clear,
+	      night_less,
+	      danger_rate
+	      FROM
+	      results
+	      INNER JOIN
+	      schedules
+	      ON
+	      schedules.schedule_id = results.schedule_id
+	      AND
+	      schedules.start_time IS NOT NULL
+	      WHERE
+	      results.play_time BETWEEN NOW() - INTERVAL '23HOURS' AND NOW()
+      )
       SELECT
-      DATE_TRUNC('hour', results.play_time) AS play_time,
-      COUNT(*)::INT AS count,
+      play_time,
+      AVG(danger_rate * 100 * 5 - 800) AS grade_point,
       COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
-      COALESCE(AVG(grade_point)::FLOAT, 0) grade_point
+      COALESCE(COUNT(night_less=true OR null)::INT, 0) night_less,
+      COUNT(*)
       FROM
       results
-      INNER JOIN
-      players
-      ON
-      players.result_id = results.salmon_id
-      INNER JOIN
-      schedules
-      ON
-      schedules.schedule_id = results.schedule_id
-      WHERE
-      results.play_time BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
-      AND
-      players.grade_point IS NOT NULL
-      AND
-      schedules.mode = 'REGULAR'
       GROUP BY
-      DATE_TRUNC('hour', results.play_time)
-      ORDER BY play_time DESC
-      LIMIT 24
+      play_time
+      ORDER BY
+      play_time DESC
       `;
     const statuses = results
       .map((result) => plainToInstance(AnalyticsStatusResponseDto, result))
