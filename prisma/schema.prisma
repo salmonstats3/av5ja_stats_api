@@ -8,13 +8,35 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgres"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+enum Rule {
+  REGULAR
+  BIG_RUN
+  TEAM_CONTEST
+}
+
+enum Mode {
+  REGULAR
+  LIMITED
+  PRIVATE_CUSTOM
+  PRIVATE_SCENARIO
+}
+
+enum Species {
+  INKLING
+  OCTOLING
+}
+
+enum Client {
+  SALMONIA
+  SALMDROID
 }
 
 model Schedule {
-  scheduleId Int       @id @default(autoincrement()) @map("schedule_id")
+  scheduleId String    @id @default(dbgenerated("gen_random_uuid()")) @map("schedule_id") @db.Uuid
   // 開始時刻
   startTime  DateTime? @map("start_time")
   // 終了時刻
@@ -24,11 +46,15 @@ model Schedule {
   // 支給ブキID
   weaponList Int[]     @map("weapon_list")
   // モード
-  mode       String    @default("REGULAR")
+  mode       Mode      @default(REGULAR)
   // ルール
-  rule       String    @default("REGULAR")
+  rule       Rule      @default(REGULAR)
   // レアブキ
   rareWeapon Int?      @map("rare_weapon")
+  // 作成日
+  createdAt  DateTime  @default(now()) @map("created_at")
+  // 更新日
+  updatedAt  DateTime  @updatedAt() @map("updated_at")
   // リザルト一覧
   results    Result[]
 
@@ -42,11 +68,11 @@ model Schedule {
 
 model Result {
   // サーモンID
-  resultId             Int       @id @default(autoincrement()) @map("salmon_id")
+  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   // スケジュールID
-  scheduleId           Int?      @map("schedule_id")
-  // バイト固有ID(シナリオコードの代わりみたいなもの)
-  uuid                 String    @map("uuid")
+  scheduleId           String    @map("schedule_id") @db.Uuid
+  // バイトID
+  resultId             String    @map("result_id") @db.Uuid
   // プレイ時刻
   playTime             DateTime  @map("play_time")
   // オオモノ出現数
@@ -63,7 +89,7 @@ model Result {
   nightLess            Boolean   @map("night_less")
   // キケン度
   dangerRate           Float     @map("danger_rate")
-  // プレイヤーのID配列
+  // プレイヤーのID配列(ソート済み)
   members              String[]
   // ドウウロコの枚数
   bronze               Int?
@@ -85,38 +111,30 @@ model Result {
   createdAt            DateTime  @default(now()) @map("created_at")
   // 更新日
   updatedAt            DateTime  @updatedAt() @map("updated_at")
+  // アップロードしたクライアント
+  createdBy            Client    @default(SALMONIA) @map("updated_by")
+  // アップロードしたクライアントバージョン
+  version              String
   waves                Wave[]
   players              Player[]
   schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId])
 
-  @@unique([playTime, uuid])
-  @@index([bossId])
-  @@index([uuid])
+  @@unique([playTime, resultId])
+  @@index([members])
+  @@index([resultId])
+  @@index([scheduleId])
+  @@index([scenarioCode])
   @@index([dangerRate])
+  @@index([createdBy])
+  @@index([createdBy, version])
   @@map("results")
 }
 
-enum Species {
-  INKLING
-  OCTOLING
-}
-
-enum Mode {
-  REGULAR
-  PRIVATE_CUSTOM
-  PRIVATE_SCENARIO
-}
-
-enum Rule {
-  REGULAR
-  BIG_RUN
-}
-
 model Player {
+  // リザルトID
+  id                   String   @map("id") @db.Uuid
   // プレイヤーID
   nplnUserId           String   @map("npln_user_id")
-  // リザルトID
-  resultId             Int      @map("result_id")
   // 遊んだ時間
   playTime             DateTime @map("play_time")
   // 名前
@@ -173,26 +191,27 @@ model Player {
   createdAt            DateTime @default(now()) @map("created_at")
   // 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at")
-  /// リレーション
-  Result               Result?  @relation(fields: [resultId], references: [resultId])
+  // リレーション
+  Result               Result?  @relation(fields: [id], references: [id])
 
-  @@id([nplnUserId, resultId])
+  @@id([nplnUserId, id])
   @@unique([nplnUserId, playTime])
   @@index([nplnUserId])
   @@index([nplnUserId, name])
   @@index([nplnUserId, gradePoint])
+  @@index([playTime])
   @@index([name])
   @@index([nameplate])
   @@index([uniform])
-  @@index([gradePoint])
   @@index([gradeId])
+  @@index([gradePoint])
   @@index([gradeId, gradePoint])
   @@map("players")
 }
 
 model Wave {
   // リザルトID
-  resultId          Int      @map("salmon_id")
+  id                String   @map("id") @db.Uuid
   // WAVE数
   waveId            Int      @map("wave_id")
   // 潮位
@@ -211,12 +230,13 @@ model Wave {
   createdAt         DateTime @default(now()) @map("created_at")
   // 更新日
   updatedAt         DateTime @updatedAt() @map("updated_at")
-  Result            Result?  @relation(fields: [resultId], references: [resultId])
+  Result            Result?  @relation(fields: [id], references: [id])
 
-  @@id([resultId, waveId])
+  @@id([id, waveId])
   @@index([waterLevel])
   @@index([eventType])
   @@index([waterLevel, eventType])
   @@index([waterLevel, eventType, waveId])
+  @@index([goldenIkuraNum])
   @@map("waves")
 }

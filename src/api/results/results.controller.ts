@@ -1,8 +1,8 @@
-import { Body, Controller, HttpCode, Post, Version } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Post, Query, ValidationPipe, Version } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Result } from "@prisma/client";
 
-import { PaginatedDto } from "../dto/pagination.dto";
+import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
 import { CoopResultManyRequest } from "../dto/results/results.request.dto";
 
 import { ResultsService } from "./results.service";
@@ -11,6 +11,20 @@ import { ResultsService } from "./results.service";
 @ApiExtraModels(PaginatedDto)
 export class ResultsController {
   constructor(private readonly service: ResultsService) {}
+
+  @Get("")
+  @Version("1")
+  @HttpCode(201)
+  @ApiTags("リザルト")
+  @ApiOperation({
+    deprecated: true,
+    description: "旧API",
+    operationId: "リザルト登録V2(Salmonia3+)",
+  })
+  @ApiBadRequestResponse()
+  fetch(@Query(new ValidationPipe({ transform: true })) request: PaginatedRequestDto): Promise<PaginatedDto<Result>> {
+    return this.service.fetch(request);
+  }
 
   @Post("")
   @Version("1")

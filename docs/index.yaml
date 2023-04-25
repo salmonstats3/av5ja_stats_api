@@ -50,6 +50,36 @@ paths:
       tags:
         - 分析
   /v1/results:
+    get:
+      operationId: リザルト登録V2(Salmonia3+)
+      summary: ''
+      deprecated: true
+      description: 旧API
+      parameters:
+        - name: offset
+          required: false
+          in: query
+          description: オフセット
+          schema:
+            minimum: 0
+            title: offset
+            default: 0
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: 上限値
+          schema:
+            minimum: 0
+            maximum: 2000
+            title: limit
+            default: 25
+            type: number
+      responses:
+        '400':
+          description: ''
+      tags:
+        - リザルト
     post:
       operationId: リザルト登録V2(Salmonia3+)
       summary: ''
@@ -164,7 +194,7 @@ paths:
           description: 上限値
           schema:
             minimum: 0
-            maximum: 200
+            maximum: 2000
             title: limit
             default: 25
             type: number
