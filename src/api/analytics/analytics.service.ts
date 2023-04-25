@@ -86,10 +86,10 @@ export class AnalyticsService {
       )
       SELECT
       play_time,
-      AVG(danger_rate * 100 * 5 - 800) AS grade_point,
+      AVG(danger_rate * 100 * 5 - 800)::FLOAT AS grade_point,
       COALESCE(COUNT(is_clear=true OR null)::INT, 0) is_clear,
       COALESCE(COUNT(night_less=true OR null)::INT, 0) night_less,
-      COUNT(*)
+      COUNT(*)::INT
       FROM
       results
       GROUP BY
