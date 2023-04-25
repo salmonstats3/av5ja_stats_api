@@ -7,7 +7,7 @@
 import { applyDecorators, Type } from "@nestjs/common";
 import { ApiExtraModels, ApiOkResponse, ApiProperty, ApiPropertyOptional, getSchemaPath } from "@nestjs/swagger";
 import { Expose, Transform } from "class-transformer";
-import { IsBoolean, IsDate, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
+import { IsBoolean, IsDate, IsInt, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
 import dayjs from "dayjs";
 
 export class PaginatedRequestDto {
@@ -219,6 +219,8 @@ export class PaginatedDto<T> {
   @ApiProperty({ description: "オフセット", type: "integer" })
   offset: number;
 
+  @ApiProperty()
+  @ValidateNested({ each: true })
   results: T[];
 
   constructor(limit: number, offset: number, total: number, results: T[]) {
