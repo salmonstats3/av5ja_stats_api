@@ -120,6 +120,32 @@ paths:
           description: ''
       tags:
         - スケジュール
+  /v1/scenario:
+    get:
+      operationId: ScenarioController_getAnalytics
+      parameters:
+        - name: offset
+          required: false
+          in: query
+          description: オフセット
+          schema:
+            minimum: 0
+            title: offset
+            default: 0
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: 上限値
+          schema:
+            minimum: 0
+            maximum: 200
+            title: limit
+            default: 25
+            type: number
+      responses:
+        '200':
+          description: ''
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents. (development)
