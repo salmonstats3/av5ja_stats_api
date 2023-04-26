@@ -2,6 +2,7 @@ import { exec } from "child_process";
 import { mkdir, writeFileSync } from "fs";
 import * as path from "path";
 
+import fastifyHelmet from "@fastify/helmet";
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
@@ -29,6 +30,7 @@ function build(documents: OpenAPIObject) {
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  app.register(fastifyHelmet);
   app.use(bodyParser.json({ limit: "50mb" }));
   app.enableCors({
     credentials: false,
