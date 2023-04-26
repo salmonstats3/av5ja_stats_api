@@ -32,10 +32,10 @@ export class ResultsService {
       .map((result: CoopResultCustomRequest) => result.query);
     try {
       const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
-      const response = await this.prisma.$transaction([...results]);
+      await this.prisma.$transaction([...results]);
       const endTime = performance.now();
       console.log("In write transaction...", endTime - startTime, queries.length);
-      return response;
+      return [];
     } catch (error) {
       throw new BadRequestException();
     }

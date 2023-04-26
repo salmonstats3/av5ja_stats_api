@@ -8,7 +8,6 @@ import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { OpenAPIObject, SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 // import { SwaggerModule, DocumentBuilder, OpenAPIObject } from "@nestjs/swagger";
-import * as bodyParser from "body-parser";
 import { config } from "dotenv";
 import { dump } from "js-yaml";
 
@@ -29,9 +28,9 @@ function build(documents: OpenAPIObject) {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ bodyLimit: 50 * 1024 * 1024 }));
   app.register(fastifyHelmet);
-  app.use(bodyParser.json({ limit: "50mb" }));
+  // app.use(bodyParser.json({ limit: "50mb" }));
   app.enableCors({
     credentials: false,
     maxAge: 86400,
@@ -65,6 +64,6 @@ async function bootstrap() {
     build(documents);
   }
   SwaggerModule.setup("", app, documents);
-  await app.listen(process.env.PORT || 3000, "0.0.0.0");
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
