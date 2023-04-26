@@ -24,13 +24,19 @@ export class ResultsService {
   // }
 
   async restore(request: PaginatedDto<CoopResultCustomRequest>): Promise<Result[]> {
-    const queries: Prisma.ResultUpsertArgs[] = request.results.map((result: CoopResultCustomRequest) => {
-      return plainToInstance(CoopResultCustomRequest, result).query;
-    });
+    const startTime = performance.now();
+    const queries: Prisma.ResultUpsertArgs[] = request.results
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((result: any) => plainToInstance(CoopResultCustomRequest, result))
+      .filter((result: CoopResultCustomRequest) => result.isValid)
+      .map((result: CoopResultCustomRequest) => result.query);
     const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query: Prisma.ResultUpsertArgs) =>
       this.prisma.result.upsert(query),
     );
-    return this.prisma.$transaction([...results]);
+    const response = await this.prisma.$transaction([...results]);
+    const endTime = performance.now();
+    console.log("In write transaction...", endTime - startTime, queries.length);
+    return response;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
