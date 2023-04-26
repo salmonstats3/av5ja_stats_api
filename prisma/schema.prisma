@@ -49,6 +49,10 @@ model Schedule {
   mode       Mode      @default(REGULAR)
   // ルール
   rule       Rule      @default(REGULAR)
+  // レアブキ
+  rareWeapon Int?      @map("rare_weapon") @db.SmallInt
+  // レアブキ
+  bossId     Int?      @map("boss_id") @db.SmallInt
   // 作成日
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(3)
   // 更新日
@@ -56,7 +60,7 @@ model Schedule {
   // リザルト一覧
   results    Result[]
 
-  @@unique([stageId, mode, rule, weaponList])
+  @@unique([stageId, mode, rule, weaponList, startTime, endTime], name: "unique_schedule")
   @@index([stageId])
   @@index([rule])
   @@index([rule, mode])

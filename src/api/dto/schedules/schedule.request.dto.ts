@@ -48,10 +48,12 @@ export class CoopScheduleRequest {
         weaponList: this.weaponList,
       },
       where: {
-        stageId_mode_rule_weaponList: {
+        unique_schedule: {
+          endTime: this.endTime,
           mode: this.mode,
           rule: this.rule,
           stageId: this.stageId,
+          startTime: this.startTime,
           weaponList: this.weaponList,
         },
       },
