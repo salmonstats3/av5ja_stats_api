@@ -12,6 +12,7 @@ services:
   db:
     image: postgres:15.2
     container_name: salmon_stats_db
+    shm_size: 16gb
     restart: always
     volumes:
       - ./postgresql/init:/docker-entrypoint-initdb.d
