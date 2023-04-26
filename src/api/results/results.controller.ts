@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, ValidationPipe, Version } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post, Version } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Result } from "@prisma/client";
 
@@ -54,7 +54,7 @@ export class ResultsController {
   //   return this.service.upsertMany(request);
   // }
 
-  @Post("")
+  @Post()
   @Version("3")
   @HttpCode(201)
   @ApiTags("リザルト")
@@ -64,7 +64,7 @@ export class ResultsController {
     operationId: "リザルト登録V2(Salmonia3+)",
   })
   @ApiBadRequestResponse()
-  restore(@Body(new ValidationPipe({ transform: true })) request: PaginatedDto<CoopResultCustomRequest>): Promise<Result[]> {
+  restore(@Body() request: PaginatedDto<CoopResultCustomRequest>): Promise<Result[]> {
     return this.service.restore(request);
   }
 
