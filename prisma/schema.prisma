@@ -60,7 +60,8 @@ model Schedule {
   // リザルト一覧
   results    Result[]
 
-  @@unique([stageId, mode, rule, weaponList, startTime, endTime], name: "unique_schedule")
+  @@unique([stageId, mode, rule, weaponList, startTime, endTime], name: "regular")
+  @@unique([stageId, mode, rule, weaponList], name: "private")
   @@index([stageId])
   @@index([rule])
   @@index([rule, mode])
