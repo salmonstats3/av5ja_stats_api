@@ -38,9 +38,9 @@ enum Client {
 model Schedule {
   scheduleId String    @id @default(cuid()) @map("schedule_id")
   // 開始時刻
-  startTime  DateTime? @map("start_time") @db.Timestamp(3)
+  startTime  DateTime? @map("start_time") @db.Timestamp(0)
   // 終了時刻
-  endTime    DateTime? @map("end_time") @db.Timestamp(3)
+  endTime    DateTime? @map("end_time") @db.Timestamp(0)
   // ステージID
   stageId    Int       @map("stage_id") @db.SmallInt
   // 支給ブキID
@@ -54,9 +54,9 @@ model Schedule {
   // レアブキ
   bossId     Int?      @map("boss_id") @db.SmallInt
   // 作成日
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(3)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
-  updatedAt  DateTime  @updatedAt() @map("updated_at") @db.Timestamp(3)
+  updatedAt  DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
   // リザルト一覧
   results    Result[]
 
@@ -76,7 +76,7 @@ model Result {
   // バイトID
   resultId             String    @map("result_id") @db.Uuid
   // プレイ時刻
-  playTime             DateTime  @map("play_time") @db.Timestamp(3)
+  playTime             DateTime  @map("play_time") @db.Timestamp(0)
   // オオモノ出現数
   bossCounts           Int[]     @map("boss_counts")
   // オオモノ討伐数
@@ -110,9 +110,9 @@ model Result {
   // シナリオコード
   scenarioCode         String?   @map("scenario_code")
   // 作成日
-  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamp(3)
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
-  updatedAt            DateTime  @updatedAt() @map("updated_at") @db.Timestamp(3)
+  updatedAt            DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
   // アップロードしたクライアント
   createdBy            Client    @default(SALMONIA) @map("updated_by")
   // アップロードしたクライアントバージョン
@@ -132,67 +132,67 @@ model Result {
 
 model Player {
   // リザルトID
-  id                   String    @map("id")
+  id                   String   @map("id")
   // プレイヤーID
-  nplnUserId           String    @map("npln_user_id")
+  nplnUserId           String   @map("npln_user_id")
   // 遊んだ時間
-  playTime             DateTime  @map("play_time") @db.Timestamp(3)
+  playTime             DateTime @map("play_time") @db.Timestamp(0)
   // 名前
   name                 String
   // 称号
   byname               String
   // 名前ID
-  nameId               String    @map("name_id")
+  nameId               String   @map("name_id")
   // バッジ
   badges               Int[]
   // ネームプレート
-  nameplate            Int
+  nameplate            Int      @db.SmallInt
   // ネームプレート
-  textColor            Decimal[] @map("text_color") @db.Decimal(12, 11)
+  textColor            Float[]  @map("text_color")
   // ユニフォーム
-  uniform              Int       @db.SmallInt
+  uniform              Int      @db.SmallInt
   // オオモノ討伐数合計
-  bossKillCountsTotal  Int       @map("boss_kill_counts_total") @db.SmallInt
+  bossKillCountsTotal  Int      @map("boss_kill_counts_total") @db.SmallInt
   // オオモノ討伐数
-  bossKillCounts       Int[]     @map("boss_kill_counts")
+  bossKillCounts       Int[]    @map("boss_kill_counts") @db.SmallInt
   // 被救助数
-  deadCount            Int       @map("dead_count") @db.SmallInt
+  deadCount            Int      @map("dead_count") @db.SmallInt
   // 救助数
-  helpCount            Int       @map("help_count") @db.SmallInt
+  helpCount            Int      @map("help_count") @db.SmallInt
   // イクラ数
-  ikuraNum             Int       @map("ikura_num") @db.SmallInt
+  ikuraNum             Int      @map("ikura_num") @db.SmallInt
   // 金イクラ数
-  goldenIkuraNum       Int       @map("golden_ikura_num") @db.SmallInt
+  goldenIkuraNum       Int      @map("golden_ikura_num") @db.SmallInt
   // 金イクラアシスト数
-  goldenIkuraAssistNum Int       @map("golden_ikura_assist_num") @db.SmallInt
+  goldenIkuraAssistNum Int      @map("golden_ikura_assist_num") @db.SmallInt
   // バイトボーナス
-  jobBonus             Int?      @map("job_bonus") @db.SmallInt
+  jobBonus             Int?     @map("job_bonus") @db.SmallInt
   // バイトレート
-  jobRate              Decimal?  @map("job_rate") @db.Decimal(3, 2)
+  jobRate              Float?   @map("job_rate")
   // バイトスコア
-  jobScore             Int?      @map("job_score") @db.SmallInt
+  jobScore             Int?     @map("job_score") @db.SmallInt
   // クマサンポイント
-  kumaPoint            Int?      @map("kuma_point") @db.SmallInt
+  kumaPoint            Int?     @map("kuma_point") @db.SmallInt
   // 称号
-  gradeId              Int?      @map("grade_id") @db.SmallInt
+  gradeId              Int?     @map("grade_id") @db.SmallInt
   // 評価レート
-  gradePoint           Int?      @map("grade_point") @db.SmallInt
+  gradePoint           Int?     @map("grade_point") @db.SmallInt
   // オカシラメーター
-  smellMeter           Int?      @map("smell_meter") @db.SmallInt
+  smellMeter           Int?     @map("smell_meter") @db.SmallInt
   // 種族
-  species              String    @default("INKLING")
+  species              String   @default("INKLING")
   // スペシャルID
-  specialId            Int?      @map("special_id") @db.SmallInt
+  specialId            Int?     @map("special_id") @db.SmallInt
   // スペシャル使用数
-  specialCounts        Int[]     @map("special_count")
+  specialCounts        Int[]    @map("special_count") @db.SmallInt
   // 支給されたブキのリスト
-  weaponList           Int[]     @map("weapon_list")
+  weaponList           Int[]    @map("weapon_list") @db.SmallInt
   // 作成日
-  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamp(3)
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
-  updatedAt            DateTime  @updatedAt() @map("updated_at") @db.Timestamp(3)
+  updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   // リレーション
-  Result               Result?   @relation(fields: [id], references: [id])
+  Result               Result?  @relation(fields: [id], references: [id])
 
   @@id([nplnUserId, id])
   @@unique([nplnUserId, playTime])
@@ -224,9 +224,9 @@ model Wave {
   // クリアしたか
   isClear           Boolean  @map("is_clear")
   // 作成日
-  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(3)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
-  updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(3)
+  updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   Result            Result?  @relation(fields: [id], references: [id])
 
   @@id([id, waveId])
