@@ -4,7 +4,9 @@ import * as path from "path";
 
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { SwaggerModule, DocumentBuilder, OpenAPIObject } from "@nestjs/swagger";
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { OpenAPIObject, SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+// import { SwaggerModule, DocumentBuilder, OpenAPIObject } from "@nestjs/swagger";
 import * as bodyParser from "body-parser";
 import { config } from "dotenv";
 import { dump } from "js-yaml";
@@ -13,7 +15,7 @@ import { AppModule } from "./app.module";
 
 config({ path: ".env" });
 
-async function build(documents: OpenAPIObject) {
+function build(documents: OpenAPIObject) {
   const build = path.resolve(process.cwd(), "docs");
   const output = path.resolve(build, "index");
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -26,13 +28,7 @@ async function build(documents: OpenAPIObject) {
 }
 
 async function bootstrap() {
-  if (process.env.NODE_ENV === "production") {
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = `/app/credentials.json`;
-  } else {
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = `credentials.json`;
-  }
-
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
   app.use(bodyParser.json({ limit: "50mb" }));
   app.enableCors({
     credentials: false,
@@ -54,16 +50,19 @@ async function bootstrap() {
   );
   const options = new DocumentBuilder()
     .setTitle("Salmon Stats+")
-    .setDescription(`Salmon Stats for Splatoon 3 API documents. (${process.env.NODE_ENV})`)
+    .setDescription("Salmon Stats for Splatoon 3 API documents.")
     .setVersion(process.env.API_VER)
-    .setContact("@Salmonia3Dev", "https://twitter.com/Salmonia3Dev", "nasawake.am@gmail.com")
     .build();
+
   const documents = SwaggerModule.createDocument(app, options);
   SwaggerModule.createDocument;
-  if (!disableErrorMessages) {
+  if (process.env.NODE_ENV === "production") {
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = `/app/credentials.json`;
+  } else {
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = `credentials.json`;
     build(documents);
   }
   SwaggerModule.setup("", app, documents);
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3000, "0.0.0.0");
 }
 bootstrap();
