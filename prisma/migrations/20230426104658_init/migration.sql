@@ -13,16 +13,16 @@ CREATE TYPE "Client" AS ENUM ('SALMONIA', 'SALMDROID');
 -- CreateTable
 CREATE TABLE "schedules" (
     "schedule_id" TEXT NOT NULL,
-    "start_time" TIMESTAMP(3),
-    "end_time" TIMESTAMP(3),
+    "start_time" TIMESTAMP(0),
+    "end_time" TIMESTAMP(0),
     "stage_id" SMALLINT NOT NULL,
     "weapon_list" INTEGER[],
     "mode" "Mode" NOT NULL DEFAULT 'REGULAR',
     "rule" "Rule" NOT NULL DEFAULT 'REGULAR',
     "rare_weapon" SMALLINT,
     "boss_id" SMALLINT,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(0) NOT NULL,
 
     CONSTRAINT "schedules_pkey" PRIMARY KEY ("schedule_id")
 );
@@ -32,7 +32,7 @@ CREATE TABLE "results" (
     "id" TEXT NOT NULL,
     "schedule_id" TEXT NOT NULL,
     "result_id" UUID NOT NULL,
-    "play_time" TIMESTAMP(3) NOT NULL,
+    "play_time" TIMESTAMP(0) NOT NULL,
     "boss_counts" INTEGER[],
     "boss_kill_counts" INTEGER[],
     "ikura_num" SMALLINT NOT NULL,
@@ -49,8 +49,8 @@ CREATE TABLE "results" (
     "is_boss_defeated" BOOLEAN,
     "boss_id" SMALLINT,
     "scenario_code" TEXT,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(0) NOT NULL,
     "updated_by" "Client" NOT NULL DEFAULT 'SALMONIA',
     "version" TEXT NOT NULL,
 
@@ -61,23 +61,23 @@ CREATE TABLE "results" (
 CREATE TABLE "players" (
     "id" TEXT NOT NULL,
     "npln_user_id" TEXT NOT NULL,
-    "play_time" TIMESTAMP(3) NOT NULL,
+    "play_time" TIMESTAMP(0) NOT NULL,
     "name" TEXT NOT NULL,
     "byname" TEXT NOT NULL,
     "name_id" TEXT NOT NULL,
     "badges" INTEGER[],
-    "nameplate" INTEGER NOT NULL,
-    "text_color" DECIMAL(12,11)[],
+    "nameplate" SMALLINT NOT NULL,
+    "text_color" DOUBLE PRECISION[],
     "uniform" SMALLINT NOT NULL,
     "boss_kill_counts_total" SMALLINT NOT NULL,
-    "boss_kill_counts" INTEGER[],
+    "boss_kill_counts" SMALLINT[],
     "dead_count" SMALLINT NOT NULL,
     "help_count" SMALLINT NOT NULL,
     "ikura_num" SMALLINT NOT NULL,
     "golden_ikura_num" SMALLINT NOT NULL,
     "golden_ikura_assist_num" SMALLINT NOT NULL,
     "job_bonus" SMALLINT,
-    "job_rate" DECIMAL(3,2),
+    "job_rate" DOUBLE PRECISION,
     "job_score" SMALLINT,
     "kuma_point" SMALLINT,
     "grade_id" SMALLINT,
@@ -85,10 +85,10 @@ CREATE TABLE "players" (
     "smell_meter" SMALLINT,
     "species" TEXT NOT NULL DEFAULT 'INKLING',
     "special_id" SMALLINT,
-    "special_count" INTEGER[],
-    "weapon_list" INTEGER[],
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "special_count" SMALLINT[],
+    "weapon_list" SMALLINT[],
+    "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(0) NOT NULL,
 
     CONSTRAINT "players_pkey" PRIMARY KEY ("npln_user_id","id")
 );
@@ -103,8 +103,8 @@ CREATE TABLE "waves" (
     "golden_ikura_pop_num" SMALLINT NOT NULL,
     "quota_num" SMALLINT,
     "is_clear" BOOLEAN NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(0) NOT NULL,
 
     CONSTRAINT "waves_pkey" PRIMARY KEY ("id","wave_id")
 );
