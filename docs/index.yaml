@@ -155,12 +155,9 @@ paths:
           description: ''
 info:
   title: Salmon Stats+
-  description: Salmon Stats for Splatoon 3 API documents. (development)
+  description: Salmon Stats for Splatoon 3 API documents.
   version: 1.0.0
-  contact:
-    name: '@Salmonia3Dev'
-    url: https://twitter.com/Salmonia3Dev
-    email: nasawake.am@gmail.com
+  contact: {}
 tags: []
 servers: []
 components:
