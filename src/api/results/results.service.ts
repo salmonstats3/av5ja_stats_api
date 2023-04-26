@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { Prisma, Result } from "@prisma/client";
 import { plainToInstance } from "class-transformer";
 import { PrismaService } from "src/prisma.service";
@@ -30,13 +30,15 @@ export class ResultsService {
       .map((result: any) => plainToInstance(CoopResultCustomRequest, result))
       .filter((result: CoopResultCustomRequest) => result.isValid)
       .map((result: CoopResultCustomRequest) => result.query);
-    const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query: Prisma.ResultUpsertArgs) =>
-      this.prisma.result.upsert(query),
-    );
-    const response = await this.prisma.$transaction([...results]);
-    const endTime = performance.now();
-    console.log("In write transaction...", endTime - startTime, queries.length);
-    return response;
+    try {
+      const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
+      const response = await this.prisma.$transaction([...results]);
+      const endTime = performance.now();
+      console.log("In write transaction...", endTime - startTime, queries.length);
+      return response;
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

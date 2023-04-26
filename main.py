@@ -11,17 +11,22 @@ def upload(path):
     response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
     if response.status_code != 201:
       with open(f"status.log", mode="a") as w:
-        w.write(f"{response.status_code}: {path}")
+        w.write(f"{path}\n")
         print(response.text)
 
 
 def future():
   future_list = []
   files = sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))
-  with futures.ThreadPoolExecutor(max_workers=5) as executor:
+  with futures.ThreadPoolExecutor(max_workers=3) as executor:
     for file in files:
       executor.submit(upload, file)
       future_list.append(future)
+
+def restore():
+  with open("status.log", mode="r") as f:
+    for line in f.readlines():
+      upload(line.strip())
 
 def download():
   limit: int = 5000
@@ -34,4 +39,5 @@ def download():
 
 if __name__=="__main__":
   # download()
-  future()
+  # future()
+  restore()
