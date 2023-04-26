@@ -1,19 +1,27 @@
 import requests
 import os
 import json
+from concurrent import futures
 
-def upload():
+def upload(path):
+  with open(f"results/{path}.json", mode="r") as f:
+    request = json.loads(f.read())
+    print(f"Uploading {path}.json")
+    headers = {"Content-Type": "application/json"}
+    response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
+    if response.status_code != 201:
+      with open(f"status.log", mode="a") as w:
+        w.write(f"{response.status_code}: {path}")
+        print(response.text)
+
+
+def future():
+  future_list = []
   files = sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))
-  for file in files:
-    with open(f"results/{file}.json", mode="r") as f:
-      request = json.loads(f.read())
-      print(f"Uploading {file}.json")
-      headers = {"Content-Type": "application/json"}
-      response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
-      if response.status_code != 201:
-        with open(f"status.log", mode="a") as w:
-          w.write(f"{response.status_code}: {file}")
-          print(response.text)
+  with futures.ThreadPoolExecutor(max_workers=5) as executor:
+    for file in files:
+      executor.submit(upload, file)
+      future_list.append(future)
 
 def download():
   limit: int = 5000
@@ -26,4 +34,4 @@ def download():
 
 if __name__=="__main__":
   # download()
-  upload()
+  future()

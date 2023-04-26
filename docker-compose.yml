@@ -10,9 +10,12 @@ services:
   #   command: [sh, -c, yarn start:prod]
 
   db:
-    image: postgres:14.6
+    image: postgres:15.2
     container_name: salmon_stats_db
     restart: always
+    volumes:
+      - ./postgresql/init:/docker-entrypoint-initdb.d
+      - ./postgresql/postgresql.conf:/etc/postgresql/postgresql.conf
     environment:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
