@@ -19,6 +19,8 @@ CREATE TABLE "schedules" (
     "weapon_list" INTEGER[],
     "mode" "Mode" NOT NULL DEFAULT 'REGULAR',
     "rule" "Rule" NOT NULL DEFAULT 'REGULAR',
+    "rare_weapon" SMALLINT,
+    "boss_id" SMALLINT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -120,7 +122,7 @@ CREATE INDEX "schedules_rule_mode_idx" ON "schedules"("rule", "mode");
 CREATE INDEX "schedules_start_time_idx" ON "schedules"("start_time");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "schedules_stage_id_mode_rule_weapon_list_key" ON "schedules"("stage_id", "mode", "rule", "weapon_list");
+CREATE UNIQUE INDEX "schedules_stage_id_mode_rule_weapon_list_start_time_end_tim_key" ON "schedules"("stage_id", "mode", "rule", "weapon_list", "start_time", "end_time");
 
 -- CreateIndex
 CREATE INDEX "results_members_idx" ON "results"("members");
