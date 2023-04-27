@@ -9,13 +9,8 @@ def upload(path):
     print(f"Uploading {path}.json")
     headers = {"Content-Type": "application/json"}
     response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
-    if response.status_code != 201:
-      with open(f"status.log", mode="a") as w:
-        w.write(f"{path}\n")
-        print(response.text)
-    else:
-      with open(f"success.log", mode="a") as w:
-        w.write(f"{path}\n")
+    with open(f"success.log", mode="a") as w:
+      w.write(f"{response.status_code}, {path}\n")
 
 def future():
   future_list = []
