@@ -2,6 +2,7 @@ import requests
 import os
 import json
 from concurrent import futures
+from array import array
 
 def upload(path, restore = False) -> int:
   with open(f"results/{path}.json", mode="r") as f:
@@ -16,11 +17,14 @@ def upload(path, restore = False) -> int:
 
 def future():
   future_list = []
-  files = sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))
-  with futures.ThreadPoolExecutor(max_workers=3) as executor:
-    for file in files:
-      executor.submit(upload, file)
-      future_list.append(future)
+  files: set[int] = set(map(lambda x: int(x), sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))))
+  with open("status.log", mode="r") as f:
+    lines: set[int] = set(map(lambda x: int(x), filter(lambda x: x!= "", map(lambda x: x.split(",")[-1], f.read().split("\n")))))
+    subtract = list(files - lines)
+    with futures.ThreadPoolExecutor(max_workers=3) as executor:
+      for file in subtract:
+        executor.submit(upload, file)
+        future_list.append(future)
 
 def restore():
   with open("status.log", mode="r+") as f:
