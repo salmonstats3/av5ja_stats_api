@@ -1,16 +1,15 @@
-import { Controller, Get, Version } from "@nestjs/common";
+import { Controller, Get } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { AnalyticsResponseDto } from "../dto/analytics/analytics.response.dto";
 
-import { AnalyticsService } from "./analytics.service";
+import { AnalyticsService } from "./timeline.service";
 
-@Controller("analytics")
+@Controller("timeline")
 export class AnalyticsController {
   constructor(private readonly service: AnalyticsService) {}
 
-  @Get("")
-  @Version("1")
+  @Get(":schedule_id")
   @ApiTags("分析")
   @ApiOperation({
     description: "データを解析して返します",

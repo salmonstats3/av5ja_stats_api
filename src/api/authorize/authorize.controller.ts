@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Version } from "@nestjs/common";
+import { Controller, Get, HttpCode } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { AppVersionResponse } from "../dto/authorize/app_version.dto";
@@ -11,12 +11,11 @@ export class AuthorizeController {
   constructor(private readonly service: AuthorizeService) {}
 
   @Get("")
-  @Version("1")
   @HttpCode(200)
-  @ApiTags("スケジュール")
+  @ApiTags("認証")
   @ApiOperation({
-    description: "イカリング3のスケジュールを取得して書き込みます",
-    operationId: "スケジュール書き込み",
+    description: "認証情報を取得して返します",
+    operationId: "取得",
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: AuthorizeResponse })
@@ -25,12 +24,11 @@ export class AuthorizeController {
   }
 
   @Get("version")
-  @Version("1")
   @HttpCode(200)
   @ApiTags("認証")
   @ApiOperation({
-    description: "バージョンを取得して返します",
-    operationId: "バージョン",
+    description: "X-ProductVersionバージョンを取得して返します",
+    operationId: "X-ProductVersion",
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: AppVersionResponse })

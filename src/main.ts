@@ -39,7 +39,7 @@ async function bootstrap() {
     preflightContinue: false,
   });
   app.enableVersioning({
-    defaultVersion: "1",
+    defaultVersion: "3",
     type: VersioningType.URI,
   });
   const disableErrorMessages: boolean = process.env.NODE_ENV === "production";

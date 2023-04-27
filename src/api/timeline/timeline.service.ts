@@ -8,7 +8,7 @@ import { PrismaService } from "src/prisma.service";
 
 import { AnalyticsResponseDto, AnalyticsSummaryResponseDto } from "../dto/analytics/analytics.response.dto";
 
-import { AnalyticsStatusResponseDto } from "./analytics.status.dto";
+import { AnalyticsStatusResponseDto } from "./timeline.status.dto";
 
 @Injectable()
 export class AnalyticsService {

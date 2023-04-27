@@ -1,7 +1,7 @@
 import { Schedule } from "@prisma/client";
 import { Expose, plainToInstance, Transform } from "class-transformer";
 import dayjs from "dayjs";
-import { AnalyticsStatusResponseDto } from "src/api/analytics/analytics.status.dto";
+import { AnalyticsStatusResponseDto } from "src/api/timeline/timeline.status.dto";
 
 export class AnalyticsResponseDto {
   @Expose()
