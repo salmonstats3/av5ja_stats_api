@@ -1,20 +1,22 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Transform } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 import { IsInt, IsOptional, Max, Min } from "class-validator";
 
 export class ScheduleRequestQuery {
-  @ApiProperty({ required: false })
+  @ApiProperty({ minimum: 0, required: false })
+  @Expose()
   @IsOptional()
   @IsInt()
   @Min(0)
   @Transform((param) => parseInt(param.value, 10))
   skip: number | null;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ maximum: 25, minimum: 0, required: false })
+  @Expose()
   @IsOptional()
   @IsInt()
   @Min(0)
-  @Max(20)
+  @Max(25)
   @Transform((param) => parseInt(param.value, 10))
   take: number | null;
 }

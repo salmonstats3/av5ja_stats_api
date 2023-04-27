@@ -1,10 +1,10 @@
 openapi: 3.0.0
 paths:
-  /v1/authorize:
+  /v3/authorize:
     get:
-      operationId: スケジュール書き込み
+      operationId: 取得
       summary: ''
-      description: イカリング3のスケジュールを取得して書き込みます
+      description: 認証情報を取得して返します
       parameters: []
       responses:
         '200':
@@ -16,12 +16,12 @@ paths:
         '400':
           description: ''
       tags:
-        - スケジュール
-  /v1/authorize/version:
+        - 認証
+  /v3/authorize/version:
     get:
-      operationId: バージョン
+      operationId: X-ProductVersion
       summary: ''
-      description: バージョンを取得して返します
+      description: X-ProductVersionバージョンを取得して返します
       parameters: []
       responses:
         '200':
@@ -34,7 +34,7 @@ paths:
           description: ''
       tags:
         - 認証
-  /v1/analytics:
+  /v3/timeline/{schedule_id}:
     get:
       operationId: Salmon Stats分析
       summary: ''
@@ -50,86 +50,10 @@ paths:
       tags:
         - 分析
   /v3/results:
-    post:
-      operationId: リザルト登録V2(Salmonia3+)
-      summary: ''
-      deprecated: false
-      description: 新API
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PaginatedDto'
-      responses:
-        '400':
-          description: ''
-      tags:
-        - リザルト
-  /v1/schedules:
     get:
-      operationId: スケジュール全件取得
+      operationId: 取得
       summary: ''
-      deprecated: true
-      description: スケジュールを全件返します
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CoopScheduleDataResponse'
-        '400':
-          description: ''
-      tags:
-        - スケジュール
-  /v2/schedules:
-    get:
-      operationId: スケジュール取得
-      summary: ''
-      description: 指定された条件に基づいてスケジュールを返します. skipとtakeがどちらもnullの場合は全件を返します.
-      parameters:
-        - name: skip
-          required: false
-          in: query
-          schema:
-            type: number
-        - name: take
-          required: false
-          in: query
-          schema:
-            type: number
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CoopScheduleDataResponse'
-        '400':
-          description: ''
-      tags:
-        - スケジュール
-  /v1/schedules/statistics:
-    get:
-      operationId: スケジュール統計取得
-      summary: ''
-      description: 最新のスケジュールの統計データを返します.
-      parameters: []
-      responses:
-        '400':
-          description: ''
-      tags:
-        - スケジュール
-  /v1/scenario:
-    get:
-      operationId: ScenarioController_getAnalytics
+      description: リザルトを取得します
       parameters:
         - name: offset
           required: false
@@ -146,17 +70,93 @@ paths:
           description: 上限値
           schema:
             minimum: 0
-            maximum: 2000
+            maximum: 200
             title: limit
             default: 25
             type: number
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDto'
+        '400':
+          description: ''
+      tags:
+        - リザルト
+  /v2/schedules:
+    get:
+      operationId: 取得
+      summary: ''
+      description: 過去のスケジュールを一括で返します. 一時間に一回、データを更新します.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CoopScheduleDataResponse'
+        '400':
+          description: ''
+      tags:
+        - スケジュール
+  /v3/schedules:
+    get:
+      operationId: ID取得
+      summary: ''
+      description: スケジュールIDを返します.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PartialType'
+        '400':
+          description: ''
+      tags:
+        - スケジュール
+  /v3/scenario:
+    get:
+      operationId: シナリオコード取得
+      summary: ''
+      description: シナリオコードを取得します
+      parameters:
+        - name: offset
+          required: false
+          in: query
+          description: オフセット
+          schema:
+            minimum: 0
+            title: offset
+            default: 0
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: 上限値
+          schema:
+            minimum: 0
+            maximum: 200
+            title: limit
+            default: 25
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - シナリオコード
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
-  version: 1.0.0
+  version: 3.0.0
   contact: {}
 tags: []
 servers: []
@@ -284,3 +284,6 @@ components:
         - stageId
         - setting
         - estimatedKingSalmonId
+    PartialType:
+      type: object
+      properties: {}
