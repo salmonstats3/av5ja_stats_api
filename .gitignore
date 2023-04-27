@@ -47,5 +47,5 @@ __pycache__
 results
 
 # Secret
-
+status.log
 credentials.json
