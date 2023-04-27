@@ -31,12 +31,16 @@ export class ResultsService {
       .filter((result: CoopResultCustomRequest) => result.isValid)
       .map((result: CoopResultCustomRequest) => result.query);
     try {
-      const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
-      await this.prisma.$transaction([...results]);
+      // ミスしても全部書き込める
+      await Promise.all(queries.map((query) => this.prisma.result.upsert(query)));
+      // ミスすると全て書き込めない
+      // const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
+      // await this.prisma.$transaction([...results]);
       const endTime = performance.now();
       console.log("In write transaction...", endTime - startTime, queries.length);
       return [];
     } catch (error) {
+      console.log(error);
       throw new BadRequestException();
     }
   }
