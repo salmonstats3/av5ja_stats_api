@@ -3,14 +3,16 @@ import os
 import json
 from concurrent import futures
 
-def upload(path):
+def upload(path, restore = False) -> int:
   with open(f"results/{path}.json", mode="r") as f:
     request = json.loads(f.read())
     print(f"Uploading {path}.json")
     headers = {"Content-Type": "application/json"}
     response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
-    with open(f"success.log", mode="a") as w:
-      w.write(f"{response.status_code}, {path}\n")
+    if not restore:
+      with open(f"status.log", mode="a") as w:
+        w.write(f"{response.status_code},{path}\n")
+    return response.status_code
 
 def future():
   future_list = []
@@ -21,9 +23,12 @@ def future():
       future_list.append(future)
 
 def restore():
-  with open("status.log", mode="r") as f:
+  with open("status.log", mode="r+") as f:
     for line in f.readlines():
-      upload(line.strip())
+      substr: list[str] = line.split(",") 
+      if int(substr[0]) == 400:
+        status_code = upload(substr[1].strip(), True)
+        line = f"{status_code},{substr[1]}\n"
 
 def download():
   limit: int = 5000
@@ -36,5 +41,5 @@ def download():
 
 if __name__=="__main__":
   # download()
-  future()
-  # restore()
+  # future()
+  restore()
