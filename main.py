@@ -13,7 +13,10 @@ def upload(path):
       with open(f"status.log", mode="a") as w:
         w.write(f"{path}\n")
         print(response.text)
-
+    else:
+      with open(f"success.log", mode="a") as w:
+        w.write(f"{path}\n")
+        print(response.text)
 
 def future():
   future_list = []
@@ -39,5 +42,5 @@ def download():
 
 if __name__=="__main__":
   # download()
-  future()
-  # restore()
+  # future()
+  restore()
