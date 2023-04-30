@@ -20,7 +20,7 @@ def future():
   files: set[int] = set(map(lambda x: int(x), sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))))
   with open("status.log", mode="r") as f:
     lines: set[int] = set(map(lambda x: int(x), filter(lambda x: x!= "", map(lambda x: x.split(",")[-1], f.read().split("\n")))))
-    subtract = list(files - lines)
+    subtract = sorted(list(files - lines))
     with futures.ThreadPoolExecutor(max_workers=3) as executor:
       for file in subtract:
         executor.submit(upload, file)
@@ -32,9 +32,6 @@ def restore():
       substr: list[str] = line.split(",") 
       if int(substr[0]) == 400:
         status_code = upload(substr[1].strip(), True)
-        if status_code == 201:
-          
-        print(status_code)
         line = f"{status_code},{substr[1]}\n"
 
 def download():
@@ -48,5 +45,5 @@ def download():
 
 if __name__=="__main__":
   # download()
-  # future()
-  restore()
+  future()
+  # restore()
