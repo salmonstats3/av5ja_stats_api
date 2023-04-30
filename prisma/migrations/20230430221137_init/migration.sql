@@ -13,8 +13,8 @@ CREATE TYPE "Client" AS ENUM ('SALMONIA', 'SALMDROID');
 -- CreateTable
 CREATE TABLE "schedules" (
     "schedule_id" TEXT NOT NULL,
-    "start_time" TIMESTAMP(0),
-    "end_time" TIMESTAMP(0),
+    "start_time" TIMESTAMP(0) NOT NULL DEFAULT '1970-01-01 00:00:00 +00:00',
+    "end_time" TIMESTAMP(0) NOT NULL DEFAULT '1970-01-01 00:00:00 +00:00',
     "stage_id" SMALLINT NOT NULL,
     "weapon_list" INTEGER[],
     "mode" "Mode" NOT NULL DEFAULT 'REGULAR',
@@ -60,8 +60,9 @@ CREATE TABLE "results" (
 -- CreateTable
 CREATE TABLE "players" (
     "id" TEXT NOT NULL,
-    "npln_user_id" TEXT NOT NULL,
+    "scheduleId" TEXT NOT NULL,
     "play_time" TIMESTAMP(0) NOT NULL,
+    "npln_user_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "byname" TEXT NOT NULL,
     "name_id" TEXT NOT NULL,
@@ -125,6 +126,9 @@ CREATE INDEX "schedules_start_time_idx" ON "schedules"("start_time");
 CREATE UNIQUE INDEX "schedules_stage_id_mode_rule_weapon_list_start_time_end_tim_key" ON "schedules"("stage_id", "mode", "rule", "weapon_list", "start_time", "end_time");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "schedules_schedule_id_key" ON "schedules"("schedule_id");
+
+-- CreateIndex
 CREATE INDEX "results_members_idx" ON "results"("members");
 
 -- CreateIndex
@@ -141,6 +145,9 @@ CREATE INDEX "results_updated_by_version_idx" ON "results"("updated_by", "versio
 
 -- CreateIndex
 CREATE UNIQUE INDEX "results_play_time_result_id_key" ON "results"("play_time", "result_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "results_id_schedule_id_play_time_key" ON "results"("id", "schedule_id", "play_time");
 
 -- CreateIndex
 CREATE INDEX "players_npln_user_id_idx" ON "players"("npln_user_id");
@@ -185,7 +192,7 @@ CREATE INDEX "waves_golden_ikura_num_idx" ON "waves"("golden_ikura_num");
 ALTER TABLE "results" ADD CONSTRAINT "results_schedule_id_fkey" FOREIGN KEY ("schedule_id") REFERENCES "schedules"("schedule_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "players" ADD CONSTRAINT "players_id_fkey" FOREIGN KEY ("id") REFERENCES "results"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "players" ADD CONSTRAINT "players_id_scheduleId_play_time_fkey" FOREIGN KEY ("id", "scheduleId", "play_time") REFERENCES "results"("id", "schedule_id", "play_time") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "waves" ADD CONSTRAINT "waves_id_fkey" FOREIGN KEY ("id") REFERENCES "results"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

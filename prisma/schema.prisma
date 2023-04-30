@@ -51,7 +51,7 @@ model Schedule {
   rule       Rule     @default(REGULAR)
   // レアブキ
   rareWeapon Int?     @map("rare_weapon") @db.SmallInt
-  // レアブキ
+  // オカシラシャケのID
   bossId     Int?     @map("boss_id") @db.SmallInt
   // 作成日
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(0)
@@ -61,6 +61,7 @@ model Schedule {
   results    Result[]
 
   @@unique([stageId, mode, rule, weaponList, startTime, endTime], name: "unique")
+  @@unique([scheduleId])
   @@index([stageId])
   @@index([rule])
   @@index([rule, mode])
@@ -106,6 +107,7 @@ model Result {
   // オカシラシャケを討伐したかどうか
   isBossDefeated       Boolean?  @map("is_boss_defeated")
   // たおしたオカシラシャケのID
+  // 不要かもしれないが残しておく
   bossId               Int?      @map("boss_id") @db.SmallInt
   // シナリオコード
   scenarioCode         String?   @map("scenario_code")
@@ -122,7 +124,7 @@ model Result {
   schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId])
 
   @@unique([playTime, resultId])
-  @@unique([id, scheduleId])
+  @@unique([id, scheduleId, playTime])
   @@index([members])
   @@index([scheduleId])
   @@index([scenarioCode])
@@ -136,10 +138,10 @@ model Player {
   id                   String   @map("id")
   // スケジュールjID
   scheduleId           String   @map("scheduleId")
-  // プレイヤーID
-  nplnUserId           String   @map("npln_user_id")
   // 遊んだ時間
   playTime             DateTime @map("play_time") @db.Timestamp(0)
+  // プレイヤーID
+  nplnUserId           String   @map("npln_user_id")
   // 名前
   name                 String
   // 称号
@@ -195,7 +197,7 @@ model Player {
   // 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   // リレーション
-  Result               Result?  @relation(fields: [id, scheduleId], references: [id, scheduleId])
+  Result               Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime])
 
   @@id([nplnUserId, id])
   @@unique([nplnUserId, playTime])
