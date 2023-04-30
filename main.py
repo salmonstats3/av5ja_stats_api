@@ -32,12 +32,15 @@ def restore():
       substr: list[str] = line.split(",") 
       if int(substr[0]) == 400:
         status_code = upload(substr[1].strip(), True)
+        if status_code == 201:
+          
+        print(status_code)
         line = f"{status_code},{substr[1]}\n"
 
 def download():
   limit: int = 5000
   for offset in range(0, 2060000, limit):
-    requestURL = f"https://localhost:8080/v1/results?offset={offset}&limit={limit}"
+    requestURL = f"http://localhost:8080/v1/results?offset={offset}&limit={limit}"
     response = requests.get(requestURL)
     with open(f"results/{offset}.json", mode="w") as f:
       print(f"Downloading {offset} -> {offset + 5000}")
