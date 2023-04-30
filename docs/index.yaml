@@ -85,6 +85,23 @@ paths:
           description: ''
       tags:
         - リザルト
+    post:
+      operationId: リザルト登録V2(Salmonia3+)
+      summary: ''
+      deprecated: false
+      description: 新API
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginatedDto'
+      responses:
+        '400':
+          description: ''
+      tags:
+        - リザルト
   /v2/schedules:
     get:
       operationId: 取得
