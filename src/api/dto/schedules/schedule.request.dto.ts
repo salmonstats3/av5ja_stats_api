@@ -48,7 +48,7 @@ export class CoopScheduleRequest {
         weaponList: this.weaponList,
       },
       where: {
-        regular: {
+        unique: {
           endTime: this.endTime,
           mode: this.mode,
           rule: this.rule,

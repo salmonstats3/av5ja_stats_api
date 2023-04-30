@@ -60,8 +60,7 @@ model Schedule {
   // リザルト一覧
   results    Result[]
 
-  @@unique([stageId, mode, rule, weaponList, startTime, endTime], name: "regular")
-  @@unique([stageId, mode, rule, weaponList], name: "private")
+  @@unique([stageId, mode, rule, weaponList, startTime, endTime], name: "unique")
   @@index([stageId])
   @@index([rule])
   @@index([rule, mode])
@@ -123,6 +122,7 @@ model Result {
   schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId])
 
   @@unique([playTime, resultId])
+  @@unique([id, scheduleId])
   @@index([members])
   @@index([scheduleId])
   @@index([scenarioCode])
@@ -134,6 +134,8 @@ model Result {
 model Player {
   // リザルトID
   id                   String   @map("id")
+  // スケジュールjID
+  scheduleId           String   @map("scheduleId")
   // プレイヤーID
   nplnUserId           String   @map("npln_user_id")
   // 遊んだ時間
@@ -193,7 +195,7 @@ model Player {
   // 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   // リレーション
-  Result               Result?  @relation(fields: [id], references: [id])
+  Result               Result?  @relation(fields: [id, scheduleId], references: [id, scheduleId])
 
   @@id([nplnUserId, id])
   @@unique([nplnUserId, playTime])
