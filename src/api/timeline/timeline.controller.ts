@@ -1,11 +1,11 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { AnalyticsResponseDto } from "../dto/analytics/analytics.response.dto";
 
 import { AnalyticsService } from "./timeline.service";
 
-@Controller("timeline")
+@Controller("schedules")
 export class AnalyticsController {
   constructor(private readonly service: AnalyticsService) {}
 
@@ -16,7 +16,7 @@ export class AnalyticsController {
     operationId: "Salmon Stats分析",
   })
   @ApiOkResponse({ type: AnalyticsResponseDto })
-  getAnalytics(): Promise<AnalyticsResponseDto> {
-    return this.service.getAnalytics();
+  getAnalytics(@Param("schedule_id") scheduleId: string): Promise<AnalyticsResponseDto> {
+    return this.service.getTimeline(scheduleId);
   }
 }

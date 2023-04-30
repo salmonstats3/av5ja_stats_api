@@ -34,12 +34,17 @@ paths:
           description: ''
       tags:
         - 認証
-  /v3/timeline/{schedule_id}:
+  /v3/schedules/{schedule_id}:
     get:
       operationId: Salmon Stats分析
       summary: ''
       description: データを解析して返します
-      parameters: []
+      parameters:
+        - name: schedule_id
+          required: true
+          in: path
+          schema:
+            type: string
       responses:
         '200':
           description: ''

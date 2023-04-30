@@ -12,7 +12,7 @@ def upload(path, restore = False) -> int:
     response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
     if not restore:
       with open(f"status.log", mode="a") as w:
-        w.write(f"{response.status_code},{path}\n")
+        w.write(f"{response.text},{path}\n")
     return response.status_code
 
 def future():
@@ -21,11 +21,11 @@ def future():
   with open("status.log", mode="r") as f:
     lines: set[int] = set(map(lambda x: int(x), filter(lambda x: x!= "", map(lambda x: x.split(",")[-1], f.read().split("\n")))))
     subtract = sorted(list(files - lines))
-    with futures.ThreadPoolExecutor(max_workers=3) as executor:
+    with futures.ThreadPoolExecutor(max_workers=5) as executor:
       for file in subtract:
         executor.submit(upload, file)
         future_list.append(future)
-
+      
 def restore():
   with open("status.log", mode="r+") as f:
     for line in f.readlines():
