@@ -17,6 +17,6 @@ export class AnalyticsController {
   })
   @ApiOkResponse({ type: AnalyticsResponseDto })
   getAnalytics(@Param("schedule_id") scheduleId: string): Promise<AnalyticsResponseDto> {
-    return this.service.getTimeline(scheduleId);
+    return this.service.getAnalytics(scheduleId);
   }
 }
