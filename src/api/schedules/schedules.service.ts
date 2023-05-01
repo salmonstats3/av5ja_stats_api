@@ -62,10 +62,10 @@ export class SchedulesService {
       },
       where: {
         mode: {
-          equals: "REGULAR",
+          in: ["REGULAR", "LIMITED"],
         },
         rule: {
-          equals: "REGULAR",
+          in: ["REGULAR", "BIG_RUN", "TEAM_CONTEST"],
         },
       },
     });
