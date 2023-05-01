@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { Client, Prisma, Result } from "@prisma/client";
-import { plainToInstance } from "class-transformer";
+import { Expose, Transform, plainToInstance } from "class-transformer";
+import { IsDate, IsNotEmpty, IsString } from "class-validator";
 import { PrismaService } from "src/prisma.service";
 
 import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
@@ -61,14 +62,16 @@ export class ResultsService {
     request: CoopResultManyRequest,
     version: AppVersion = AppVersion.V216,
     client: Client = Client.SALMONIA,
-  ): Promise<Result[]> {
+  ): Promise<CustomResult[]> {
     // クライアントチェック
     if (Object.values(Client).find((value) => value === client.toUpperCase()) === undefined) {
+      console.log("Invalid Client");
       throw new BadRequestException({ message: "Invalid Client", status: 400 });
     }
 
     // バージョンチェック
     if (Object.values(AppVersion).find((value) => value === version) === undefined) {
+      console.log("Invalid Version");
       throw new BadRequestException({ message: "Invalid Version", status: 400 });
     }
 
@@ -77,6 +80,26 @@ export class ResultsService {
       .filter((result: CoopResultRequest) => result.isValid)
       .map((result) => result.query(version, client));
     const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
-    return this.prisma.$transaction([...results]);
+    return (await this.prisma.$transaction([...results])).map((result) => {
+      console.log(result);
+      return plainToInstance(CustomResult, result, { excludeExtraneousValues: true });
+    });
   }
+}
+
+export class CustomResult {
+  @Expose({ name: "resultId" })
+  @Transform(() => Math.round(Math.random() * 100000000))
+  resultId: number;
+
+  @Expose()
+  @Transform((param) => param.obj.resultId)
+  @IsString()
+  @IsNotEmpty()
+  uuid: string;
+
+  @Expose({ name: "playTime" })
+  @Transform((param) => param.obj.playTime)
+  @IsDate()
+  playTime: Date;
 }
