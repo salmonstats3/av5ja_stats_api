@@ -80,10 +80,9 @@ export class ResultsService {
       .filter((result: CoopResultRequest) => result.isValid)
       .map((result) => result.query(version, client));
     const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
-    return (await this.prisma.$transaction([...results])).map((result) => {
-      console.log(result);
-      return plainToInstance(CustomResult, result, { excludeExtraneousValues: true });
-    });
+    return (await this.prisma.$transaction([...results])).map((result) =>
+      plainToInstance(CustomResult, result, { excludeExtraneousValues: true }),
+    );
   }
 }
 
