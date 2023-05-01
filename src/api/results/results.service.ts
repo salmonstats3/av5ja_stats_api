@@ -10,6 +10,12 @@ import { CoopResultCustomRequest, ResultStatus } from "../dto/results/result.cus
 export class ResultsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * リザルト取得API
+   * @description この方式は重たいので修正予定
+   * @param request
+   * @returns
+   */
   async fetch(request: PaginatedRequestDto): Promise<PaginatedDto<Result>> {
     const results: Result[] = await this.prisma.result.findMany({
       include: {
@@ -23,6 +29,11 @@ export class ResultsService {
     return new PaginatedDto<Result>(request.limit, request.offset, 0, results);
   }
 
+  /**
+   * リザルト登録API
+   * @param request リザルト登録リクエスト
+   * @returns 結果
+   */
   async create(request: PaginatedDto<Result>): Promise<string> {
     const results: CoopResultCustomRequest[] = request.results.map((result) => plainToInstance(CoopResultCustomRequest, result));
 

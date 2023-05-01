@@ -29,7 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppVersionResponse'
+                $ref: '#/components/schemas/AppVersionResult'
         '400':
           description: ''
       tags:
@@ -54,7 +54,7 @@ paths:
                 $ref: '#/components/schemas/AnalyticsResponseDto'
       tags:
         - 分析
-  /v1/results:
+  /v3/results:
     get:
       operationId: リザルト登録V2(Salmonia3+)
       summary: ''
@@ -85,11 +85,46 @@ paths:
           description: ''
       tags:
         - リザルト
-  /v3/results:
     post:
-      operationId: 登録(SplatNet3)
+      operationId: 登録(V3)
       summary: ''
-      description: Salmonia3+形式のデータを最大同時に200件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。
+      description: Salmonia3+のリザルト登録
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginatedDto'
+      responses:
+        '400':
+          description: ''
+      tags:
+        - リザルト
+  /v1/results:
+    post:
+      operationId: 登録(V1)
+      summary: ''
+      deprecated: true
+      description: Salmonia3+のリザルト登録
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginatedDto'
+      responses:
+        '400':
+          description: ''
+      tags:
+        - リザルト
+  /v2/results:
+    post:
+      operationId: 登録(V2)
+      summary: ''
+      deprecated: true
+      description: Salmonia3+のリザルト登録
       parameters: []
       requestBody:
         required: true
@@ -104,9 +139,9 @@ paths:
         - リザルト
   /v2/schedules:
     get:
-      operationId: 取得
+      operationId: 取得(SplatNet3)
       summary: ''
-      description: 過去のスケジュールを一括で返します. 一時間に一回、データを更新します.
+      description: イカリング3で配信されていたスケジュールを返します.
       parameters: []
       responses:
         '200':
@@ -123,9 +158,9 @@ paths:
         - スケジュール
   /v3/schedules:
     get:
-      operationId: ID取得
+      operationId: 取得(Salmon Stats+)
       summary: ''
-      description: スケジュールIDを返します.
+      description: Salmon Stats+に登録されているスケジュールを返します.
       parameters: []
       responses:
         '200':
@@ -228,16 +263,14 @@ components:
         - thumbnail_url
         - version
         - web_version
-    AppVersionResponse:
+    AppVersionResult:
       type: object
       properties:
-        results:
-          default: ''
-          type: array
-          items:
-            type: string
+        version:
+          type: string
+          default: 2.5.0
       required:
-        - results
+        - version
     AnalyticsResponseDto:
       type: object
       properties: {}

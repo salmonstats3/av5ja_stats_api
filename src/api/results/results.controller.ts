@@ -40,7 +40,6 @@ export class ResultsController {
   // }
 
   @Get("")
-  @Version("1")
   @HttpCode(200)
   @ApiTags("リザルト")
   @ApiOperation({
@@ -54,14 +53,43 @@ export class ResultsController {
   }
 
   @Post("")
+  @Version("1")
   @HttpCode(201)
   @ApiTags("リザルト")
   @ApiOperation({
-    description: "Salmonia3+形式のデータを最大同時に200件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。",
-    operationId: "登録(SplatNet3)",
+    deprecated: true,
+    description: "Salmonia3+のリザルト登録",
+    operationId: "登録(V1)",
   })
   @ApiBadRequestResponse()
-  createMany(@Body(new ValidationPipe({ transform: true })) request: PaginatedDto<Result>): Promise<string> {
+  createManyV1(@Body(new ValidationPipe({ transform: true })) request: PaginatedDto<Result>): Promise<string> {
+    return this.service.create(request);
+  }
+
+  @Post("")
+  @Version("2")
+  @HttpCode(201)
+  @ApiTags("リザルト")
+  @ApiOperation({
+    deprecated: true,
+    description: "Salmonia3+のリザルト登録",
+    operationId: "登録(V2)",
+  })
+  @ApiBadRequestResponse()
+  createManyV2(@Body(new ValidationPipe({ transform: true })) request: PaginatedDto<Result>): Promise<string> {
+    return this.service.create(request);
+  }
+
+  @Post("")
+  @Version("3")
+  @HttpCode(201)
+  @ApiTags("リザルト")
+  @ApiOperation({
+    description: "Salmonia3+のリザルト登録",
+    operationId: "登録(V3)",
+  })
+  @ApiBadRequestResponse()
+  createManyV3(@Body(new ValidationPipe({ transform: true })) request: PaginatedDto<Result>): Promise<string> {
     return this.service.create(request);
   }
 }
