@@ -7,7 +7,6 @@ import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { OpenAPIObject, SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-// import { SwaggerModule, DocumentBuilder, OpenAPIObject } from "@nestjs/swagger";
 import { config } from "dotenv";
 import { dump } from "js-yaml";
 
