@@ -15,10 +15,19 @@ export class ScenarioService {
         goldenIkuraNum: "desc",
       },
       select: {
+        dangerRate: true,
         goldenIkuraNum: true,
+        scenarioCode: true,
+        schedule: {
+          select: {
+            stageId: true,
+            weaponList: true,
+          },
+        },
         waves: {
           select: {
             eventType: true,
+            goldenIkuraNum: true,
             waterLevel: true,
           },
         },
