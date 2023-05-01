@@ -13,34 +13,6 @@ import { CustomResult, ResultsService } from "./results.service";
 export class ResultsController {
   constructor(private readonly service: ResultsService) {}
 
-  // @Post("")
-  // @Version("1")
-  // @HttpCode(201)
-  // @ApiTags("リザルト")
-  // @ApiOperation({
-  //   deprecated: true,
-  //   description: "旧API",
-  //   operationId: "リザルト登録V2(Salmonia3+)",
-  // })
-  // @ApiBadRequestResponse()
-  // upsertManyV1(@Body() request: CoopResultManyRequest): Promise<Result[]> {
-  //   return this.service.upsertMany(request);
-  // }
-
-  // @Post("")
-  // @Version("2")
-  // @HttpCode(201)
-  // @ApiTags("リザルト")
-  // @ApiOperation({
-  //   deprecated: false,
-  //   description: "新API",
-  //   operationId: "リザルト登録V2(Salmonia3+)",
-  // })
-  // @ApiBadRequestResponse()
-  // upsertManyV2(@Body() request: CoopResultManyRequest): Promise<Result[]> {
-  //   return this.service.upsertMany(request);
-  // }
-
   @Get("")
   @HttpCode(200)
   @ApiTags("リザルト")
@@ -97,4 +69,18 @@ export class ResultsController {
   createManyV3(@Body() body: CoopResultManyRequest, @Headers() headers: CoopRequestHeader): Promise<CustomResult[]> {
     return this.service.upsertMany(body, headers.version, headers.client);
   }
+
+  // @Post("restore")
+  // @Version("3")
+  // @HttpCode(201)
+  // @ApiTags("リザルト")
+  // @ApiOperation({
+  //   description: "Salmonia3+のリザルト登録",
+  //   operationId: "登録(V3)",
+  // })
+  // @ApiBadRequestResponse()
+  // @ApiOkResponse({ type: [Object] })
+  // restore(@Body() body: PaginatedDto<Result>): Promise<string> {
+  //   return this.service.create(body);
+  // }
 }

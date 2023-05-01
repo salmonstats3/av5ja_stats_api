@@ -9,7 +9,7 @@ def upload(path) -> int:
     request = json.loads(f.read())
     print(f"Uploading {path}.json")
     headers = {"Content-Type": "application/json"}
-    response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
+    response = requests.post("http://localhost:8080/v3/results/restore", data=json.dumps(request), headers=headers)
     if response.status_code == 201:
       with open(f"status.log", mode="a") as w:
         w.write(f"{response.text},{path}\n")
