@@ -37,7 +37,6 @@ const ToInteger = () => {
   const toClass = (target: any, key: string) => {
     return Transform(
       ({ obj }) => {
-        console.log(target, obj, key);
         return parseInt(obj[key], 10);
       },
       {

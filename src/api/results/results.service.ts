@@ -65,13 +65,11 @@ export class ResultsService {
   ): Promise<CustomResult[]> {
     // クライアントチェック
     if (Object.values(Client).find((value) => value === client.toUpperCase()) === undefined) {
-      console.log("Invalid Client");
       throw new BadRequestException({ message: "Invalid Client", status: 400 });
     }
 
     // バージョンチェック
     if (Object.values(AppVersion).find((value) => value === version) === undefined) {
-      console.log("Invalid Version");
       throw new BadRequestException({ message: "Invalid Version", status: 400 });
     }
 
