@@ -1,12 +1,12 @@
 import { BadRequestException, HttpException, Injectable } from "@nestjs/common";
 import axios from "axios";
-import { plainToClass } from "class-transformer";
+import { plainToClass, plainToInstance } from "class-transformer";
 import dayjs from "dayjs";
 import { initializeApp } from "firebase/app";
 import { collection, doc, getDocs, getFirestore, limit, setDoc } from "firebase/firestore/lite";
 
 import { AccessTokenRequest, AccessTokenResponse } from "../dto/authorize/access_token.dto";
-import { AppVersionResponse } from "../dto/authorize/app_version.dto";
+import { AppVersionResponse, AppVersionResult } from "../dto/authorize/app_version.dto";
 import { BulletTokenRequest, BulletTokenResponse } from "../dto/authorize/bullet_token.dto";
 import { GameServiceTokenRequest, GameServiceTokenResponse } from "../dto/authorize/game_service_token.dto";
 import { GameWebTokenRequest, GameWebTokenResponse } from "../dto/authorize/game_web_token.dto";
@@ -49,7 +49,7 @@ export class AuthorizeService {
 
   async authorize(): Promise<AuthorizeResponse> {
     const session_token: string = process.env.SESSION_TOKEN;
-    const version: string = (await this.get_app_version()).results[0].version;
+    const version: string = (await this.get_app_version()).version;
     const web_version: string = process.env.WEB_VIEW_VER;
     const request: AccessTokenRequest = {
       session_token: session_token,
@@ -125,9 +125,9 @@ export class AuthorizeService {
     }
   }
 
-  async get_app_version(): Promise<AppVersionResponse> {
+  async get_app_version(): Promise<AppVersionResult> {
     const url = "https://itunes.apple.com/lookup?id=1234806557";
-    return plainToClass(AppVersionResponse, (await axios.get(url)).data);
+    return plainToInstance(AppVersionResponse, (await axios.get(url)).data, { excludeExtraneousValues: true }).results[0];
   }
 
   private async get_access_token(request: AccessTokenRequest): Promise<AccessTokenResponse> {
@@ -220,7 +220,6 @@ export class AuthorizeService {
     } catch (error) {
       throw new BadRequestException(error);
     }
-    return;
   }
 
   private async get_bullet_token(request: BulletTokenRequest) {
@@ -242,18 +241,5 @@ export class AuthorizeService {
     } catch (error) {
       throw new BadRequestException(error);
     }
-  }
-
-  private update() {
-    // // オカシラシャケがまだ決まっていなければ推定する
-    // let estimatedKingSalmonId: KingSalmonId | null = null;
-    // schedules.forEach((schedule) => {
-    //   if (schedule.estimatedKingSalmonId !== null) {
-    //     estimatedKingSalmonId = this.next(schedule.estimatedKingSalmonId);
-    //   }
-    //   if (schedule.estimatedKingSalmonId === null) {
-    //     schedule.estimatedKingSalmonId = estimatedKingSalmonId;
-    //   }
-    // });
   }
 }
