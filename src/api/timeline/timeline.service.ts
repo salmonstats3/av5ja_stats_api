@@ -31,15 +31,38 @@ export class AnalyticsService {
         npln_user_id
       )
       SELECT
-      (CASE grade_point WHEN 999 THEN 999 ELSE grade_point / 10 * 10 END) AS grade_point,
+      (CASE grade_point WHEN 999 THEN 999 ELSE grade_point / 200 * 200 END) AS grade_point,
       COUNT(*)::INT
       FROM
       players
       GROUP BY
-      (CASE grade_point WHEN 999 THEN 999 ELSE grade_point / 10 * 10 END)
+      (CASE grade_point WHEN 999 THEN 999 ELSE grade_point / 200 * 200 END)
       ORDER BY
       grade_point
     `;
+  }
+
+  async getWaves(scheduleId: string): Promise<any> {
+    return this.prisma.$queryRaw`
+      SELECT
+      water_level,
+      event_type,
+      COUNT(*)::INT AS occurrence,
+      COALESCE(COUNT(waves.is_clear = true OR null)::INT) AS is_clear
+      FROM
+      waves
+      INNER JOIN
+      results
+      ON
+      results.id = waves.id
+      WHERE
+      schedule_id = ${scheduleId}
+      AND
+      waves.golden_ikura_num IS NOT NULL
+      GROUP BY
+      water_level,
+      event_type
+      `;
   }
 
   async getIkuraNum(scheduleId: string): Promise<any> {
@@ -77,11 +100,17 @@ export class AnalyticsService {
     if (analytics !== undefined) {
       return analytics;
     }
-    const results: any[] = await Promise.all([this.getGradePoint(scheduleId), this.getIkuraNum(scheduleId), this.getTimeline(scheduleId)]);
+    const results: any[] = await Promise.all([
+      this.getGradePoint(scheduleId),
+      this.getIkuraNum(scheduleId),
+      this.getTimeline(scheduleId),
+      this.getWaves(scheduleId),
+    ]);
     const response = {
       golden_ikura_num: results[1],
       grade_point: results[0],
       status: results[2],
+      waves: [0, 1, 2, 3, 4, 5, 6, 7, 8].map((eventType: number) => results[3].filter((result: any) => result.event_type === eventType)),
     };
     this.cacheManager.set(`analytics:${scheduleId}`, response, { ttl: 60 * 60 * 1 });
     return response;
@@ -95,20 +124,23 @@ export class AnalyticsService {
       MAX(golden_ikura_num) AS max_golden_ikura_num,
       AVG(golden_ikura_num) FILTER (WHERE is_clear = true)::DECIMAL(6, 3) AS avg_golden_ikura_num,
       ARRAY[
-          COALESCE(COUNT(is_clear = true OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 < 100), 0)::INT,
-          COALESCE(COUNT(is_clear = true OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 BETWEEN 100 AND 400), 0)::INT,
-          COALESCE(COUNT(is_clear = true OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 > 400), 0)::INT
+          COALESCE(COUNT(is_clear = true OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 >= 0), 0)::INT,
+          COALESCE(COUNT(is_clear = true OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 >= 200), 0)::INT,
+          COALESCE(COUNT(is_clear = true OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 >= 400), 0)::INT,
+          COALESCE(COUNT(is_clear = true OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 >= 600), 0)::INT
       ] AS is_clear_by_rate,
       ARRAY[
-          COALESCE(COUNT(is_clear = false OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 < 100), 0)::INT,
-          COALESCE(COUNT(is_clear = false OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 BETWEEN 100 AND 400), 0)::INT,
-          COALESCE(COUNT(is_clear = false OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 > 400), 0)::INT
+          COALESCE(COUNT(is_clear = false OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 >= 0), 0)::INT,
+          COALESCE(COUNT(is_clear = false OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 >= 200), 0)::INT,
+          COALESCE(COUNT(is_clear = false OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 >= 400), 0)::INT,
+          COALESCE(COUNT(is_clear = false OR null) FILTER (WHERE danger_rate * 100 * 5 - 800 >= 600), 0)::INT
       ] AS is_failure_by_rate,
       ARRAY[
           COALESCE(COUNT(failure_wave = 1 OR null)::INT, 0),
           COALESCE(COUNT(failure_wave = 2 OR null)::INT, 0),
           COALESCE(COUNT(failure_wave = 3 OR null)::INT, 0)
-      ] AS failure_wave
+      ] AS failure_wave,
+      COUNT(*)::INT shifts_worked
       FROM
       results
       WHERE
