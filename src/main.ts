@@ -55,10 +55,17 @@ async function bootstrap() {
     .build();
 
   const documents = SwaggerModule.createDocument(app, options);
-  if (process.env.NODE_ENV === "development") {
+
+  /**
+   * 環境変数読み込み
+   */
+  if (process.env.NODE_ENV === "production") {
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = `/app/credentials.json`;
+  } else {
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = `credentials.json`;
     build(documents);
   }
-  SwaggerModule.createDocument;
+
   SwaggerModule.setup("", app, documents);
   await app.listen(process.env.PORT || 3000);
 }
