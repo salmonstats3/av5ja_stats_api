@@ -137,7 +137,7 @@ model Player {
   // リザルトID
   id                   String   @map("id")
   // スケジュールjID
-  scheduleId           String   @map("scheduleId")
+  scheduleId           String   @map("schedule_id")
   // 遊んだ時間
   playTime             DateTime @map("play_time") @db.Timestamp(0)
   // プレイヤーID
