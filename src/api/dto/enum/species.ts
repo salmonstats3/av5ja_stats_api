@@ -1,4 +1,4 @@
 export enum Species {
-  INKLING,
-  OCTOLING,
+  INKLING = "INKLING",
+  OCTOLING = "OCTOLING",
 }

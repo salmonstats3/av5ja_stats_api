@@ -93,8 +93,7 @@ export class GameServiceTokenRequest {
   naIdToken: string;
 
   @ApiProperty({
-    example:
-      "9e4e5b2e13f46e399adb5f390fd95b2b78de7e3d7e886633f8d16c479382d5e5d44caca68bc19351fe1d0b69c7",
+    example: "9e4e5b2e13f46e399adb5f390fd95b2b78de7e3d7e886633f8d16c479382d5e5d44caca68bc19351fe1d0b69c7",
     required: true,
   })
   @Expose()
@@ -158,11 +157,10 @@ export class GameServiceTokenUser {
   id: number;
 
   @ApiProperty({ example: "91d160aa84e88da6" })
-  nsaid: string;
+  nsaId: string;
 
   @ApiProperty({
-    example:
-      "https://cdn-image-e0d67c509fb203858ebcb2fe3f88c2aa.baas.nintendo.com/1/430d0e57d74d2366",
+    example: "https://cdn-image-e0d67c509fb203858ebcb2fe3f88c2aa.baas.nintendo.com/1/430d0e57d74d2366",
   })
   imageUri: string;
 

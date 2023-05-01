@@ -44,4 +44,8 @@ lerna-debug.log*
 __pycache__
 
 # Results
-results
+/results
+
+# Secret
+status.log
+credentials.json

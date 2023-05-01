@@ -1,5 +1,6 @@
 import { Controller, Get, HttpCode, Version } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags, PartialType } from "@nestjs/swagger";
+import { Schedule } from "@prisma/client";
 
 import { PaginatedDto } from "../dto/pagination.dto";
 import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
@@ -12,28 +13,44 @@ export class SchedulesController {
   constructor(private readonly service: SchedulesService) {}
 
   @Get("")
-  @Version("1")
   @HttpCode(200)
+  @Version("1")
   @ApiTags("スケジュール")
   @ApiOperation({
-    description: "指定されたスケジュールの統計データを返します.",
-    operationId: "統計取得",
+    deprecated: true,
+    description: "イカリング3で配信されていたスケジュールを返します.",
+    operationId: "取得(SplatNet3)V2",
   })
   @ApiBadRequestResponse()
-  find(): Promise<CoopScheduleDataResponse[]> {
+  @ApiOkResponse({ type: [CoopScheduleDataResponse] })
+  findManyV1(): Promise<CoopScheduleDataResponse[]> {
     return this.service.get_schedules();
   }
 
-  @Get("statistics")
-  @Version("1")
+  @Get("")
+  @HttpCode(200)
+  @Version("2")
+  @ApiTags("スケジュール")
+  @ApiOperation({
+    description: "イカリング3で配信されていたスケジュールを返します.",
+    operationId: "取得(SplatNet3)V3",
+  })
+  @ApiBadRequestResponse()
+  @ApiOkResponse({ type: [CoopScheduleDataResponse] })
+  findManyV2(): Promise<CoopScheduleDataResponse[]> {
+    return this.service.get_schedules();
+  }
+
+  @Get("")
   @HttpCode(200)
   @ApiTags("スケジュール")
   @ApiOperation({
-    description: "指定されたスケジュールの統計データを返します.",
-    operationId: "統計取得",
+    description: "Salmon Stats+に登録されているスケジュールを返します.",
+    operationId: "取得(Salmon Stats+)",
   })
   @ApiBadRequestResponse()
-  estimate() {
-    return this.service.get_schedule_statistics();
+  @ApiOkResponse({ type: [PartialType<Schedule>] })
+  findManyV3(): Promise<Partial<Schedule>[]> {
+    return this.service.get_schedule_ids();
   }
 }

@@ -1,28 +1,49 @@
 import requests
 import os
 import json
+from concurrent import futures
+from array import array
 
-def upload():
-  files = sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))
-  for file in files:
-    if file >= 834000:
-      with open(f"results/{file}.json", mode="r") as f:
-        request = json.loads(f.read())
-        print(f"Uploading {file}.json")
-        headers = {"Content-Type": "application/json"}
-        response = requests.post("http://localhost:8080/v2/results", data=json.dumps(request), headers=headers)
-        if response.status_code != 201:
-          with open(f"status.log", mode="a") as w:
-            w.write(f"{response.status_code}: {file}")
-            print(response.text)
+def upload(path) -> int:
+  with open(f"results/{path}.json", mode="r") as f:
+    request = json.loads(f.read())
+    print(f"Uploading {path}.json")
+    headers = {"Content-Type": "application/json"}
+    response = requests.post("http://localhost:8080/v3/results/restore", data=json.dumps(request), headers=headers)
+    if response.status_code == 201:
+      with open(f"status.log", mode="a") as w:
+        w.write(f"{response.text},{path}\n")
+    return response.status_code
+
+def future():
+  future_list = []
+  files: set[int] = set(map(lambda x: int(x), list(map(lambda x: x.split(".")[0], os.listdir("results")))))
+  with open("status.log", mode="r") as f:
+    lines: set[int] = set(map(lambda x: int(x), filter(lambda x: x!= "", map(lambda x: x.split(",")[-1], f.read().split("\n")))))
+    subtract = sorted(list(files - lines))
+    with futures.ThreadPoolExecutor(max_workers=5) as executor:
+      for file in subtract:
+        executor.submit(upload, file)
+        future_list.append(future)
+      
+def restore():
+  with open("status.log", mode="r+") as f:
+    for line in f.readlines():
+      substr: list[str] = line.split(",") 
+      if int(substr[0]) == 400:
+        status_code = upload(substr[1].strip(), True)
+        line = f"{status_code},{substr[1]}\n"
 
 def download():
-  for offset in range(757000, 780000, 1000):
-    requestURL = f"http://localhost:8080/v1/results?offset={offset}&limit=1000&sort=salmonId&order=asc"
+  limit: int = 5000
+  for offset in range(0, 2060000, limit):
+    requestURL = f"http://localhost:8080/v1/results?offset={offset}&limit={limit}"
     response = requests.get(requestURL)
     with open(f"results/{offset}.json", mode="w") as f:
-      print(f"Downloading {offset} -> {offset + 1000}")
+      print(f"Downloading {offset} -> {offset + 5000}")
       f.write(response.text)
 
 if __name__=="__main__":
-  upload()
+  # download()
+  future()
+  # restore()
