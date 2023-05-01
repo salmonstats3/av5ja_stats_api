@@ -13,6 +13,7 @@
   "scripts": {
     "build": "yarn nest build",
     "start:dev": "nest start --watch",
+    "start:stg": "dotenv -e .env.stg nest start --watch",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,ts,json}'",
     "lint": "eslint --ignore-path .gitignore './**/*.{js,ts}' --fix",
     "postreset": "yarn prisma migrate deploy",
