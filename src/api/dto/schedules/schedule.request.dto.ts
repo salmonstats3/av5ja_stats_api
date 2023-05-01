@@ -42,17 +42,18 @@ export class CoopScheduleRequest {
       create: {
         endTime: this.endTime,
         mode: this.mode,
-        rareWeapon: this.rareWeapon,
         rule: this.rule,
         stageId: this.stageId,
         startTime: this.startTime,
         weaponList: this.weaponList,
       },
       where: {
-        stageId_mode_rule_weaponList: {
+        unique: {
+          endTime: this.endTime,
           mode: this.mode,
           rule: this.rule,
           stageId: this.stageId,
+          startTime: this.startTime,
           weaponList: this.weaponList,
         },
       },

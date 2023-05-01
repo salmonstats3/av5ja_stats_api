@@ -6,7 +6,7 @@ up:
 
 .PHONY: down
 down:
-	docker-compose up -d
+	docker-compose down -v
 
 .PHONY: build
 build:

@@ -1,7 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose, plainToClass, Transform, Type } from "class-transformer";
-import { ValidateNested } from "class-validator";
+import { IsDateString, IsEnum, IsOptional, ValidateNested } from "class-validator";
 import { stageLists } from "src/api/constants/stage";
 import { weaponLists } from "src/api/constants/weapon";
 
@@ -9,31 +9,43 @@ import { Mode } from "../enum/mode";
 import { Setting } from "../enum/setting";
 
 export enum KingSalmonId {
-  COHOZUNA = "COHOZUNA",
-  HORROROBOROS = "HORROROBOROS",
+  COHOZUNA = 23,
+  HORROROBOROS = 24,
 }
 
 export class CoopScheduleDataResponse {
+  @ApiProperty({ example: [-1, -1, -1, -1] })
+  @IsDateString()
   @Expose()
-  weaponList: number[];
+  readonly weaponList: number[];
 
+  @ApiProperty({ example: "2023-04-26T16:00:00Z" })
+  @IsDateString()
   @Expose()
-  startTime: string;
+  readonly startTime: string;
 
+  @ApiProperty({ example: "2023-04-28T08:00:00Z" })
+  @IsDateString()
   @Expose()
-  endTime: string;
+  readonly endTime: string;
 
+  @ApiProperty({ example: null, nullable: true })
+  @IsOptional()
   @Expose()
-  rareWeapon: number | null;
+  readonly rareWeapon: number | null;
 
+  @ApiProperty({ example: 1 })
   @Expose()
-  stageId: number;
+  readonly stageId: number;
 
+  @ApiProperty({ example: Setting.NORMAL })
+  @IsEnum(Setting)
   @Expose()
-  setting: Setting;
+  readonly setting: Setting;
 
+  @ApiProperty({ example: 24 })
   @Expose()
-  estimated_king_salmon_id: KingSalmonId | null;
+  estimatedKingSalmonId: KingSalmonId | null;
 
   constructor(
     weaponList: number[],
@@ -42,7 +54,7 @@ export class CoopScheduleDataResponse {
     rareWeapon: number | null,
     stageId: number,
     setting: Setting,
-    estimated_king_salmon_id: KingSalmonId | null,
+    estimatedKingSalmonId: KingSalmonId | null,
   ) {
     this.weaponList = weaponList;
     this.startTime = startTime;
@@ -50,7 +62,7 @@ export class CoopScheduleDataResponse {
     this.rareWeapon = rareWeapon;
     this.stageId = stageId;
     this.setting = setting;
-    this.estimated_king_salmon_id = estimated_king_salmon_id;
+    this.estimatedKingSalmonId = estimatedKingSalmonId;
   }
 
   static from(schedule: CoopScheduleDataResponse, king_salmon_id: KingSalmonId): CoopScheduleDataResponse {
