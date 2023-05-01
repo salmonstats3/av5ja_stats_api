@@ -24,7 +24,6 @@ export class ResultsService {
   }
 
   async create(request: PaginatedDto<Result>): Promise<string> {
-    console.log(request);
     const results: CoopResultCustomRequest[] = request.results.map((result) => plainToInstance(CoopResultCustomRequest, result));
 
     // 修正する

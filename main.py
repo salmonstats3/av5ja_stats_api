@@ -17,7 +17,7 @@ def upload(path) -> int:
 
 def future():
   future_list = []
-  files: set[int] = set(map(lambda x: int(x), sorted(list(map(lambda x: int(x.split(".")[0]), os.listdir("results"))))))
+  files: set[int] = set(map(lambda x: int(x), list(map(lambda x: x.split(".")[0], os.listdir("results")))))
   with open("status.log", mode="r") as f:
     lines: set[int] = set(map(lambda x: int(x), filter(lambda x: x!= "", map(lambda x: x.split(",")[-1], f.read().split("\n")))))
     subtract = sorted(list(files - lines))
@@ -25,7 +25,6 @@ def future():
       for file in subtract:
         executor.submit(upload, file)
         future_list.append(future)
-        break
       
 def restore():
   with open("status.log", mode="r+") as f:
