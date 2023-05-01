@@ -159,7 +159,7 @@ paths:
         - リザルト
   /v1/schedules:
     get:
-      operationId: 取得(SplatNet3)
+      operationId: 取得(SplatNet3)V2
       summary: ''
       deprecated: true
       description: イカリング3で配信されていたスケジュールを返します.
@@ -179,7 +179,7 @@ paths:
         - スケジュール
   /v2/schedules:
     get:
-      operationId: 取得(SplatNet3)
+      operationId: 取得(SplatNet3)V3
       summary: ''
       description: イカリング3で配信されていたスケジュールを返します.
       parameters: []

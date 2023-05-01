@@ -19,7 +19,7 @@ export class SchedulesController {
   @ApiOperation({
     deprecated: true,
     description: "イカリング3で配信されていたスケジュールを返します.",
-    operationId: "取得(SplatNet3)",
+    operationId: "取得(SplatNet3)V2",
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: [CoopScheduleDataResponse] })
@@ -33,7 +33,7 @@ export class SchedulesController {
   @ApiTags("スケジュール")
   @ApiOperation({
     description: "イカリング3で配信されていたスケジュールを返します.",
-    operationId: "取得(SplatNet3)",
+    operationId: "取得(SplatNet3)V3",
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: [CoopScheduleDataResponse] })
