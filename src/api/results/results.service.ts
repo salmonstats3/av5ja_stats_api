@@ -1,10 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { Prisma, Result } from "@prisma/client";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { Client, Prisma, Result } from "@prisma/client";
 import { plainToInstance } from "class-transformer";
 import { PrismaService } from "src/prisma.service";
 
 import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
 import { CoopResultCustomRequest, ResultStatus } from "../dto/results/result.custom.dto";
+import { AppVersion } from "../dto/results/result.headers.dto";
+import { CoopResultManyRequest, CoopResultRequest } from "../dto/results/result.request.dto";
 
 @Injectable()
 export class ResultsService {
@@ -37,7 +39,6 @@ export class ResultsService {
   async create(request: PaginatedDto<Result>): Promise<string> {
     const results: CoopResultCustomRequest[] = request.results.map((result) => plainToInstance(CoopResultCustomRequest, result));
 
-    // 修正する
     results.forEach((result) => {
       result.fix();
     });
@@ -51,19 +52,31 @@ export class ResultsService {
     return status.join();
   }
 
-  // async upsertMany(request: CoopResultManyRequest): Promise<Result[]> {
-  //   const queries: Prisma.ResultUpsertArgs[] = request.results
-  //     .filter((result: CoopResultRequest) => result.isValid)
-  //     .map((result) => result.query);
-  //   const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
-  //   return this.prisma.$transaction([...results]);
-  // }
+  /**
+   * リザルト登録API
+   * @param request リザルト登録リクエスト
+   * @returns 結果
+   */
+  async upsertMany(
+    request: CoopResultManyRequest,
+    version: AppVersion = AppVersion.V216,
+    client: Client = Client.SALMONIA,
+  ): Promise<Result[]> {
+    // クライアントチェック
+    if (Object.values(Client).find((value) => value === client.toUpperCase()) === undefined) {
+      throw new BadRequestException({ message: "Invalid Client", status: 400 });
+    }
 
-  // async createMany(request: CustomCoopResultManyRequest): Promise<Result[]> {
-  //   const queries: Prisma.ResultUpsertArgs[] = request.results
-  //     .filter((result: CustomCoopResultRequest) => result.isValid)
-  //     .map((result) => result.query);
-  //   const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
-  //   return this.prisma.$transaction([...results]);
-  // }
+    // バージョンチェック
+    if (Object.values(AppVersion).find((value) => value === version) === undefined) {
+      throw new BadRequestException({ message: "Invalid Version", status: 400 });
+    }
+
+    // 書き込み
+    const queries: Prisma.ResultUpsertArgs[] = request.results
+      .filter((result: CoopResultRequest) => result.isValid)
+      .map((result) => result.query(version, client));
+    const results: Prisma.Prisma__ResultClient<Result, never>[] = queries.map((query) => this.prisma.result.upsert(query));
+    return this.prisma.$transaction([...results]);
+  }
 }

@@ -1,4 +1,3 @@
-import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Client, Prisma } from "@prisma/client";
 import { Expose, plainToClass, Transform, Type } from "class-transformer";
@@ -131,19 +130,6 @@ export class CoopResultIdRequest {
 }
 
 export class CoopPlayerRequest {
-  @ApiProperty()
-  @Expose()
-  @IsDate()
-  @Transform((param) => {
-    const regexp = new RegExp("^([0-9]{8}T[0-9]{6}):");
-    if (!regexp.test(param.obj.id)) {
-      throw new BadRequestException("playTime must be given by the format of 'YYYYMMDD`T`THHmmss:");
-    }
-    const play_time: string = param.obj.id.match(regexp)[1];
-    return dayjs(play_time).toDate();
-  })
-  readonly playTime: Date;
-
   @ApiProperty()
   @Expose()
   @IsArray()
@@ -331,6 +317,7 @@ export class CoopPlayerRequest {
 }
 
 export class CoopWaveRequest {
+  @ApiProperty({ name: "id" })
   @Expose({ name: "id" })
   @IsInt()
   @Min(1)
@@ -522,18 +509,29 @@ export class CoopResultRequest {
   @Transform((param) => param.value.map((player: any) => CoopPlayerRequest.fromJSON(player)))
   otherResults: CoopPlayerRequest[];
 
+  /**
+   * 全てのWAVEのeventTypeが0なら夜なし
+   */
   get nightLess(): boolean {
     return this.waveDetails.every((wave) => wave.eventType === 0);
   }
 
+  /**
+   * メンバー一覧
+   */
   get members(): string[] {
-    return this.otherResults.concat(this.myResult).map((player) => player.nplnUserId);
+    return this.otherResults
+      .concat(this.myResult)
+      .map((player) => player.nplnUserId)
+      .sort();
   }
 
   /**
-   * 有効なリザルトかどうかをチェックする
+   * 有効なリザルトかどうかをチェック
    */
   get isValid(): boolean {
+    console.log(this);
+    const currentTime: Date = new Date();
     /**
      * 1. キケン度が0
      * 2. いつものバイトでオカシラメーターがnull
@@ -547,7 +545,7 @@ export class CoopResultRequest {
       (this.smellMeter === null && this.schedule.mode === Mode.REGULAR) ||
       this.otherResults.concat(this.myResult).every((player) => player.specialId === null) ||
       this.jobResult.failureWave === -1 ||
-      this.resultId.playTime >= dayjs().toDate() ||
+      this.resultId.playTime >= currentTime ||
       (this.schedule.mode === Mode.REGULAR &&
         (this.schedule.startTime > this.resultId.playTime || this.schedule.endTime < this.resultId.playTime))
     ) {
@@ -609,7 +607,7 @@ export class CoopResultRequest {
             where: {
               nplnUserId_playTime: {
                 nplnUserId: this.myResult.nplnUserId,
-                playTime: this.myResult.playTime,
+                playTime: this.resultId.playTime,
               },
             },
           },
@@ -630,7 +628,7 @@ export class CoopResultManyRequest {
   @IsArray()
   @IsNotEmpty()
   @ArrayMinSize(1)
-  @ArrayMaxSize(1000)
+  @ArrayMaxSize(200)
   @ValidateNested({ each: true })
   @Type(() => CoopResultRequest)
   results: CoopResultRequest[];

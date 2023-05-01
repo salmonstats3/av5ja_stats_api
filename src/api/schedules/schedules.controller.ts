@@ -14,6 +14,21 @@ export class SchedulesController {
 
   @Get("")
   @HttpCode(200)
+  @Version("1")
+  @ApiTags("スケジュール")
+  @ApiOperation({
+    deprecated: true,
+    description: "イカリング3で配信されていたスケジュールを返します.",
+    operationId: "取得(SplatNet3)",
+  })
+  @ApiBadRequestResponse()
+  @ApiOkResponse({ type: [CoopScheduleDataResponse] })
+  findManyV1(): Promise<CoopScheduleDataResponse[]> {
+    return this.service.get_schedules();
+  }
+
+  @Get("")
+  @HttpCode(200)
   @Version("2")
   @ApiTags("スケジュール")
   @ApiOperation({

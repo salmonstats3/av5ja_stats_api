@@ -89,14 +89,34 @@ paths:
       operationId: 登録(V3)
       summary: ''
       description: Salmonia3+のリザルト登録
-      parameters: []
+      parameters:
+        - name: client
+          in: header
+          description: クライアント
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: header
+          description: アプリバージョン
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaginatedDto'
+              $ref: '#/components/schemas/CoopResultManyRequest'
       responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
         '400':
           description: ''
       tags:
@@ -113,7 +133,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaginatedDto'
+              $ref: '#/components/schemas/CoopResultManyRequest'
       responses:
         '400':
           description: ''
@@ -131,12 +151,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaginatedDto'
+              $ref: '#/components/schemas/CoopResultManyRequest'
       responses:
         '400':
           description: ''
       tags:
         - リザルト
+  /v1/schedules:
+    get:
+      operationId: 取得(SplatNet3)
+      summary: ''
+      deprecated: true
+      description: イカリング3で配信されていたスケジュールを返します.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CoopScheduleDataResponse'
+        '400':
+          description: ''
+      tags:
+        - スケジュール
   /v2/schedules:
     get:
       operationId: 取得(SplatNet3)
@@ -294,6 +334,15 @@ components:
         - total
         - limit
         - offset
+        - results
+    CoopResultManyRequest:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: string
+      required:
         - results
     CoopScheduleDataResponse:
       type: object

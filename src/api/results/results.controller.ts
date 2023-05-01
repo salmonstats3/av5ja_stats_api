@@ -1,8 +1,10 @@
-import { Body, Controller, Get, HttpCode, Post, Query, ValidationPipe, Version } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, Headers, HttpCode, Post, Query, ValidationPipe, Version } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiExtraModels, ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Result } from "@prisma/client";
 
 import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
+import { AppVersion, Client, CoopRequestHeader } from "../dto/results/result.headers.dto";
+import { CoopResultManyRequest } from "../dto/results/result.request.dto";
 
 import { ResultsService } from "./results.service";
 
@@ -62,8 +64,8 @@ export class ResultsController {
     operationId: "登録(V1)",
   })
   @ApiBadRequestResponse()
-  createManyV1(@Body(new ValidationPipe({ transform: true })) request: PaginatedDto<Result>): Promise<string> {
-    return this.service.create(request);
+  createManyV1(@Body(new ValidationPipe({ transform: true })) request: CoopResultManyRequest): Promise<Result[]> {
+    return this.service.upsertMany(request);
   }
 
   @Post("")
@@ -76,8 +78,8 @@ export class ResultsController {
     operationId: "登録(V2)",
   })
   @ApiBadRequestResponse()
-  createManyV2(@Body(new ValidationPipe({ transform: true })) request: PaginatedDto<Result>): Promise<string> {
-    return this.service.create(request);
+  createManyV2(@Body(new ValidationPipe({ transform: true })) request: CoopResultManyRequest): Promise<Result[]> {
+    return this.service.upsertMany(request);
   }
 
   @Post("")
@@ -88,8 +90,11 @@ export class ResultsController {
     description: "Salmonia3+のリザルト登録",
     operationId: "登録(V3)",
   })
+  @ApiHeader({ description: "アプリバージョン", example: AppVersion.V216, name: "version", required: true })
+  @ApiHeader({ description: "クライアント", example: Client.SALMONIA, name: "client", required: true })
   @ApiBadRequestResponse()
-  createManyV3(@Body(new ValidationPipe({ transform: true })) request: PaginatedDto<Result>): Promise<string> {
-    return this.service.create(request);
+  @ApiOkResponse({ type: [Object] })
+  createManyV3(@Body() body: CoopResultManyRequest, @Headers() headers: CoopRequestHeader): Promise<Result[]> {
+    return this.service.upsertMany(body, headers.version, headers.client);
   }
 }
