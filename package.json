@@ -34,9 +34,9 @@
     "@google-analytics/data": "^3.2.2",
     "@nestjs/axios": "^1.0.1",
     "@nestjs/cli": "^9.4.2",
-    "@nestjs/common": "^8.0.0",
+    "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.2.0",
-    "@nestjs/core": "^8.0.0",
+    "@nestjs/core": "^9.4.0",
     "@nestjs/platform-fastify": "^9.4.0",
     "@nestjs/swagger": "^6.3.0",
     "@prisma/client": "^4.9.0",
@@ -58,7 +58,7 @@
     "snakecase-keys": "^5.4.4"
   },
   "devDependencies": {
-    "@nestjs/schematics": "^8.0.0",
+    "@nestjs/schematics": "^9.1.0",
     "@nestjs/testing": "^8.0.0",
     "@types/cache-manager": "^4.0.2",
     "@types/express": "^4.17.13",
