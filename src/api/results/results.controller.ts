@@ -6,7 +6,7 @@ import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
 import { AppVersion, Client, CoopRequestHeader } from "../dto/results/result.headers.dto";
 import { CoopResultManyRequest } from "../dto/results/result.request.dto";
 
-import { ResultsService } from "./results.service";
+import { CustomResult, ResultsService } from "./results.service";
 
 @Controller("results")
 @ApiExtraModels(PaginatedDto)
@@ -64,7 +64,7 @@ export class ResultsController {
     operationId: "登録(V1)",
   })
   @ApiBadRequestResponse()
-  createManyV1(@Body(new ValidationPipe({ transform: true })) request: CoopResultManyRequest): Promise<Result[]> {
+  createManyV1(@Body() request: CoopResultManyRequest): Promise<CustomResult[]> {
     return this.service.upsertMany(request);
   }
 
@@ -78,7 +78,7 @@ export class ResultsController {
     operationId: "登録(V2)",
   })
   @ApiBadRequestResponse()
-  createManyV2(@Body(new ValidationPipe({ transform: true })) request: CoopResultManyRequest): Promise<Result[]> {
+  createManyV2(@Body(new ValidationPipe({ transform: true })) request: CoopResultManyRequest): Promise<CustomResult[]> {
     return this.service.upsertMany(request);
   }
 
@@ -94,7 +94,7 @@ export class ResultsController {
   @ApiHeader({ description: "クライアント", example: Client.SALMONIA, name: "client", required: true })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: [Object] })
-  createManyV3(@Body() body: CoopResultManyRequest, @Headers() headers: CoopRequestHeader): Promise<Result[]> {
+  createManyV3(@Body() body: CoopResultManyRequest, @Headers() headers: CoopRequestHeader): Promise<CustomResult[]> {
     return this.service.upsertMany(body, headers.version, headers.client);
   }
 }
