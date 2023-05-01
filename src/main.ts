@@ -30,7 +30,6 @@ function build(documents: OpenAPIObject) {
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ bodyLimit: 50 * 1024 * 1024 }));
   app.register(fastifyHelmet);
-  // app.use(bodyParser.json({ limit: "50mb" }));
   app.enableCors({
     credentials: false,
     maxAge: 86400,
@@ -56,13 +55,10 @@ async function bootstrap() {
     .build();
 
   const documents = SwaggerModule.createDocument(app, options);
-  SwaggerModule.createDocument;
-  if (process.env.NODE_ENV === "production") {
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = `/app/credentials.json`;
-  } else {
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = `credentials.json`;
+  if (process.env.NODE_ENV === "development") {
     build(documents);
   }
+  SwaggerModule.createDocument;
   SwaggerModule.setup("", app, documents);
   await app.listen(process.env.PORT || 3000);
 }
