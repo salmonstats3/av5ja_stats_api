@@ -1,25 +1,14 @@
 version: "3.9"
 
 services:
-  # app:
-  #   image: tkgling/salmon-stats-app:1.0.0
-  #   platform: linux/amd64
-  #   ports:
-  #     - $PORT:$PORT
-  #   container_name: salmon_stats_app
-  #   command: [sh, -c, yarn start:prod]
-
-  db:
-    image: postgres:15.2
-    container_name: salmon_stats_db
-    shm_size: 16gb
-    restart: always
-    volumes:
-      - ./postgresql/init:/docker-entrypoint-initdb.d
-      - ./postgresql/postgresql.conf:/etc/postgresql/postgresql.conf
-    environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
+  app:
+    image: tkgling/salmon-stats-app:latest
+    platform: linux/amd64
     ports:
-      - 5432:5432
+      - $PORT:$PORT
+    container_name: salmon_stats_app
+    command: [sh, -c, yarn start:prod]
+    environment:
+      DATABASE_URL: $DATABASE_URL
+    depends_on:
+      - db
