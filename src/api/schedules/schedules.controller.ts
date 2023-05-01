@@ -17,8 +17,8 @@ export class SchedulesController {
   @Version("2")
   @ApiTags("スケジュール")
   @ApiOperation({
-    description: "過去のスケジュールを一括で返します. 一時間に一回、データを更新します.",
-    operationId: "取得",
+    description: "イカリング3で配信されていたスケジュールを返します.",
+    operationId: "取得(SplatNet3)",
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: [CoopScheduleDataResponse] })
@@ -30,8 +30,8 @@ export class SchedulesController {
   @HttpCode(200)
   @ApiTags("スケジュール")
   @ApiOperation({
-    description: "スケジュールIDを返します.",
-    operationId: "ID取得",
+    description: "Salmon Stats+に登録されているスケジュールを返します.",
+    operationId: "取得(Salmon Stats+)",
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: [PartialType<Schedule>] })

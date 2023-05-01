@@ -1,7 +1,7 @@
 import { Controller, Get, HttpCode } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
-import { AppVersionResponse } from "../dto/authorize/app_version.dto";
+import { AppVersionResult } from "../dto/authorize/app_version.dto";
 
 import { AuthorizeService } from "./authorize.service";
 import { AuthorizeResponse } from "./autorize.response.dto";
@@ -31,8 +31,8 @@ export class AuthorizeController {
     operationId: "X-ProductVersion",
   })
   @ApiBadRequestResponse()
-  @ApiOkResponse({ type: AppVersionResponse })
-  async version(): Promise<AppVersionResponse> {
+  @ApiOkResponse({ type: AppVersionResult })
+  async version(): Promise<AppVersionResult> {
     return this.service.get_app_version();
   }
 }

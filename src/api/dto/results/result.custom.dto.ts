@@ -31,6 +31,11 @@ export enum ResultStatus {
   UNKNOWN = "UNKNOWN",
   PRIVATE = "PRIVATE",
 }
+
+/**
+ * リストア用のリクエスト
+ * @description 普段は使用しない
+ */
 export class CoopScheduleCustomRequest {
   @ApiProperty()
   @Expose()
