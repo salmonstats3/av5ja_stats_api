@@ -4,13 +4,13 @@ import json
 from concurrent import futures
 from array import array
 
-def upload(path, restore = False) -> int:
+def upload(path) -> int:
   with open(f"results/{path}.json", mode="r") as f:
     request = json.loads(f.read())
     print(f"Uploading {path}.json")
     headers = {"Content-Type": "application/json"}
     response = requests.post("http://localhost:8080/v3/results", data=json.dumps(request), headers=headers)
-    if not restore:
+    if response.status_code == 201:
       with open(f"status.log", mode="a") as w:
         w.write(f"{response.text},{path}\n")
     return response.status_code
@@ -25,6 +25,7 @@ def future():
       for file in subtract:
         executor.submit(upload, file)
         future_list.append(future)
+        break
       
 def restore():
   with open("status.log", mode="r+") as f:

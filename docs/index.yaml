@@ -54,11 +54,12 @@ paths:
                 $ref: '#/components/schemas/AnalyticsResponseDto'
       tags:
         - 分析
-  /v3/results:
+  /v1/results:
     get:
-      operationId: 取得
+      operationId: リザルト登録V2(Salmonia3+)
       summary: ''
-      description: リザルトを取得します
+      deprecated: false
+      description: 新API
       parameters:
         - name: offset
           required: false
@@ -80,21 +81,15 @@ paths:
             default: 25
             type: number
       responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedDto'
         '400':
           description: ''
       tags:
         - リザルト
+  /v3/results:
     post:
-      operationId: リザルト登録V2(Salmonia3+)
+      operationId: 登録(SplatNet3)
       summary: ''
-      deprecated: false
-      description: 新API
+      description: Salmonia3+形式のデータを最大同時に200件まで登録します。`results`のキーを指定して、JSONデータを配列で送信してください。
       parameters: []
       requestBody:
         required: true
@@ -178,7 +173,7 @@ paths:
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
-  version: 1.0.0
+  version: 3.0.0
   contact: {}
 tags: []
 servers: []
