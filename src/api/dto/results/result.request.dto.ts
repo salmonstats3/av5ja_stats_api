@@ -1,6 +1,5 @@
-import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
-import { Prisma } from "@prisma/client";
+import { Client, Prisma } from "@prisma/client";
 import { Expose, plainToClass, Transform, Type } from "class-transformer";
 import {
   ArrayMaxSize,
@@ -126,24 +125,11 @@ export class CoopResultIdRequest {
 
   @ApiProperty()
   @IsUUID()
-  @Transform((param) => param.value.toUpperCase())
+  @Transform((param) => param.value)
   readonly uuid: string;
 }
 
 export class CoopPlayerRequest {
-  @ApiProperty()
-  @Expose()
-  @IsDate()
-  @Transform((param) => {
-    const regexp = new RegExp("^([0-9]{8}T[0-9]{6}):");
-    if (!regexp.test(param.obj.id)) {
-      throw new BadRequestException("playTime must be given by the format of 'YYYYMMDD`T`THHmmss:");
-    }
-    const play_time: string = param.obj.id.match(regexp)[1];
-    return dayjs(play_time).toDate();
-  })
-  readonly playTime: Date;
-
   @ApiProperty()
   @Expose()
   @IsArray()
@@ -173,7 +159,7 @@ export class CoopPlayerRequest {
   @IsArray()
   @IsNotEmpty()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   @Type(() => Number)
   readonly specialCounts: number[];
 
@@ -217,7 +203,7 @@ export class CoopPlayerRequest {
   @IsArray()
   @IsNotEmpty()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   @Type(() => Number)
   readonly weaponList: number[];
 
@@ -271,6 +257,7 @@ export class CoopPlayerRequest {
   kumaPoint: number | null;
 
   static fromJSON(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     result: any,
     smellMeter: number | null = null,
     jobScore: number | null = null,
@@ -318,11 +305,10 @@ export class CoopPlayerRequest {
       nameId: this.nameId,
       nameplate: this.nameplate.background.id,
       nplnUserId: this.nplnUserId,
-      playTime: this.playTime,
       smellMeter: this.smellMeter,
       specialCounts: this.specialCounts,
       specialId: this.specialId,
-      species: this.species.toString(),
+      species: this.species,
       textColor: this.textColor,
       uniform: this.uniform,
       weaponList: this.weaponList,
@@ -331,10 +317,11 @@ export class CoopPlayerRequest {
 }
 
 export class CoopWaveRequest {
+  @ApiProperty({ name: "id" })
   @Expose({ name: "id" })
   @IsInt()
   @Min(1)
-  @Max(4)
+  @Max(5)
   waveId: number;
 
   @ApiProperty({ enum: EventType })
@@ -398,7 +385,7 @@ export class CoopResultRequest {
   @IsArray()
   @IsNotEmpty()
   @ArrayMinSize(0)
-  @ArrayMaxSize(4)
+  @ArrayMaxSize(5)
   @ValidateNested({ each: true })
   @Type(() => CoopWaveRequest)
   waveDetails: CoopWaveRequest[];
@@ -494,16 +481,7 @@ export class CoopResultRequest {
     const jobScore: number | null = param.obj.jobScore;
     const jobBonus: number | null = param.obj.jobBonus;
     const kumaPoint: number | null = param.obj.kumaPoint;
-    return CoopPlayerRequest.fromJSON(
-      param.value,
-      smellMeter,
-      jobScore,
-      jobRate,
-      jobBonus,
-      gradeId,
-      gradePoint,
-      kumaPoint,
-    );
+    return CoopPlayerRequest.fromJSON(param.value, smellMeter, jobScore, jobRate, jobBonus, gradeId, gradePoint, kumaPoint);
   })
   myResult: CoopPlayerRequest;
 
@@ -527,42 +505,63 @@ export class CoopResultRequest {
   @ArrayMaxSize(3)
   @ValidateNested({ each: true })
   @Type(() => CoopPlayerRequest)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Transform((param) => param.value.map((player: any) => CoopPlayerRequest.fromJSON(player)))
   otherResults: CoopPlayerRequest[];
 
+  /**
+   * 全てのWAVEのeventTypeが0なら夜なし
+   */
   get nightLess(): boolean {
     return this.waveDetails.every((wave) => wave.eventType === 0);
   }
 
+  /**
+   * メンバー一覧
+   */
   get members(): string[] {
-    return this.otherResults.concat(this.myResult).map((player) => player.nplnUserId);
+    return this.otherResults
+      .concat(this.myResult)
+      .map((player) => player.nplnUserId)
+      .sort();
   }
 
+  /**
+   * 有効なリザルトかどうかをチェック
+   */
   get isValid(): boolean {
-    // キケン度が0の場合は無効
-    if (this.dangerRate === 0) {
-      return false;
-    }
-
-    // いつものバイトでオカシラメーターがnullの場合は無効
-    if (this.smellMeter === null && this.schedule.mode === Mode.REGULAR) {
-      return false;
-    }
-
-    // スペシャルIDが全員nullの場合は無効
-    if (this.otherResults.concat(this.myResult).every((player) => player.specialId === null)) {
+    console.log(this);
+    const currentTime: Date = new Date();
+    /**
+     * 1. キケン度が0
+     * 2. いつものバイトでオカシラメーターがnull
+     * 3. 全てのプレイヤーのスペシャルIDがnull
+     * 4. 失敗WAVEが-1(回線落ち)
+     * 5. プレイ時間が現在時刻より未来
+     * 6. いつものバイトでプレイ時刻がスケジュールの範囲内でない
+     */
+    if (
+      this.dangerRate === 0 ||
+      (this.smellMeter === null && this.schedule.mode === Mode.REGULAR) ||
+      this.otherResults.concat(this.myResult).every((player) => player.specialId === null) ||
+      this.jobResult.failureWave === -1 ||
+      this.resultId.playTime >= currentTime ||
+      (this.schedule.mode === Mode.REGULAR &&
+        (this.schedule.startTime > this.resultId.playTime || this.schedule.endTime < this.resultId.playTime))
+    ) {
       return false;
     }
     return true;
   }
 
-  get query(): Prisma.ResultUpsertArgs {
+  query(version: string, client: Client): Prisma.ResultUpsertArgs {
     return {
       create: {
         bossCounts: this.bossCounts,
         bossId: this.jobResult.bossId,
         bossKillCounts: this.bossKillCounts,
         bronze: this.scale[0],
+        createdBy: client,
         dangerRate: this.dangerRate,
         failureWave: this.jobResult.failureWave,
         gold: this.scale[2],
@@ -579,12 +578,13 @@ export class CoopResultRequest {
             data: this.otherResults.concat(this.myResult).map((player) => player.query),
           },
         },
+        resultId: this.resultId.uuid,
         scenarioCode: this.scenarioCode,
         schedule: {
           connectOrCreate: this.schedule.query,
         },
         silver: this.scale[1],
-        uuid: this.resultId.uuid,
+        version: version,
         waves: {
           createMany: {
             data: this.waveDetails.map((wave) => wave.query),
@@ -592,33 +592,44 @@ export class CoopResultRequest {
         },
       },
       update: {
-        // players: {
-        //   update: {
-        //     data: {
-        //       bossKillCounts: this.myResult.bossKillCounts,
-        //       gradeId: this.myResult.gradeId,
-        //       gradePoint: this.myResult.gradePoint,
-        //       jobBonus: this.myResult.jobBonus,
-        //       jobRate: this.myResult.jobRate,
-        //       jobScore: this.myResult.jobScore,
-        //       kumaPoint: this.myResult.kumaPoint,
-        //       smellMeter: this.myResult.smellMeter,
-        //     },
-        //     where: {
-        //       nplnUserId_playTime: {
-        //         nplnUserId: this.myResult.nplnUserId,
-        //         playTime: this.myResult.playTime,
-        //       },
-        //     },
-        //   },
-        // },
+        players: {
+          update: {
+            data: {
+              bossKillCounts: this.myResult.bossKillCounts,
+              gradeId: this.myResult.gradeId,
+              gradePoint: this.myResult.gradePoint,
+              jobBonus: this.myResult.jobBonus,
+              jobRate: this.myResult.jobRate,
+              jobScore: this.myResult.jobScore,
+              kumaPoint: this.myResult.kumaPoint,
+              smellMeter: this.myResult.smellMeter,
+            },
+            where: {
+              nplnUserId_playTime: {
+                nplnUserId: this.myResult.nplnUserId,
+                playTime: this.resultId.playTime,
+              },
+            },
+          },
+        },
       },
       where: {
-        playTime_uuid: {
+        playTime_resultId: {
           playTime: this.resultId.playTime,
-          uuid: this.resultId.uuid,
+          resultId: this.resultId.uuid,
         },
       },
     };
   }
+}
+
+export class CoopResultManyRequest {
+  @ApiProperty()
+  @IsArray()
+  @IsNotEmpty()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(200)
+  @ValidateNested({ each: true })
+  @Type(() => CoopResultRequest)
+  results: CoopResultRequest[];
 }

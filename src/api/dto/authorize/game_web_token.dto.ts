@@ -72,8 +72,7 @@ export class GameWebTokenRequest {
   naIdToken: string;
 
   @ApiProperty({
-    example:
-      "9e4e5b2e13f46e399adb5f390fd95b2b78de7e3d7e886633f8d16c479382d5e5d44caca68bc19351fe1d0b69c7",
+    example: "9e4e5b2e13f46e399adb5f390fd95b2b78de7e3d7e886633f8d16c479382d5e5d44caca68bc19351fe1d0b69c7",
   })
   @Expose()
   @IsNotEmpty()
