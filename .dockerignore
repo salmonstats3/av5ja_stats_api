@@ -1,0 +1,15 @@
+.git
+.venv
+.vscode
+dist
+docs
+postgresql
+results
+node_modules
+README.md
+.gitignore
+credentials.json
+main.py
+\*.code-workspace
+status.log
+Procfile
