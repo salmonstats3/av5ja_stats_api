@@ -530,7 +530,6 @@ export class CoopResultRequest {
    * 有効なリザルトかどうかをチェック
    */
   get isValid(): boolean {
-    console.log(this);
     const currentTime: Date = new Date();
     /**
      * 1. キケン度が0
