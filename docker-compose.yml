@@ -2,11 +2,13 @@ version: "3.9"
 
 services:
   app:
-    image: tkgling/salmon-stats-app:3.0.1
+    image: postgres:15.2
     platform: linux/amd64
     ports:
-      - $PORT:$PORT
-    container_name: salmon_stats_app
-    command: [sh, -c, yarn start:prod]
+      - 5432:5432
+    container_name: salmon_stats_db
     environment:
       DATABASE_URL: $DATABASE_URL
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_USER: $POSTGRES_USER
