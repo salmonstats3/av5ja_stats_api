@@ -157,6 +157,31 @@ paths:
           description: ''
       tags:
         - リザルト
+  /v3/results/restore:
+    post:
+      operationId: 登録(V3)
+      summary: ''
+      description: Salmonia3+のリザルト登録
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginatedDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: ''
+      tags:
+        - リザルト
   /v1/schedules:
     get:
       operationId: 取得(SplatNet3)V2
@@ -248,7 +273,7 @@ paths:
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
-  version: 3.0.0
+  version: 3.0.3
   contact: {}
 tags: []
 servers: []
