@@ -9,11 +9,11 @@ def upload(path) -> int:
     request = json.loads(f.read())
     print(f"Uploading {path}.json")
     headers = {"Content-Type": "application/json"}
-    response = requests.post("http://localhost:8080/v3/results/restore", data=json.dumps(request), headers=headers)
-    if response.status_code == 201:
-      with open(f"status.log", mode="a") as w:
-        w.write(f"{response.text},{path}\n")
-    return response.status_code
+    response = requests.post("http://localhost:3000/v3/results/restore", data=json.dumps(request), headers=headers)
+    status_code: int = response.status_code
+    # with open(f"status.log", mode="a") as w:
+    #   w.write(f"{status_code},{response.text},{path}\n")
+    return status_code
 
 def future():
   future_list = []
@@ -21,7 +21,7 @@ def future():
   with open("status.log", mode="r") as f:
     lines: set[int] = set(map(lambda x: int(x), filter(lambda x: x!= "", map(lambda x: x.split(",")[-1], f.read().split("\n")))))
     subtract = sorted(list(files - lines))
-    with futures.ThreadPoolExecutor(max_workers=5) as executor:
+    with futures.ThreadPoolExecutor(max_workers=3) as executor:
       for file in subtract:
         executor.submit(upload, file)
         future_list.append(future)
@@ -36,7 +36,7 @@ def restore():
 
 def download():
   limit: int = 5000
-  for offset in range(0, 2060000, limit):
+  for offset in range(2646000, 2060000, limit):
     requestURL = f"http://localhost:8080/v1/results?offset={offset}&limit={limit}"
     response = requests.get(requestURL)
     with open(f"results/{offset}.json", mode="w") as f:

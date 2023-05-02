@@ -39,7 +39,7 @@ export class ResultsService {
    */
   async create(request: PaginatedDto<Result>): Promise<string> {
     const results: CoopResultCustomRequest[] = request.results.map((result) => plainToInstance(CoopResultCustomRequest, result));
-
+    // 修正する
     results.forEach((result) => {
       result.fix();
     });
@@ -47,10 +47,30 @@ export class ResultsService {
       const length: number = results.filter((result) => result.status === status).length;
       return `${status},${("0000" + length).slice(-4)}`;
     });
+    // クエリ作成
     const queries: Prisma.ResultUpsertArgs[] = results.filter((result) => result.isValid).map((result) => result.query);
-
-    await Promise.allSettled(queries.map((query) => this.prisma.result.upsert(query)));
+    await this.write(queries);
     return status.join();
+  }
+
+  private async write(queries: Prisma.ResultUpsertArgs[]): Promise<Prisma.ResultUpsertArgs[]> {
+    if (queries.length === 0) {
+      return;
+    }
+    // 成功したものを取得する
+    const success: any[] = (await Promise.allSettled(queries.map((query) => this.prisma.result.upsert(query))))
+      .filter((result) => result.status === "fulfilled")
+      // @ts-ignore
+      .map((result) => `${result.value.resultId.toLowerCase()}:${result.value.playTime.toISOString()}`);
+    // 失敗したものを抽出する
+    // @ts-ignore
+    const failure: Prisma.ResultUpsertArgs[] = queries.filter(
+      // @ts-ignore
+      (query) => !success.includes(`${query.create.resultId.toLowerCase()}:${query.create.playTime.toISOString()}`),
+    );
+
+    console.log(success.length, failure.length);
+    return await this.write(failure);
   }
 
   /**
@@ -82,6 +102,11 @@ export class ResultsService {
       plainToInstance(CustomResult, result, { excludeExtraneousValues: true }),
     );
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function chunked<T extends any[]>(arr: T, size: number): T[] {
+  return arr.reduce((newarr, _, i) => (i % size ? newarr : [...newarr, arr.slice(i, i + size)]), [] as T[][]);
 }
 
 export class CustomResult {

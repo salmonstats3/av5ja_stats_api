@@ -70,17 +70,17 @@ export class ResultsController {
     return this.service.upsertMany(body, headers.version, headers.client);
   }
 
-  // @Post("restore")
-  // @Version("3")
-  // @HttpCode(201)
-  // @ApiTags("リザルト")
-  // @ApiOperation({
-  //   description: "Salmonia3+のリザルト登録",
-  //   operationId: "登録(V3)",
-  // })
-  // @ApiBadRequestResponse()
-  // @ApiOkResponse({ type: [Object] })
-  // restore(@Body() body: PaginatedDto<Result>): Promise<string> {
-  //   return this.service.create(body);
-  // }
+  @Post("restore")
+  @Version("3")
+  @HttpCode(201)
+  @ApiTags("リザルト")
+  @ApiOperation({
+    description: "Salmonia3+のリザルト登録",
+    operationId: "登録(V3)",
+  })
+  @ApiBadRequestResponse()
+  @ApiOkResponse({ type: [Object] })
+  restore(@Body() body: PaginatedDto<Result>): Promise<string> {
+    return this.service.create(body);
+  }
 }
