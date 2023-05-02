@@ -40,11 +40,11 @@ export class CoopScheduleRequest {
   get query(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
     return {
       create: {
-        endTime: this.endTime,
+        endTime: this.endTime ?? undefined,
         mode: this.mode,
         rule: this.rule,
         stageId: this.stageId,
-        startTime: this.startTime,
+        startTime: this.startTime ?? undefined,
         weaponList: this.weaponList,
       },
       where: {
