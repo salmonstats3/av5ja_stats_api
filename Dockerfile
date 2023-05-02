@@ -10,6 +10,7 @@ COPY --chown=node:node ./tsconfig.build.json ./
 COPY --chown=node:node .nvmrc ./
 RUN yarn install --prod --frozen-lockfile
 RUN yarn prisma generate
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 RUN yarn build
 COPY --chown=node:node . .
 USER node
