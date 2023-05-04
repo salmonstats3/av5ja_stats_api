@@ -21,7 +21,7 @@ export class AnalyticsService {
 
   async getAnalytics(scheduleId: string): Promise<any> {
     const analytics = await this.cacheManager.get(`analytics:${scheduleId}`);
-    const ttl: number = dayjs().ceil("minute", 30).diff(dayjs(), "second") - 60;
+    const ttl: number = dayjs().ceil(30).diff(dayjs(), "second") - 60;
     if (analytics !== undefined) {
       return analytics;
     }
