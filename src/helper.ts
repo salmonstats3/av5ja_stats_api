@@ -2,15 +2,15 @@ import inst, { PluginFunc, UnitType } from "dayjs";
 
 declare module "dayjs" {
   interface Dayjs {
-    ceil(unit: UnitType, amount: number): inst.Dayjs;
+    ceil(amount: number): inst.Dayjs;
   }
 }
 
 export const ceil: PluginFunc = (option, dayjsClass) => {
-  dayjsClass.prototype.ceil = function (unit, amount) {
-    if (this.get(unit) % amount === 0) {
-      return this.startOf(unit);
+  dayjsClass.prototype.ceil = function (amount) {
+    if (this.get("minute") % amount === 0) {
+      return this.startOf("minute");
     }
-    return this.add(amount - (this.get(unit) % amount), unit).startOf(unit);
+    return this.add(amount - (this.get("minute") % amount), "minute").startOf("minute");
   };
 };

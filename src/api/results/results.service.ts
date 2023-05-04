@@ -19,27 +19,9 @@ export class ResultsService {
    * @param request
    * @returns
    */
-  async fetch(request: PaginatedRequestDto): Promise<PaginatedDto<Partial<Result>>> {
-    const results: Partial<Result>[] = await this.prisma.result.findMany({
-      select: {
-        resultId: true,
-        playTime: true,
-        bossCounts: true,
-        bossKillCounts: true,
-        ikuraNum: true,
-        goldenIkuraNum: true,
-        goldenIkuraAssistNum: true,
-        nightLess: true,
-        dangerRate: true,
-        members: true,
-        bronze: true,
-        silver: true,
-        gold: true,
-        isClear: true,
-        failureWave: true,
-        isBossDefeated: true,
-        bossId: true,
-        scenarioCode: true,
+  async fetch(request: PaginatedRequestDto): Promise<PaginatedDto<Result>> {
+    const results: Result[] = await this.prisma.result.findMany({
+      include: {
         players: true,
         schedule: true,
         waves: true,
@@ -47,7 +29,7 @@ export class ResultsService {
       skip: request.offset,
       take: request.limit,
     });
-    return new PaginatedDto<Partial<Result>>(request.limit, request.offset, 0, results);
+    return new PaginatedDto<Result>(request.limit, request.offset, 0, results);
   }
 
   /**
@@ -94,7 +76,6 @@ export class ResultsService {
     if (failure.length === queries.length || failure.length === 0 || retry > 5) {
       return;
     }
-    return await this.write(failure, retry + 1);
   }
 
   /**
