@@ -76,7 +76,7 @@ paths:
           description: 上限値
           schema:
             minimum: 0
-            maximum: 200
+            maximum: 1000
             title: limit
             default: 25
             type: number
@@ -261,7 +261,7 @@ paths:
           description: 上限値
           schema:
             minimum: 0
-            maximum: 200
+            maximum: 1000
             title: limit
             default: 25
             type: number

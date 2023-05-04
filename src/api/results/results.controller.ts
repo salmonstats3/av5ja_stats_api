@@ -22,7 +22,7 @@ export class ResultsController {
     operationId: "リザルト登録V2(Salmonia3+)",
   })
   @ApiBadRequestResponse()
-  fetch(@Query() request: PaginatedRequestDto): Promise<PaginatedDto<Result>> {
+  fetch(@Query() request: PaginatedRequestDto): Promise<PaginatedDto<Partial<Result>>> {
     return this.service.fetch(request);
   }
 
