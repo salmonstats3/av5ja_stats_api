@@ -7,6 +7,8 @@ services:
     ports:
       - 5432:5432
     container_name: salmon_stats_db
+    volumes:
+      - ./postgresql/init:/docker-entrypoint-initdb.d
     environment:
       DATABASE_URL: $DATABASE_URL
       POSTGRES_DB: $POSTGRES_DB

@@ -27,11 +27,11 @@ export class PaginatedRequestDto {
   @Transform((params) => parseInt(params.value || 25, 10))
   @IsInt()
   @Min(1)
-  @Max(200)
+  @Max(1000)
   @ApiPropertyOptional({
     default: 25,
     description: "上限値",
-    maximum: 200,
+    maximum: 1000,
     minimum: 0,
     title: "limit",
   })
