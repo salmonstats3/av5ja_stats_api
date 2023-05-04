@@ -49,11 +49,11 @@ export class CoopScheduleRequest {
       },
       where: {
         unique: {
-          endTime: this.endTime ?? undefined,
+          endTime: this.endTime ?? dayjs("1970-01-01T00:00:00.000Z").toDate(),
           mode: this.mode,
           rule: this.rule,
           stageId: this.stageId,
-          startTime: this.startTime ?? undefined,
+          startTime: this.startTime ?? dayjs("1970-01-01T00:00:00.000Z").toDate(),
           weaponList: this.weaponList,
         },
       },

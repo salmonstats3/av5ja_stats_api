@@ -11,8 +11,8 @@ def upload(path) -> int:
     headers = {"Content-Type": "application/json"}
     response = requests.post("http://localhost:3000/v3/results/restore", data=json.dumps(request), headers=headers)
     status_code: int = response.status_code
-    # with open(f"status.log", mode="a") as w:
-    #   w.write(f"{status_code},{response.text},{path}\n")
+    with open(f"status.log", mode="a") as w:
+      w.write(f"{status_code},{response.text},{path}\n")
     return status_code
 
 def future():
@@ -35,15 +35,15 @@ def restore():
         line = f"{status_code},{substr[1]}\n"
 
 def download():
-  limit: int = 5000
-  for offset in range(2646000, 2060000, limit):
-    requestURL = f"http://localhost:8080/v1/results?offset={offset}&limit={limit}"
+  limit: int = 1000
+  for offset in range(2676000, 2700000, limit):
+    requestURL = f"http://localhost:3000/v3/results?offset={offset}&limit={limit}"
     response = requests.get(requestURL)
     with open(f"results/{offset}.json", mode="w") as f:
-      print(f"Downloading {offset} -> {offset + 5000}")
+      print(f"Downloading {offset} -> {offset + 1000}")
       f.write(response.text)
 
 if __name__=="__main__":
-  # download()
-  future()
+  download()
+  # future()
   # restore()

@@ -3,6 +3,10 @@ import { HttpService } from "@nestjs/axios";
 import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
 import { Cache } from "cache-manager";
 import { PrismaService } from "src/prisma.service";
+import dayjs from "dayjs";
+import { ceil } from "src/helper";
+
+dayjs.extend(ceil);
 
 @Injectable()
 export class AnalyticsService {
@@ -15,7 +19,29 @@ export class AnalyticsService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
-  async getGradePoint(scheduleId: string): Promise<any> {
+  async getAnalytics(scheduleId: string): Promise<any> {
+    const analytics = await this.cacheManager.get(`analytics:${scheduleId}`);
+    const ttl: number = dayjs().ceil("minute", 30).diff(dayjs(), "second") - 60;
+    if (analytics !== undefined) {
+      return analytics;
+    }
+    const results: any[] = await Promise.all([
+      this.getGradePoint(scheduleId),
+      this.getIkuraNum(scheduleId),
+      this.getTimeline(scheduleId),
+      this.getWaves(scheduleId),
+    ]);
+    const response = {
+      golden_ikura_num: results[1],
+      grade_point: results[0],
+      status: results[2],
+      waves: [0, 1, 2, 3, 4, 5, 6, 7, 8].map((eventType: number) => results[3].filter((result: any) => result.event_type === eventType)),
+    };
+    this.cacheManager.set(`analytics:${scheduleId}`, response, { ttl: ttl });
+    return response;
+  }
+
+  private async getGradePoint(scheduleId: string): Promise<any> {
     return this.prisma.$queryRaw`
       WITH players AS (
         SELECT
@@ -42,7 +68,7 @@ export class AnalyticsService {
     `;
   }
 
-  async getWaves(scheduleId: string): Promise<any> {
+  private async getWaves(scheduleId: string): Promise<any> {
     return this.prisma.$queryRaw`
       SELECT
       water_level,
@@ -65,7 +91,7 @@ export class AnalyticsService {
       `;
   }
 
-  async getIkuraNum(scheduleId: string): Promise<any> {
+  private async getIkuraNum(scheduleId: string): Promise<any> {
     return this.prisma.$queryRaw`
       WITH results AS (
         SELECT
@@ -95,28 +121,7 @@ export class AnalyticsService {
     `;
   }
 
-  async getAnalytics(scheduleId: string): Promise<any> {
-    const analytics = await this.cacheManager.get(`analytics:${scheduleId}`);
-    if (analytics !== undefined) {
-      return analytics;
-    }
-    const results: any[] = await Promise.all([
-      this.getGradePoint(scheduleId),
-      this.getIkuraNum(scheduleId),
-      this.getTimeline(scheduleId),
-      this.getWaves(scheduleId),
-    ]);
-    const response = {
-      golden_ikura_num: results[1],
-      grade_point: results[0],
-      status: results[2],
-      waves: [0, 1, 2, 3, 4, 5, 6, 7, 8].map((eventType: number) => results[3].filter((result: any) => result.event_type === eventType)),
-    };
-    this.cacheManager.set(`analytics:${scheduleId}`, response, { ttl: 60 * 60 * 1 });
-    return response;
-  }
-
-  async getTimeline(scheduleId: string): Promise<any> {
+  private async getTimeline(scheduleId: string): Promise<any> {
     return this.prisma.$queryRaw`
       SELECT
       DATE_TRUNC('HOUR', play_time) + CAST(EXTRACT(MINUTE FROM play_time)::INT / 30 * 30 || ' MINUTES' AS INTERVAL) AS play_time,

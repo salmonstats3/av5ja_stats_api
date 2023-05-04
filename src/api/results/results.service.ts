@@ -19,9 +19,27 @@ export class ResultsService {
    * @param request
    * @returns
    */
-  async fetch(request: PaginatedRequestDto): Promise<PaginatedDto<Result>> {
-    const results: Result[] = await this.prisma.result.findMany({
-      include: {
+  async fetch(request: PaginatedRequestDto): Promise<PaginatedDto<Partial<Result>>> {
+    const results: Partial<Result>[] = await this.prisma.result.findMany({
+      select: {
+        resultId: true,
+        playTime: true,
+        bossCounts: true,
+        bossKillCounts: true,
+        ikuraNum: true,
+        goldenIkuraNum: true,
+        goldenIkuraAssistNum: true,
+        nightLess: true,
+        dangerRate: true,
+        members: true,
+        bronze: true,
+        silver: true,
+        gold: true,
+        isClear: true,
+        failureWave: true,
+        isBossDefeated: true,
+        bossId: true,
+        scenarioCode: true,
         players: true,
         schedule: true,
         waves: true,
@@ -29,7 +47,7 @@ export class ResultsService {
       skip: request.offset,
       take: request.limit,
     });
-    return new PaginatedDto<Result>(request.limit, request.offset, 0, results);
+    return new PaginatedDto<Partial<Result>>(request.limit, request.offset, 0, results);
   }
 
   /**
@@ -53,10 +71,13 @@ export class ResultsService {
     return status.join();
   }
 
-  private async write(queries: Prisma.ResultUpsertArgs[]): Promise<Prisma.ResultUpsertArgs[]> {
-    if (queries.length === 0) {
-      return;
-    }
+  /**
+   * リザルトを正常に書き込めるまで繰り返す
+   * @param queries クエリ
+   * @param retry リトライ回数
+   * @returns
+   */
+  private async write(queries: Prisma.ResultUpsertArgs[], retry: number = 0): Promise<Prisma.ResultUpsertArgs[]> {
     // 成功したものを取得する
     const success: any[] = (await Promise.allSettled(queries.map((query) => this.prisma.result.upsert(query))))
       .filter((result) => result.status === "fulfilled")
@@ -68,9 +89,12 @@ export class ResultsService {
       // @ts-ignore
       (query) => !success.includes(`${query.create.resultId.toLowerCase()}:${query.create.playTime.toISOString()}`),
     );
-
     console.log(success.length, failure.length);
-    return await this.write(failure);
+    // 失敗件数が0または一件も書き込めていなかったら終了
+    if (failure.length === queries.length || failure.length === 0 || retry > 5) {
+      return;
+    }
+    return await this.write(failure, retry + 1);
   }
 
   /**
