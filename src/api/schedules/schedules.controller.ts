@@ -1,11 +1,12 @@
-import { Controller, Get, HttpCode, Version } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags, PartialType } from "@nestjs/swagger";
+import { Controller, Get, HttpCode, Param, Query, ValidationPipe, Version } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiTags, PartialType } from "@nestjs/swagger";
 import { Schedule } from "@prisma/client";
 
 import { PaginatedDto } from "../dto/pagination.dto";
 import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
 
 import { SchedulesService } from "./schedules.service";
+import { CoopScheduleRequestQuery } from "../dto/schedules/schedule.request.dto";
 
 @Controller("schedules")
 @ApiExtraModels(PaginatedDto)
@@ -50,7 +51,7 @@ export class SchedulesController {
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: [PartialType<Schedule>] })
-  findManyV3(): Promise<Partial<Schedule>[]> {
-    return this.service.get_schedule_ids();
+  findManyV3(@Query() param: CoopScheduleRequestQuery): Promise<Partial<Schedule>[]> {
+    return this.service.get_schedule_ids(param);
   }
 }

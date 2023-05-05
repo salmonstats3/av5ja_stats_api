@@ -7,6 +7,19 @@ import dayjs from "dayjs";
 import { Mode } from "../enum/mode";
 import { Rule } from "../enum/rule";
 
+export class CoopScheduleRequestQuery {
+  @ApiProperty()
+  @IsOptional()
+  @IsEnum(Mode)
+  @Transform((param) => (param.value === null ? null : param.value))
+  mode: Mode | null;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsEnum(Rule)
+  rule: Rule | null;
+}
+
 export class CoopScheduleRequest {
   @ApiProperty()
   stageId: number;
