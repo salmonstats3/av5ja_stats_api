@@ -5,6 +5,8 @@ import { Cache } from "cache-manager";
 import { PrismaService } from "src/prisma.service";
 import dayjs from "dayjs";
 import { ceil } from "src/helper";
+import { Prisma } from "@prisma/client";
+import { Sql } from "@prisma/client/runtime";
 
 dayjs.extend(ceil);
 
@@ -25,105 +27,142 @@ export class AnalyticsService {
     if (analytics !== undefined) {
       return analytics;
     }
+
     const results: any[] = await Promise.all([
-      this.getGradePoint(scheduleId),
-      this.getIkuraNum(scheduleId),
-      this.getTimeline(scheduleId),
-      this.getWaves(scheduleId),
+      this.prisma.$queryRaw(this.getGradePointQuery(scheduleId)),
+      this.prisma.$queryRaw(this.getIkuraNumQuery(scheduleId)),
+      this.prisma.$queryRaw(this.getIkuraDistQuery(scheduleId)),
+      this.prisma.$queryRaw(this.getTimelineQuery(scheduleId)),
+      this.prisma.$queryRaw(this.getWavesQuery(scheduleId)),
     ]);
     const response = {
-      golden_ikura_num: results[1],
       grade_point: results[0],
-      status: results[2],
-      waves: [0, 1, 2, 3, 4, 5, 6, 7, 8].map((eventType: number) => results[3].filter((result: any) => result.event_type === eventType)),
+      golden_ikura_num: results[1],
+      distribution: results[2][0],
+      status: results[3],
+      waves: [0, 1, 2, 3, 4, 5, 6, 7, 8].map((eventType: number) => results[4].filter((result: any) => result.event_type === eventType)),
     };
     this.cacheManager.set(`analytics:${scheduleId}`, response, { ttl: ttl });
     return response;
   }
 
-  private async getGradePoint(scheduleId: string): Promise<any> {
-    return this.prisma.$queryRaw`
-      WITH players AS (
-        SELECT
-        npln_user_id,
-        MAX(grade_point) AS grade_point
-        FROM
-        players
-        WHERE
-        schedule_id = ${scheduleId}
-        AND
-        grade_point IS NOT NULL
-        GROUP BY
-        npln_user_id
-      )
+  private getIkuraDistQuery(scheduleId: string): Sql {
+    return Prisma.sql`
+    SELECT
+	  AVG(golden_ikura_num)::NUMERIC(8, 3) AS golden_ikura_num_avg,
+	  STDDEV(golden_ikura_num)::NUMERIC(8, 3) AS golden_ikura_num_std,
+	  AVG(ikura_num)::NUMERIC(8, 3) AS ikura_num_avg,
+	  STDDEV(ikura_num)::NUMERIC(8, 3) AS ikura_num_std
+	  FROM
+    (
       SELECT
-      (CASE grade_point WHEN 999 THEN 999 ELSE grade_point / 200 * 200 END) AS grade_point,
-      COUNT(*)::INT
+      npln_user_id,
+      MAX(results.golden_ikura_num) AS golden_ikura_num,
+      MAX(results.ikura_num) AS ikura_num,
+      MAX(grade_point) AS grade_point
       FROM
       players
+      INNER JOIN
+      results
+      ON
+      players.id = results.id
+      AND
+      results.schedule_id = ${scheduleId}
       GROUP BY
-      (CASE grade_point WHEN 999 THEN 999 ELSE grade_point / 200 * 200 END)
-      ORDER BY
-      grade_point
+      npln_user_id
+    ) AS players
     `;
   }
 
-  private async getWaves(scheduleId: string): Promise<any> {
-    return this.prisma.$queryRaw`
+  private getIkuraNumQuery(scheduleId: string): Sql {
+    return Prisma.sql`
+    SELECT
+    golden_ikura_num / 5 * 5 AS golden_ikura_num,
+    COUNT(*)::INT
+    FROM
+    (
+      SELECT
+      npln_user_id,
+      MAX(results.golden_ikura_num) AS golden_ikura_num,
+      MAX(results.ikura_num) AS ikura_num,
+      MAX(grade_point) AS grade_point
+      FROM
+      players
+      INNER JOIN
+      results
+      ON
+      players.id = results.id
+      AND
+      results.schedule_id = ${scheduleId}
+      GROUP BY
+      npln_user_id
+    ) AS players
+    GROUP BY
+    golden_ikura_num / 5 * 5
+    ORDER BY
+    golden_ikura_num
+      `;
+  }
+
+  private getWavesQuery(scheduleId: string): Sql {
+    return Prisma.sql`
       SELECT
       water_level,
       event_type,
       COUNT(*)::INT AS occurrence,
-      COALESCE(COUNT(waves.is_clear = true OR null)::INT) AS is_clear
+      COALESCE(COUNT(waves.is_clear = true OR null)::INT) AS is_clear,
+      MAX(waves.golden_ikura_num) AS golden_ikura_num
       FROM
       waves
       INNER JOIN
       results
       ON
       results.id = waves.id
-      WHERE
-      schedule_id = ${scheduleId}
       AND
       waves.golden_ikura_num IS NOT NULL
+      AND  
+      schedule_id = ${scheduleId}
       GROUP BY
       water_level,
       event_type
       `;
   }
 
-  private async getIkuraNum(scheduleId: string): Promise<any> {
-    return this.prisma.$queryRaw`
-      WITH results AS (
+  private getGradePointQuery(scheduleId: string): Sql {
+    return Prisma.sql`
+      SELECT
+      (CASE grade_point WHEN 999 THEN 999 ELSE grade_point / 200 * 200 END) AS grade_point,
+      COUNT(*)::INT
+      FROM
+      (
         SELECT
         npln_user_id,
         MAX(results.golden_ikura_num) AS golden_ikura_num,
-        MAX(results.ikura_num) AS ikura_num
+        MAX(results.ikura_num) AS ikura_num,
+        MAX(grade_point) AS grade_point
         FROM
-        results
-        INNER JOIN
         players
+        INNER JOIN
+        results
         ON
         players.id = results.id
-        WHERE
+        AND
         results.schedule_id = ${scheduleId}
+        AND
+        grade_point IS NOT NULL
         GROUP BY
         npln_user_id
-    )
-    SELECT
-    golden_ikura_num / 5 * 5 AS golden_ikura_num,
-    COUNT(*)::INT
-    FROM
-    results
-    GROUP BY
-    golden_ikura_num / 5 * 5
-    ORDER BY
-    golden_ikura_num
-    `;
+      ) AS players
+      GROUP BY
+      (CASE grade_point WHEN 999 THEN 999 ELSE grade_point / 200 * 200 END)
+      ORDER BY
+      grade_point
+      `;
   }
 
-  private async getTimeline(scheduleId: string): Promise<any> {
-    return this.prisma.$queryRaw`
-      SELECT
+  private getTimelineQuery(scheduleId: string): Sql {
+    return Prisma.sql`
+    SELECT
       DATE_TRUNC('HOUR', play_time) + CAST(EXTRACT(MINUTE FROM play_time)::INT / 30 * 30 || ' MINUTES' AS INTERVAL) AS play_time,
       AVG(danger_rate * 100 * 5 - 800)::DECIMAL(6, 3) AS grade_point,
       MAX(golden_ikura_num) AS max_golden_ikura_num,

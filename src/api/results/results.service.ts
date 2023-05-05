@@ -20,6 +20,7 @@ export class ResultsService {
    * @returns
    */
   async fetch(request: PaginatedRequestDto): Promise<PaginatedDto<Result>> {
+    console.log("Downloading...");
     const results: Result[] = await this.prisma.result.findMany({
       include: {
         players: true,

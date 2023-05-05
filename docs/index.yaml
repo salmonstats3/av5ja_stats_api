@@ -226,7 +226,17 @@ paths:
       operationId: 取得(Salmon Stats+)
       summary: ''
       description: Salmon Stats+に登録されているスケジュールを返します.
-      parameters: []
+      parameters:
+        - name: mode
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: rule
+          required: true
+          in: query
+          schema:
+            type: string
       responses:
         '200':
           description: ''

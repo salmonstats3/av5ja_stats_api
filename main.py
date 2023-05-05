@@ -36,11 +36,12 @@ def restore():
 
 def download():
   limit: int = 1000
-  for offset in range(2676000, 2700000, limit):
+  for offset in range(2679000, 2700000, limit):
     requestURL = f"http://localhost:3000/v3/results?offset={offset}&limit={limit}"
+    print(f"Downloading... {offset} -> {offset + 1000}")
     response = requests.get(requestURL)
+    print(f"Done {offset} -> {offset + 1000}")
     with open(f"results/{offset}.json", mode="w") as f:
-      print(f"Downloading {offset} -> {offset + 1000}")
       f.write(response.text)
 
 if __name__=="__main__":

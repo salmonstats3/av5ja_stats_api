@@ -11,6 +11,7 @@ import { PrismaService } from "src/prisma.service";
 import { Setting } from "../dto/enum/setting";
 import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
 import { firebaseConfig } from "../firebase.config";
+import { CoopScheduleRequestQuery } from "../dto/schedules/schedule.request.dto";
 
 @Injectable()
 export class SchedulesService {
@@ -47,7 +48,7 @@ export class SchedulesService {
   /**
    * スケジュールID一覧を返す
    */
-  async get_schedule_ids(): Promise<Partial<Schedule>[]> {
+  async get_schedule_ids(param: CoopScheduleRequestQuery): Promise<Partial<Schedule>[]> {
     return this.prisma.schedule.findMany({
       orderBy: {
         startTime: "asc",
@@ -62,10 +63,10 @@ export class SchedulesService {
       },
       where: {
         mode: {
-          in: ["REGULAR", "LIMITED"],
+          equals: param.mode ?? undefined,
         },
         rule: {
-          in: ["REGULAR", "BIG_RUN", "TEAM_CONTEST"],
+          equals: param.rule ?? undefined,
         },
       },
     });
