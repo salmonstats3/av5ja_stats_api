@@ -20,7 +20,7 @@
     "prebuild": "rimraf dist",
     "reset": "yarn prisma migrate reset --force",
     "start:dev": "nest start --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "dotenv -e env.prod node dist/main",
     "start:stg": "dotenv -e .env.stg nest start --watch",
     "test": "jest",
     "test:cov": "jest --coverage",
