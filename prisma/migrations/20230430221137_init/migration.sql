@@ -192,7 +192,7 @@ CREATE INDEX "waves_golden_ikura_num_idx" ON "waves"("golden_ikura_num");
 ALTER TABLE "results" ADD CONSTRAINT "results_schedule_id_fkey" FOREIGN KEY ("schedule_id") REFERENCES "schedules"("schedule_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "players" ADD CONSTRAINT "players_id_schedule_id_play_time_fkey" FOREIGN KEY ("id", "scheduleId", "play_time") REFERENCES "results"("id", "schedule_id", "play_time") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "players" ADD CONSTRAINT "players_id_schedule_id_play_time_fkey" FOREIGN KEY ("id", "schedule_id", "play_time") REFERENCES "results"("id", "schedule_id", "play_time") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "waves" ADD CONSTRAINT "waves_id_fkey" FOREIGN KEY ("id") REFERENCES "results"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
