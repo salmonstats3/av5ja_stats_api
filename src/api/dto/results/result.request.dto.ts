@@ -577,7 +577,7 @@ export class CoopResultRequest {
             data: this.otherResults.concat(this.myResult).map((player) => player.query),
           },
         },
-        resultId: this.resultId.uuid,
+        id: this.resultId.uuid,
         scenarioCode: this.scenarioCode,
         schedule: {
           connectOrCreate: this.schedule.query,
@@ -613,9 +613,9 @@ export class CoopResultRequest {
         },
       },
       where: {
-        playTime_resultId: {
+        id_playTime: {
+          id: this.resultId.uuid,
           playTime: this.resultId.playTime,
-          resultId: this.resultId.uuid,
         },
       },
     };
