@@ -18,7 +18,6 @@
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,ts,json}'",
     "lint": "eslint --ignore-path .gitignore './**/*.{js,ts}' --fix",
     "prebuild": "rimraf dist",
-    "prestart:prod": "yarn build",
     "reset:dev": "dotenv -e .env yarn prisma migrate reset --force",
     "reset:prod": "dotenv -e .env.prod yarn prisma migrate reset --force",
     "start:dev": "nest start --watch",
