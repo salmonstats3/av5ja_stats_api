@@ -23,12 +23,12 @@ export class ResultsService {
     console.log("Downloading...");
     const results: Result[] = await this.prisma.result.findMany({
       include: {
-        players: true,
-        schedule: true,
-        waves: true,
+        players: {
+          take: 10,
+        },
       },
-      skip: request.offset,
-      take: request.limit,
+      skip: 0,
+      take: 10,
     });
     return new PaginatedDto<Result>(request.limit, request.offset, 0, results);
   }
@@ -50,8 +50,8 @@ export class ResultsService {
     });
     // クエリ作成
     const queries: Prisma.ResultUpsertArgs[] = results.filter((result) => result.isValid).map((result) => result.query);
-    await this.write(queries);
-    return status.join();
+    const status_code: number = (await this.write(queries)) ? 201 : 500;
+    return `${status_code},${status.join()}`;
   }
 
   /**
@@ -60,23 +60,27 @@ export class ResultsService {
    * @param retry リトライ回数
    * @returns
    */
-  private async write(queries: Prisma.ResultUpsertArgs[], retry: number = 0): Promise<Prisma.ResultUpsertArgs[]> {
+  private async write(queries: Prisma.ResultUpsertArgs[], retry: number = 0): Promise<boolean> {
     // 成功したものを取得する
     const success: any[] = (await Promise.allSettled(queries.map((query) => this.prisma.result.upsert(query))))
       .filter((result) => result.status === "fulfilled")
       // @ts-ignore
-      .map((result) => `${result.value.resultId.toLowerCase()}:${result.value.playTime.toISOString()}`);
+      .map((result) => `${result.value.id.toLowerCase()}:${result.value.playTime.toISOString()}`);
     // 失敗したものを抽出する
     // @ts-ignore
     const failure: Prisma.ResultUpsertArgs[] = queries.filter(
       // @ts-ignore
-      (query) => !success.includes(`${query.create.resultId.toLowerCase()}:${query.create.playTime.toISOString()}`),
+      (query) => !success.includes(`${query.create.id.toLowerCase()}:${query.create.playTime.toISOString()}`),
     );
-    console.log(success.length, failure.length);
-    // 失敗件数が0または一件も書き込めていなかったら終了
-    if (failure.length === queries.length || failure.length === 0 || retry > 5) {
-      return;
-    }
+    console.log(`Try: ${padding(retry)} -> Result: ${padding(success.length)}/${padding(queries.length)}: ${padding(failure.length)}`);
+
+    // 失敗件数が0になっていたらTrueを返して書き込み終了
+    if (failure.length === 0) return true;
+
+    // 一件も書き込めていないかまたはリトライ回数が五回以上なら終了
+    if (failure.length === queries.length || retry > 5) return false;
+
+    return this.write(failure, retry + 1);
   }
 
   /**
@@ -89,11 +93,6 @@ export class ResultsService {
     version: AppVersion = AppVersion.V216,
     client: Client = Client.SALMONIA,
   ): Promise<CustomResult[]> {
-    // クライアントチェック
-    if (Object.values(Client).find((value) => value === client.toUpperCase()) === undefined) {
-      throw new BadRequestException({ message: "Invalid Client", status: 400 });
-    }
-
     // バージョンチェック
     if (Object.values(AppVersion).find((value) => value === version) === undefined) {
       throw new BadRequestException({ message: "Invalid Version", status: 400 });
@@ -114,6 +113,10 @@ export class ResultsService {
 function chunked<T extends any[]>(arr: T, size: number): T[] {
   return arr.reduce((newarr, _, i) => (i % size ? newarr : [...newarr, arr.slice(i, i + size)]), [] as T[][]);
 }
+
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+const max_retry_count: number = process.env.NODE_ENV === "production" ? 10 : 5;
+const padding = (amount: number) => ("0000" + amount).slice(-4);
 
 export class CustomResult {
   @Expose({ name: "resultId" })

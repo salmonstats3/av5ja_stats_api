@@ -29,18 +29,18 @@ export class AnalyticsService {
     }
 
     const results: any[] = await Promise.all([
-      this.prisma.$queryRaw(this.getGradePointQuery(scheduleId)),
-      this.prisma.$queryRaw(this.getIkuraNumQuery(scheduleId)),
-      this.prisma.$queryRaw(this.getIkuraDistQuery(scheduleId)),
-      this.prisma.$queryRaw(this.getTimelineQuery(scheduleId)),
+      // this.prisma.$queryRaw(this.getGradePointQuery(scheduleId)),
+      // this.prisma.$queryRaw(this.getIkuraNumQuery(scheduleId)),
+      // this.prisma.$queryRaw(this.getIkuraDistQuery(scheduleId)),
+      // this.prisma.$queryRaw(this.getTimelineQuery(scheduleId)),
       this.prisma.$queryRaw(this.getWavesQuery(scheduleId)),
     ]);
     const response = {
-      grade_point: results[0],
-      golden_ikura_num: results[1],
-      distribution: results[2][0],
-      status: results[3],
-      waves: [0, 1, 2, 3, 4, 5, 6, 7, 8].map((eventType: number) => results[4].filter((result: any) => result.event_type === eventType)),
+      // grade_point: results[0],
+      // golden_ikura_num: results[1],
+      // distribution: results[2][0],
+      // status: results[3],
+      waves: [0, 1, 2, 3, 4, 5, 6, 7, 8].map((eventType: number) => results[0].filter((result: any) => result.event_type === eventType)),
     };
     this.cacheManager.set(`analytics:${scheduleId}`, response, { ttl: ttl });
     return response;
@@ -114,11 +114,7 @@ export class AnalyticsService {
       MAX(waves.golden_ikura_num) AS golden_ikura_num
       FROM
       waves
-      INNER JOIN
-      results
-      ON
-      results.id = waves.id
-      AND
+      WHERE
       waves.golden_ikura_num IS NOT NULL
       AND  
       schedule_id = ${scheduleId}
