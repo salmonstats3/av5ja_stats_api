@@ -12,7 +12,7 @@ CREATE TYPE "Client" AS ENUM ('SALMONIA', 'SALMDROID');
 
 -- CreateTable
 CREATE TABLE "schedules" (
-    "schedule_id" TEXT NOT NULL,
+    "schedule_id" UUID NOT NULL,
     "start_time" TIMESTAMP(0) NOT NULL DEFAULT '1970-01-01 00:00:00 +00:00',
     "end_time" TIMESTAMP(0) NOT NULL DEFAULT '1970-01-01 00:00:00 +00:00',
     "stage_id" SMALLINT NOT NULL,
@@ -29,18 +29,17 @@ CREATE TABLE "schedules" (
 
 -- CreateTable
 CREATE TABLE "results" (
-    "id" TEXT NOT NULL,
-    "schedule_id" TEXT NOT NULL,
-    "result_id" UUID NOT NULL,
+    "id" UUID NOT NULL,
+    "schedule_id" UUID NOT NULL,
     "play_time" TIMESTAMP(0) NOT NULL,
-    "boss_counts" INTEGER[],
-    "boss_kill_counts" INTEGER[],
+    "boss_counts" SMALLINT[],
+    "boss_kill_counts" SMALLINT[],
     "ikura_num" SMALLINT NOT NULL,
     "golden_ikura_num" SMALLINT NOT NULL,
     "golden_ikura_assist_num" SMALLINT NOT NULL,
     "night_less" BOOLEAN NOT NULL,
     "danger_rate" DECIMAL(4,3) NOT NULL,
-    "members" TEXT[],
+    "members" VARCHAR(20)[],
     "bronze" SMALLINT,
     "silver" SMALLINT,
     "gold" SMALLINT,
@@ -48,24 +47,24 @@ CREATE TABLE "results" (
     "failure_wave" SMALLINT,
     "is_boss_defeated" BOOLEAN,
     "boss_id" SMALLINT,
-    "scenario_code" TEXT,
+    "scenario_code" VARCHAR(16),
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
     "updated_by" "Client" NOT NULL DEFAULT 'SALMONIA',
-    "version" TEXT NOT NULL,
+    "version" VARCHAR(16) NOT NULL,
 
-    CONSTRAINT "results_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "results_pkey" PRIMARY KEY ("id","play_time")
 );
 
 -- CreateTable
 CREATE TABLE "players" (
-    "id" TEXT NOT NULL,
-    "schedule_id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "schedule_id" UUID NOT NULL,
     "play_time" TIMESTAMP(0) NOT NULL,
-    "npln_user_id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "byname" TEXT NOT NULL,
-    "name_id" TEXT NOT NULL,
+    "npln_user_id" VARCHAR(20) NOT NULL,
+    "name" VARCHAR(32) NOT NULL,
+    "byname" VARCHAR(64) NOT NULL,
+    "name_id" VARCHAR(8) NOT NULL,
     "badges" INTEGER[],
     "nameplate" SMALLINT NOT NULL,
     "text_color" DOUBLE PRECISION[],
@@ -78,25 +77,27 @@ CREATE TABLE "players" (
     "golden_ikura_num" SMALLINT NOT NULL,
     "golden_ikura_assist_num" SMALLINT NOT NULL,
     "job_bonus" SMALLINT,
-    "job_rate" DOUBLE PRECISION,
+    "job_rate" REAL,
     "job_score" SMALLINT,
     "kuma_point" SMALLINT,
     "grade_id" SMALLINT,
     "grade_point" SMALLINT,
     "smell_meter" SMALLINT,
-    "species" TEXT NOT NULL DEFAULT 'INKLING',
+    "species" "Species" NOT NULL DEFAULT 'INKLING',
     "special_id" SMALLINT,
     "special_count" SMALLINT[],
     "weapon_list" SMALLINT[],
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
 
-    CONSTRAINT "players_pkey" PRIMARY KEY ("npln_user_id","id")
+    CONSTRAINT "players_pkey" PRIMARY KEY ("npln_user_id","play_time")
 );
 
 -- CreateTable
 CREATE TABLE "waves" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "schedule_id" UUID NOT NULL,
+    "play_time" TIMESTAMP(0) NOT NULL,
     "wave_id" SMALLINT NOT NULL,
     "water_level" SMALLINT NOT NULL,
     "event_type" SMALLINT NOT NULL,
@@ -107,7 +108,7 @@ CREATE TABLE "waves" (
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
 
-    CONSTRAINT "waves_pkey" PRIMARY KEY ("id","wave_id")
+    CONSTRAINT "waves_pkey" PRIMARY KEY ("id","wave_id","play_time")
 );
 
 -- CreateIndex
@@ -117,10 +118,10 @@ CREATE INDEX "schedules_stage_id_idx" ON "schedules"("stage_id");
 CREATE INDEX "schedules_rule_idx" ON "schedules"("rule");
 
 -- CreateIndex
-CREATE INDEX "schedules_rule_mode_idx" ON "schedules"("rule", "mode");
+CREATE INDEX "schedules_mode_idx" ON "schedules"("mode");
 
 -- CreateIndex
-CREATE INDEX "schedules_start_time_idx" ON "schedules"("start_time");
+CREATE INDEX "schedules_rule_mode_idx" ON "schedules"("rule", "mode");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "schedules_stage_id_mode_rule_weapon_list_start_time_end_tim_key" ON "schedules"("stage_id", "mode", "rule", "weapon_list", "start_time", "end_time");
@@ -132,6 +133,9 @@ CREATE UNIQUE INDEX "schedules_schedule_id_key" ON "schedules"("schedule_id");
 CREATE INDEX "results_members_idx" ON "results"("members");
 
 -- CreateIndex
+CREATE INDEX "results_golden_ikura_num_night_less_idx" ON "results"("golden_ikura_num", "night_less");
+
+-- CreateIndex
 CREATE INDEX "results_schedule_id_idx" ON "results"("schedule_id");
 
 -- CreateIndex
@@ -141,37 +145,25 @@ CREATE INDEX "results_scenario_code_idx" ON "results"("scenario_code");
 CREATE INDEX "results_danger_rate_idx" ON "results"("danger_rate");
 
 -- CreateIndex
-CREATE INDEX "results_updated_by_version_idx" ON "results"("updated_by", "version");
-
--- CreateIndex
-CREATE UNIQUE INDEX "results_play_time_result_id_key" ON "results"("play_time", "result_id");
-
--- CreateIndex
 CREATE UNIQUE INDEX "results_id_schedule_id_play_time_key" ON "results"("id", "schedule_id", "play_time");
 
 -- CreateIndex
 CREATE INDEX "players_npln_user_id_idx" ON "players"("npln_user_id");
 
 -- CreateIndex
+CREATE INDEX "players_schedule_id_idx" ON "players"("schedule_id");
+
+-- CreateIndex
 CREATE INDEX "players_name_idx" ON "players"("name");
-
--- CreateIndex
-CREATE INDEX "players_nameplate_idx" ON "players"("nameplate");
-
--- CreateIndex
-CREATE INDEX "players_uniform_idx" ON "players"("uniform");
-
--- CreateIndex
-CREATE INDEX "players_grade_id_idx" ON "players"("grade_id");
 
 -- CreateIndex
 CREATE INDEX "players_grade_point_idx" ON "players"("grade_point");
 
 -- CreateIndex
-CREATE INDEX "players_grade_id_grade_point_idx" ON "players"("grade_id", "grade_point");
+CREATE UNIQUE INDEX "players_npln_user_id_play_time_id_key" ON "players"("npln_user_id", "play_time", "id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "players_npln_user_id_play_time_key" ON "players"("npln_user_id", "play_time");
+CREATE INDEX "waves_schedule_id_idx" ON "waves"("schedule_id");
 
 -- CreateIndex
 CREATE INDEX "waves_water_level_idx" ON "waves"("water_level");
@@ -183,9 +175,6 @@ CREATE INDEX "waves_event_type_idx" ON "waves"("event_type");
 CREATE INDEX "waves_water_level_event_type_idx" ON "waves"("water_level", "event_type");
 
 -- CreateIndex
-CREATE INDEX "waves_water_level_event_type_wave_id_idx" ON "waves"("water_level", "event_type", "wave_id");
-
--- CreateIndex
 CREATE INDEX "waves_golden_ikura_num_idx" ON "waves"("golden_ikura_num");
 
 -- AddForeignKey
@@ -195,4 +184,4 @@ ALTER TABLE "results" ADD CONSTRAINT "results_schedule_id_fkey" FOREIGN KEY ("sc
 ALTER TABLE "players" ADD CONSTRAINT "players_id_schedule_id_play_time_fkey" FOREIGN KEY ("id", "schedule_id", "play_time") REFERENCES "results"("id", "schedule_id", "play_time") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "waves" ADD CONSTRAINT "waves_id_fkey" FOREIGN KEY ("id") REFERENCES "results"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "waves" ADD CONSTRAINT "waves_id_schedule_id_play_time_fkey" FOREIGN KEY ("id", "schedule_id", "play_time") REFERENCES "results"("id", "schedule_id", "play_time") ON DELETE RESTRICT ON UPDATE CASCADE;

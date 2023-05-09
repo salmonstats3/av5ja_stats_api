@@ -625,7 +625,7 @@ export class CoopResultCustomRequest {
             data: this.players.map((player) => player.query),
           },
         },
-        resultId: this.resultId,
+        id: this.resultId,
         scenarioCode: this.scenarioCode,
         schedule: {
           connectOrCreate: this.schedule.query,
@@ -640,9 +640,9 @@ export class CoopResultCustomRequest {
       },
       update: {},
       where: {
-        playTime_resultId: {
+        id_playTime: {
           playTime: this.playTime,
-          resultId: this.resultId,
+          id: this.resultId,
         },
       },
     };

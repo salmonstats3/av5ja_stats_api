@@ -11,8 +11,9 @@ def upload(path) -> int:
     headers = {"Content-Type": "application/json"}
     response = requests.post("http://localhost:3000/v3/results/restore", data=json.dumps(request), headers=headers)
     status_code: int = response.status_code
-    with open(f"status.log", mode="a") as w:
-      w.write(f"{status_code},{response.text},{path}\n")
+    if status_code == 201:
+      with open(f"status.log", mode="a") as w:
+        w.write(f"{response.text},{path}\n")
     return status_code
 
 def future():
@@ -21,11 +22,14 @@ def future():
   with open("status.log", mode="r") as f:
     lines: set[int] = set(map(lambda x: int(x), filter(lambda x: x!= "", map(lambda x: x.split(",")[-1], f.read().split("\n")))))
     subtract = sorted(list(files - lines))
-    with futures.ThreadPoolExecutor(max_workers=3) as executor:
+    with futures.ThreadPoolExecutor(max_workers=5) as executor:
       for file in subtract:
-        executor.submit(upload, file)
-        future_list.append(future)
-      
+        try:
+          executor.submit(upload, file)
+          future_list.append(future)
+        except Exception as e:
+          print(e)
+          break
 def restore():
   with open("status.log", mode="r+") as f:
     for line in f.readlines():
@@ -45,6 +49,6 @@ def download():
       f.write(response.text)
 
 if __name__=="__main__":
-  download()
-  # future()
+  # download()
+  future()
   # restore()
