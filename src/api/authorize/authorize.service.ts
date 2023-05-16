@@ -78,8 +78,10 @@ export class AuthorizeService {
         weaponList: schedule.weaponList,
       };
     });
+    console.log(schedules);
     // 最大10件のデータを取得する
     const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting)), limit(10)));
+    console.log(documents);
     const database: CoopScheduleDataResponse[] = documents
       .flatMap((document) => document.docs.map((doc) => plainToClass(CoopScheduleDataResponse, doc.data())))
       .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
