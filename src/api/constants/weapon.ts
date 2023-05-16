@@ -1,10 +1,11 @@
-export const weaponLists: { [name: string]: number } = {
+const WeaponType = {
   "01e8399a3c56707b6e9f7500d3d583ba1d400eec06449d8fe047cda1956a4ccc": 50,
   "035920eb9428955c25aecb8a56c2b1b58f3e322af3657d921db1778de4b80c59": 90,
   "10d4a1584d1428cb164ddfbc5febc9b1e77fd05e2e9ed9de851838a94d202c15": 200,
   "25e98eaba1e17308db191b740d9b89e6a977bfcd37c8dc1d65883731c0c72609": 20,
   "0d2963b386b6da598b8da1087eab3f48b99256e2e6a20fc8bbe53b34579fb338": 220,
   "473fffb2442075078d8bb7125744905abdeae651b6a5b7453ae295582e45f7d1": -1,
+  "9d7272733ae2f2282938da17d69f13419a935eef42239132a02fcf37d8678f10": -2,
   "0a929d514403d07e1543e638141ebace947ffd539f5f766b42f4d6577d40d7b8": 240,
   "5607f7014bbc7339feeb67218c05ef19c7a466152b1bd056a899b955127ea433": 70,
   "29ccca01285a04f42dc15911f3cd1ee940f9ca0e94c75ba07378828afb3165c0": 210,
@@ -63,4 +64,12 @@ export const weaponLists: { [name: string]: number } = {
   e68609e51d30dfb13e1ea996e46995ed1f7cf561caef0fe96314966d0a039109: 5040,
   bf89bcf3d3a51badd78b436266e6b7927d99ac386e083023df3551da6b39e412: 23900,
   ddd2a4258a70cdaf8a1dbc0ded024db497445d71f950fe7645fa8c69a178a082: 8000,
-};
+} as const;
+
+type WeaponType = (typeof WeaponType)[keyof typeof WeaponType];
+
+export namespace WeaponKey {
+  export function from(key: string): WeaponType {
+    return WeaponType[key];
+  }
+}

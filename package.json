@@ -21,7 +21,7 @@
     "reset:dev": "dotenv -e .env yarn prisma migrate reset --force",
     "reset:prod": "dotenv -e .env.prod yarn prisma migrate reset --force",
     "start:dev": "nest start --watch",
-    "start:prod": "dotenv -e .env.prod node dist/main",
+    "start:prod": "node dist/main",
     "start:stg": "dotenv -e .env.stg nest start --watch",
     "test": "jest",
     "test:cov": "jest --coverage",

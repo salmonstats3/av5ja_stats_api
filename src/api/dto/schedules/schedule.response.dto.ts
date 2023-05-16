@@ -2,8 +2,8 @@ import { BadRequestException } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose, plainToClass, Transform, Type } from "class-transformer";
 import { IsDateString, IsEnum, IsOptional, ValidateNested } from "class-validator";
-import { stageLists } from "src/api/constants/stage";
-import { weaponLists } from "src/api/constants/weapon";
+import { StageKey } from "src/api/constants/stage";
+import { WeaponKey } from "src/api/constants/weapon";
 
 import { Mode } from "../enum/mode";
 import { Setting } from "../enum/setting";
@@ -90,7 +90,7 @@ class URL {
   url: string;
 }
 
-class WeaponType {
+class Weapon {
   @Expose()
   name: string;
 
@@ -102,12 +102,12 @@ class WeaponType {
 class CoopSetting {
   @ApiProperty()
   @Expose({ name: "coopStage" })
-  @Transform((param) => stageLists[plainToClass(WeaponType, param.value).image.url])
+  @Transform((param) => StageKey.from(plainToClass(Weapon, param.value).image.url))
   coopStage: number;
 
   @ApiProperty()
   @Expose({ name: "weapons" })
-  @Transform((param) => param.value.map((value) => weaponLists[plainToClass(WeaponType, value).image.url]))
+  @Transform((param) => param.value.map((value: any) => WeaponKey.from(plainToClass(Weapon, value).image.url)))
   weapons: number[];
 
   @ApiProperty()
