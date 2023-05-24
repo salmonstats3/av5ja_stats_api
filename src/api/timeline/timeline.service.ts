@@ -23,7 +23,8 @@ export class AnalyticsService {
 
   async getAnalytics(scheduleId: string): Promise<any> {
     const analytics = await this.cacheManager.get(`analytics:${scheduleId}`);
-    const ttl: number = dayjs().ceil(30).diff(dayjs(), "second") - 60;
+    // 五分区切りの時間まであと何秒かという値を取得
+    const ttl: number = dayjs().ceil(10).diff(dayjs(), "second") - 60;
     if (analytics !== undefined) {
       return analytics;
     }
@@ -62,7 +63,7 @@ export class AnalyticsService {
       	FROM
       	results
       	WHERE
-      	schedule_id = 'eeef991a-6a9d-4f01-b49a-83a2042e39dd'
+      	schedule_id = ${scheduleId}::UUID 
       	GROUP BY
       	npln_user_id
       ) AS results
