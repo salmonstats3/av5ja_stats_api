@@ -19,7 +19,7 @@ export class AnalyticsService {
     private readonly axios: HttpService,
     private readonly prisma: PrismaService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-  ) {}
+  ) { }
 
   async getAnalytics(scheduleId: string): Promise<any> {
     const analytics = await this.cacheManager.get(`analytics:${scheduleId}`);
