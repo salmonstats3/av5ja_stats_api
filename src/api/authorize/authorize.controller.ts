@@ -8,7 +8,7 @@ import { AuthorizeResponse } from "./autorize.response.dto";
 
 @Controller("authorize")
 export class AuthorizeController {
-  constructor(private readonly service: AuthorizeService) {}
+  constructor(private readonly service: AuthorizeService) { }
 
   @Get("")
   @HttpCode(200)
@@ -32,7 +32,7 @@ export class AuthorizeController {
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: AppVersionResult })
-  async version(): Promise<AppVersionResult> {
-    return this.service.get_app_version();
+  async version(): Promise<{ version: string, web_version: string }> {
+    return this.service.get_version();
   }
 }
