@@ -614,6 +614,7 @@ export class CoopResultCustomRequest {
         gold: this.gold,
         goldenIkuraAssistNum: this.goldenIkuraAssistNum,
         goldenIkuraNum: this.goldenIkuraNum,
+        id: this.resultId,
         ikuraNum: this.ikuraNum,
         isBossDefeated: this.isBossDefeated,
         isClear: this.isClear,
@@ -625,7 +626,6 @@ export class CoopResultCustomRequest {
             data: this.players.map((player) => player.query),
           },
         },
-        id: this.resultId,
         scenarioCode: this.scenarioCode,
         schedule: {
           connectOrCreate: this.schedule.query,
@@ -641,8 +641,8 @@ export class CoopResultCustomRequest {
       update: {},
       where: {
         id_playTime: {
-          playTime: this.playTime,
           id: this.resultId,
+          playTime: this.playTime,
         },
       },
     };

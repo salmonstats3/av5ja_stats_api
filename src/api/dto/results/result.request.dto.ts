@@ -566,6 +566,7 @@ export class CoopResultRequest {
         gold: this.scale[2],
         goldenIkuraAssistNum: this.goldenIkuraAssistNum,
         goldenIkuraNum: this.goldenIkuraNum,
+        id: this.resultId.uuid,
         ikuraNum: this.ikuraNum,
         isBossDefeated: this.jobResult.isBossDefeated,
         isClear: this.jobResult.isClear,
@@ -577,7 +578,6 @@ export class CoopResultRequest {
             data: this.otherResults.concat(this.myResult).map((player) => player.query),
           },
         },
-        id: this.resultId.uuid,
         scenarioCode: this.scenarioCode,
         schedule: {
           connectOrCreate: this.schedule.query,

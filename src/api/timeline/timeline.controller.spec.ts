@@ -1,4 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
+
 import { AnalyticsController } from "./timeline.controller";
 
 describe("AnalyticsController", () => {
