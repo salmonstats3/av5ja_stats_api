@@ -1,29 +1,29 @@
 import { BadRequestException, CACHE_MANAGER, HttpException, Inject, Injectable } from "@nestjs/common";
 import axios from "axios";
+import { Cache } from "cache-manager";
 import { plainToClass, plainToInstance } from "class-transformer";
 import dayjs from "dayjs";
 import { initializeApp } from "firebase/app";
 import { collection, doc, getDocs, getFirestore, limit, setDoc } from "firebase/firestore/lite";
+
 import { AccessTokenRequest, AccessTokenResponse } from "../dto/authorize/access_token.dto";
 import { AppVersionResponse, AppVersionResult } from "../dto/authorize/app_version.dto";
 import { BulletTokenRequest, BulletTokenResponse } from "../dto/authorize/bullet_token.dto";
 import { GameServiceTokenRequest, GameServiceTokenResponse } from "../dto/authorize/game_service_token.dto";
 import { GameWebTokenRequest, GameWebTokenResponse } from "../dto/authorize/game_web_token.dto";
-import { IminkRequest, IminkResponse, IminkType, CoralRequest } from "../dto/authorize/imink.dto";
+import { IminkResponse, CoralRequest } from "../dto/authorize/imink.dto";
 import { Setting } from "../dto/enum/setting";
 import { CoopSchedule, CoopScheduleDataResponse, CoopScheduleResponse, KingSalmonId } from "../dto/schedules/schedule.response.dto";
 import { firebaseConfig } from "../firebase.config";
+
 import { AuthorizeResponse } from "./autorize.response.dto";
-import { Cache } from "cache-manager";
 
 @Injectable()
 export class AuthorizeService {
   private readonly app = initializeApp(firebaseConfig);
   private readonly firestore = getFirestore(this.app);
 
-  constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-  ) { }
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   private async get_schedules(bullet_token: string, web_version: string): Promise<CoopSchedule[]> {
     const hash = "011e394c0e384d77a0701474c8c11a20";
@@ -59,9 +59,7 @@ export class AuthorizeService {
     };
     const access_token = await this.get_access_token(request);
     const imink_nso: IminkResponse = await this.get_f(new CoralRequest(access_token));
-    const game_service_token = await this.get_game_service_token(
-      new GameServiceTokenRequest(imink_nso, version, access_token.id_token),
-    );
+    const game_service_token = await this.get_game_service_token(new GameServiceTokenRequest(imink_nso, version, access_token.id_token));
     const imink_app: IminkResponse = await this.get_f(new CoralRequest(game_service_token));
     const game_web_token = await this.get_game_web_token(
       new GameWebTokenRequest(imink_app, version, game_service_token.result.webApiServerCredential.accessToken),
@@ -128,26 +126,23 @@ export class AuthorizeService {
     }
   }
 
-  async get_version(): Promise<{ version: string, web_version: string }> {
+  async get_version(): Promise<{ version: string; web_version: string }> {
     const version = await this.cacheManager.get("version");
     const ttl: number = dayjs().ceil(30).diff(dayjs(), "second");
     if (version !== undefined) {
-      return version as { version: string, web_version: string };
+      return version as { version: string; web_version: string };
     }
 
     const hash: string = await this.get_game_web_version_hash();
-    const [app_version, web_revision] = await Promise.all([
-      this.get_app_version(),
-      this.get_web_revision(hash),
-    ])
+    const [app_version, web_revision] = await Promise.all([this.get_app_version(), this.get_web_revision(hash)]);
     const response = {
       version: app_version.version,
       web_version: web_revision,
-    }
+    };
 
     this.cacheManager.set("version", response, { ttl: ttl });
 
-    return response
+    return response;
   }
 
   private async get_app_version(): Promise<AppVersionResult> {
@@ -156,27 +151,40 @@ export class AuthorizeService {
   }
 
   private async get_game_web_version_hash(): Promise<string> {
-    const url = "https://api.lp1.av5ja.srv.nintendo.net/"
-    const hash: RegExp = new RegExp('main\.([a-z0-9]{8})\.js')
+    const url = "https://api.lp1.av5ja.srv.nintendo.net/";
+    const hash = new RegExp("main.([a-z0-9]{8}).js");
     const response = (await axios.get(url)).data;
-    return hash.test(response)
-      ? hash.exec(response)[1]
-      : "bd36a652"
+    return hash.test(response) ? hash.exec(response)[1] : "bd36a652";
   }
 
   private async get_web_revision(hash: string): Promise<string> {
-    const url = `https://api.lp1.av5ja.srv.nintendo.net/static/js/main.${hash}.js`
+    const url = `https://api.lp1.av5ja.srv.nintendo.net/static/js/main.${hash}.js`;
     const response = (await axios.get(url)).data;
     const version: string = (() => {
-      const re: RegExp = /`(\d{1}\.\d{1}\.\d{1})-/
-      return re.test(response) ? re.exec(response)[1] : "3.1.0"
-    })()
+      const re = /`(\d{1}\.\d{1}\.\d{1})-/;
+      return re.test(response) ? re.exec(response)[1] : "3.1.0";
+    })();
     const revision: string = (() => {
-      const re: RegExp = /REACT_APP_REVISION:"([a-f0-9]{8})/
-      return re.test(response) ? re.exec(response)[1] : "bd36a652"
-    })()
+      const re = /REACT_APP_REVISION:"([a-f0-9]{8})/;
+      return re.test(response) ? re.exec(response)[1] : "bd36a652";
+    })();
 
-    return `${version}-${revision}`
+    return `${version}-${revision}`;
+  }
+
+  async get_bundle_urls(): Promise<string[]> {
+    const hash: string = await this.get_game_web_version_hash();
+    const script: string = await (async () => {
+      const url = `https://api.lp1.av5ja.srv.nintendo.net/static/js/main.${hash}.js`;
+      return (await axios.get(url)).data as string;
+    })();
+    const css: string = await (async () => {
+      const url = "https://api.lp1.av5ja.srv.nintendo.net/static/css/main.d9ea986a.css";
+      return (await axios.get(url)).data as string;
+    })();
+    const re = /static\/media\/.*?(gif|svg|png|jpg|woff|woff2)/g;
+
+    return [...(css + script).matchAll(re)].map((match) => match[0]);
   }
 
   private async get_access_token(request: AccessTokenRequest): Promise<AccessTokenResponse> {
@@ -226,19 +234,19 @@ export class AuthorizeService {
   }
 
   private async get_f(request: CoralRequest) {
-    const url = process.env.F_SERVER_URL
-    console.log(url)
+    const url = process.env.F_SERVER_URL;
+    console.log(url);
     const parameters = {
-      hash_method: request.method.valueOf(),
-      token: request.naIdToken,
-      timestamp: request.timestamp,
-      request_id: request.request_id,
-      na_id: request.na_id,
       coral_user_id: request.coral_user_id,
+      hash_method: request.method.valueOf(),
+      na_id: request.na_id,
+      request_id: request.request_id,
+      timestamp: request.timestamp,
+      token: request.naIdToken,
     };
     try {
       const response = await axios.post(url, parameters);
-      return plainToClass(IminkResponse, { ...response.data, ...{ timestamp: request.timestamp, request_id: request.request_id } });
+      return plainToClass(IminkResponse, { ...response.data, ...{ request_id: request.request_id, timestamp: request.timestamp } });
     } catch (error) {
       throw new HttpException(error.response.data, error.response.status);
     }
