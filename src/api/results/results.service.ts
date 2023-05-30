@@ -60,7 +60,7 @@ export class ResultsService {
    * @param retry リトライ回数
    * @returns
    */
-  private async write(queries: Prisma.ResultUpsertArgs[], retry: number = 0): Promise<boolean> {
+  private async write(queries: Prisma.ResultUpsertArgs[], retry = 0): Promise<boolean> {
     // 成功したものを取得する
     const success: any[] = (await Promise.allSettled(queries.map((query) => this.prisma.result.upsert(query))))
       .filter((result) => result.status === "fulfilled")

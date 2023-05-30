@@ -1,12 +1,12 @@
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
 import { HttpService } from "@nestjs/axios";
 import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
-import { Cache } from "cache-manager";
-import { PrismaService } from "src/prisma.service";
-import dayjs from "dayjs";
-import { ceil } from "src/helper";
 import { Prisma } from "@prisma/client";
 import { Sql } from "@prisma/client/runtime";
+import { Cache } from "cache-manager";
+import dayjs from "dayjs";
+import { ceil } from "src/helper";
+import { PrismaService } from "src/prisma.service";
 
 dayjs.extend(ceil);
 
@@ -19,7 +19,7 @@ export class AnalyticsService {
     private readonly axios: HttpService,
     private readonly prisma: PrismaService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-  ) { }
+  ) {}
 
   async getAnalytics(scheduleId: string): Promise<any> {
     const analytics = await this.cacheManager.get(`analytics:${scheduleId}`);
@@ -37,9 +37,9 @@ export class AnalyticsService {
       this.prisma.$queryRaw(this.getWavesQuery(scheduleId)),
     ]);
     const response = {
-      grade_point: results[0],
-      golden_ikura_num: results[1],
       distribution: results[2][0],
+      golden_ikura_num: results[1],
+      grade_point: results[0],
       status: results[3],
       waves: [0, 1, 2, 3, 4, 5, 6, 7, 8].map((eventType: number) => results[4].filter((result: any) => result.event_type === eventType)),
     };

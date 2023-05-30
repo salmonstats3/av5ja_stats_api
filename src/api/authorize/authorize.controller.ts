@@ -8,7 +8,7 @@ import { AuthorizeResponse } from "./autorize.response.dto";
 
 @Controller("authorize")
 export class AuthorizeController {
-  constructor(private readonly service: AuthorizeService) { }
+  constructor(private readonly service: AuthorizeService) {}
 
   @Get("")
   @HttpCode(200)
@@ -32,7 +32,20 @@ export class AuthorizeController {
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: AppVersionResult })
-  async version(): Promise<{ version: string, web_version: string }> {
+  async version(): Promise<{ version: string; web_version: string }> {
     return this.service.get_version();
+  }
+
+  @Get("bundle")
+  @HttpCode(200)
+  @ApiTags("認証")
+  @ApiOperation({
+    description: "Bundle URLを返します",
+    operationId: "URL取得",
+  })
+  @ApiBadRequestResponse()
+  @ApiOkResponse({ type: AppVersionResult })
+  async bundle(): Promise<string[]> {
+    return this.service.get_bundle_urls();
   }
 }
