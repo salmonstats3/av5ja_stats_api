@@ -235,7 +235,6 @@ export class AuthorizeService {
 
   private async get_f(request: CoralRequest) {
     const url = process.env.F_SERVER_URL;
-    console.log(url);
     const parameters = {
       coral_user_id: request.coral_user_id,
       hash_method: request.method.valueOf(),
@@ -244,6 +243,7 @@ export class AuthorizeService {
       timestamp: request.timestamp,
       token: request.naIdToken,
     };
+    console.log(parameters);
     try {
       const response = await axios.post(url, parameters);
       return plainToClass(IminkResponse, { ...response.data, ...{ request_id: request.request_id, timestamp: request.timestamp } });
