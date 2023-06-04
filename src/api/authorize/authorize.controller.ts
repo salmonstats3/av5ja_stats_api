@@ -1,10 +1,9 @@
 import { Controller, Get, HttpCode } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-
 import { AppVersionResult } from "../dto/authorize/app_version.dto";
-
 import { AuthorizeService } from "./authorize.service";
 import { AuthorizeResponse } from "./autorize.response.dto";
+import resources from "./resources.json";
 
 @Controller("authorize")
 export class AuthorizeController {
@@ -47,5 +46,18 @@ export class AuthorizeController {
   @ApiOkResponse({ type: AppVersionResult })
   async bundle(): Promise<string[]> {
     return this.service.get_bundle_urls();
+  }
+
+  @Get("resources")
+  @HttpCode(200)
+  @ApiTags("認証")
+  @ApiOperation({
+    description: "Resources URLを返します",
+    operationId: "リソースURL取得",
+  })
+  @ApiBadRequestResponse()
+  @ApiOkResponse({ type: AppVersionResult })
+  async resources(): Promise<any> {
+    return resources;
   }
 }
