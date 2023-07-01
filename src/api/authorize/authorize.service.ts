@@ -17,13 +17,17 @@ import { CoopSchedule, CoopScheduleDataResponse, CoopScheduleResponse, KingSalmo
 import { firebaseConfig } from "../firebase.config";
 
 import { AuthorizeResponse } from "./autorize.response.dto";
+import { SplatoonInkLink } from "../dto/enum/link";
+import { CoopEnemyInfo, WeaponInfoMain } from "../dto/weaponinfo.dto";
+import resources from "./resources.json";
+import { assert } from "console";
 
 @Injectable()
 export class AuthorizeService {
   private readonly app = initializeApp(firebaseConfig);
   private readonly firestore = getFirestore(this.app);
 
-  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) { }
 
   private async get_schedules(bullet_token: string, web_version: string): Promise<CoopSchedule[]> {
     const hash = "011e394c0e384d77a0701474c8c11a20";
@@ -50,6 +54,10 @@ export class AuthorizeService {
     }
   }
 
+  /**
+   * スケジュールデータを書き込む
+   * @returns 認証情報
+   */
   async authorize(): Promise<AuthorizeResponse> {
     const session_token: string = process.env.SESSION_TOKEN;
     const version: string = (await this.get_app_version()).version;
@@ -115,6 +123,11 @@ export class AuthorizeService {
     };
   }
 
+  /**
+   * オカシラシャケ予想
+   * @param salmon_id オカシラシャケのID
+   * @returns 次出現するオカシラシャケのID
+   */
   private next(salmon_id: KingSalmonId | null): KingSalmonId {
     switch (salmon_id) {
       case KingSalmonId.COHOZUNA:
@@ -174,17 +187,21 @@ export class AuthorizeService {
 
   async get_bundle_urls(): Promise<string[]> {
     const hash: string = await this.get_game_web_version_hash();
-    const script: string = await (async () => {
+    const script3: string = await (async () => {
       const url = `https://api.lp1.av5ja.srv.nintendo.net/static/js/main.${hash}.js`;
       return (await axios.get(url)).data as string;
     })();
-    const css: string = await (async () => {
+    const css3: string = await (async () => {
       const url = "https://api.lp1.av5ja.srv.nintendo.net/static/css/main.d9ea986a.css";
       return (await axios.get(url)).data as string;
     })();
-    const re = /static\/media\/.*?(gif|svg|png|jpg|woff|woff2)/g;
+    const css2: string = await (async () => {
+      const url = "https://app.splatoon2.nintendo.net/css/837905c36da9d9d89266d6815b0cfe70.css";
+      return (await axios.get(url)).data as string;
+    })();
+    const re = /(static\/media|fonts\/bundled)\/.*?(gif|svg|png|jpg|woff2|woff)/g;
 
-    return [...(css + script).matchAll(re)].map((match) => match[0]);
+    return [...(css2 + css3 + script3).matchAll(re)].map((match) => match[0]);
   }
 
   private async get_access_token(request: AccessTokenRequest): Promise<AccessTokenResponse> {
@@ -304,4 +321,101 @@ export class AuthorizeService {
       throw new BadRequestException(error);
     }
   }
+
+  private async get_latest_app_version(): Promise<number> {
+    const url: string = 'https://leanny.github.io/splat3/versions.json';
+    return ((await axios.get(url)).data as string[]).map((version) => parseInt(version, 10)).sort((a, b) => b - a)[0];
+  }
+
+  private async get_stage_banner(): Promise<{ [name: string]: any }> {
+    const base_url: string = `https://leanny.github.io/splat3/data/language/JPja.json`;
+    const stages: string[] = Object.keys((await axios.get(base_url)).data["CommonMsg/Coop/CoopStageName"])
+      .map((stage: string) => {
+        return `https://leanny.github.io/splat3/images/stageBanner/${stage.includes('Shake') ? `Cop_${stage}.png` : stage === 'Unknown' ? `${stage}.png` : `Vss_${stage}.png`}`
+      })
+    return {
+      'stage_img': {
+        "banner": stages,
+        "icon": stages.map((stage: string) => stage.replace('Banner', 'L'))
+      }
+    };
+  }
+
+  private async get_coop_enemy(version: number): Promise<{ [name: string]: any }> {
+    const base_url: string = `https://leanny.github.io/splat3/data/mush/${version}/CoopEnemyInfo.json`;
+    const enemies: CoopEnemyInfo[] = (await axios.get(base_url)).data
+      .map((data: any) => plainToInstance(CoopEnemyInfo, data, { excludeExtraneousValues: true }))
+    return {
+      'coop_enemy_img': enemies.map((enemy: CoopEnemyInfo) => enemy.url)
+    };
+  }
+
+  private async get_weapon_info_main(version: number): Promise<{ [name: string]: any }> {
+    const base_url: string = `https://leanny.github.io/splat3/data/mush/${version}/WeaponInfoMain.json`;
+    const weapons: WeaponInfoMain[] = (await axios.get(base_url)).data
+      .map((data: any) => plainToInstance(WeaponInfoMain, data, { excludeExtraneousValues: true }))
+      .filter((weapon: WeaponInfoMain) => weapon.row_id.includes('Bear'));
+    return {
+      'weapon_illust': weapons.map((weapon: WeaponInfoMain) => weapon.url)
+    };
+  }
+
+  private async plain_text(link: SplatoonInkLink): Promise<{ [name: string]: any }> {
+    const base_url: string = 'https://splatoon3.ink/assets/splatnet/v1';
+    const url: string = `${base_url}/${link}`;
+    const context: string = (await axios.get(url)).data;
+    const pattern: RegExp = /([\w\d]{64}_0.png)/g;
+    const urls: string[] = [...context.matchAll(pattern)].map((match) => `${base_url}/${link}/${match[1]}`);
+    switch (link) {
+      case SplatoonInkLink.WEAPON_ILLUST:
+        return {
+          weapon_illust: urls,
+        };
+      case SplatoonInkLink.UI_IMG:
+        return {
+          ui_img: urls,
+        };
+      case SplatoonInkLink.SPECIAL_IMG:
+        return {
+          special_img: urls,
+        };
+    }
+  }
+
+  async get_resource_urls(): Promise<{ [name: string]: any }> {
+    const version: number = await this.get_latest_app_version();
+    const rare_weapons: string[] = (await this.get_weapon_info_main(version)).weapon_illust;
+    const urls: { [name: string]: any } = (await Promise.all([
+      this.get_coop_enemy(version),
+      this.get_stage_banner(),
+    ].concat(
+      Object.entries(SplatoonInkLink).map(async ([_, value]) => {
+        return await this.plain_text(value);
+      }),
+    ))).reduce((prev, current) => Object.assign(prev, current), {});
+    const asset_urls = { ...urls, ...resources }
+    asset_urls['weapon_illust'] = asset_urls['weapon_illust'].concat(rare_weapons);
+    return asset_urls
+  }
+}
+
+function merge(target, source, opts) {
+  const isObject = obj => obj && typeof obj === 'object' && !Array.isArray(obj);
+  const isConcatArray = opts && opts.concatArray;
+  let result = Object.assign({}, target);
+  if (isObject(target) && isObject(source)) {
+    for (const [sourceKey, sourceValue] of Object.entries(source)) {
+      const targetValue = target[sourceKey];
+      if (isConcatArray && Array.isArray(sourceValue) && Array.isArray(targetValue)) {
+        result[sourceKey] = targetValue.concat(...sourceValue);
+      }
+      else if (isObject(sourceValue) && target.hasOwnProperty(sourceKey)) {
+        result[sourceKey] = merge(targetValue, sourceValue, opts);
+      }
+      else {
+        Object.assign(result, { [sourceKey]: sourceValue });
+      }
+    }
+  }
+  return result;
 }

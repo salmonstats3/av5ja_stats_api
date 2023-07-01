@@ -34,23 +34,6 @@ paths:
           description: ''
       tags:
         - 認証
-  /v3/authorize/bundle:
-    get:
-      operationId: URL取得
-      summary: ''
-      description: Bundle URLを返します
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AppVersionResult'
-        '400':
-          description: ''
-      tags:
-        - 認証
   /v3/authorize/resources:
     get:
       operationId: リソースURL取得
