@@ -3,11 +3,10 @@ import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@ne
 import { AppVersionResult } from "../dto/authorize/app_version.dto";
 import { AuthorizeService } from "./authorize.service";
 import { AuthorizeResponse } from "./autorize.response.dto";
-import resources from "./resources.json";
 
 @Controller("authorize")
 export class AuthorizeController {
-  constructor(private readonly service: AuthorizeService) {}
+  constructor(private readonly service: AuthorizeService) { }
 
   @Get("")
   @HttpCode(200)
@@ -35,18 +34,18 @@ export class AuthorizeController {
     return this.service.get_version();
   }
 
-  @Get("bundle")
-  @HttpCode(200)
-  @ApiTags("認証")
-  @ApiOperation({
-    description: "Bundle URLを返します",
-    operationId: "URL取得",
-  })
-  @ApiBadRequestResponse()
-  @ApiOkResponse({ type: AppVersionResult })
-  async bundle(): Promise<string[]> {
-    return this.service.get_bundle_urls();
-  }
+  // @Get("bundle")
+  // @HttpCode(200)
+  // @ApiTags("認証")
+  // @ApiOperation({
+  //   description: "Bundle URLを返します",
+  //   operationId: "URL取得",
+  // })
+  // @ApiBadRequestResponse()
+  // @ApiOkResponse({ type: AppVersionResult })
+  // async bundle(): Promise<string[]> {
+  //   return this.service.get_bundle_urls();
+  // }
 
   @Get("resources")
   @HttpCode(200)
@@ -58,6 +57,6 @@ export class AuthorizeController {
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: AppVersionResult })
   async resources(): Promise<any> {
-    return resources;
+    return this.service.get_resource_urls();
   }
 }
