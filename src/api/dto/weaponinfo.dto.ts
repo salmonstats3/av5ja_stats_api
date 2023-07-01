@@ -12,7 +12,7 @@ export class WeaponInfoMain {
     row_id: string;
 
     get url(): string {
-        return `https://leanny.github.io/splat3/images/weapon_flat/${this.row_id}.png`;
+        return `https://leanny.github.io/splat3/images/weapon_flat/Path_Wst_${this.row_id}.png`;
     }
 }
 

@@ -341,6 +341,16 @@ export class AuthorizeService {
     };
   }
 
+  private async get_scale(): Promise<{ [name: string]: any }> {
+    return {
+      'scale_img': [
+        "https://leanny.github.io/splat3/images/coop/UrocoIcon_00.png",
+        "https://leanny.github.io/splat3/images/coop/UrocoIcon_01.png",
+        "https://leanny.github.io/splat3/images/coop/UrocoIcon_02.png"
+      ]
+    }
+  }
+
   private async get_coop_enemy(version: number): Promise<{ [name: string]: any }> {
     const base_url: string = `https://leanny.github.io/splat3/data/mush/${version}/CoopEnemyInfo.json`;
     const enemies: CoopEnemyInfo[] = (await axios.get(base_url)).data
@@ -388,6 +398,7 @@ export class AuthorizeService {
     const urls: { [name: string]: any } = (await Promise.all([
       this.get_coop_enemy(version),
       this.get_stage_banner(),
+      this.get_scale()
     ].concat(
       Object.entries(SplatoonInkLink).map(async ([_, value]) => {
         return await this.plain_text(value);
@@ -397,25 +408,4 @@ export class AuthorizeService {
     asset_urls['weapon_illust'] = asset_urls['weapon_illust'].concat(rare_weapons);
     return asset_urls
   }
-}
-
-function merge(target, source, opts) {
-  const isObject = obj => obj && typeof obj === 'object' && !Array.isArray(obj);
-  const isConcatArray = opts && opts.concatArray;
-  let result = Object.assign({}, target);
-  if (isObject(target) && isObject(source)) {
-    for (const [sourceKey, sourceValue] of Object.entries(source)) {
-      const targetValue = target[sourceKey];
-      if (isConcatArray && Array.isArray(sourceValue) && Array.isArray(targetValue)) {
-        result[sourceKey] = targetValue.concat(...sourceValue);
-      }
-      else if (isObject(sourceValue) && target.hasOwnProperty(sourceKey)) {
-        result[sourceKey] = merge(targetValue, sourceValue, opts);
-      }
-      else {
-        Object.assign(result, { [sourceKey]: sourceValue });
-      }
-    }
-  }
-  return result;
 }
