@@ -1,4 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
+
 import { AuthorizeService } from "./authorize.service";
 
 describe("AuthorizeService", () => {

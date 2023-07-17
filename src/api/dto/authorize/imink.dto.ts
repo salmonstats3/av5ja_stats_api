@@ -1,9 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Expose, plainToInstance } from "class-transformer";
-import { GameServiceTokenResponse } from "./game_service_token.dto";
-import { v4 as uuidv4 } from 'uuid'
+import { Expose } from "class-transformer";
 import { Jwt } from "src/utils/jwt";
+import { v4 as uuidv4 } from "uuid";
+
 import { AccessTokenResponse } from "./access_token.dto";
+import { GameServiceTokenResponse } from "./game_service_token.dto";
 export enum IminkType {
   NSO = 1,
   APP = 2,
@@ -40,32 +41,32 @@ export class IminkResponse {
 
 export class CoralRequest extends IminkRequest {
   @Expose()
-  timestamp: number
+  timestamp: number;
 
   @Expose()
-  request_id?: string
+  request_id?: string;
 
   @Expose()
-  na_id?: string
+  na_id?: string;
 
   @Expose()
-  coral_user_id?: string
+  coral_user_id?: string;
 
   constructor(token: GameServiceTokenResponse | AccessTokenResponse) {
     if (token instanceof AccessTokenResponse) {
-      super(IminkType.NSO, token.id_token)
-      this.timestamp = Date.now()
-      this.request_id = uuidv4()
-      const [jwt, sig] = Jwt.decode(token.id_token)
-      this.na_id = jwt.payload.sub.toString()
-      console.log(this)
+      super(IminkType.NSO, token.id_token);
+      this.timestamp = Date.now();
+      this.request_id = uuidv4();
+      const [jwt, sig] = Jwt.decode(token.id_token);
+      this.na_id = jwt.payload.sub.toString();
+      console.log(this);
     } else {
-      super(IminkType.APP, token.result.webApiServerCredential.accessToken)
-      this.timestamp = Date.now()
-      this.request_id = uuidv4()
-      const [jwt, sig] = Jwt.decode(token.result.webApiServerCredential.accessToken)
-      this.na_id = jwt.payload.sub.toString()
-      this.coral_user_id = token.result.user.id.toString()
+      super(IminkType.APP, token.result.webApiServerCredential.accessToken);
+      this.timestamp = Date.now();
+      this.request_id = uuidv4();
+      const [jwt, sig] = Jwt.decode(token.result.webApiServerCredential.accessToken);
+      this.na_id = jwt.payload.sub.toString();
+      this.coral_user_id = token.result.user.id.toString();
     }
   }
 }

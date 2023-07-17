@@ -16,9 +16,5 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "cSpell.words": [
-    "fastify",
-    "nestjs",
-    "redoc"
-  ]
+  "cSpell.words": ["fastify", "nestjs", "redoc"]
 }

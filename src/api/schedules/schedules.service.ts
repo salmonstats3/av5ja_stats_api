@@ -9,9 +9,9 @@ import { collection, getDocs, getFirestore } from "firebase/firestore/lite";
 import { PrismaService } from "src/prisma.service";
 
 import { Setting } from "../dto/enum/setting";
+import { CoopScheduleRequestQuery } from "../dto/schedules/schedule.request.dto";
 import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
 import { firebaseConfig } from "../firebase.config";
-import { CoopScheduleRequestQuery } from "../dto/schedules/schedule.request.dto";
 
 @Injectable()
 export class SchedulesService {
