@@ -34,6 +34,23 @@ paths:
           description: ''
       tags:
         - 認証
+  /v3/authorize/resources:
+    get:
+      operationId: リソースURL取得
+      summary: ''
+      description: Resources URLを返します
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppVersionResult'
+        '400':
+          description: ''
+      tags:
+        - 認証
   /v3/schedules/{schedule_id}:
     get:
       operationId: Salmon Stats分析
@@ -283,7 +300,6 @@ paths:
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
-  version: 3.0.5
   contact: {}
 tags: []
 servers: []

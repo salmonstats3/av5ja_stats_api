@@ -1,12 +1,12 @@
-import { Controller, Get, HttpCode, Param, Query, ValidationPipe, Version } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiTags, PartialType } from "@nestjs/swagger";
+import { Controller, Get, HttpCode, Query, Version } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags, PartialType } from "@nestjs/swagger";
 import { Schedule } from "@prisma/client";
 
 import { PaginatedDto } from "../dto/pagination.dto";
+import { CoopScheduleRequestQuery } from "../dto/schedules/schedule.request.dto";
 import { CoopScheduleDataResponse } from "../dto/schedules/schedule.response.dto";
 
 import { SchedulesService } from "./schedules.service";
-import { CoopScheduleRequestQuery } from "../dto/schedules/schedule.request.dto";
 
 @Controller("schedules")
 @ApiExtraModels(PaginatedDto)
