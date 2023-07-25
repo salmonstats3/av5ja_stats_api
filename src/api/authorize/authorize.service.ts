@@ -66,9 +66,9 @@ export class AuthorizeService {
       session_token: session_token,
     };
     const access_token = await this.get_access_token(request);
-    const imink_nso: IminkResponse = await this.get_f(new CoralRequest(access_token));
+    const imink_nso: IminkResponse = await this.get_f(new CoralRequest(access_token), version);
     const game_service_token = await this.get_game_service_token(new GameServiceTokenRequest(imink_nso, version, access_token.id_token));
-    const imink_app: IminkResponse = await this.get_f(new CoralRequest(game_service_token));
+    const imink_app: IminkResponse = await this.get_f(new CoralRequest(game_service_token), version);
     const game_web_token = await this.get_game_web_token(
       new GameWebTokenRequest(imink_app, version, game_service_token.result.webApiServerCredential.accessToken),
     );
@@ -250,20 +250,23 @@ export class AuthorizeService {
     }
   }
 
-  private async get_f(request: CoralRequest) {
+  private async get_f(request: CoralRequest, version: string) {
     const url = process.env.F_SERVER_URL;
+    const headers = {
+      'User-Agent': 'SplatNet3/@tkgling',
+      'X-znca-Version': version,
+      'X-znca-Platform': 'Android',
+    }
     const parameters = {
       coral_user_id: request.coral_user_id,
       hash_method: request.method.valueOf(),
       na_id: request.na_id,
       request_id: request.request_id,
-      timestamp: request.timestamp,
       token: request.naIdToken,
     };
-    console.log(parameters);
     try {
-      const response = await axios.post(url, parameters);
-      return plainToClass(IminkResponse, { ...response.data, ...{ request_id: request.request_id, timestamp: request.timestamp } });
+      const response = await axios.post(url, parameters, { headers: headers });
+      return plainToClass(IminkResponse, { ...response.data, ...{ request_id: request.request_id } });
     } catch (error) {
       throw new HttpException(error.response.data, error.response.status);
     }
