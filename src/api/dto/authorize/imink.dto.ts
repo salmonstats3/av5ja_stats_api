@@ -41,9 +41,6 @@ export class IminkResponse {
 
 export class CoralRequest extends IminkRequest {
   @Expose()
-  timestamp: number;
-
-  @Expose()
   request_id?: string;
 
   @Expose()
@@ -55,14 +52,12 @@ export class CoralRequest extends IminkRequest {
   constructor(token: GameServiceTokenResponse | AccessTokenResponse) {
     if (token instanceof AccessTokenResponse) {
       super(IminkType.NSO, token.id_token);
-      this.timestamp = Date.now();
       this.request_id = uuidv4();
       const [jwt, sig] = Jwt.decode(token.id_token);
       this.na_id = jwt.payload.sub.toString();
       console.log(this);
     } else {
       super(IminkType.APP, token.result.webApiServerCredential.accessToken);
-      this.timestamp = Date.now();
       this.request_id = uuidv4();
       const [jwt, sig] = Jwt.decode(token.result.webApiServerCredential.accessToken);
       this.na_id = jwt.payload.sub.toString();
