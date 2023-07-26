@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import { AccessTokenResponse } from "./access_token.dto";
 import { GameServiceTokenResponse } from "./game_service_token.dto";
 import { IsNumber, IsOptional, IsString, IsUUID, MaxLength, Min, MinLength } from "class-validator";
+import { BadRequestException } from "@nestjs/common";
+import dayjs from "dayjs";
 
 enum HashMethod {
   NSO = 1,
@@ -36,7 +38,7 @@ export class CoralRequest {
   @Expose()
   na_id?: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: "4737360831381504" })
   @IsOptional()
   @Expose()
   coral_user_id?: string;
@@ -47,6 +49,9 @@ export class CoralRequest {
       this.token = token.id_token
       this.request_id = uuidv4();
       const [jwt, sig] = Jwt.decode(token.id_token);
+      if (jwt.payload.exp < dayjs().unix()) {
+        throw new BadRequestException("Token expired")
+      }
       this.na_id = jwt.payload.sub.toString();
       return
     }
@@ -56,6 +61,9 @@ export class CoralRequest {
       this.request_id = uuidv4();
       const [jwt, sig] = Jwt.decode(token.result.webApiServerCredential.accessToken);
       this.na_id = jwt.payload.sub.toString();
+      if (jwt.payload.exp < dayjs().unix()) {
+        throw new BadRequestException("Token expired")
+      }
       this.coral_user_id = token.result.user.id.toString();
       return
     }
