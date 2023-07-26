@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
 import { IsNotEmpty } from "class-validator";
 
-import { IminkResponse } from "./imink.dto";
+import { CoralResponse } from "./imink.dto";
 
 export class GameWebTokenBadRequest {
   @ApiProperty({ default: 9400 })
@@ -90,7 +90,7 @@ export class GameWebTokenRequest {
   @IsNotEmpty()
   timestamp: number;
 
-  constructor(imink: IminkResponse, version: string, naIdToken: string) {
+  constructor(imink: CoralResponse, version: string, naIdToken: string) {
     this.version = version;
     this.f = imink.f;
     this.request_id = imink.request_id;

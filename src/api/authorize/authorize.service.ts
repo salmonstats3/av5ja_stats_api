@@ -11,7 +11,7 @@ import { AppVersionResponse, AppVersionResult } from "../dto/authorize/app_versi
 import { BulletTokenRequest, BulletTokenResponse } from "../dto/authorize/bullet_token.dto";
 import { GameServiceTokenRequest, GameServiceTokenResponse } from "../dto/authorize/game_service_token.dto";
 import { GameWebTokenRequest, GameWebTokenResponse } from "../dto/authorize/game_web_token.dto";
-import { IminkResponse, CoralRequest } from "../dto/authorize/imink.dto";
+import { CoralResponse, CoralRequest } from "../dto/authorize/imink.dto";
 import { Setting } from "../dto/enum/setting";
 import { CoopSchedule, CoopScheduleDataResponse, CoopScheduleResponse, KingSalmonId } from "../dto/schedules/schedule.response.dto";
 import { firebaseConfig } from "../firebase.config";
@@ -65,9 +65,9 @@ export class AuthorizeService {
       session_token: session_token,
     };
     const access_token = await this.get_access_token(request);
-    const imink_nso: IminkResponse = await this.get_f_value(new CoralRequest(access_token), version);
+    const imink_nso: CoralResponse = await this.get_f(new CoralRequest(access_token), version);
     const game_service_token = await this.get_game_service_token(new GameServiceTokenRequest(imink_nso, version, access_token.id_token));
-    const imink_app: IminkResponse = await this.get_f_value(new CoralRequest(game_service_token), version);
+    const imink_app: CoralResponse = await this.get_f(new CoralRequest(game_service_token), version);
     const game_web_token = await this.get_game_web_token(
       new GameWebTokenRequest(imink_app, version, game_service_token.result.webApiServerCredential.accessToken),
     );
@@ -249,8 +249,9 @@ export class AuthorizeService {
     }
   }
 
-  async get_f_value(request: CoralRequest, version: string): Promise<IminkResponse> {
+  async get_f(request: CoralRequest, version: string) {
     const url = "http://192.168.1.22:9000/f";
+    // const url = process.env.F_SERVER_URL;
     const headers = {
       "User-Agent": "SplatNet3/@tkgling",
       "X-znca-Version": version,
@@ -258,36 +259,14 @@ export class AuthorizeService {
     };
     const parameters = {
       coral_user_id: request.coral_user_id,
-      hash_method: request.method.valueOf(),
+      hash_method: request.hash_method.valueOf(),
       na_id: request.na_id,
       request_id: request.request_id,
-      token: request.naIdToken,
+      token: request.token,
     };
     try {
       const response = await axios.post(url, parameters, { headers: headers });
-      return plainToClass(IminkResponse, { ...response.data, ...{ request_id: request.request_id } });
-    } catch (error) {
-      throw new HttpException(error.response.data, error.response.status);
-    }
-  }
-
-  private async get_f(request: CoralRequest, version: string) {
-    const url = process.env.F_SERVER_URL;
-    const headers = {
-      "User-Agent": "SplatNet3/@tkgling",
-      "X-znca-Version": version,
-      "X-znca-Platform": "Android",
-    };
-    const parameters = {
-      coral_user_id: request.coral_user_id,
-      hash_method: request.method.valueOf(),
-      na_id: request.na_id,
-      request_id: request.request_id,
-      token: request.naIdToken,
-    };
-    try {
-      const response = await axios.post(url, parameters, { headers: headers });
-      return plainToClass(IminkResponse, { ...response.data, ...{ request_id: request.request_id } });
+      return plainToClass(CoralResponse, { ...response.data, ...{ request_id: request.request_id } });
     } catch (error) {
       throw new HttpException(error.response.data, error.response.status);
     }

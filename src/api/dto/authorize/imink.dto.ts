@@ -2,66 +2,76 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
 import { Jwt } from "src/utils/jwt";
 import { v4 as uuidv4 } from "uuid";
-
 import { AccessTokenResponse } from "./access_token.dto";
 import { GameServiceTokenResponse } from "./game_service_token.dto";
-export enum IminkType {
+import { IsNumber, IsOptional, IsString, IsUUID, MaxLength, Min, MinLength } from "class-validator";
+
+enum HashMethod {
   NSO = 1,
   APP = 2,
 }
 
-export class IminkRequest {
-  @ApiProperty({ default: IminkType.NSO, enum: IminkType })
+export class CoralRequest {
+  @ApiProperty({ default: HashMethod.NSO, enum: HashMethod })
   @Expose()
-  method: IminkType;
+  hash_method: HashMethod;
 
   @ApiProperty({
     default:
       "eyJraWQiOiIxZDkwOWFhNC1lZDExLTQzZWUtODEyZS00NzZhNzQ1YTY5YmUiLCJqa3UiOiJodHRwczovL2FjY291bnRzLm5pbnRlbmRvLmNvbS8xLjAuMC9jZXJ0aWZpY2F0ZXMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1YWU4ZjdhNzhiMGNjYTRkIiwiZXhwIjoxNjY1MzE1Nzg5LCJqdGkiOiJjNDMwNjQ0NS04NDBhLTQ4ZTEtYjYyZS0zYWVmYWRkOTZiNmEiLCJhYzpzY3AiOlswLDgsOSwxNywyM10sImF1ZCI6IjcxYjk2M2MxYjdiNmQxMTkiLCJhYzpncnQiOjY0LCJpc3MiOiJodHRwczovL2FjY291bnRzLm5pbnRlbmRvLmNvbSIsImlhdCI6MTY2NTMxNDg4OSwidHlwIjoidG9rZW4ifQ.bf0hGoTZE8WN962BoUBh2xyY4SQq4GGdvuYsB1C_gu5RmleCRumK5XkCqNPcR1m17Zlh68oUqJx4xaRLSWNvPmjR1m76oo37N2TkV9U5ObssC-iI-FkIIkfrxlXK0nayqcxwcHLG4kHUO1QFsLuC6st2dPHt7d4yP8r88g8n1Jx27KMeB4u_JvIr3AXFPtgW0-VA4gEn_phYz7Vi4InA61bBVryhXqQIIi_-3rKapQVPgknKMYpLG9Eig8q6meILFQyOP9moy8UYZmnIpRSCgp8BM2Ze3kia3Rt66fTp2dmAukFmWbjku-kf4BK1eb8fxPoBffv6LHXkZFfgi7JO1Q",
   })
   @Expose()
-  naIdToken: string;
+  token: string;
 
-  constructor(method: IminkType, naIdToken: string) {
-    this.method = method;
-    this.naIdToken = naIdToken;
-  }
-}
-
-export class IminkResponse {
-  @ApiProperty()
-  f: string;
-
-  @ApiProperty()
-  request_id: string;
-
-  @ApiProperty()
-  timestamp: number;
-}
-
-export class CoralRequest extends IminkRequest {
+  @ApiProperty({ example: "9c5a943a-761d-4dc2-a489-2a3a38e69dc2" })
+  @IsOptional()
+  @IsUUID()
   @Expose()
   request_id?: string;
 
+  @ApiProperty({ example: "5ae8f7a78b0cca4d" })
+  @IsOptional()
+  @MinLength(16)
+  @MaxLength(16)
   @Expose()
   na_id?: string;
 
+  @ApiProperty()
+  @IsOptional()
   @Expose()
   coral_user_id?: string;
 
-  constructor(token: GameServiceTokenResponse | AccessTokenResponse) {
+  constructor(token: GameServiceTokenResponse | AccessTokenResponse | string, hash_method: HashMethod = HashMethod.NSO) {
     if (token instanceof AccessTokenResponse) {
-      super(IminkType.NSO, token.id_token);
+      this.hash_method = HashMethod.NSO
+      this.token = token.id_token
       this.request_id = uuidv4();
       const [jwt, sig] = Jwt.decode(token.id_token);
       this.na_id = jwt.payload.sub.toString();
-      console.log(this);
-    } else {
-      super(IminkType.APP, token.result.webApiServerCredential.accessToken);
+      return
+    }
+    if (token instanceof GameServiceTokenResponse) {
+      this.hash_method = HashMethod.APP
+      this.token = token.result.webApiServerCredential.accessToken
       this.request_id = uuidv4();
       const [jwt, sig] = Jwt.decode(token.result.webApiServerCredential.accessToken);
       this.na_id = jwt.payload.sub.toString();
       this.coral_user_id = token.result.user.id.toString();
+      return
     }
   }
+}
+
+export class CoralResponse {
+  @ApiProperty()
+  @IsString()
+  f: string
+
+  @ApiProperty()
+  @IsNumber()
+  timestamp: number
+
+  @ApiProperty()
+  @IsUUID()
+  request_id: string
 }

@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@ne
 import { AppVersionResult } from "../dto/authorize/app_version.dto";
 import { AuthorizeService } from "./authorize.service";
 import { AuthorizeResponse } from "./autorize.response.dto";
-import { IminkRequest, IminkResponse } from "../dto/authorize/imink.dto";
+import { CoralRequest, CoralResponse } from "../dto/authorize/imink.dto";
 
 @Controller("authorize")
 export class AuthorizeController {
@@ -30,9 +30,10 @@ export class AuthorizeController {
     operationId: "ハッシュ取得",
   })
   @ApiBadRequestResponse()
-  @ApiOkResponse({ type: IminkResponse })
-  async f(@Headers('X-ProductVersion') version: string, @Body() request: IminkRequest): Promise<IminkResponse> {
-    return this.service.get_f_value(request, version);
+  @ApiOkResponse({ type: CoralResponse })
+  async f(@Headers('X-ProductVersion') version: string, @Body() request: CoralRequest): Promise<CoralResponse> {
+    console.log(request)
+    return this.service.get_f(request, version);
   }
 
   @Get("version")
