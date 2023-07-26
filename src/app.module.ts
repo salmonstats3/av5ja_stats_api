@@ -4,9 +4,10 @@ import { ConfigModule } from "@nestjs/config";
 import { ApiModule } from "./api/api.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { ApiController } from './api/api.controller';
 
 @Module({
-  controllers: [AppController],
+  controllers: [AppController, ApiController],
   imports: [
     ApiModule,
     ConfigModule.forRoot({
@@ -15,4 +16,4 @@ import { AppService } from "./app.service";
   ],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

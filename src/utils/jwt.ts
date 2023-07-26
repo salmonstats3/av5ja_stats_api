@@ -3,6 +3,7 @@ import * as crypto from "node:crypto";
 
 import createDebug from "debug";
 import fetch from "node-fetch";
+import { BadRequestException } from "@nestjs/common";
 
 const debug = createDebug("nxapi:util:jwt");
 
@@ -42,21 +43,25 @@ export interface JwtPayload {
 type JwtVerifier = (data: Buffer, signature: Buffer, key: string) => boolean;
 
 export class Jwt<T = JwtPayload, H extends JwtHeader = JwtHeader> {
-  constructor(readonly header: H, readonly payload: T) {}
+  constructor(readonly header: H, readonly payload: T) { }
 
   static decode<T = JwtPayload, H extends JwtHeader = JwtHeader>(token: string) {
-    const [header_str, payload_str, signature_str] = token.split(".", 3);
+    try {
+      const [header_str, payload_str, signature_str] = token.split(".", 3);
 
-    const header = JSON.parse(Buffer.from(header_str, "base64url").toString());
-    const payload = JSON.parse(Buffer.from(payload_str, "base64url").toString());
-    const signature = Buffer.from(signature_str, "base64url");
+      const header = JSON.parse(Buffer.from(header_str, "base64url").toString());
+      const payload = JSON.parse(Buffer.from(payload_str, "base64url").toString());
+      const signature = Buffer.from(signature_str, "base64url");
 
-    if ("typ" in header && header.typ !== "JWT") {
-      throw new Error("Invalid JWT");
+      if ("typ" in header && header.typ !== "JWT") {
+        throw new Error("Invalid JWT");
+      }
+
+      const jwt = new this<T, H>(header, payload);
+      return [jwt, signature] as const;
+    } catch {
+      throw new BadRequestException("Invalid JWT")
     }
-
-    const jwt = new this<T, H>(header, payload);
-    return [jwt, signature] as const;
   }
 
   verify(signature: Buffer, key: string, verifier?: JwtVerifier) {

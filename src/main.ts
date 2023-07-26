@@ -18,7 +18,7 @@ function build(documents: OpenAPIObject) {
   const build = path.resolve(process.cwd(), "docs");
   const output = path.resolve(build, "index");
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  mkdir(build, { recursive: true }, () => {});
+  mkdir(build, { recursive: true }, () => { });
   writeFileSync(`${output}.json`, JSON.stringify(documents), {
     encoding: "utf8",
   });
@@ -35,10 +35,6 @@ async function bootstrap() {
     optionsSuccessStatus: 200,
     origin: "*",
     preflightContinue: false,
-  });
-  app.enableVersioning({
-    defaultVersion: "3",
-    type: VersioningType.URI,
   });
   const disableErrorMessages: boolean = process.env.NODE_ENV === "production";
   app.useGlobalPipes(
