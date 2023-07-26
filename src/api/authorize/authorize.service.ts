@@ -20,7 +20,6 @@ import { AuthorizeResponse } from "./autorize.response.dto";
 import { SplatoonInkLink } from "../dto/enum/link";
 import { CoopEnemyInfo, WeaponInfoMain } from "../dto/weaponinfo.dto";
 import resources from "./resources.json";
-import { assert } from "console";
 
 @Injectable()
 export class AuthorizeService {
@@ -66,9 +65,9 @@ export class AuthorizeService {
       session_token: session_token,
     };
     const access_token = await this.get_access_token(request);
-    const imink_nso: IminkResponse = await this.get_f(new CoralRequest(access_token), version);
+    const imink_nso: IminkResponse = await this.get_f_value(new CoralRequest(access_token), version);
     const game_service_token = await this.get_game_service_token(new GameServiceTokenRequest(imink_nso, version, access_token.id_token));
-    const imink_app: IminkResponse = await this.get_f(new CoralRequest(game_service_token), version);
+    const imink_app: IminkResponse = await this.get_f_value(new CoralRequest(game_service_token), version);
     const game_web_token = await this.get_game_web_token(
       new GameWebTokenRequest(imink_app, version, game_service_token.result.webApiServerCredential.accessToken),
     );
@@ -250,13 +249,35 @@ export class AuthorizeService {
     }
   }
 
+  async get_f_value(request: CoralRequest, version: string): Promise<IminkResponse> {
+    const url = "http://192.168.1.22:9000/f";
+    const headers = {
+      "User-Agent": "SplatNet3/@tkgling",
+      "X-znca-Version": version,
+      "X-znca-Platform": "Android",
+    };
+    const parameters = {
+      coral_user_id: request.coral_user_id,
+      hash_method: request.method.valueOf(),
+      na_id: request.na_id,
+      request_id: request.request_id,
+      token: request.naIdToken,
+    };
+    try {
+      const response = await axios.post(url, parameters, { headers: headers });
+      return plainToClass(IminkResponse, { ...response.data, ...{ request_id: request.request_id } });
+    } catch (error) {
+      throw new HttpException(error.response.data, error.response.status);
+    }
+  }
+
   private async get_f(request: CoralRequest, version: string) {
     const url = process.env.F_SERVER_URL;
     const headers = {
-      'User-Agent': 'SplatNet3/@tkgling',
-      'X-znca-Version': version,
-      'X-znca-Platform': 'Android',
-    }
+      "User-Agent": "SplatNet3/@tkgling",
+      "X-znca-Version": version,
+      "X-znca-Platform": "Android",
+    };
     const parameters = {
       coral_user_id: request.coral_user_id,
       hash_method: request.method.valueOf(),
@@ -326,40 +347,41 @@ export class AuthorizeService {
   }
 
   private async get_latest_app_version(): Promise<number> {
-    const url: string = 'https://leanny.github.io/splat3/versions.json';
+    const url: string = "https://leanny.github.io/splat3/versions.json";
     return ((await axios.get(url)).data as string[]).map((version) => parseInt(version, 10)).sort((a, b) => b - a)[0];
   }
 
   private async get_stage_banner(): Promise<{ [name: string]: any }> {
     const base_url: string = `https://leanny.github.io/splat3/data/language/JPja.json`;
-    const stages: string[] = Object.keys((await axios.get(base_url)).data["CommonMsg/Coop/CoopStageName"])
-      .map((stage: string) => {
-        return `https://leanny.github.io/splat3/images/stageBanner/${stage.includes('Shake') ? `Cop_${stage}.png` : stage === 'Unknown' ? `${stage}.png` : `Vss_${stage}.png`}`
-      })
+    const stages: string[] = Object.keys((await axios.get(base_url)).data["CommonMsg/Coop/CoopStageName"]).map((stage: string) => {
+      return `https://leanny.github.io/splat3/images/stageBanner/${stage.includes("Shake") ? `Cop_${stage}.png` : stage === "Unknown" ? `${stage}.png` : `Vss_${stage}.png`
+        }`;
+    });
     return {
-      'stage_img': {
-        "banner": stages,
-        "icon": stages.map((stage: string) => stage.replace('Banner', 'L'))
-      }
+      stage_img: {
+        banner: stages,
+        icon: stages.map((stage: string) => stage.replace("Banner", "L")),
+      },
     };
   }
 
   private async get_scale(): Promise<{ [name: string]: any }> {
     return {
-      'scale_img': [
+      scale_img: [
         "https://leanny.github.io/splat3/images/coop/UrocoIcon_00.png",
         "https://leanny.github.io/splat3/images/coop/UrocoIcon_01.png",
-        "https://leanny.github.io/splat3/images/coop/UrocoIcon_02.png"
-      ]
-    }
+        "https://leanny.github.io/splat3/images/coop/UrocoIcon_02.png",
+      ],
+    };
   }
 
   private async get_coop_enemy(version: number): Promise<{ [name: string]: any }> {
     const base_url: string = `https://leanny.github.io/splat3/data/mush/${version}/CoopEnemyInfo.json`;
-    const enemies: CoopEnemyInfo[] = (await axios.get(base_url)).data
-      .map((data: any) => plainToInstance(CoopEnemyInfo, data, { excludeExtraneousValues: true }))
+    const enemies: CoopEnemyInfo[] = (await axios.get(base_url)).data.map((data: any) =>
+      plainToInstance(CoopEnemyInfo, data, { excludeExtraneousValues: true }),
+    );
     return {
-      'coop_enemy_img': enemies.map((enemy: CoopEnemyInfo) => enemy.url)
+      coop_enemy_img: enemies.map((enemy: CoopEnemyInfo) => enemy.url),
     };
   }
 
@@ -367,14 +389,14 @@ export class AuthorizeService {
     const base_url: string = `https://leanny.github.io/splat3/data/mush/${version}/WeaponInfoMain.json`;
     const weapons: WeaponInfoMain[] = (await axios.get(base_url)).data
       .map((data: any) => plainToInstance(WeaponInfoMain, data, { excludeExtraneousValues: true }))
-      .filter((weapon: WeaponInfoMain) => weapon.row_id.includes('Bear'));
+      .filter((weapon: WeaponInfoMain) => weapon.row_id.includes("Bear"));
     return {
-      'weapon_illust': weapons.map((weapon: WeaponInfoMain) => weapon.url)
+      weapon_illust: weapons.map((weapon: WeaponInfoMain) => weapon.url),
     };
   }
 
   private async plain_text(link: SplatoonInkLink): Promise<{ [name: string]: any }> {
-    const base_url: string = 'https://splatoon3.ink/assets/splatnet/v1';
+    const base_url: string = "https://splatoon3.ink/assets/splatnet/v1";
     const url: string = `${base_url}/${link}`;
     const context: string = (await axios.get(url)).data;
     const pattern: RegExp = /([\w\d]{64}_0.png)/g;
@@ -398,17 +420,17 @@ export class AuthorizeService {
   async get_resource_urls(): Promise<{ [name: string]: any }> {
     const version: number = await this.get_latest_app_version();
     const rare_weapons: string[] = (await this.get_weapon_info_main(version)).weapon_illust;
-    const urls: { [name: string]: any } = (await Promise.all([
-      this.get_coop_enemy(version),
-      this.get_stage_banner(),
-      this.get_scale()
-    ].concat(
-      Object.entries(SplatoonInkLink).map(async ([_, value]) => {
-        return await this.plain_text(value);
-      }),
-    ))).reduce((prev, current) => Object.assign(prev, current), {});
-    const asset_urls = { ...urls, ...resources }
-    asset_urls['weapon_illust'] = asset_urls['weapon_illust'].concat(rare_weapons);
-    return asset_urls
+    const urls: { [name: string]: any } = (
+      await Promise.all(
+        [this.get_coop_enemy(version), this.get_stage_banner(), this.get_scale()].concat(
+          Object.entries(SplatoonInkLink).map(async ([_, value]) => {
+            return await this.plain_text(value);
+          }),
+        ),
+      )
+    ).reduce((prev, current) => Object.assign(prev, current), {});
+    const asset_urls = { ...urls, ...resources };
+    asset_urls["weapon_illust"] = asset_urls["weapon_illust"].concat(rare_weapons);
+    return asset_urls;
   }
 }
