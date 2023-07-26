@@ -1,12 +1,15 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, CACHE_MANAGER, HttpException, Inject, Injectable } from '@nestjs/common';
 import { SessionTokenRequest, SessionTokenResponse } from './dto/session_tokne.dto';
 import { AccessTokenRequest, AccessTokenResponse } from './dto/access_token.dto';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import axios from 'axios';
 import { GameServiceTokenRequest, GameServiceTokenResponse } from './dto/game_service_token.dto';
 import { GameWebTokenRequest, GameWebTokenResponse } from './dto/game_web_token.dto';
 import { BulletTokenRequest, BulletTokenResponse } from './dto/bullet_token.dto';
 import { CoralRequest, CoralResponse } from './dto/coral.dto';
+import { APIConfig } from './dto/api_config.dto';
+import { AppVersionResponse } from './dto/version.dto';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class OauthService {
@@ -22,17 +25,17 @@ export class OauthService {
             session_token: request.session_token,
         };
         try {
-            return plainToClass(AccessTokenResponse, (await axios.post(url, parameters)).data);
+            return plainToInstance(AccessTokenResponse, (await axios.post(url, parameters)).data);
         } catch (error) {
             throw new HttpException(error.response.data, error.response.status);
         }
     }
 
-    async game_service_token(request: GameServiceTokenRequest): Promise<GameServiceTokenResponse> {
+    async game_service_token(request: GameServiceTokenRequest, version: string): Promise<GameServiceTokenResponse> {
         const url = "https://api-lp1.znc.srv.nintendo.net/v3/Account/Login";
         const headers = {
             "X-Platform": "Android",
-            "X-ProductVersion": request.version,
+            "X-ProductVersion": version,
         };
         const parameters = {
             parameter: {
@@ -51,7 +54,7 @@ export class OauthService {
             const status_code = response.data.status;
             switch (status_code) {
                 case 0:
-                    return plainToClass(GameServiceTokenResponse, response.data);
+                    return plainToInstance(GameServiceTokenResponse, response.data);
                 default:
                     throw new HttpException(response.data, status_code - 9000);
             }
@@ -60,12 +63,12 @@ export class OauthService {
         }
     }
 
-    async game_web_token(request: GameWebTokenRequest): Promise<GameWebTokenResponse> {
+    async game_web_token(request: GameWebTokenRequest, version: string): Promise<GameWebTokenResponse> {
         const url = "https://api-lp1.znc.srv.nintendo.net/v2/Game/GetWebServiceToken";
         const headers = {
             Authorization: `Bearer ${request.naIdToken}`,
             "X-Platform": "Android",
-            "X-ProductVersion": request.version,
+            "X-ProductVersion": version,
         };
         const parameters = {
             parameter: {
@@ -83,7 +86,7 @@ export class OauthService {
             const status_code = response.data.status;
             switch (status_code) {
                 case 0:
-                    return plainToClass(GameWebTokenResponse, response.data);
+                    return plainToInstance(GameWebTokenResponse, response.data);
                 default:
                     throw new HttpException(response.data, status_code - 9000);
             }
@@ -105,7 +108,7 @@ export class OauthService {
             const status_code = response.status;
             switch (status_code) {
                 case 201:
-                    return plainToClass(BulletTokenResponse, response.data);
+                    return plainToInstance(BulletTokenResponse, response.data);
                 default:
                     throw new HttpException(response.data, status_code);
             }
@@ -118,9 +121,49 @@ export class OauthService {
         const url = "http://192.168.1.22:9000/f";
         try {
             const response = await axios.post(url, request);
-            return plainToClass(CoralResponse, response.data);
+            return plainToInstance(CoralResponse, response.data);
         } catch (error) {
             throw new BadRequestException(error);
         }
+    }
+
+    async config(): Promise<APIConfig> {
+        const hash: string = await this.web_version_hash();
+        const [version, web_version] = await Promise.all([
+            this.version(),
+            this.web_version(hash),
+        ])
+        return plainToInstance(APIConfig, {
+            version: version,
+            web_version: web_version,
+            hash: hash
+        })
+    }
+
+    private async version(): Promise<string> {
+        const url = "https://itunes.apple.com/lookup?id=1234806557";
+        return plainToInstance(AppVersionResponse, (await axios.get(url)).data, { excludeExtraneousValues: true }).results[0].version;
+    }
+
+    private async web_version_hash(): Promise<string> {
+        const url = "https://api.lp1.av5ja.srv.nintendo.net/";
+        const hash = new RegExp("main.([a-z0-9]{8}).js");
+        const response = (await axios.get(url)).data;
+        return hash.test(response) ? hash.exec(response)[1] : "bd36a652";
+    }
+
+    private async web_version(hash: string): Promise<string> {
+        const url = `https://api.lp1.av5ja.srv.nintendo.net/static/js/main.${hash}.js`;
+        const response = (await axios.get(url)).data;
+        const version: string = (() => {
+            const re = /`(\d{1}\.\d{1}\.\d{1})-/;
+            return re.test(response) ? re.exec(response)[1] : "3.1.0";
+        })();
+        const revision: string = (() => {
+            const re = /REACT_APP_REVISION:"([a-f0-9]{8})/;
+            return re.test(response) ? re.exec(response)[1] : "bd36a652";
+        })();
+
+        return `${version}-${revision}`;
     }
 }

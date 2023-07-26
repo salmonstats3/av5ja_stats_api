@@ -5,14 +5,6 @@ import { CoralResponse } from "./coral.dto";
 
 export class GameServiceTokenRequest {
     @ApiProperty({
-        example: "2.6.0",
-        required: true,
-    })
-    @Expose()
-    @IsNotEmpty()
-    version: string;
-
-    @ApiProperty({
         example: 1661322690000,
         required: true,
     })
@@ -45,8 +37,7 @@ export class GameServiceTokenRequest {
     @IsNotEmpty()
     f: string;
 
-    constructor(imink: CoralResponse, version: string, naIdToken: string) {
-        this.version = version;
+    constructor(imink: CoralResponse, naIdToken: string) {
         this.f = imink.f;
         this.timestamp = imink.timestamp;
         this.request_id = imink.request_id;

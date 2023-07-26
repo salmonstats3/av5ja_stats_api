@@ -5,13 +5,6 @@ import { CoralResponse } from "./coral.dto";
 
 export class GameWebTokenRequest {
     @ApiProperty({
-        example: "2.6.0",
-    })
-    @Expose()
-    @IsNotEmpty()
-    version: string;
-
-    @ApiProperty({
         example:
             "fK0khI0DhU8KmMKxX6oixI:APA91bEcKhiHi4acYjs495cIih46knhphM1SEUJo7eBu4cCPXfBSK82XnpnDkCrowl9DWN8v7hqwN2eDnFaclhnOyUKE7N1YXtwtps4ES7oQPMQmFqb86NK_V0hblS2ojYoDpSOa7mOD",
     })
@@ -38,8 +31,7 @@ export class GameWebTokenRequest {
     @IsNotEmpty()
     timestamp: number;
 
-    constructor(imink: CoralResponse, version: string, naIdToken: string) {
-        this.version = version;
+    constructor(imink: CoralResponse, naIdToken: string) {
         this.f = imink.f;
         this.request_id = imink.request_id;
         this.timestamp = imink.timestamp;
