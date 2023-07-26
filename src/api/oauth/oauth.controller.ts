@@ -9,6 +9,7 @@ import { SessionTokenRequest, SessionTokenResponse } from './dto/session_tokne.d
 import { OauthService } from './oauth.service';
 import { APIConfig } from './dto/api_config.dto';
 import { Cache } from "cache-manager";
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('oauth')
 export class OauthController {
