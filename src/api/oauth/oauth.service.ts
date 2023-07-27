@@ -55,7 +55,7 @@ export class OauthService {
             switch (status_code) {
                 case 0:
                     return plainToInstance(GameServiceTokenResponse, response.data);
-                default:
+                    example:
                     throw new HttpException(response.data, status_code - 9000);
             }
         } catch (error) {
@@ -87,7 +87,7 @@ export class OauthService {
             switch (status_code) {
                 case 0:
                     return plainToInstance(GameWebTokenResponse, response.data);
-                default:
+                    example:
                     throw new HttpException(response.data, status_code - 9000);
             }
         } catch (error) {
@@ -109,7 +109,7 @@ export class OauthService {
             switch (status_code) {
                 case 201:
                     return plainToInstance(BulletTokenResponse, response.data);
-                default:
+                    example:
                     throw new HttpException(response.data, status_code);
             }
         } catch (error) {

@@ -51,15 +51,15 @@ class GameServiceTokenCredential {
             "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc0NoaWxkUmVzdHJpY3RlZCI6ZmFsc2UsIm1lbWJlcnNoaXAiOnsiYWN0aXZlIjp0cnVlfSwiYXVkIjoiZjQxN2UxdGlianFkOTFjaDk5dTQ5aXd6NXNuOWNoeTMiLCJleHAiOjE2NDg2OTYwNzQsImlhdCI6MTY0ODY4ODg3NCwiaXNzIjoiYXBpLWxwMS56bmMuc3J2Lm5pbnRlbmRvLm5ldCIsInN1YiI6NjQ0NTQ1NzE2OTk3MzI0OCwidHlwIjoiaWRfdG9rZW4ifQ.UjXgsX4lPi5_3lYCrQh475UkSho2FbsESEsJRw19X_Q",
     })
     accessToken: string;
-    @ApiProperty({ default: 7200 })
+    @ApiProperty({ example: 7200 })
     expiresIn: number;
 }
 
 class GameServiceTokenFirebase {
-    @ApiProperty({ default: "" })
+    @ApiProperty({ example: "" })
     accessToken: string;
 
-    @ApiProperty({ default: 3600 })
+    @ApiProperty({ example: 3600 })
     expiresIn: number;
 }
 

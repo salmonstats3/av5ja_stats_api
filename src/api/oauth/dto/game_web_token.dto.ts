@@ -46,12 +46,12 @@ class GameWebTokenResult {
     })
     accessToken: string;
 
-    @ApiProperty({ default: 7200 })
+    @ApiProperty({ example: 7200 })
     expiresIn: number;
 }
 
 export class GameWebTokenResponse {
-    @ApiProperty({ default: 0 })
+    @ApiProperty({ example: 0 })
     status: number;
 
     @ApiProperty()

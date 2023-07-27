@@ -11,7 +11,7 @@ export class AppVersionResponse {
 }
 
 export class AppVersionResult {
-    @ApiProperty({ default: "2.5.0" })
+    @ApiProperty({ example: "2.5.0" })
     @Expose()
     version: string;
 }
