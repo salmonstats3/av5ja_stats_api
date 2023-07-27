@@ -156,6 +156,33 @@ paths:
                 $ref: '#/components/schemas/APIConfig'
       tags:
         - Authorize
+  /results:
+    post:
+      operationId: POST
+      summary: ''
+      description: ''
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoopResultManyRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedDto'
+                  - properties:
+                      results:
+                        items:
+                          $ref: '#/components/schemas/CustomResult'
+                        type: array
+      tags:
+        - Results
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
@@ -421,3 +448,351 @@ components:
         - version
         - web_version
         - hash
+    PaginatedDto:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: 総数
+        limit:
+          type: integer
+          description: 上限数
+        offset:
+          type: integer
+          description: オフセット
+        results:
+          type: array
+          items:
+            type: string
+      required:
+        - total
+        - limit
+        - offset
+        - results
+    CustomResult:
+      type: object
+      properties:
+        resultId:
+          type: number
+          example: a4e583cc-043e-4687-b5fd-20a0bcc179ae
+        uuid:
+          type: string
+          example: 9c5a943a-761d-4dc2-a489-2a3a38e69dc2
+        playTime:
+          format: date-time
+          type: string
+      required:
+        - resultId
+        - uuid
+        - playTime
+    CoopScheduleRequest:
+      type: object
+      properties:
+        stageId:
+          type: number
+          example: 1
+        startTime:
+          format: date-time
+          type: string
+        endTime:
+          format: date-time
+          type: string
+        weaponList:
+          example:
+            - -2
+            - -2
+            - -2
+            - -2
+          type: array
+          items:
+            type: string
+        rareWeapon:
+          type: number
+          nullable: true
+          example: null
+        mode:
+          type: string
+          enum:
+            - REGULAR
+            - LIMITED
+            - PRIVATE_CUSTOM
+            - PRIVATE_SCENARIO
+          example: REGULAR
+        rule:
+          type: string
+          enum:
+            - REGULAR
+            - BIG_RUN
+            - TEAM_CONTEST
+          example: REGULAR
+      required:
+        - stageId
+        - startTime
+        - endTime
+        - weaponList
+        - rareWeapon
+        - mode
+        - rule
+    CoopJobRequest:
+      type: object
+      properties:
+        bossId:
+          type: number
+        isBossDefeated:
+          type: boolean
+        failureWave:
+          type: number
+        isClear:
+          type: boolean
+      required:
+        - bossId
+        - isBossDefeated
+        - failureWave
+        - isClear
+    CoopResultIdRequest:
+      type: object
+      properties:
+        nplnUserId:
+          type: string
+        playTime:
+          format: date-time
+          type: string
+        uuid:
+          type: string
+      required:
+        - nplnUserId
+        - playTime
+        - uuid
+    CoopTextColorRequest:
+      type: object
+      properties:
+        r:
+          type: number
+        g:
+          type: number
+        b:
+          type: number
+        a:
+          type: number
+      required:
+        - r
+        - g
+        - b
+        - a
+    CoopBackgroundRequest:
+      type: object
+      properties:
+        id:
+          type: number
+        textColor:
+          $ref: '#/components/schemas/CoopTextColorRequest'
+      required:
+        - id
+        - textColor
+    CoopNameplateRequest:
+      type: object
+      properties:
+        badges:
+          type: array
+          items:
+            type: string
+        background:
+          $ref: '#/components/schemas/CoopBackgroundRequest'
+      required:
+        - badges
+        - background
+    CoopPlayerRequest:
+      type: object
+      properties:
+        bossKillCounts:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+        byname:
+          type: string
+        bossKillCountsTotal:
+          type: number
+        specialCounts:
+          type: array
+          items:
+            type: string
+        ikuraNum:
+          type: number
+        isMyself:
+          type: boolean
+        nameplate:
+          $ref: '#/components/schemas/CoopNameplateRequest'
+        nplnUserId:
+          type: string
+        helpCount:
+          type: number
+        deadCount:
+          type: number
+        weaponList:
+          type: array
+          items:
+            type: string
+        nameId:
+          type: string
+        goldenIkuraAssistNum:
+          type: number
+        species:
+          type: string
+        specialId:
+          type: number
+        goldenIkuraNum:
+          type: number
+        uniform:
+          type: number
+      required:
+        - bossKillCounts
+        - name
+        - byname
+        - bossKillCountsTotal
+        - specialCounts
+        - ikuraNum
+        - isMyself
+        - nameplate
+        - nplnUserId
+        - helpCount
+        - deadCount
+        - weaponList
+        - nameId
+        - goldenIkuraAssistNum
+        - species
+        - specialId
+        - goldenIkuraNum
+        - uniform
+    CoopResultRequest:
+      type: object
+      properties:
+        jobBonus:
+          type: number
+          example: 999
+        gradeId:
+          type: number
+          example: 8
+        waveDetails:
+          type: array
+          items:
+            type: string
+        ikuraNum:
+          type: number
+          example: 1000
+        jobScore:
+          type: number
+          example: 999
+        kumaPoint:
+          type: number
+          example: 999
+        jobRate:
+          type: number
+          example: 3.25
+        goldenIkuraNum:
+          type: number
+          example: 999
+        schedule:
+          $ref: '#/components/schemas/CoopScheduleRequest'
+        jobResult:
+          $ref: '#/components/schemas/CoopJobRequest'
+        bossKillCounts:
+          example:
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+          type: array
+          items:
+            type: string
+        resultId:
+          $ref: '#/components/schemas/CoopResultIdRequest'
+        scale:
+          example:
+            - 0
+            - 0
+            - 0
+          type: array
+          items:
+            type: string
+        smellMeter:
+          type: number
+          example: 5
+        goldenIkuraAssistNum:
+          type: number
+          example: 99
+        gradePoint:
+          type: number
+          example: 999
+        dangerRate:
+          type: number
+          example: 3.33
+        myResult:
+          $ref: '#/components/schemas/CoopPlayerRequest'
+        scenarioCode:
+          type: string
+          example: null
+          nullable: true
+        bossCounts:
+          example:
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+            - 0
+          type: array
+          items:
+            type: string
+        otherResults:
+          type: array
+          items:
+            type: string
+      required:
+        - jobBonus
+        - gradeId
+        - waveDetails
+        - ikuraNum
+        - jobScore
+        - kumaPoint
+        - jobRate
+        - goldenIkuraNum
+        - schedule
+        - jobResult
+        - bossKillCounts
+        - resultId
+        - scale
+        - smellMeter
+        - goldenIkuraAssistNum
+        - gradePoint
+        - dangerRate
+        - myResult
+        - scenarioCode
+        - bossCounts
+        - otherResults
+    CoopResultManyRequest:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoopResultRequest'
+      required:
+        - results
