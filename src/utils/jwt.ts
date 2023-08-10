@@ -43,7 +43,7 @@ export interface JwtPayload {
 type JwtVerifier = (data: Buffer, signature: Buffer, key: string) => boolean;
 
 export class Jwt<T = JwtPayload, H extends JwtHeader = JwtHeader> {
-  constructor(readonly header: H, readonly payload: T) {}
+  constructor(readonly header: H, readonly payload: T) { }
 
   static decode<T = JwtPayload, H extends JwtHeader = JwtHeader>(token: string) {
     try {
@@ -133,7 +133,8 @@ interface SavedJwks {
 
 const cached_keysets = new Map<string, SavedJwks>();
 
-export async function getJwks(url: string, cache_dir?: string) {
+// export async function getJwks(url: string, cache_dir?: string) {
+export async function getJwks(url: string) {
   const cached_keyset: SavedJwks | undefined = cached_keysets.get(url);
 
   if (!cached_keyset || cached_keyset.expires_at <= Date.now()) {
@@ -142,7 +143,6 @@ export async function getJwks(url: string, cache_dir?: string) {
     const controller = new AbortController();
 
     const timeout = setTimeout(() => {
-      // @ts-ignore
       controller.abort(new Error("Timeout"));
     }, 10 * 1000);
 

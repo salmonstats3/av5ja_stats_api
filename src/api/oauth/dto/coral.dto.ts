@@ -25,7 +25,7 @@ export class CoralRequest {
   })
   @Expose()
   @Transform((param) => {
-    const [jwt, sig] = Jwt.decode(param.value);
+    const [jwt] = Jwt.decode(param.value);
     if (jwt.payload.exp < dayjs().unix()) {
       throw new BadRequestException("Token expired");
     }
@@ -51,12 +51,12 @@ export class CoralRequest {
   @Expose()
   coral_user_id?: string;
 
-  constructor(token: GameServiceTokenResponse | AccessTokenResponse | string, hash_method: HashMethod = HashMethod.NSO) {
+  constructor(token: GameServiceTokenResponse | AccessTokenResponse | string) {
     if (token instanceof AccessTokenResponse) {
       this.hash_method = HashMethod.NSO;
       this.token = token.id_token;
       this.request_id = uuidv4();
-      const [jwt, sig] = Jwt.decode(token.id_token);
+      const [jwt] = Jwt.decode(token.id_token);
       if (jwt.payload.exp < dayjs().unix()) {
         throw new BadRequestException("Token expired");
       }
@@ -67,7 +67,7 @@ export class CoralRequest {
       this.hash_method = HashMethod.APP;
       this.token = token.result.webApiServerCredential.accessToken;
       this.request_id = uuidv4();
-      const [jwt, sig] = Jwt.decode(token.result.webApiServerCredential.accessToken);
+      const [jwt] = Jwt.decode(token.result.webApiServerCredential.accessToken);
       this.na_id = jwt.payload.sub.toString();
       if (jwt.payload.exp < dayjs().unix()) {
         throw new BadRequestException("Token expired");

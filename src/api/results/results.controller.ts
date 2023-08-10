@@ -8,7 +8,7 @@ import { ResultsService } from "./results.service";
 
 @Controller("results")
 export class ResultsController {
-  constructor(private readonly service: ResultsService) {}
+  constructor(private readonly service: ResultsService) { }
 
   @Post()
   @HttpCode(201)
@@ -18,6 +18,7 @@ export class ResultsController {
     operationId: "POST",
   })
   @ApiOkResponsePaginated({ type: CustomResult })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async session_token(@Body() request: CoopResultManyRequest): Promise<PaginatedDto<CustomResult>> {
     return;
   }

@@ -1,12 +1,10 @@
-import { exec } from "child_process";
-import { mkdir, writeFileSync } from "fs";
-import path from "path";
 import fastifyHelmet from "@fastify/helmet";
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { SwaggerModule, DocumentBuilder, OpenAPIObject } from "@nestjs/swagger";
+import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { config } from "dotenv";
+
 import { AppModule } from "./app.module";
 
 config({ path: ".env" });

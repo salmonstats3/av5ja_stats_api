@@ -13,6 +13,7 @@ import { AppVersionResponse } from "./dto/version.dto";
 
 @Injectable()
 export class OauthService {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async session_token(request: SessionTokenRequest): Promise<SessionTokenResponse> {
     return;
   }

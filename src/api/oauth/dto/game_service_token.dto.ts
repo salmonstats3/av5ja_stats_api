@@ -56,13 +56,13 @@ class GameServiceTokenCredential {
   expiresIn: number;
 }
 
-class GameServiceTokenFirebase {
-  @ApiProperty({ example: "" })
-  accessToken: string;
+// class GameServiceTokenFirebase {
+//   @ApiProperty({ example: "" })
+//   accessToken: string;
 
-  @ApiProperty({ example: 3600 })
-  expiresIn: number;
-}
+//   @ApiProperty({ example: 3600 })
+//   expiresIn: number;
+// }
 
 class GameServiceTokenUser {
   @ApiProperty({ example: 6445457169973248 })

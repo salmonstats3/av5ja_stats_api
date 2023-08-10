@@ -1,10 +1,12 @@
-import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
 import { mkdir, writeFileSync } from "fs";
-import { dump } from "js-yaml";
 import path from "path";
-import { config } from "dotenv";
+
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { config } from "dotenv";
+import { dump } from "js-yaml";
+
 import { AppModule } from "./app.module";
 
 config({ path: ".env" });

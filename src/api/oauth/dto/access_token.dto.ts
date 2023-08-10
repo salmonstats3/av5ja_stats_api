@@ -14,7 +14,7 @@ export class AccessTokenRequest {
   @Expose()
   @IsNotEmpty()
   @Transform((param) => {
-    const [jwt, sig] = Jwt.decode(param.value);
+    const [jwt] = Jwt.decode(param.value);
     if (jwt.payload.exp < dayjs().unix()) {
       throw new BadRequestException("Token expired");
     }
