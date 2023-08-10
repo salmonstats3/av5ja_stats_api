@@ -1,16 +1,10 @@
-## Salmon Stats+
+## Description
 
 > This repository does not contain any contents copyrighted by Nintendo Co., Ltd.
 
-### Requirements
+## Get started
 
-- git
-- nvm
-- yarn
-- docker(Optional)
-- docker compose(Optional)
-
-### Installation
+- To check API documents, visit [docs.splatnet3.com](https://docs.splatnet3.com)
 
 ```
 git clone https://github.com/SalmonStats3/salmonstats_api
@@ -20,6 +14,14 @@ yarn start:dev
 ```
 
 #### Environment Values
+
+Environment values contain a credentials for [Docker Hub](https://hub.docker.com/)
+
+```zsh
+cp .env.sample .env
+```
+
+Copy and edit `.env` following format.
 
 ```
 # OpenAPI
@@ -38,6 +40,8 @@ SESSION_TOKEN=
 # Prisma
 DATABASE_URL=
 ```
+
+To checkout the detail, please read [wiki]().
 
 #### Secrets
 
@@ -95,3 +99,7 @@ make build
 ```zsh
 make deploy
 ```
+
+## License
+
+Salmon Stats is [MIT licensed](https://github.com/SalmonStats3/salmonstats_api/blob/develop/4.0.0/LICENSE).
