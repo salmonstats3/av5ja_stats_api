@@ -19,7 +19,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionTokenResponse'
-      tags:
+      tags: &ref_0
         - Authorize
   /oauth/access_token:
     post:
@@ -40,8 +40,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccessTokenResponse'
-      tags:
-        - Authorize
+      tags: *ref_0
   /oauth/game_service_token:
     post:
       operationId: GameServiceToken
@@ -66,8 +65,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GameServiceTokenResponse'
-      tags:
-        - Authorize
+      tags: *ref_0
   /oauth/game_web_token:
     post:
       operationId: GameWebToken
@@ -92,8 +90,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GameWebTokenResponse'
-      tags:
-        - Authorize
+      tags: *ref_0
   /oauth/bullet_token:
     post:
       operationId: BulletToken
@@ -113,8 +110,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BulletTokenResponse'
-      tags:
-        - Authorize
+      tags: *ref_0
   /oauth/f:
     post:
       operationId: f
@@ -139,8 +135,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CoralResponse'
-      tags:
-        - Authorize
+      tags: *ref_0
   /oauth/config:
     get:
       operationId: config
@@ -154,8 +149,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/APIConfig'
-      tags:
-        - Authorize
+      tags: *ref_0
   /results:
     post:
       operationId: POST
@@ -183,7 +177,25 @@ paths:
                         type: array
       tags:
         - Results
+  /schedules:
+    get:
+      operationId: GET
+      summary: ''
+      description: ''
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          schema: {}
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Schedules
 info:
+  title: Salmon Stats+
+  description: Salmon Stats for Splatoon 3 API documents.
+  version: 4.0.0
   contact: {}
 tags: []
 servers: []
