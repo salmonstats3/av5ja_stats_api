@@ -22,7 +22,9 @@ jobs:
 
       - name: Node 16.15.0
         uses: actions/setup-node@v3
-        
+        with:
+          node-version: 16.15.0
+
       - name: Install Dependencies
         if: ${{ steps.cache_cdk_dependency_id.outputs.cache-hit != 'true' }}
         run: yarn install
