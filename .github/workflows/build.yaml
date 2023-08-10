@@ -20,7 +20,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
           restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
 
-      - name: Node 16.15.0
+      - name: Set Node v16.15.0
         uses: actions/setup-node@v3
         with:
           node-version: 16.15.0

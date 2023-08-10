@@ -4,12 +4,4 @@
 			"path": "."
 		}
 	],
-	"settings": {
-		"files.associations": {
-			"*.css": "postcss"
-		},
-		"cSpell.words": [
-			"Ikura"
-		]
-	}
 }

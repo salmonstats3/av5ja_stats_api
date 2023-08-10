@@ -37,17 +37,7 @@ lerna-debug.log*
 
 # Environment
 .env
-.env.local
 
 # Secrets
 .secrets
-
-# Python
-__pycache__
-
-# Results
-/results
-
-# Secret
-status.log
 credentials.json
