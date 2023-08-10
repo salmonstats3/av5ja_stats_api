@@ -20,7 +20,11 @@ const build = async () => {
     const output = path.resolve(build, "index");
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     mkdir(build, { recursive: true }, () => { });
+    const config = path.resolve(build, "CNAME")
     const documents = SwaggerModule.createDocument(app, options);
+    writeFileSync(config, process.env.OPENAPI_DOC_DOMAIN, {
+        encoding: "utf8",
+    });
     writeFileSync(`${output}.json`, JSON.stringify(documents), {
         encoding: "utf8",
     });
