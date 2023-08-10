@@ -6,6 +6,7 @@ import { PrismaModule } from "nestjs-prisma";
 
 import { OauthModule } from "./api/oauth/oauth.module";
 import { ResultsModule } from "./api/results/results.module";
+import { SchedulesModule } from "./api/schedules/schedules.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
@@ -25,6 +26,7 @@ import { AppService } from "./app.service";
     }),
     OauthModule,
     ResultsModule,
+    SchedulesModule,
     PrismaModule.forRoot({
       isGlobal: true,
     }),

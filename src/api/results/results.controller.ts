@@ -6,13 +6,13 @@ import { CoopResultManyRequest } from "./dto/results.request.dto";
 import { CustomResult } from "./dto/results.response.dto";
 import { ResultsService } from "./results.service";
 
+@ApiTags("Results")
 @Controller("results")
 export class ResultsController {
-  constructor(private readonly service: ResultsService) { }
+  constructor(private readonly service: ResultsService) {}
 
   @Post()
   @HttpCode(201)
-  @ApiTags("Results")
   @ApiOperation({
     description: "",
     operationId: "POST",

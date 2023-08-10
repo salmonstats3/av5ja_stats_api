@@ -1,4 +1,4 @@
-import { Body, CACHE_MANAGER, Controller, Get, Headers, HttpCode, Inject, Post } from "@nestjs/common";
+import { Body, CACHE_MANAGER, Controller, Get, Headers, Inject, Post } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Cache } from "cache-manager";
 
@@ -11,13 +11,12 @@ import { GameWebTokenRequest, GameWebTokenResponse } from "./dto/game_web_token.
 import { SessionTokenRequest, SessionTokenResponse } from "./dto/session_tokne.dto";
 import { OauthService } from "./oauth.service";
 
+@ApiTags("Authorize")
 @Controller("oauth")
 export class OauthController {
   constructor(private readonly service: OauthService, @Inject(CACHE_MANAGER) private readonly manager: Cache) {}
 
   @Post("session_token")
-  @HttpCode(200)
-  @ApiTags("Authorize")
   @ApiOperation({
     description: "",
     operationId: "SessionToken",
@@ -28,8 +27,6 @@ export class OauthController {
   }
 
   @Post("access_token")
-  @HttpCode(200)
-  @ApiTags("Authorize")
   @ApiOperation({
     description: "",
     operationId: "AccessToken",
@@ -40,8 +37,6 @@ export class OauthController {
   }
 
   @Post("game_service_token")
-  @HttpCode(200)
-  @ApiTags("Authorize")
   @ApiOperation({
     description: "",
     operationId: "GameServiceToken",
@@ -55,8 +50,6 @@ export class OauthController {
   }
 
   @Post("game_web_token")
-  @HttpCode(200)
-  @ApiTags("Authorize")
   @ApiOperation({
     description: "",
     operationId: "GameWebToken",
@@ -67,8 +60,6 @@ export class OauthController {
   }
 
   @Post("bullet_token")
-  @HttpCode(200)
-  @ApiTags("Authorize")
   @ApiOperation({
     description: "",
     operationId: "BulletToken",
@@ -79,8 +70,6 @@ export class OauthController {
   }
 
   @Post("f")
-  @HttpCode(200)
-  @ApiTags("Authorize")
   @ApiOperation({
     description: "",
     operationId: "f",
@@ -91,8 +80,6 @@ export class OauthController {
   }
 
   @Get("config")
-  @HttpCode(200)
-  @ApiTags("Authorize")
   @ApiOperation({
     description: "",
     operationId: "config",
