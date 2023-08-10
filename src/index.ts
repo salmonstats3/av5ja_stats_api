@@ -9,7 +9,7 @@ import { AppModule } from "./app.module";
 
 config({ path: ".env" });
 
-async function build() {
+const build = async () => {
     const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ bodyLimit: 50 * 1024 * 1024 }));
     const options = new DocumentBuilder()
         .setTitle(process.env.OPENAPI_TITLE)
@@ -26,3 +26,5 @@ async function build() {
     });
     writeFileSync(`${output}.yaml`, dump(documents, {}));
 }
+
+(async () => await build())();
