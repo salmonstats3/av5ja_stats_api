@@ -1,3 +1,3 @@
 .PHONY: build
 build:
-	act -j build -P node:16-buster-slim --container-architecture linux/amd64 --secret-file .secrets
+	act --secret-file .secrets --env-file .env -P ubuntu-20.04=ghcr.io/catthehacker/ubuntu:act-20.04 -j build --container-architecture linux/amd64

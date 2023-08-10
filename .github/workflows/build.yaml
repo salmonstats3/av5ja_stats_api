@@ -1,0 +1,40 @@
+name: Build & Deploy 
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache CDK Dependencies
+        uses: actions/cache@v3
+        id: cache_cdk_dependency_id
+        env:
+          cache-name: cache-cdk-dependency
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: Install Dependencies
+        if: ${{ steps.cache_cdk_dependency_id.outputs.cache-hit != 'true' }}
+        run: yarn install
+
+      - name: Format
+        run: yarn format
+      
+      - name: Lint
+        run: yarn lint
+      
+      - name: Build
+        run: yarn build:docs 
+
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./docs

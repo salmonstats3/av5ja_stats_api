@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "yarn nest build",
+    "build:docs": "npx @redocly/cli build-docs docs/index.json -o docs/index.html",
     "format": "prettier --check --write --ignore-path .gitignore '{src,test}/**/*.{js,ts,json}'",
     "lint": "eslint --max-warnings=0 --ignore-path .gitignore '{src,test}/**/*.{js,ts}' --fix",
     "start:dev": "nest start --watch",
