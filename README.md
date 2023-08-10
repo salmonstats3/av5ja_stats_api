@@ -1,3 +1,18 @@
+<p align="center">
+  <img alt="Node" src="https://img.shields.io/badge/node-16.15.0-green">
+  <img alt="NestJS" src="https://img.shields.io/badge/nest-10.1.3-blue">
+  <img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/SalmonStats/salmonstats_api/build">
+  <img src="https://img.shields.io/badge/-NintendoSwitch-E60012.svg?logo=nintendoswitch&style=popout">
+  <img src="https://img.shields.io/badge/XProductVersion-2.6.0-8F8F8F.svg?logo=nintendoswitch&style=popout">
+  <img src="https://img.shields.io/badge/XWebViewVer-4.0.0-8F8F8F.svg?logo=nintendoswitch&style=popout">
+  <img src="https://img.shields.io/badge/-Prettier-F7B93E.svg?logo=prettier&style=popout">
+  <img src="https://img.shields.io/badge/-Postgresql-336791.svg?logo=postgresql&style=popout">
+  <img src="https://img.shields.io/badge/-Eslint-4B32C3.svg?logo=eslint&style=popout">
+  <img src="https://img.shields.io/badge/-Typescript-007ACC.svg?logo=typescript&style=popout">
+  <img src="https://img.shields.io/badge/-Node.js-339933.svg?logo=node.js&style=popout">
+  <img src="https://img.shields.io/badge/-Netlify-00C7B7.svg?logo=netlify&style=popout">
+</p>
+
 ## Description
 
 > This repository does not contain any contents copyrighted by Nintendo Co., Ltd.
