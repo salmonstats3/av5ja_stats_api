@@ -1,9 +1,9 @@
 import { Buffer } from "node:buffer";
 import * as crypto from "node:crypto";
 
+import { BadRequestException } from "@nestjs/common";
 import createDebug from "debug";
 import fetch from "node-fetch";
-import { BadRequestException } from "@nestjs/common";
 
 const debug = createDebug("nxapi:util:jwt");
 
@@ -43,7 +43,7 @@ export interface JwtPayload {
 type JwtVerifier = (data: Buffer, signature: Buffer, key: string) => boolean;
 
 export class Jwt<T = JwtPayload, H extends JwtHeader = JwtHeader> {
-  constructor(readonly header: H, readonly payload: T) { }
+  constructor(readonly header: H, readonly payload: T) {}
 
   static decode<T = JwtPayload, H extends JwtHeader = JwtHeader>(token: string) {
     try {
@@ -60,7 +60,7 @@ export class Jwt<T = JwtPayload, H extends JwtHeader = JwtHeader> {
       const jwt = new this<T, H>(header, payload);
       return [jwt, signature] as const;
     } catch {
-      throw new BadRequestException("Invalid JWT")
+      throw new BadRequestException("Invalid JWT");
     }
   }
 
