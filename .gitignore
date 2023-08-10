@@ -35,11 +35,12 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Prisma
+# Environment
 .env
-.env.*
 .env.local
-.env.sample
+
+# Secrets
+.secrets
 
 # Python
 __pycache__

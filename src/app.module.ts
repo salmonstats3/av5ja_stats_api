@@ -9,7 +9,6 @@ import { ResultsModule } from "./api/results/results.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
-
 @Module({
   controllers: [AppController],
   imports: [
