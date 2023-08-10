@@ -186,10 +186,17 @@ paths:
         - name: limit
           required: false
           in: query
-          schema: {}
+          schema:
+            type: number
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CoopSchedule'
       tags:
         - Schedules
 info:
@@ -805,3 +812,70 @@ components:
             $ref: '#/components/schemas/CoopResultRequest'
       required:
         - results
+    CoopSchedule:
+      type: object
+      properties:
+        weaponList:
+          example:
+            - -2
+            - -2
+            - -2
+            - -2
+          type: array
+          items:
+            type: number
+        startTime:
+          format: date-time
+          type: string
+          nullable: true
+        endTime:
+          format: date-time
+          type: string
+          nullable: true
+        rareWeapon:
+          type: number
+          nullable: true
+        setting:
+          type: string
+          enum:
+            - CoopNormalSetting
+            - CoopBigRunSetting
+            - CoopTeamContestSetting
+          example: CoopNormalSetting
+        stageId:
+          type: number
+          enum:
+            - -999
+            - 1
+            - 2
+            - 6
+            - 7
+            - 8
+            - 100
+            - 102
+            - 103
+          example: 1
+        mode:
+          type: string
+          enum:
+            - REGULAR
+            - LIMITED
+            - PRIVATE_CUSTOM
+            - PRIVATE_SCENARIO
+          example: REGULAR
+        rule:
+          type: string
+          enum:
+            - REGULAR
+            - BIG_RUN
+            - TEAM_CONTEST
+          example: REGULAR
+      required:
+        - weaponList
+        - startTime
+        - endTime
+        - rareWeapon
+        - setting
+        - stageId
+        - mode
+        - rule
