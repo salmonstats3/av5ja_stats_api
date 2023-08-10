@@ -21,6 +21,7 @@ jobs:
           restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
 
       - name: Install Dependencies
+        uses: actions/setup-node@v3
         if: ${{ steps.cache_cdk_dependency_id.outputs.cache-hit != 'true' }}
         run: yarn install
 
