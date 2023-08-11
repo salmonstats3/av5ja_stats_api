@@ -7,10 +7,6 @@ import fetch from 'node-fetch';
 
 const debug = createDebug('nxapi:util:jwt');
 
-//
-// JSON Web Tokens
-//
-
 export interface JwtHeader {
     alg: JwtAlgorithm;
     /** JSON Web Key Set URL */
@@ -19,6 +15,7 @@ export interface JwtHeader {
     kid?: string;
     typ?: 'JWT';
 }
+
 export enum JwtAlgorithm {
     RS256 = 'RS256',
 }
@@ -43,7 +40,7 @@ export interface JwtPayload {
 type JwtVerifier = (data: Buffer, signature: Buffer, key: string) => boolean;
 
 export class Jwt<T = JwtPayload, H extends JwtHeader = JwtHeader> {
-    constructor(readonly header: H, readonly payload: T) {}
+    constructor(readonly header: H, readonly payload: T) { }
 
     static decode<T = JwtPayload, H extends JwtHeader = JwtHeader>(token: string) {
         try {
@@ -89,15 +86,10 @@ export class Jwt<T = JwtPayload, H extends JwtHeader = JwtHeader> {
     };
 }
 
-//
-// JSON Web Key Sets
-//
-// Used for verifying JSON Web Tokens
-//
-
 export interface Jwks {
     keys: Jwk[];
 }
+
 export interface Jwk {
     alg?: JwtAlgorithm | string;
     key_ops?: JwkKeyOperation | string;
@@ -111,6 +103,7 @@ export interface Jwk {
     'x5t#S256'?: string;
     x5u?: string[];
 }
+
 export enum JwkUse {
     SIGNATURE = 'sig',
     ENCRYPTION = 'enc',
@@ -133,7 +126,6 @@ interface SavedJwks {
 
 const cached_keysets = new Map<string, SavedJwks>();
 
-// export async function getJwks(url: string, cache_dir?: string) {
 export async function getJwks(url: string) {
     const cached_keyset: SavedJwks | undefined = cached_keysets.get(url);
 
