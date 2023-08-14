@@ -5,101 +5,80 @@ import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, MaxLength, Min, Mi
 import dayjs from 'dayjs';
 import { Mode } from 'src/enum/mode';
 import { Rule } from 'src/enum/rule';
-import { Setting } from 'src/enum/setting';
 import { StageId } from 'src/enum/stage';
 
-export class CoopScheduleRequestQuery {
-    @ApiProperty()
-    @IsOptional()
-    @IsEnum(Mode)
-    @Transform((param) => param.value ?? param.value)
-    mode: Mode | null;
+// export class CoopSchedule {
+//     @ApiProperty({ example: [-2, -2, -2, -2], type: [Number] })
+//     @IsArray()
+//     @Type(() => Number)
+//     weaponList: number[];
 
-    @ApiProperty()
-    @IsOptional()
-    @IsEnum(Rule)
-    rule: Rule | null;
+//     @ApiProperty({ nullable: true })
+//     @IsOptional()
+//     @IsDateString()
+//     startTime: Date | null;
 
-    @ApiProperty()
-    @IsOptional()
-    @IsNumber()
-    @Min(0)
-    limit: number | null;
-}
+//     @ApiProperty({ nullable: true })
+//     @IsOptional()
+//     @IsDateString()
+//     endTime: Date | null;
 
-export class CoopSchedule {
-    @ApiProperty({ example: [-2, -2, -2, -2], type: [Number] })
-    @IsArray()
-    @Type(() => Number)
-    weaponList: number[];
+//     @ApiProperty({ nullable: true, type: Number })
+//     @IsNumber()
+//     rareWeapon: number | null;
 
-    @ApiProperty({ nullable: true })
-    @IsOptional()
-    @IsDateString()
-    startTime: Date | null;
+//     @ApiProperty({ enum: Setting, example: Setting.NORMAL })
+//     @IsEnum(Setting)
+//     setting: Setting;
 
-    @ApiProperty({ nullable: true })
-    @IsOptional()
-    @IsDateString()
-    endTime: Date | null;
+//     @ApiProperty({ enum: StageId, example: StageId.Shakeup })
+//     @IsEnum(StageId)
+//     stageId: StageId;
 
-    @ApiProperty({ nullable: true, type: Number })
-    @IsNumber()
-    rareWeapon: number | null;
+//     @ApiProperty({ enum: Mode, example: Mode.REGULAR })
+//     @IsEnum(Mode)
+//     mode: Mode;
 
-    @ApiProperty({ enum: Setting, example: Setting.NORMAL })
-    @IsEnum(Setting)
-    setting: Setting;
-
-    @ApiProperty({ enum: StageId, example: StageId.Shakeup })
-    @IsEnum(StageId)
-    stageId: StageId;
-
-    @ApiProperty({ enum: Mode, example: Mode.REGULAR })
-    @IsEnum(Mode)
-    mode: Mode;
-
-    @ApiProperty({ enum: Rule, example: Rule.REGULAR })
-    @IsEnum(Rule)
-    rule: Rule;
-}
+//     @ApiProperty({ enum: Rule, example: Rule.REGULAR })
+//     @IsEnum(Rule)
+//     rule: Rule;
+// }
 
 export class CoopScheduleRequest {
-    @ApiProperty({ example: 1 })
-    stageId: number;
+    @ApiProperty({ example: StageId.Shakeup, enum: StageId })
+    @IsEnum(StageId)
+    readonly stageId: StageId;
 
-    @ApiProperty()
+    @ApiProperty({ example: '2021-01-01T00:00:00.000Z', type: Date })
     @IsOptional()
-    // @IsDateString()
     @Transform((param) => (param.value === null ? null : dayjs(param.value).toDate()))
-    startTime: Date | null;
+    readonly startTime: Date | null;
 
-    @ApiProperty()
+    @ApiProperty({ example: '2021-01-01T00:00:00.000Z', type: Date })
     @IsOptional()
-    // @IsDateString()
     @Transform((param) => (param.value === null ? null : dayjs(param.value).toDate()))
-    endTime: Date | null;
+    readonly endTime: Date | null;
 
-    @ApiProperty({ example: [-2, -2, -2, -2] })
+    @ApiProperty({ example: [-2, -2, -2, -2], type: ['integer'] })
     @IsArray()
     @MinLength(1)
     @MaxLength(4)
     @ValidateNested({ each: true })
     @Type(() => Number)
-    weaponList: number[];
+    readonly weaponList: number[];
 
-    @ApiProperty({ example: null, nullable: true })
+    @ApiProperty({ example: null, nullable: true, type: ['integer'] })
     @IsOptional()
     @IsNumber()
-    rareWeapon: number | null;
+    readonly rareWeapon: number | null;
 
     @ApiProperty({ enum: Mode, example: Rule.REGULAR })
     @IsEnum(Mode)
-    mode: Mode;
+    readonly mode: Mode;
 
     @ApiProperty({ enum: Rule, example: Rule.REGULAR })
     @IsEnum(Rule)
-    rule: Rule;
+    readonly rule: Rule;
 
     get query(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
         return {
