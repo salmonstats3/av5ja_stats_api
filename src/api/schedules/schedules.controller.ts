@@ -2,7 +2,7 @@ import { CACHE_MANAGER, Controller, Get, Inject } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 import { SchedulesService } from './schedules.service';
-import { CoopSchedule } from './dto/schedules.response.dto';
+import { CoopSchedule, CoopScheduleStats } from './dto/schedules.response.dto';
 
 @ApiTags('Schedules')
 @Controller('schedules')
@@ -27,9 +27,9 @@ export class SchedulesController {
         operationId: 'GET_SCHEDULE',
     })
     @ApiParam({ name: 'schedule_id', required: true, type: 'String' })
-    @ApiOkResponse({ isArray: true, type: CoopSchedule })
+    @ApiOkResponse({ type: CoopScheduleStats })
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async schedule(): Promise<CoopSchedule[]> {
+    async schedule(): Promise<CoopScheduleStats> {
         return;
     }
 
