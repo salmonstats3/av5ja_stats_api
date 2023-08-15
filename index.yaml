@@ -179,7 +179,7 @@ paths:
         - Results
   /schedules:
     get:
-      operationId: GET
+      operationId: GET_SCHEDULES
       summary: ''
       description: ''
       parameters:
@@ -197,8 +197,27 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CoopSchedule'
-      tags:
+      tags: &ref_1
         - Schedules
+  /schedules/{schedule_id}:
+    get:
+      operationId: GET_SCHEDULE
+      summary: ''
+      description: ''
+      parameters:
+        - name: schedule_id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoopScheduleStats'
+      tags: *ref_1
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
@@ -469,17 +488,16 @@ components:
       properties:
         total:
           type: integer
-          description: 総数
+          description: Total
         limit:
           type: integer
-          description: 上限数
+          description: Limit
         offset:
           type: integer
-          description: オフセット
+          description: Offset
         results:
           type: array
-          items:
-            type: string
+          description: Entries
       required:
         - total
         - limit
@@ -501,34 +519,87 @@ components:
         - resultId
         - uuid
         - playTime
+    CoopWaveRequest:
+      type: object
+      properties:
+        id:
+          type: number
+        eventType:
+          type: number
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+        quotaNum:
+          type: number
+        goldenIkuraNum:
+          type: number
+        waterLevel:
+          type: number
+          enum:
+            - 0
+            - 1
+            - 2
+        goldenIkuraPopNum:
+          type: number
+        isClear:
+          type: boolean
+      required:
+        - id
+        - eventType
+        - quotaNum
+        - goldenIkuraNum
+        - waterLevel
+        - goldenIkuraPopNum
+        - isClear
     CoopScheduleRequest:
       type: object
       properties:
         stageId:
           type: number
+          enum: &ref_2
+            - -999
+            - 1
+            - 2
+            - 6
+            - 7
+            - 8
+            - 100
+            - 102
+            - 103
           example: 1
         startTime:
           format: date-time
           type: string
+          example: '2021-01-01T00:00:00.000Z'
         endTime:
           format: date-time
           type: string
+          example: '2021-01-01T00:00:00.000Z'
         weaponList:
-          example:
+          example: &ref_3
             - -2
             - -2
             - -2
             - -2
           type: array
           items:
-            type: string
+            type: integer
         rareWeapon:
-          type: number
           example: null
           nullable: true
+          type: array
+          items:
+            type: integer
         mode:
           type: string
-          enum:
+          enum: &ref_4
             - REGULAR
             - LIMITED
             - PRIVATE_CUSTOM
@@ -536,7 +607,7 @@ components:
           example: REGULAR
         rule:
           type: string
-          enum:
+          enum: &ref_5
             - REGULAR
             - BIG_RUN
             - TEAM_CONTEST
@@ -553,11 +624,14 @@ components:
       type: object
       properties:
         bossId:
-          type: number
+          type: integer
+          nullable: true
         isBossDefeated:
           type: boolean
+          nullable: true
         failureWave:
-          type: number
+          type: integer
+          nullable: true
         isClear:
           type: boolean
       required:
@@ -685,29 +759,43 @@ components:
       type: object
       properties:
         jobBonus:
-          type: number
+          type: integer
           example: 999
+          minimum: 0
+          nullable: true
         gradeId:
-          type: number
+          type: integer
           example: 8
+          maximum: 8
+          minimum: 0
+          nullable: true
         waveDetails:
+          maxItems: 5
+          minItems: 1
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/CoopWaveRequest'
         ikuraNum:
-          type: number
+          type: integer
           example: 1000
+          minimum: 0
         jobScore:
-          type: number
+          type: integer
           example: 999
+          minimum: 0
+          nullable: true
         kumaPoint:
-          type: number
+          type: integer
           example: 999
+          minimum: 0
+          nullable: true
         jobRate:
           type: number
           example: 3.25
+          maximum: 3.25
+          minimum: 0
         goldenIkuraNum:
-          type: number
+          type: integer
           example: 999
         schedule:
           $ref: '#/components/schemas/CoopScheduleRequest'
@@ -728,9 +816,11 @@ components:
             - 0
             - 0
             - 0
+          maxItems: 14
+          minItems: 14
           type: array
           items:
-            type: string
+            type: number
         resultId:
           $ref: '#/components/schemas/CoopResultIdRequest'
         scale:
@@ -738,21 +828,32 @@ components:
             - 0
             - 0
             - 0
+          maxItems: 3
+          minItems: 3
           type: array
           items:
-            type: string
+            type: integer
         smellMeter:
-          type: number
+          type: integer
           example: 5
+          maximum: 5
+          minimum: 0
+          nullable: true
         goldenIkuraAssistNum:
           type: number
           example: 99
+          minimum: 0
         gradePoint:
           type: number
           example: 999
+          maximum: 999
+          minimum: 0
+          nullable: true
         dangerRate:
           type: number
           example: 3.33
+          maximum: 3.33
+          minimum: 0
         myResult:
           $ref: '#/components/schemas/CoopPlayerRequest'
         scenarioCode:
@@ -774,13 +875,17 @@ components:
             - 0
             - 0
             - 0
+          maxItems: 14
+          minItems: 14
           type: array
           items:
-            type: string
+            type: integer
         otherResults:
+          maxItems: 3
+          minItems: 1
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/CoopPlayerRequest'
       required:
         - jobBonus
         - gradeId
@@ -815,67 +920,132 @@ components:
     CoopSchedule:
       type: object
       properties:
-        weaponList:
-          example:
-            - -2
-            - -2
-            - -2
-            - -2
-          type: array
-          items:
-            type: number
+        stageId:
+          type: number
+          enum: *ref_2
+          example: 1
         startTime:
           format: date-time
           type: string
-          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
         endTime:
           format: date-time
           type: string
-          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+        weaponList:
+          example: *ref_3
+          type: array
+          items:
+            type: integer
         rareWeapon:
-          type: number
+          example: null
           nullable: true
-        setting:
-          type: string
-          enum:
-            - CoopNormalSetting
-            - CoopBigRunSetting
-            - CoopTeamContestSetting
-          example: CoopNormalSetting
-        stageId:
-          type: number
-          enum:
-            - -999
-            - 1
-            - 2
-            - 6
-            - 7
-            - 8
-            - 100
-            - 102
-            - 103
-          example: 1
+          type: array
+          items:
+            type: integer
         mode:
           type: string
-          enum:
-            - REGULAR
-            - LIMITED
-            - PRIVATE_CUSTOM
-            - PRIVATE_SCENARIO
+          enum: *ref_4
           example: REGULAR
         rule:
           type: string
-          enum:
-            - REGULAR
-            - BIG_RUN
-            - TEAM_CONTEST
+          enum: *ref_5
           example: REGULAR
+        limit:
+          type: number
       required:
-        - weaponList
+        - stageId
         - startTime
         - endTime
+        - weaponList
         - rareWeapon
-        - setting
-        - stageId
         - mode
         - rule
+        - limit
+    ActiveCount:
+      type: object
+      properties:
+        user:
+          type: integer
+        account:
+          type: integer
+        result:
+          type: integer
+      required:
+        - user
+        - account
+        - result
+    IkuraNum:
+      type: object
+      properties:
+        maximum:
+          type: integer
+        average:
+          type: number
+        dispersion:
+          type: number
+        deviation:
+          type: number
+      required:
+        - maximum
+        - average
+        - dispersion
+        - deviation
+    GradePoint:
+      type: object
+      properties:
+        grade_point:
+          type: integer
+          maximum: 999
+          minimum: 0
+        grade_id:
+          type: integer
+          maximum: 8
+          minimum: 0
+        count:
+          type: integer
+          minimum: 0
+      required:
+        - grade_point
+        - grade_id
+        - count
+    CoopScheduleStatus:
+      type: object
+      properties:
+        start_time:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        end_time:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        active_count:
+          $ref: '#/components/schemas/ActiveCount'
+        golden_ikura_num:
+          $ref: '#/components/schemas/IkuraNum'
+        ikura_num:
+          $ref: '#/components/schemas/IkuraNum'
+        grade_point:
+          type: array
+          items:
+            $ref: '#/components/schemas/GradePoint'
+      required:
+        - start_time
+        - end_time
+        - active_count
+        - golden_ikura_num
+        - ikura_num
+        - grade_point
+    CoopScheduleStats:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/CoopScheduleStatus'
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoopScheduleStatus'
+      required:
+        - status
+        - history
