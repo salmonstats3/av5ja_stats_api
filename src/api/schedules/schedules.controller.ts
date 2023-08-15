@@ -1,13 +1,14 @@
 import { CACHE_MANAGER, Controller, Get, Inject } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
-import { SchedulesService } from './schedules.service';
+
 import { CoopSchedule, CoopScheduleStats } from './dto/schedules.response.dto';
+import { SchedulesService } from './schedules.service';
 
 @ApiTags('Schedules')
 @Controller('schedules')
 export class SchedulesController {
-    constructor(private readonly service: SchedulesService, @Inject(CACHE_MANAGER) private readonly manager: Cache) { }
+    constructor(private readonly service: SchedulesService, @Inject(CACHE_MANAGER) private readonly manager: Cache) {}
 
     @Get()
     @ApiOperation({

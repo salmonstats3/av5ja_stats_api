@@ -1,7 +1,7 @@
 import { applyDecorators, Type } from '@nestjs/common';
-import { ApiExtraModels, ApiOkResponse, ApiProperty, ApiPropertyOptional, getSchemaPath } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOkResponse, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
-import { IsBoolean, IsDate, IsInt, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
+import { IsInt, Max, Min, ValidateNested } from 'class-validator';
 
 export class PaginatedRequestDto {
     @Expose()
@@ -12,9 +12,9 @@ export class PaginatedRequestDto {
         default: 0,
         description: 'Offset',
         minimum: 0,
+        required: true,
         title: 'offset',
         type: 'integer',
-        required: true
     })
     readonly offset: number;
 
@@ -28,24 +28,24 @@ export class PaginatedRequestDto {
         description: 'Limit',
         maximum: 200,
         minimum: 0,
+        required: true,
         title: 'limit',
         type: 'integer',
-        required: true
     })
     readonly limit: number;
 }
 
 export class PaginatedDto<T> {
-    @ApiProperty({ description: 'Total', type: 'integer', required: true })
+    @ApiProperty({ description: 'Total', required: true, type: 'integer' })
     total: number;
 
-    @ApiProperty({ description: 'Limit', type: 'integer', required: true })
+    @ApiProperty({ description: 'Limit', required: true, type: 'integer' })
     limit: number;
 
-    @ApiProperty({ description: 'Offset', type: 'integer', required: true })
+    @ApiProperty({ description: 'Offset', required: true, type: 'integer' })
     offset: number;
 
-    @ApiProperty({ description: 'Entries', type: 'array', required: true })
+    @ApiProperty({ description: 'Entries', required: true, type: 'array' })
     @ValidateNested({ each: true })
     results: T[];
 

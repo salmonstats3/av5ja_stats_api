@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
-import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, MaxLength, Min, MinLength, ValidateNested } from 'class-validator';
+import { IsArray, IsEnum, IsNumber, IsOptional, MaxLength, MinLength, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { Mode } from 'src/enum/mode';
 import { Rule } from 'src/enum/rule';
@@ -45,7 +45,7 @@ import { StageId } from 'src/enum/stage';
 // }
 
 export class CoopScheduleRequest {
-    @ApiProperty({ example: StageId.Shakeup, enum: StageId })
+    @ApiProperty({ enum: StageId, example: StageId.Shakeup })
     @IsEnum(StageId)
     readonly stageId: StageId;
 

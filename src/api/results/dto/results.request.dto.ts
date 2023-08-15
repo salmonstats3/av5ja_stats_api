@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Client, Prisma } from '@prisma/client';
 import { Expose, plainToClass, Transform, Type } from 'class-transformer';
 import {
@@ -267,20 +267,23 @@ export class CoopPlayerRequest {
         kumaPoint: number | null = null,
     ): CoopPlayerRequest {
         const player: CoopPlayerRequest = plainToClass(
-            CoopPlayerRequest, {
-            ...result,
-            ...{
-                smellMeter: smellMeter,
-                jobScore: jobScore,
-                jobBonus: jobBonus,
-                jobRate: jobRate,
-                gradeId: gradeId,
-                gradePoint: gradePoint,
-                kumaPoint: kumaPoint,
-            }
-        }, {
-            excludeExtraneousValues: true,
-        });
+            CoopPlayerRequest,
+            {
+                ...result,
+                ...{
+                    gradeId: gradeId,
+                    gradePoint: gradePoint,
+                    jobBonus: jobBonus,
+                    jobRate: jobRate,
+                    jobScore: jobScore,
+                    kumaPoint: kumaPoint,
+                    smellMeter: smellMeter,
+                },
+            },
+            {
+                excludeExtraneousValues: true,
+            },
+        );
         return player;
     }
 
@@ -373,19 +376,19 @@ export class CoopWaveRequest {
 }
 
 export class CoopResultRequest {
-    @ApiProperty({ example: 999, minimum: 0, type: 'integer', nullable: true })
+    @ApiProperty({ example: 999, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     readonly jobBonus: number | null;
 
-    @ApiProperty({ example: 8, minimum: 0, maximum: 8, type: 'integer', nullable: true })
+    @ApiProperty({ example: 8, maximum: 8, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     @Min(0)
     @Max(8)
     readonly gradeId: number | null;
 
-    @ApiProperty({ type: [CoopWaveRequest], minItems: 1, maxItems: 5 })
+    @ApiProperty({ maxItems: 5, minItems: 1, type: [CoopWaveRequest] })
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(0)
@@ -399,19 +402,19 @@ export class CoopResultRequest {
     @Min(0)
     readonly ikuraNum: number;
 
-    @ApiProperty({ example: 999, minimum: 0, type: 'integer', nullable: true })
+    @ApiProperty({ example: 999, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly jobScore: number | null;
 
-    @ApiProperty({ example: 999, minimum: 0, type: 'integer', nullable: true })
+    @ApiProperty({ example: 999, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly kumaPoint: number | null;
 
-    @ApiProperty({ example: 3.25, minimum: 0, maximum: 3.25, type: Number })
+    @ApiProperty({ example: 3.25, maximum: 3.25, minimum: 0, type: Number })
     @IsOptional()
     @IsNumber()
     @Min(0)
@@ -432,7 +435,7 @@ export class CoopResultRequest {
     @Type(() => CoopJobRequest)
     readonly jobResult: CoopJobRequest;
 
-    @ApiProperty({ example: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], minItems: 14, maxItems: 14, type: [Number] })
+    @ApiProperty({ example: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], maxItems: 14, minItems: 14, type: [Number] })
     @IsArray()
     @ArrayMinSize(14)
     @ArrayMaxSize(14)
@@ -445,11 +448,11 @@ export class CoopResultRequest {
     @Type(() => CoopResultIdRequest)
     readonly resultId: CoopResultIdRequest;
 
-    @ApiProperty({ example: [0, 0, 0], minItems: 3, maxItems: 3, type: ['integer'] })
+    @ApiProperty({ example: [0, 0, 0], maxItems: 3, minItems: 3, type: ['integer'] })
     @Type(() => Number)
     readonly scale: number[];
 
-    @ApiProperty({ example: 5, type: 'integer', minimum: 0, maximum: 5, nullable: true })
+    @ApiProperty({ example: 5, maximum: 5, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     @Min(0)
@@ -461,14 +464,14 @@ export class CoopResultRequest {
     @Min(0)
     readonly goldenIkuraAssistNum: number;
 
-    @ApiProperty({ example: 999, minimum: 0, maximum: 999, nullable: true })
+    @ApiProperty({ example: 999, maximum: 999, minimum: 0, nullable: true })
     @IsOptional()
     @IsInt()
     @Min(0)
     @Max(999)
     readonly gradePoint: number | null;
 
-    @ApiProperty({ example: 3.33, minimum: 0, maximum: 3.33 })
+    @ApiProperty({ example: 3.33, maximum: 3.33, minimum: 0 })
     @IsNumber()
     @Min(0)
     @Max(3.33)
@@ -494,7 +497,7 @@ export class CoopResultRequest {
     @IsString()
     readonly scenarioCode: string | null;
 
-    @ApiProperty({ example: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], minItems: 14, maxItems: 14, type: ['integer'] })
+    @ApiProperty({ example: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], maxItems: 14, minItems: 14, type: ['integer'] })
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(14)
@@ -502,7 +505,7 @@ export class CoopResultRequest {
     @Type(() => Number)
     readonly bossCounts: number[];
 
-    @ApiProperty({ minItems: 1, maxItems: 3, type: [CoopPlayerRequest] })
+    @ApiProperty({ maxItems: 3, minItems: 1, type: [CoopPlayerRequest] })
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(1)
