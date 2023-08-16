@@ -1011,13 +1011,16 @@ components:
           type: array
           items:
             type: integer
-        boss_defeated:
+        boss_count:
+          type: integer
+        boss_defeated_count:
           type: integer
       required:
         - clear
         - failure
         - failure_waves
-        - boss_defeated
+        - boss_count
+        - boss_defeated_count
     CoopScheduleStatus:
       type: object
       properties:
