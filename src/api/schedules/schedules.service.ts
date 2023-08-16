@@ -1,18 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Sql } from '@prisma/client/runtime/library';
-import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'nestjs-prisma';
-import * as _ from 'underscore';
 
-import {
-    CoopScheduleStats,
-    CoopScheduleStatsRaw,
-    CoopScheduleStatus,
-    GoldenIkuraResult,
-    GradeResult,
-    WaveResult,
-} from './dto/schedules.response.dto';
+import { CoopScheduleStats } from './dto/schedules.response.dto';
 
 @Injectable()
 export class SchedulesService {
@@ -20,27 +11,14 @@ export class SchedulesService {
 
     async get_schedule(schedule_id: string): Promise<CoopScheduleStats> {
         const response: unknown[] = await Promise.all([
+            this.prisma.schedule.findUnique({ where: { scheduleId: schedule_id } }),
             this.prisma.$queryRaw(this.get_schedule_query(schedule_id)),
             this.prisma.$queryRaw(this.get_schedule_status_query(schedule_id)),
             this.prisma.$queryRaw(this.get_wave_query(schedule_id)),
             this.prisma.$queryRaw(this.get_grade_point_query(schedule_id)),
             this.prisma.$queryRaw(this.get_ikura_query(schedule_id)),
         ]);
-        const golden_ikura: GoldenIkuraResult[] = (response[4] as unknown[]).map((entry: unknown) => GoldenIkuraResult.fromJSON(entry));
-        const { max, min } = {
-            max: Math.max(...golden_ikura.map((entry: GoldenIkuraResult) => entry.golden_ikura_num)),
-            min: Math.min(...golden_ikura.map((entry: GoldenIkuraResult) => entry.golden_ikura_num)),
-        };
-        return plainToInstance(CoopScheduleStats, {
-            entries: (response[0] as unknown[]).map((entry: CoopScheduleStatsRaw) => CoopScheduleStatus.fromJSON(entry)),
-            golden_ikura_num: Object.values({
-                ..._.range(min, max, 5).map((entry: number) => GoldenIkuraResult.fromJSON({ count: 0, golden_ikura_num: entry })),
-                ...(response[4] as unknown[]).map((entry: unknown) => GoldenIkuraResult.fromJSON(entry)),
-            }).sort((a: GoldenIkuraResult, b: GoldenIkuraResult) => b.golden_ikura_num - a.golden_ikura_num),
-            grade_point: (response[3] as unknown[]).map((entry: unknown) => GradeResult.fromJSON(entry)),
-            status: CoopScheduleStatus.fromJSON(response[1][0]),
-            waves: (response[2] as unknown[]).map((entry: unknown) => WaveResult.fromJSON(entry)),
-        });
+        return CoopScheduleStats.fromJSON(response);
     }
 
     private get_schedule_query(schedule_id: string): Sql {
@@ -95,7 +73,7 @@ export class SchedulesService {
           VARIANCE(golden_ikura_num) FILTER (WHERE is_clear = true)::DECIMAL(10, 3) AS var_golden_ikura_num,
           STDDEV_POP(golden_ikura_num) FILTER (WHERE is_clear = true)::DECIMAL(7, 3) AS std_golden_ikura_num,
 		  COALESCE(COUNT(boss_id IS NOT NULL OR null)::INT, 0) AS boss_count,
-		  COALESCE(COUNT(is_boss_defeated = true OR null)::INT, 0) AS boss_defeated_count,
+		  COALESCE(COUNT(is_boss_defeated = true OR null)::INT, 0) AS boss_kill_count,
 		  COALESCE(COUNT(is_clear = true OR null))::INT is_clear,
 		  COALESCE(COUNT(is_clear = false OR null))::INT is_failure,
           ARRAY[

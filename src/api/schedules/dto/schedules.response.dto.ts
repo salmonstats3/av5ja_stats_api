@@ -1,10 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
+import snakecaseKeys from 'snakecase-keys';
 import { EventType } from 'src/enum/event_type';
 import { WaterLevel } from 'src/enum/water_level';
+import _ from 'underscore';
 
 import { CoopScheduleRequest } from './schedules.request.dto';
+
+interface CoopScheduleStatsRaw {
+    avg_golden_ikura_num: number;
+    avg_ikura_num: number;
+    boss_count: number;
+    boss_kill_count: number;
+    end_time: string;
+    failure_waves: number[];
+    golden_ikura_num: number;
+    grade_point: number;
+    ikura_num: number;
+    is_clear: number;
+    is_failure: number;
+    max_golden_ikura_num: number;
+    max_ikura_num: number;
+    shifts_worked: number;
+    start_time: string;
+    std_golden_ikura_num: number;
+    std_ikura_num: number;
+    var_golden_ikura_num: number;
+    var_ikura_num: number;
+}
 
 class ActiveCount {
     @Expose()
@@ -73,7 +97,7 @@ class GradePoint {
     readonly count: number;
 }
 
-export class GoldenIkuraResult {
+class GoldenIkuraResult {
     @Expose()
     @ApiProperty({ minimum: 0, type: 'integer' })
     golden_ikura_num: number;
@@ -88,7 +112,7 @@ export class GoldenIkuraResult {
     }
 }
 
-export class GradeResult {
+class GradeResult {
     @Expose()
     grade_id: number;
 
@@ -125,10 +149,10 @@ class JobResult extends Result {
 
     @Expose()
     @ApiProperty({ type: 'integer' })
-    boss_defeated_count: number;
+    boss_kill_count: number;
 }
 
-export class WaveResult {
+class WaveResult {
     @Expose()
     @ApiProperty({ enum: WaterLevel })
     water_level: WaterLevel;
@@ -169,7 +193,7 @@ export class WaveResult {
     }
 }
 
-export class CoopScheduleStatus {
+class CoopScheduleStatus {
     @Expose()
     @ApiProperty({ example: '2021-01-01T00:00:00.000Z', type: Date })
     readonly start_time: Date;
@@ -193,10 +217,6 @@ export class CoopScheduleStatus {
     @Type(() => IkuraNum)
     @ValidateNested()
     readonly ikura_num: IkuraNum;
-
-    @ApiProperty({ isArray: true, name: 'grade_point', type: GradePoint })
-    @Type(() => GradePoint)
-    readonly grade_point: GradePoint[];
 
     @Expose()
     @ApiProperty({ name: 'result', type: JobResult })
@@ -228,6 +248,8 @@ export class CoopScheduleStatus {
                     sum: response.ikura_num,
                 },
                 result: {
+                    boss_count: response.boss_count,
+                    bouss_kill_count: response.boss_kill_count,
                     clear: response.is_clear,
                     failure: response.is_failure,
                     failure_waves: response.failure_waves,
@@ -239,27 +261,7 @@ export class CoopScheduleStatus {
     }
 }
 
-export interface CoopScheduleStatsRaw {
-    avg_golden_ikura_num: number;
-    avg_ikura_num: number;
-    end_time: string;
-    failure_waves: number[];
-    golden_ikura_num: number;
-    grade_point: number;
-    ikura_num: number;
-    is_clear: number;
-    is_failure: number;
-    max_golden_ikura_num: number;
-    max_ikura_num: number;
-    shifts_worked: number;
-    start_time: string;
-    std_golden_ikura_num: number;
-    std_ikura_num: number;
-    var_golden_ikura_num: number;
-    var_ikura_num: number;
-}
-
-export class CoopSchedule extends CoopScheduleRequest { }
+export class CoopSchedule extends CoopScheduleRequest {}
 
 export class CoopScheduleStats extends CoopSchedule {
     @Expose()
@@ -286,4 +288,30 @@ export class CoopScheduleStats extends CoopSchedule {
     @ApiProperty({ isArray: true, name: 'golden_ikura_num', type: GoldenIkuraResult })
     @Type(() => GoldenIkuraResult)
     readonly golden_ikura_num: GoldenIkuraResult[];
+
+    static fromJSON(response: any): CoopScheduleStats {
+        const golden_ikura: GoldenIkuraResult[] = (response[5] as unknown[]).map((entry: unknown) => GoldenIkuraResult.fromJSON(entry));
+        const { max, min } = {
+            max: Math.max(...golden_ikura.map((entry: GoldenIkuraResult) => entry.golden_ikura_num)),
+            min: Math.min(...golden_ikura.map((entry: GoldenIkuraResult) => entry.golden_ikura_num)),
+        };
+        const schedule = snakecaseKeys(plainToInstance(CoopSchedule, response[0]));
+        return plainToInstance(CoopScheduleStats, {
+            end_time: schedule.end_time,
+            entries: (response[1] as unknown[]).map((entry: CoopScheduleStatsRaw) => CoopScheduleStatus.fromJSON(entry)),
+            golden_ikura_num: Object.values({
+                ..._.range(min, max, 5).map((entry: number) => GoldenIkuraResult.fromJSON({ count: 0, golden_ikura_num: entry })),
+                ...(response[5] as unknown[]).map((entry: unknown) => GoldenIkuraResult.fromJSON(entry)),
+            }).sort((a: GoldenIkuraResult, b: GoldenIkuraResult) => b.golden_ikura_num - a.golden_ikura_num),
+            grade_point: (response[4] as unknown[]).map((entry: unknown) => GradeResult.fromJSON(entry)),
+            mode: schedule.mode,
+            rare_weapon: schedule.rare_weapon,
+            rule: schedule.rule,
+            stage_id: schedule.stage_id,
+            start_time: schedule.start_time,
+            status: CoopScheduleStatus.fromJSON({ ...schedule, ...response[2][0] }),
+            waves: (response[3] as unknown[]).map((entry: unknown) => WaveResult.fromJSON(entry)),
+            weapon_list: schedule.weapon_list,
+        });
+    }
 }
