@@ -1046,6 +1046,60 @@ components:
         - is_clear
         - is_failure
         - failure_waves
+    JobResult:
+      type: object
+      properties:
+        clear:
+          type: integer
+        failure:
+          type: integer
+      required:
+        - clear
+        - failure
+    WaveResult:
+      type: object
+      properties:
+        water_level:
+          type: number
+          enum:
+            - 0
+            - 1
+            - 2
+        event_type:
+          type: number
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+        result:
+          allOf:
+            - $ref: '#/components/schemas/JobResult'
+        golden_ikura_num:
+          allOf:
+            - $ref: '#/components/schemas/IkuraNum'
+      required:
+        - water_level
+        - event_type
+        - result
+        - golden_ikura_num
+    GoldenIkuraResult:
+      type: object
+      properties:
+        golden_ikura_num:
+          type: integer
+          minimum: 0
+        count:
+          type: integer
+          minimum: 0
+      required:
+        - golden_ikura_num
+        - count
     CoopScheduleStats:
       type: object
       properties:
@@ -1085,6 +1139,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CoopScheduleStatus'
+        waves:
+          type: array
+          items:
+            $ref: '#/components/schemas/WaveResult'
+        grade_point:
+          type: array
+          items:
+            $ref: '#/components/schemas/GradePoint'
+        golden_ikura_num:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoldenIkuraResult'
       required:
         - stageId
         - startTime
@@ -1095,3 +1161,6 @@ components:
         - rule
         - status
         - entries
+        - waves
+        - grade_point
+        - golden_ikura_num
