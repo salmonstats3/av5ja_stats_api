@@ -104,7 +104,7 @@ export class GradeResult {
     }
 }
 
-class JobResult {
+class Result {
     @Expose()
     @ApiProperty({ type: 'integer' })
     clear: number;
@@ -112,6 +112,16 @@ class JobResult {
     @Expose()
     @ApiProperty({ type: 'integer' })
     failure: number;
+
+    @Expose()
+    @ApiProperty({ isArray: true, type: 'integer' })
+    failure_waves: number[];
+}
+
+class JobResult extends Result {
+    @Expose()
+    @ApiProperty({ type: 'integer' })
+    boss_defeated: number;
 }
 
 export class WaveResult {
@@ -124,9 +134,9 @@ export class WaveResult {
     event_type: EventType;
 
     @Expose()
-    @ApiProperty({ name: 'result', type: JobResult })
-    @Type(() => JobResult)
-    result: JobResult;
+    @ApiProperty({ name: 'result', type: Result })
+    @Type(() => Result)
+    result: Result;
 
     @Expose()
     @ApiProperty({ name: 'golden_ikura_num', type: IkuraNum })
@@ -185,12 +195,9 @@ export class CoopScheduleStatus {
     readonly grade_point: GradePoint[];
 
     @Expose()
-    @ApiProperty({ type: 'integer' })
-    readonly is_clear: number;
-
-    @Expose()
-    @ApiProperty({ type: 'integer' })
-    readonly is_failure: number;
+    @ApiProperty({ name: 'result', type: JobResult })
+    @Type(() => JobResult)
+    readonly result: JobResult;
 
     @Expose()
     @ApiProperty({ example: [0, 0, 0], isArray: true, type: 'integer' })
@@ -215,6 +222,11 @@ export class CoopScheduleStatus {
                     avg: response.avg_ikura_num,
                     max: response.max_ikura_num,
                     sum: response.ikura_num,
+                },
+                result: {
+                    clear: response.is_clear,
+                    failure: response.is_failure,
+                    failure_waves: response.failure_waves,
                 },
                 start_time: response.start_time,
             },
@@ -243,7 +255,7 @@ export interface CoopScheduleStatsRaw {
     var_ikura_num: number;
 }
 
-export class CoopSchedule extends CoopScheduleRequest { }
+export class CoopSchedule extends CoopScheduleRequest {}
 
 export class CoopScheduleStats extends CoopSchedule {
     @Expose()

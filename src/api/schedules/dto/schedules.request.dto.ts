@@ -22,7 +22,7 @@ export class CoopScheduleRequest {
     @Transform((param) => (param.value === null ? null : dayjs(param.value).toDate()))
     readonly endTime: Date | null;
 
-    @ApiProperty({ example: [-2, -2, -2, -2], isArray: true, type: ['integer'] })
+    @ApiProperty({ example: [-2, -2, -2, -2], isArray: true, type: 'integer' })
     @IsArray()
     @MinLength(1)
     @MaxLength(4)
