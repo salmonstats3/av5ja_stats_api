@@ -3,8 +3,16 @@ import { Prisma } from '@prisma/client';
 import { Sql } from '@prisma/client/runtime/library';
 import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'nestjs-prisma';
+import * as _ from 'underscore';
 
-import { CoopScheduleStats, CoopScheduleStatsRaw, CoopScheduleStatus } from './dto/schedules.response.dto';
+import {
+    CoopScheduleStats,
+    CoopScheduleStatsRaw,
+    CoopScheduleStatus,
+    GoldenIkuraResult,
+    GradeResult,
+    WaveResult,
+} from './dto/schedules.response.dto';
 
 @Injectable()
 export class SchedulesService {
@@ -14,10 +22,24 @@ export class SchedulesService {
         const response: unknown[] = await Promise.all([
             this.prisma.$queryRaw(this.get_schedule_query(schedule_id)),
             this.prisma.$queryRaw(this.get_schedule_status_query(schedule_id)),
+            this.prisma.$queryRaw(this.get_wave_query(schedule_id)),
+            this.prisma.$queryRaw(this.get_grade_point_query(schedule_id)),
+            this.prisma.$queryRaw(this.get_ikura_query(schedule_id)),
         ]);
+        const golden_ikura: GoldenIkuraResult[] = (response[4] as unknown[]).map((entry: unknown) => GoldenIkuraResult.fromJSON(entry));
+        const { max, min } = {
+            max: Math.max(...golden_ikura.map((entry: GoldenIkuraResult) => entry.golden_ikura_num)),
+            min: Math.min(...golden_ikura.map((entry: GoldenIkuraResult) => entry.golden_ikura_num)),
+        };
         return plainToInstance(CoopScheduleStats, {
             entries: (response[0] as unknown[]).map((entry: CoopScheduleStatsRaw) => CoopScheduleStatus.fromJSON(entry)),
+            golden_ikura_num: Object.values({
+                ..._.range(min, max, 5).map((entry: number) => GoldenIkuraResult.fromJSON({ count: 0, golden_ikura_num: entry })),
+                ...(response[4] as unknown[]).map((entry: unknown) => GoldenIkuraResult.fromJSON(entry)),
+            }).sort((a: GoldenIkuraResult, b: GoldenIkuraResult) => b.golden_ikura_num - a.golden_ikura_num),
+            grade_point: (response[3] as unknown[]).map((entry: unknown) => GradeResult.fromJSON(entry)),
             status: CoopScheduleStatus.fromJSON(response[1][0]),
+            waves: (response[2] as unknown[]).map((entry: unknown) => WaveResult.fromJSON(entry)),
         });
     }
 
@@ -87,5 +109,80 @@ export class SchedulesService {
           WHERE
           schedule_id = ${schedule_id}::UUID
           `;
+    }
+
+    private get_wave_query(schedule_id: string): Sql {
+        return Prisma.sql`
+        SELECT
+          water_level,
+          event_type,
+          COALESCE(COUNT(is_clear = true OR null)::INT) AS clear,
+          COALESCE(COUNT(is_clear = false OR null)::INT) AS failure,
+          SUM(golden_ikura_num)::INT AS golden_ikura,
+          MAX(golden_ikura_num)::INT AS max_golden_ikura,
+		  AVG(golden_ikura_num) FILTER (WHERE is_clear = true)::DECIMAL(7, 3) AS avg_golden_ikura
+          FROM
+          waves
+          WHERE
+          golden_ikura_num IS NOT NULL
+          AND  
+          schedule_id = ${schedule_id}::UUID
+          GROUP BY
+          water_level,
+          event_type
+        `;
+    }
+
+    private get_grade_point_query(schedule_id: string): Sql {
+        return Prisma.sql`
+        SELECT
+        grade_id,
+        grade_point,
+        COUNT(*)::INT
+        FROM
+        (
+            SELECT
+            MAX(grade_id) AS grade_id,
+            (CASE MAX(grade_point) WHEN 999 THEN 999 ELSE MAX(grade_point) END) AS grade_point,
+            npln_user_id
+            FROM
+            players
+            WHERE
+            schedule_id = ${schedule_id}::UUID
+            AND
+            grade_point IS NOT NULL
+            GROUP BY
+            npln_user_id
+        ) AS players
+        GROUP BY
+        grade_id,
+        grade_point
+        ORDER BY
+        grade_id DESC,
+        grade_point DESC
+        `;
+    }
+
+    private get_ikura_query(schedule_id: string): Sql {
+        return Prisma.sql`
+        SELECT
+          golden_ikura_num / 5 * 5 AS golden_ikura_num,
+          COUNT(*)::INT
+          FROM
+          (
+          SELECT
+            MAX(golden_ikura_num) AS golden_ikura_num,
+            UNNEST(members) AS npln_user_id
+            FROM
+            results
+            WHERE
+            schedule_id = ${schedule_id}::UUID
+            GROUP BY npln_user_id
+          ) AS results 
+          GROUP BY
+          golden_ikura_num / 5 * 5
+          ORDER BY
+          golden_ikura_num DESC
+        `;
     }
 }
