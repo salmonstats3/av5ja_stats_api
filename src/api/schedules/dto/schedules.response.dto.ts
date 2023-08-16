@@ -121,7 +121,11 @@ class Result {
 class JobResult extends Result {
     @Expose()
     @ApiProperty({ type: 'integer' })
-    boss_defeated: number;
+    boss_count: number;
+
+    @Expose()
+    @ApiProperty({ type: 'integer' })
+    boss_defeated_count: number;
 }
 
 export class WaveResult {
@@ -255,7 +259,7 @@ export interface CoopScheduleStatsRaw {
     var_ikura_num: number;
 }
 
-export class CoopSchedule extends CoopScheduleRequest {}
+export class CoopSchedule extends CoopScheduleRequest { }
 
 export class CoopScheduleStats extends CoopSchedule {
     @Expose()
