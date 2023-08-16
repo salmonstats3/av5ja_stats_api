@@ -29,50 +29,54 @@ import { Species } from 'src/enum/species';
 import { WaterLevel } from 'src/enum/water_level';
 
 export class CoopJobRequest {
+    @Expose()
     @ApiProperty({ nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     readonly bossId: number | null;
 
+    @Expose()
     @ApiProperty({ nullable: true, type: Boolean })
     @IsOptional()
     @IsBoolean()
     readonly isBossDefeated: boolean | null;
 
+    @Expose()
     @ApiProperty({ nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     readonly failureWave: number | null;
 
+    @Expose()
     @ApiProperty({ type: Boolean })
     @IsBoolean()
     readonly isClear: boolean;
 }
 
 export class CoopTextColorRequest {
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsNumber()
     @Min(0)
     @Max(1)
     readonly r: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsNumber()
     @Min(0)
     @Max(1)
     readonly g: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsNumber()
     @Min(0)
     @Max(1)
     readonly b: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsNumber()
     @Min(0)
     @Max(1)
@@ -80,21 +84,21 @@ export class CoopTextColorRequest {
 }
 
 export class CoopBackgroundRequest {
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsInt()
     readonly id: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @ValidateNested({ each: true })
     @Type(() => CoopTextColorRequest)
     readonly textColor: CoopTextColorRequest;
 }
 
 export class CoopNameplateRequest {
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(3)
@@ -103,25 +107,28 @@ export class CoopNameplateRequest {
     @Transform((param) => param.value.map((value: number) => (value === null ? -1 : value)))
     readonly badges: number[];
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @ValidateNested({ each: true })
     @Type(() => CoopBackgroundRequest)
     readonly background: CoopBackgroundRequest;
 }
 
 export class CoopResultIdRequest {
+    @Expose()
     @ApiProperty()
     @IsString()
     @MinLength(20)
     @MaxLength(20)
     readonly nplnUserId: string;
 
+    @Expose()
     @ApiProperty()
     @IsDate()
     @Transform((param) => dayjs(param.value).toDate())
     readonly playTime: Date;
 
+    @Expose()
     @ApiProperty()
     @IsUUID()
     @Transform((param) => param.value)
@@ -129,32 +136,32 @@ export class CoopResultIdRequest {
 }
 
 export class CoopPlayerRequest {
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsArray()
     @ArrayMinSize(14)
     @ArrayMaxSize(14)
     @Type(() => Number)
     readonly bossKillCounts: number[];
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsString()
     readonly name: string;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsString()
     readonly byname: string;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsInt()
     @Min(0)
     readonly bossKillCountsTotal: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(0)
@@ -162,43 +169,43 @@ export class CoopPlayerRequest {
     @Type(() => Number)
     readonly specialCounts: number[];
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsInt()
     @Min(0)
     readonly ikuraNum: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsBoolean()
     readonly isMyself: boolean;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @ValidateNested({ each: true })
     @Type(() => CoopNameplateRequest)
     readonly nameplate: CoopNameplateRequest;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsString()
     @Length(20, 20)
     readonly nplnUserId: string;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsInt()
     @Min(0)
     readonly helpCount: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsInt()
     @Min(0)
     readonly deadCount: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(0)
@@ -206,37 +213,37 @@ export class CoopPlayerRequest {
     @Type(() => Number)
     readonly weaponList: number[];
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsString()
     readonly nameId: string;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsInt()
     @Min(0)
     readonly goldenIkuraAssistNum: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsEnum(Species)
     readonly species: Species;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly specialId: number | null;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsInt()
     @Min(0)
     readonly goldenIkuraNum: number;
 
-    @ApiProperty()
     @Expose()
+    @ApiProperty()
     @IsInt()
     @Min(0)
     readonly uniform: number;
@@ -324,17 +331,20 @@ export class CoopPlayerRequest {
 }
 
 export class CoopWaveRequest {
-    @ApiProperty({ name: 'id' })
     @Expose({ name: 'id' })
+    @ApiProperty({ name: 'id' })
     @IsInt()
     @Min(1)
     @Max(5)
+    @Transform((param) => param.obj.id)
     readonly waveId: number;
 
+    @Expose()
     @ApiProperty({ enum: EventType })
     @IsEnum(EventType)
     readonly eventType: EventType;
 
+    @Expose()
     @ApiProperty()
     @IsOptional()
     @IsInt()
@@ -342,22 +352,26 @@ export class CoopWaveRequest {
     @Max(35)
     readonly quotaNum: number | null;
 
+    @Expose()
     @ApiProperty()
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly goldenIkuraNum: number | null;
 
+    @Expose()
     @ApiProperty({ enum: WaterLevel })
     @IsEnum(WaterLevel)
     readonly waterLevel: WaterLevel;
 
+    @Expose()
     @ApiProperty()
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly goldenIkuraPopNum: number;
 
+    @Expose()
     @ApiProperty()
     @IsBoolean()
     readonly isClear: boolean;
@@ -376,11 +390,13 @@ export class CoopWaveRequest {
 }
 
 export class CoopResultRequest {
+    @Expose()
     @ApiProperty({ example: 999, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     readonly jobBonus: number | null;
 
+    @Expose()
     @ApiProperty({ example: 8, maximum: 8, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
@@ -388,7 +404,8 @@ export class CoopResultRequest {
     @Max(8)
     readonly gradeId: number | null;
 
-    @ApiProperty({ maxItems: 5, minItems: 1, type: [CoopWaveRequest] })
+    @Expose()
+    @ApiProperty({ maxItems: 5, minItems: 1, isArray: true, type: CoopWaveRequest })
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(0)
@@ -397,44 +414,52 @@ export class CoopResultRequest {
     @Type(() => CoopWaveRequest)
     readonly waveDetails: CoopWaveRequest[];
 
+    @Expose()
     @ApiProperty({ example: 1000, minimum: 0, type: 'integer' })
     @IsInt()
     @Min(0)
     readonly ikuraNum: number;
 
+    @Expose()
     @ApiProperty({ example: 999, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly jobScore: number | null;
 
+    @Expose()
     @ApiProperty({ example: 999, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly kumaPoint: number | null;
 
+    @Expose()
     @ApiProperty({ example: 3.25, maximum: 3.25, minimum: 0, type: Number })
     @IsOptional()
     @IsNumber()
     @Min(0)
     readonly jobRate: number | null;
 
+    @Expose()
     @ApiProperty({ example: 999, type: 'integer' })
     @IsInt()
     @Min(0)
     readonly goldenIkuraNum: number;
 
+    @Expose()
     @ApiProperty({ type: CoopScheduleRequest })
     @ValidateNested({ each: true })
     @Type(() => CoopScheduleRequest)
     readonly schedule: CoopScheduleRequest;
 
+    @Expose()
     @ApiProperty({ type: CoopJobRequest })
     @ValidateNested({ each: true })
     @Type(() => CoopJobRequest)
     readonly jobResult: CoopJobRequest;
 
+    @Expose()
     @ApiProperty({ example: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], maxItems: 14, minItems: 14, type: [Number] })
     @IsArray()
     @ArrayMinSize(14)
@@ -446,12 +471,15 @@ export class CoopResultRequest {
     @ApiProperty({ type: CoopResultIdRequest })
     @ValidateNested({ each: true })
     @Type(() => CoopResultIdRequest)
+    @Transform((param) => param.obj.id)
     readonly resultId: CoopResultIdRequest;
 
+    @Expose()
     @ApiProperty({ example: [0, 0, 0], maxItems: 3, minItems: 3, type: ['integer'] })
     @Type(() => Number)
     readonly scale: number[];
 
+    @Expose()
     @ApiProperty({ example: 5, maximum: 5, minimum: 0, nullable: true, type: 'integer' })
     @IsOptional()
     @IsInt()
@@ -459,11 +487,13 @@ export class CoopResultRequest {
     @Max(5)
     readonly smellMeter: number | null;
 
+    @Expose()
     @ApiProperty({ example: 99, minimum: 0 })
     @IsInt()
     @Min(0)
     readonly goldenIkuraAssistNum: number;
 
+    @Expose()
     @ApiProperty({ example: 999, maximum: 999, minimum: 0, nullable: true })
     @IsOptional()
     @IsInt()
@@ -471,12 +501,14 @@ export class CoopResultRequest {
     @Max(999)
     readonly gradePoint: number | null;
 
+    @Expose()
     @ApiProperty({ example: 3.33, maximum: 3.33, minimum: 0 })
     @IsNumber()
     @Min(0)
     @Max(3.33)
     readonly dangerRate: number;
 
+    @Expose()
     @ApiProperty()
     @Type(() => CoopPlayerRequest)
     @ValidateNested({ each: true })
@@ -492,11 +524,13 @@ export class CoopResultRequest {
     })
     readonly myResult: CoopPlayerRequest;
 
+    @Expose()
     @ApiProperty({ example: null, nullable: true })
     @IsOptional()
     @IsString()
     readonly scenarioCode: string | null;
 
+    @Expose()
     @ApiProperty({ example: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], maxItems: 14, minItems: 14, type: ['integer'] })
     @IsArray()
     @IsNotEmpty()
@@ -505,6 +539,7 @@ export class CoopResultRequest {
     @Type(() => Number)
     readonly bossCounts: number[];
 
+    @Expose()
     @ApiProperty({ maxItems: 3, minItems: 1, type: [CoopPlayerRequest] })
     @IsArray()
     @IsNotEmpty()
@@ -630,6 +665,7 @@ export class CoopResultRequest {
 }
 
 export class CoopResultManyRequest {
+    @Expose()
     @ApiProperty({ isArray: true, type: CoopResultRequest })
     @IsArray()
     @IsNotEmpty()

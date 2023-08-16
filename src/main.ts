@@ -26,7 +26,8 @@ async function bootstrap() {
             transform: true,
             transformOptions: {
                 excludeExtraneousValues: true,
-                exposeDefaultValues: true,
+                exposeUnsetFields: false,
+                // exposeDefaultValues: true,
                 ignoreDecorators: true,
             },
         }),

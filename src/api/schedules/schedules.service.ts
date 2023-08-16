@@ -1,28 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { Sql } from '@prisma/client/runtime/library';
+import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'nestjs-prisma';
+import snakecaseKeys from 'snakecase-keys';
 
-import { CoopScheduleStats } from './dto/schedules.response.dto';
+import {
+    CoopSchedule,
+    CoopScheduleGoldenIkuraStatsRaw,
+    CoopScheduleGradePointStatsRaw,
+    CoopScheduleStats,
+    CoopScheduleStatusRaw,
+    CoopScheduleWaveStatsRaw,
+} from './dto/schedules.response.dto';
 
 @Injectable()
 export class SchedulesService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) { }
 
     async get_schedule(schedule_id: string): Promise<CoopScheduleStats> {
-        const response: unknown[] = await Promise.all([
+        const response = await Promise.all([
             this.prisma.schedule.findUnique({ where: { scheduleId: schedule_id } }),
-            this.prisma.$queryRaw(this.get_schedule_query(schedule_id)),
-            this.prisma.$queryRaw(this.get_schedule_status_query(schedule_id)),
-            this.prisma.$queryRaw(this.get_wave_query(schedule_id)),
-            this.prisma.$queryRaw(this.get_grade_point_query(schedule_id)),
-            this.prisma.$queryRaw(this.get_ikura_query(schedule_id)),
+            this.get_schedule_query(schedule_id),
+            this.get_schedule_status_query(schedule_id),
+            this.get_wave_query(schedule_id),
+            this.get_grade_point_query(schedule_id),
+            this.get_ikura_query(schedule_id),
         ]);
-        return CoopScheduleStats.fromJSON(response);
+        return CoopScheduleStats.fromJSON({
+            entries: response[1],
+            golden_ikura_num: response[5],
+            grade_point: response[4],
+            schedule: plainToInstance(CoopSchedule, snakecaseKeys(response[0])),
+            status: response[2],
+            waves: response[3],
+        });
     }
 
-    private get_schedule_query(schedule_id: string): Sql {
-        return Prisma.sql`
+    private async get_schedule_query(schedule_id: string): Promise<CoopScheduleStatusRaw[]> {
+        return this.prisma.$queryRaw(Prisma.sql`
         SELECT
           DATE_TRUNC('HOUR', play_time) + CAST(EXTRACT(MINUTE FROM play_time)::INT / 30 * 30 || ' MINUTES' AS INTERVAL) AS start_time,
 		  DATE_TRUNC('HOUR', play_time) + CAST(EXTRACT(MINUTE FROM play_time)::INT / 30 * 30 + 30 || ' MINUTES' AS INTERVAL) AS end_time,
@@ -55,11 +70,11 @@ export class SchedulesService {
           DATE_TRUNC('HOUR', play_time) + CAST(EXTRACT(MINUTE FROM play_time)::INT / 30 * 30 || ' MINUTES' AS INTERVAL),
 		  DATE_TRUNC('HOUR', play_time) + CAST(EXTRACT(MINUTE FROM play_time)::INT / 30 * 30 + 30 || ' MINUTES' AS INTERVAL)
           ORDER BY start_time ASC
-          `;
+          `);
     }
 
-    private get_schedule_status_query(schedule_id: string): Sql {
-        return Prisma.sql`
+    private async get_schedule_status_query(schedule_id: string): Promise<CoopScheduleStatusRaw> {
+        return this.prisma.$queryRaw(Prisma.sql`
         SELECT
           AVG(danger_rate * 100 * 5)::DECIMAL(7, 3) AS grade_point,
 		  SUM(ikura_num)::INT AS ikura_num,
@@ -86,11 +101,11 @@ export class SchedulesService {
           results
           WHERE
           schedule_id = ${schedule_id}::UUID
-          `;
+          `)[0];
     }
 
-    private get_wave_query(schedule_id: string): Sql {
-        return Prisma.sql`
+    private async get_wave_query(schedule_id: string): Promise<CoopScheduleWaveStatsRaw[]> {
+        return this.prisma.$queryRaw(Prisma.sql`
         SELECT
           water_level,
           event_type,
@@ -108,15 +123,15 @@ export class SchedulesService {
           GROUP BY
           water_level,
           event_type
-        `;
+        `);
     }
 
-    private get_grade_point_query(schedule_id: string): Sql {
-        return Prisma.sql`
+    private async get_grade_point_query(schedule_id: string): Promise<CoopScheduleGradePointStatsRaw[]> {
+        return this.prisma.$queryRaw(Prisma.sql`
         SELECT
         grade_id,
         grade_point,
-        COUNT(*)::INT
+        COUNT(*)::INT AS count
         FROM
         (
             SELECT
@@ -138,11 +153,11 @@ export class SchedulesService {
         ORDER BY
         grade_id DESC,
         grade_point DESC
-        `;
+        `);
     }
 
-    private get_ikura_query(schedule_id: string): Sql {
-        return Prisma.sql`
+    private async get_ikura_query(schedule_id: string): Promise<CoopScheduleGoldenIkuraStatsRaw[]> {
+        return this.prisma.$queryRaw(Prisma.sql`
         SELECT
           golden_ikura_num / 5 * 5 AS golden_ikura_num,
           COUNT(*)::INT
@@ -161,6 +176,6 @@ export class SchedulesService {
           golden_ikura_num / 5 * 5
           ORDER BY
           golden_ikura_num DESC
-        `;
+        `);
     }
 }

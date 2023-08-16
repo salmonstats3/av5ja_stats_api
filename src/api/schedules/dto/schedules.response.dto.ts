@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
-import snakecaseKeys from 'snakecase-keys';
 import { EventType } from 'src/enum/event_type';
 import { WaterLevel } from 'src/enum/water_level';
 import _ from 'underscore';
 
 import { CoopScheduleRequest } from './schedules.request.dto';
 
-interface CoopScheduleStatsRaw {
+export interface CoopScheduleStatusRaw {
     avg_golden_ikura_num: number;
     avg_ikura_num: number;
     boss_count: number;
@@ -28,6 +27,36 @@ interface CoopScheduleStatsRaw {
     std_ikura_num: number;
     var_golden_ikura_num: number;
     var_ikura_num: number;
+}
+
+export interface CoopScheduleWaveStatsRaw {
+    avg_golden_ikura: number;
+    clear: number;
+    event_type: EventType;
+    failure: number;
+    golden_ikura: number;
+    max_golden_ikura: number;
+    water_level: WaterLevel;
+}
+
+export interface CoopScheduleGradePointStatsRaw {
+    count: number;
+    grade_id: number;
+    grade_point: number;
+}
+
+export interface CoopScheduleGoldenIkuraStatsRaw {
+    count: number;
+    golden_ikura_num: number;
+}
+
+export interface CoopScheduleStatsRaw {
+    entries: CoopScheduleStatusRaw[];
+    golden_ikura_num: CoopScheduleGoldenIkuraStatsRaw[];
+    grade_point: CoopScheduleGradePointStatsRaw[];
+    schedule: CoopSchedule;
+    status: CoopScheduleStatusRaw;
+    waves: CoopScheduleWaveStatsRaw[];
 }
 
 class ActiveCount {
@@ -106,8 +135,7 @@ class GoldenIkuraResult {
     @ApiProperty({ minimum: 0, type: 'integer' })
     count: number;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJSON(response: any): GoldenIkuraResult {
+    static fromJSON(response: CoopScheduleGoldenIkuraStatsRaw): GoldenIkuraResult {
         return plainToInstance(GoldenIkuraResult, response, { excludeExtraneousValues: true });
     }
 }
@@ -122,8 +150,7 @@ class GradeResult {
     @Expose()
     count: number;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJSON(response: any): GradeResult {
+    static fromJSON(response: CoopScheduleGradePointStatsRaw): GradeResult {
         return plainToInstance(GradeResult, response, { excludeExtraneousValues: true });
     }
 }
@@ -171,8 +198,7 @@ class WaveResult {
     @Type(() => IkuraNum)
     golden_ikura_num: IkuraNum;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJSON(response: any): WaveResult {
+    static fromJSON(response: CoopScheduleWaveStatsRaw): WaveResult {
         return plainToInstance(
             WaveResult,
             {
@@ -227,7 +253,7 @@ class CoopScheduleStatus {
     @ApiProperty({ example: [0, 0, 0], isArray: true, type: 'integer' })
     readonly failure_waves: number[];
 
-    static fromJSON(response: CoopScheduleStatsRaw): CoopScheduleStatus {
+    static fromJSON(response: CoopScheduleStatusRaw): CoopScheduleStatus {
         return plainToInstance(
             CoopScheduleStatus,
             {
@@ -261,7 +287,7 @@ class CoopScheduleStatus {
     }
 }
 
-export class CoopSchedule extends CoopScheduleRequest {}
+export class CoopSchedule extends CoopScheduleRequest { }
 
 export class CoopScheduleStats extends CoopSchedule {
     @Expose()
@@ -289,29 +315,24 @@ export class CoopScheduleStats extends CoopSchedule {
     @Type(() => GoldenIkuraResult)
     readonly golden_ikura_num: GoldenIkuraResult[];
 
-    static fromJSON(response: any): CoopScheduleStats {
-        const golden_ikura: GoldenIkuraResult[] = (response[5] as unknown[]).map((entry: unknown) => GoldenIkuraResult.fromJSON(entry));
+    static fromJSON(response: CoopScheduleStatsRaw): CoopScheduleStats {
+        const golden_ikura: GoldenIkuraResult[] = response.golden_ikura_num.map((entry) => GoldenIkuraResult.fromJSON(entry));
         const { max, min } = {
             max: Math.max(...golden_ikura.map((entry: GoldenIkuraResult) => entry.golden_ikura_num)),
             min: Math.min(...golden_ikura.map((entry: GoldenIkuraResult) => entry.golden_ikura_num)),
         };
-        const schedule = snakecaseKeys(plainToInstance(CoopSchedule, response[0]));
         return plainToInstance(CoopScheduleStats, {
-            end_time: schedule.end_time,
-            entries: (response[1] as unknown[]).map((entry: CoopScheduleStatsRaw) => CoopScheduleStatus.fromJSON(entry)),
-            golden_ikura_num: Object.values({
-                ..._.range(min, max, 5).map((entry: number) => GoldenIkuraResult.fromJSON({ count: 0, golden_ikura_num: entry })),
-                ...(response[5] as unknown[]).map((entry: unknown) => GoldenIkuraResult.fromJSON(entry)),
-            }).sort((a: GoldenIkuraResult, b: GoldenIkuraResult) => b.golden_ikura_num - a.golden_ikura_num),
-            grade_point: (response[4] as unknown[]).map((entry: unknown) => GradeResult.fromJSON(entry)),
-            mode: schedule.mode,
-            rare_weapon: schedule.rare_weapon,
-            rule: schedule.rule,
-            stage_id: schedule.stage_id,
-            start_time: schedule.start_time,
-            status: CoopScheduleStatus.fromJSON({ ...schedule, ...response[2][0] }),
-            waves: (response[3] as unknown[]).map((entry: unknown) => WaveResult.fromJSON(entry)),
-            weapon_list: schedule.weapon_list,
+            ...response.schedule,
+            ...{
+                entries: response.entries.map((entry: CoopScheduleStatusRaw) => CoopScheduleStatus.fromJSON(entry)),
+                golden_ikura_num: Object.values({
+                    ..._.range(min, max, 5).map((entry: number) => GoldenIkuraResult.fromJSON({ count: 0, golden_ikura_num: entry })),
+                    ...response.golden_ikura_num.map((entry) => GoldenIkuraResult.fromJSON(entry)),
+                }).sort((a: GoldenIkuraResult, b: GoldenIkuraResult) => b.golden_ikura_num - a.golden_ikura_num),
+                grade_point: response.grade_point.map((entry) => GradeResult.fromJSON(entry)),
+                status: CoopScheduleStatus.fromJSON({ ...response.schedule, ...response.status }),
+                waves: response.waves.map((entry) => WaveResult.fromJSON(entry)),
+            },
         });
     }
 }
