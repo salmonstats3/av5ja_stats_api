@@ -7,43 +7,6 @@ import { Mode } from 'src/enum/mode';
 import { Rule } from 'src/enum/rule';
 import { StageId } from 'src/enum/stage';
 
-// export class CoopSchedule {
-//     @ApiProperty({ example: [-2, -2, -2, -2], type: [Number] })
-//     @IsArray()
-//     @Type(() => Number)
-//     weaponList: number[];
-
-//     @ApiProperty({ nullable: true })
-//     @IsOptional()
-//     @IsDateString()
-//     startTime: Date | null;
-
-//     @ApiProperty({ nullable: true })
-//     @IsOptional()
-//     @IsDateString()
-//     endTime: Date | null;
-
-//     @ApiProperty({ nullable: true, type: Number })
-//     @IsNumber()
-//     rareWeapon: number | null;
-
-//     @ApiProperty({ enum: Setting, example: Setting.NORMAL })
-//     @IsEnum(Setting)
-//     setting: Setting;
-
-//     @ApiProperty({ enum: StageId, example: StageId.Shakeup })
-//     @IsEnum(StageId)
-//     stageId: StageId;
-
-//     @ApiProperty({ enum: Mode, example: Mode.REGULAR })
-//     @IsEnum(Mode)
-//     mode: Mode;
-
-//     @ApiProperty({ enum: Rule, example: Rule.REGULAR })
-//     @IsEnum(Rule)
-//     rule: Rule;
-// }
-
 export class CoopScheduleRequest {
     @ApiProperty({ enum: StageId, example: StageId.Shakeup })
     @IsEnum(StageId)
@@ -59,7 +22,7 @@ export class CoopScheduleRequest {
     @Transform((param) => (param.value === null ? null : dayjs(param.value).toDate()))
     readonly endTime: Date | null;
 
-    @ApiProperty({ example: [-2, -2, -2, -2], type: ['integer'] })
+    @ApiProperty({ example: [-2, -2, -2, -2], isArray: true, type: ['integer'] })
     @IsArray()
     @MinLength(1)
     @MaxLength(4)
@@ -67,7 +30,7 @@ export class CoopScheduleRequest {
     @Type(() => Number)
     readonly weaponList: number[];
 
-    @ApiProperty({ example: null, nullable: true, type: ['integer'] })
+    @ApiProperty({ example: null, nullable: true, type: 'integer' })
     @IsOptional()
     @IsNumber()
     readonly rareWeapon: number | null;

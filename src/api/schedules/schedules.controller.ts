@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, Controller, Get, Inject } from '@nestjs/common';
+import { CACHE_MANAGER, Controller, Get, Inject, Param } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -13,7 +13,7 @@ export class SchedulesController {
     @Get()
     @ApiOperation({
         description: '',
-        operationId: 'GET_SCHEDULES',
+        operationId: 'Schedules',
     })
     @ApiQuery({ name: 'limit', required: false, type: 'Number' })
     @ApiOkResponse({ isArray: true, type: CoopSchedule })
@@ -25,13 +25,13 @@ export class SchedulesController {
     @Get(':schedule_id')
     @ApiOperation({
         description: '',
-        operationId: 'GET_SCHEDULE',
+        operationId: 'Schedule',
     })
-    @ApiParam({ name: 'schedule_id', required: true, type: 'String' })
+    @ApiParam({ example: '2cd22d8d-59d8-4ec4-b69c-bcd6f40f6779', name: 'schedule_id', required: true, type: String })
     @ApiOkResponse({ type: CoopScheduleStats })
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async schedule(): Promise<CoopScheduleStats> {
-        return;
+    async schedule(@Param('schedule_id') schedule_id: string): Promise<CoopScheduleStats> {
+        return await this.service.get_schedule(schedule_id);
     }
 
     private async cache_manager<T>(id: string, ttl: number, callback: Promise<T>): Promise<T> {

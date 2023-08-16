@@ -630,7 +630,7 @@ export class CoopResultRequest {
 }
 
 export class CoopResultManyRequest {
-    @ApiProperty({ type: [CoopResultRequest] })
+    @ApiProperty({ isArray: true, type: CoopResultRequest })
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(1)

@@ -2,7 +2,7 @@ import { CacheInterceptor, CacheModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { PrismaModule } from 'nestjs-prisma';
+import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
 import { OauthModule } from './api/oauth/oauth.module';
 import { ResultsModule } from './api/results/results.module';
@@ -33,6 +33,7 @@ import { AppService } from './app.service';
     ],
     providers: [
         AppService,
+        PrismaService,
         {
             provide: APP_INTERCEPTOR,
             useClass: CacheInterceptor,
