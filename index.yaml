@@ -179,7 +179,7 @@ paths:
         - Results
   /schedules:
     get:
-      operationId: GET_SCHEDULES
+      operationId: Schedules
       summary: ''
       description: ''
       parameters:
@@ -201,13 +201,14 @@ paths:
         - Schedules
   /schedules/{schedule_id}:
     get:
-      operationId: GET_SCHEDULE
+      operationId: Schedule
       summary: ''
       description: ''
       parameters:
         - name: schedule_id
           required: true
           in: path
+          example: 2cd22d8d-59d8-4ec4-b69c-bcd6f40f6779
           schema:
             type: string
       responses:
@@ -588,15 +589,13 @@ components:
             - -2
             - -2
             - -2
-          type: array
           items:
-            type: integer
+            type: array
+          type: array
         rareWeapon:
+          type: integer
           example: null
           nullable: true
-          type: array
-          items:
-            type: integer
         mode:
           type: string
           enum: &ref_4
@@ -934,15 +933,13 @@ components:
           example: '2021-01-01T00:00:00.000Z'
         weaponList:
           example: *ref_3
-          type: array
           items:
-            type: integer
+            type: array
+          type: array
         rareWeapon:
+          type: integer
           example: null
           nullable: true
-          type: array
-          items:
-            type: integer
         mode:
           type: string
           enum: *ref_4
@@ -951,8 +948,6 @@ components:
           type: string
           enum: *ref_5
           example: REGULAR
-        limit:
-          type: number
       required:
         - stageId
         - startTime
@@ -961,7 +956,6 @@ components:
         - rareWeapon
         - mode
         - rule
-        - limit
     ActiveCount:
       type: object
       properties:
@@ -978,19 +972,16 @@ components:
     IkuraNum:
       type: object
       properties:
-        maximum:
+        sum:
           type: integer
-        average:
-          type: number
-        dispersion:
-          type: number
-        deviation:
+        max:
+          type: integer
+        avg:
           type: number
       required:
-        - maximum
-        - average
-        - dispersion
-        - deviation
+        - sum
+        - max
+        - avg
     GradePoint:
       type: object
       properties:
@@ -1021,15 +1012,30 @@ components:
           type: string
           example: '2021-01-01T00:00:00.000Z'
         active_count:
-          $ref: '#/components/schemas/ActiveCount'
+          allOf:
+            - $ref: '#/components/schemas/ActiveCount'
         golden_ikura_num:
-          $ref: '#/components/schemas/IkuraNum'
+          allOf:
+            - $ref: '#/components/schemas/IkuraNum'
         ikura_num:
-          $ref: '#/components/schemas/IkuraNum'
+          allOf:
+            - $ref: '#/components/schemas/IkuraNum'
         grade_point:
           type: array
           items:
             $ref: '#/components/schemas/GradePoint'
+        is_clear:
+          type: integer
+        is_failure:
+          type: integer
+        failure_waves:
+          example:
+            - 0
+            - 0
+            - 0
+          type: array
+          items:
+            type: integer
       required:
         - start_time
         - end_time
@@ -1037,15 +1043,55 @@ components:
         - golden_ikura_num
         - ikura_num
         - grade_point
+        - is_clear
+        - is_failure
+        - failure_waves
     CoopScheduleStats:
       type: object
       properties:
+        stageId:
+          type: number
+          enum: *ref_2
+          example: 1
+        startTime:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        endTime:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        weaponList:
+          example: *ref_3
+          items:
+            type: array
+          type: array
+        rareWeapon:
+          type: integer
+          example: null
+          nullable: true
+        mode:
+          type: string
+          enum: *ref_4
+          example: REGULAR
+        rule:
+          type: string
+          enum: *ref_5
+          example: REGULAR
         status:
-          $ref: '#/components/schemas/CoopScheduleStatus'
-        history:
+          allOf:
+            - $ref: '#/components/schemas/CoopScheduleStatus'
+        entries:
           type: array
           items:
             $ref: '#/components/schemas/CoopScheduleStatus'
       required:
+        - stageId
+        - startTime
+        - endTime
+        - weaponList
+        - rareWeapon
+        - mode
+        - rule
         - status
-        - history
+        - entries
