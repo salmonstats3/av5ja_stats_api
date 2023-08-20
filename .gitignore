@@ -37,7 +37,8 @@ lerna-debug.log*
 
 # Environment
 .env
+.env.*
+!.env.example
 
 # Secrets
 .secrets
-credentials.json
