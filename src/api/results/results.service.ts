@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma, Result } from '@prisma/client';
+import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'nestjs-prisma';
 import { ClientType } from 'src/enum/client';
 import { AppVersion } from 'src/enum/version';
 
 import { CoopResultManyRequest, CoopResultRequest } from './dto/results.request.dto';
 import { CustomResult } from './dto/results.response.dto';
-import { Prisma, Result } from '@prisma/client';
-import { plainToInstance } from 'class-transformer';
-
 
 @Injectable()
 export class ResultsService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService) {}
 
     async create(request: CoopResultManyRequest, version: AppVersion, client: ClientType): Promise<CustomResult[]> {
         // console.log(JSON.stringify(request, null, 2))

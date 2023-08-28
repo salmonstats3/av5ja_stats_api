@@ -15,7 +15,7 @@ import {
 
 @Injectable()
 export class SchedulesService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService) {}
 
     async get_schedule(schedule_id: string): Promise<CoopScheduleStats> {
         const response = await Promise.all([

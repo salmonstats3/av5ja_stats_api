@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Client, Prisma } from '@prisma/client';
-import { Expose, plainToClass, Transform, Type } from 'class-transformer';
+import { Expose, plainToInstance, Transform, Type } from 'class-transformer';
 import {
     ArrayMaxSize,
     ArrayMinSize,
@@ -273,7 +273,7 @@ export class CoopPlayerRequest {
         gradePoint: number | null = null,
         kumaPoint: number | null = null,
     ): CoopPlayerRequest {
-        const player: CoopPlayerRequest = plainToClass(
+        const player: CoopPlayerRequest = plainToInstance(
             CoopPlayerRequest,
             {
                 ...result,
@@ -405,7 +405,7 @@ export class CoopResultRequest {
     readonly gradeId: number | null;
 
     @Expose()
-    @ApiProperty({ maxItems: 5, minItems: 1, isArray: true, type: CoopWaveRequest })
+    @ApiProperty({ isArray: true, maxItems: 5, minItems: 1, type: CoopWaveRequest })
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(0)

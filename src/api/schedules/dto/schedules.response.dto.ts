@@ -287,7 +287,7 @@ class CoopScheduleStatus {
     }
 }
 
-export class CoopSchedule extends CoopScheduleRequest { }
+export class CoopSchedule extends CoopScheduleRequest {}
 
 export class CoopScheduleStats extends CoopSchedule {
     @Expose()

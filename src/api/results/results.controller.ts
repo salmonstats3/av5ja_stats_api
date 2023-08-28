@@ -8,7 +8,6 @@ import { CoopResultManyRequest } from './dto/results.request.dto';
 import { CustomResult } from './dto/results.response.dto';
 import { ResultsService } from './results.service';
 
-
 class CoopRequestHeader {
     version: AppVersion;
     client: ClientType;
@@ -17,7 +16,7 @@ class CoopRequestHeader {
 @ApiTags('Results')
 @Controller('results')
 export class ResultsController {
-    constructor(private readonly service: ResultsService) { }
+    constructor(private readonly service: ResultsService) {}
 
     @Post()
     @HttpCode(201)
@@ -26,9 +25,9 @@ export class ResultsController {
         operationId: 'POST',
     })
     @ApiOkResponsePaginated({ type: CustomResult })
-    @ApiHeader({ description: "Version", example: AppVersion.V216, name: "version", required: true })
-    @ApiHeader({ description: "Client", example: ClientType.SALMONIA, name: "client", required: true })
+    @ApiHeader({ description: 'Version', example: AppVersion.V216, name: 'version', required: true })
+    @ApiHeader({ description: 'Client', example: ClientType.SALMONIA, name: 'client', required: true })
     async create(@Body() request: CoopResultManyRequest, @Headers() headers: CoopRequestHeader): Promise<CustomResult[]> {
-        return this.service.create(request, headers.version, headers.client)
+        return this.service.create(request, headers.version, headers.client);
     }
 }

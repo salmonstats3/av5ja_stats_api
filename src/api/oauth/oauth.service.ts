@@ -115,7 +115,7 @@ export class OauthService {
     }
 
     async f(request: CoralRequest): Promise<CoralResponse> {
-        const url = 'http://192.168.1.22:9000/f';
+        const url = 'http://192.168.1.100:9000/f';
         try {
             const response = await axios.post(url, request);
             return plainToInstance(CoralResponse, response.data);
