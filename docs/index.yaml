@@ -300,7 +300,6 @@ paths:
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
-  version: 4.0.0
   contact: {}
 tags: []
 servers: []
