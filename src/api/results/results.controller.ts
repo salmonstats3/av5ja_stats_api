@@ -7,11 +7,12 @@ import { AppVersion, Client, CoopRequestHeader } from "../dto/results/result.hea
 import { CoopResultManyRequest } from "../dto/results/result.request.dto";
 
 import { CustomResult, ResultsService } from "./results.service";
+import camelcaseKeys from "camelcase-keys";
 
 @Controller("results")
 @ApiExtraModels(PaginatedDto)
 export class ResultsController {
-  constructor(private readonly service: ResultsService) {}
+  constructor(private readonly service: ResultsService) { }
 
   @Get("")
   @HttpCode(200)
