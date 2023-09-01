@@ -1,12 +1,14 @@
 import { Controller, Get, HttpCode } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+
 import { AppVersionResult } from "../dto/authorize/app_version.dto";
+
 import { AuthorizeService } from "./authorize.service";
 import { AuthorizeResponse } from "./autorize.response.dto";
 
 @Controller("authorize")
 export class AuthorizeController {
-  constructor(private readonly service: AuthorizeService) { }
+  constructor(private readonly service: AuthorizeService) {}
 
   @Get("")
   @HttpCode(200)
