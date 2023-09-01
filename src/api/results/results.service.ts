@@ -8,10 +8,11 @@ import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
 import { CoopResultCustomRequest, ResultStatus } from "../dto/results/result.custom.dto";
 import { AppVersion } from "../dto/results/result.headers.dto";
 import { CoopResultManyRequest, CoopResultRequest } from "../dto/results/result.request.dto";
+import { cli } from "webpack";
 
 @Injectable()
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /**
    * リザルト取得API
@@ -98,6 +99,10 @@ export class ResultsService {
       throw new BadRequestException({ message: "Invalid Version", status: 400 });
     }
 
+    if (Object.values(Client).find((value) => value === client) === undefined) {
+      throw new BadRequestException({ message: "Invalid Client", status: 400 });
+    }
+
     // 書き込み
     const queries: Prisma.ResultUpsertArgs[] = request.results
       .filter((result: CoopResultRequest) => result.isValid)
@@ -124,7 +129,7 @@ export class CustomResult {
   resultId: number;
 
   @Expose()
-  @Transform((param) => param.obj.resultId)
+  @Transform((param) => param.obj.id)
   @IsString()
   @IsNotEmpty()
   uuid: string;
