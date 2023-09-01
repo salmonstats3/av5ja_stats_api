@@ -6,24 +6,26 @@ import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
 
 @Injectable()
 export class ScenarioService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async getScenario(request: PaginatedRequestDto): Promise<PaginatedDto<Partial<Result>>> {
-    const count: number = await this.prisma.result.count({
+    const count: number = (await this.prisma.result.count({
       where: {
+        isClear: {
+          equals: true,
+        },
         scenarioCode: {
           not: null,
         },
-        isClear: {
-          equals: true,
-        }
-      }
-    }) as number
+      },
+    })) as number;
     const results: Partial<Result>[] = await this.prisma.result.findMany({
       distinct: ["scenarioCode"],
       select: {
+        bossId: true,
         dangerRate: true,
         goldenIkuraNum: true,
+        isBossDefeated: true,
         scenarioCode: true,
         schedule: {
           select: {
@@ -31,8 +33,6 @@ export class ScenarioService {
             weaponList: true,
           },
         },
-        isBossDefeated: true,
-        bossId: true,
         waves: {
           select: {
             eventType: true,
@@ -50,12 +50,7 @@ export class ScenarioService {
         },
       },
     });
-    const response: PaginatedDto<Partial<Result>> = new PaginatedDto<Partial<Result>>(
-      request.limit,
-      request.offset,
-      count,
-      results,
-    );
+    const response: PaginatedDto<Partial<Result>> = new PaginatedDto<Partial<Result>>(request.limit, request.offset, count, results);
     return response;
   }
 }
