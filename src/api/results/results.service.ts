@@ -13,7 +13,6 @@ export class ResultsService {
     constructor(private readonly prisma: PrismaService) {}
 
     async create(request: CoopResultManyRequest, version: AppVersion, client: ClientType): Promise<CustomResult[]> {
-        // console.log(JSON.stringify(request, null, 2))
         const queries: Prisma.ResultUpsertArgs[] = request.results
             .filter((result: CoopResultRequest) => result.isValid)
             .map((result) => result.query(version, client));

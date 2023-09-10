@@ -8,13 +8,24 @@ import { BulletTokenRequest, BulletTokenResponse } from './dto/bullet_token.dto'
 import { CoralRequest, CoralResponse } from './dto/coral.dto';
 import { GameServiceTokenRequest, GameServiceTokenResponse } from './dto/game_service_token.dto';
 import { GameWebTokenRequest, GameWebTokenResponse } from './dto/game_web_token.dto';
-import { SessionTokenRequest, SessionTokenResponse } from './dto/session_tokne.dto';
+import { SessionTokenRequest, SessionTokenResponse } from './dto/session_token.dto';
+import { TokenResponse } from './dto/token.dto';
 import { OauthService } from './oauth.service';
 
 @ApiTags('Authorize')
 @Controller('auth')
 export class OauthController {
     constructor(private readonly service: OauthService, @Inject(CACHE_MANAGER) private readonly manager: Cache) {}
+
+    @Get('authorize')
+    @ApiOperation({
+        description: '',
+        operationId: 'SessionToken',
+    })
+    @ApiOkResponse({ type: SessionTokenResponse })
+    async authorize(): Promise<TokenResponse> {
+        return this.service.authorize();
+    }
 
     @Post('session_token')
     @ApiOperation({

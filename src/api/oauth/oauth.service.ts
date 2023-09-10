@@ -1,6 +1,7 @@
 import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { plainToInstance } from 'class-transformer';
+import { Jwt } from 'src/utils/jwt';
 
 import { AccessTokenRequest, AccessTokenResponse } from './dto/access_token.dto';
 import { APIConfig } from './dto/api_config.dto';
@@ -8,7 +9,8 @@ import { BulletTokenRequest, BulletTokenResponse } from './dto/bullet_token.dto'
 import { CoralRequest, CoralResponse } from './dto/coral.dto';
 import { GameServiceTokenRequest, GameServiceTokenResponse } from './dto/game_service_token.dto';
 import { GameWebTokenRequest, GameWebTokenResponse } from './dto/game_web_token.dto';
-import { SessionTokenRequest, SessionTokenResponse } from './dto/session_tokne.dto';
+import { SessionTokenRequest, SessionTokenResponse } from './dto/session_token.dto';
+import { TokenResponse } from './dto/token.dto';
 import { AppVersionResponse } from './dto/version.dto';
 
 @Injectable()
@@ -56,6 +58,7 @@ export class OauthService {
             switch (status_code) {
                 case 0:
                     return plainToInstance(GameServiceTokenResponse, response.data);
+                default:
                     throw new HttpException(response.data, status_code - 9000);
             }
         } catch (error) {
@@ -87,6 +90,7 @@ export class OauthService {
             switch (status_code) {
                 case 0:
                     return plainToInstance(GameWebTokenResponse, response.data);
+                default:
                     throw new HttpException(response.data, status_code - 9000);
             }
         } catch (error) {
@@ -122,6 +126,41 @@ export class OauthService {
         } catch (error) {
             throw new BadRequestException(error);
         }
+    }
+
+    async authorize(): Promise<TokenResponse> {
+        const { version, web_version } = await this.config();
+        const session_token = (() => {
+            if (process.env.SESSION_TOKEN === undefined) {
+                throw new Error('SESSION_TOKEN is undefined');
+            }
+            return process.env.SESSION_TOKEN;
+        })();
+        const access_token = await this.access_token({
+            session_token: session_token,
+        });
+        const na_id: string = Jwt.decode(access_token.access_token)[0].payload.sub.toString();
+        const f_nso = await this.f(new CoralRequest(access_token.access_token, na_id));
+        const game_service_token = await this.game_service_token(new GameServiceTokenRequest(f_nso, access_token.access_token), version);
+        const f_app = await this.f(new CoralRequest(game_service_token.result.webApiServerCredential.accessToken, na_id));
+        const game_web_token = await this.game_web_token(
+            new GameWebTokenRequest(f_app, game_service_token.result.webApiServerCredential.accessToken),
+            version,
+        );
+        const bullet_token = await this.bullet_token({
+            'X-GameWebToken': game_web_token.result.accessToken,
+            'X-NaCountry': 'US',
+            'X-Web-View-Ver': web_version,
+        });
+        return plainToInstance(TokenResponse, {
+            access_token: access_token.access_token,
+            bullet_token: bullet_token.bulletToken,
+            game_service_token: game_service_token.result.webApiServerCredential.accessToken,
+            game_web_token: game_web_token.result.accessToken,
+            session_token: session_token,
+            version: version,
+            web_version: web_version,
+        });
     }
 
     async config(): Promise<APIConfig> {

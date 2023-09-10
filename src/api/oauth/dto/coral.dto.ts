@@ -4,10 +4,6 @@ import { Expose, Transform } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 import dayjs from 'dayjs';
 import { Jwt } from 'src/utils/jwt';
-import { v4 as uuidv4 } from 'uuid';
-
-import { AccessTokenResponse } from './access_token.dto';
-import { GameServiceTokenResponse } from './game_service_token.dto';
 
 enum HashMethod {
     NSO = 1,
@@ -33,12 +29,6 @@ export class CoralRequest {
     })
     token: string;
 
-    @ApiProperty({ example: '9c5a943a-761d-4dc2-a489-2a3a38e69dc2' })
-    @IsOptional()
-    @IsUUID()
-    @Expose()
-    request_id?: string;
-
     @ApiProperty({ example: '5ae8f7a78b0cca4d' })
     @IsOptional()
     @MinLength(16)
@@ -51,28 +41,25 @@ export class CoralRequest {
     @Expose()
     coral_user_id?: string;
 
-    constructor(token: GameServiceTokenResponse | AccessTokenResponse | string) {
-        if (token instanceof AccessTokenResponse) {
+    constructor(token: string, na_id: string | undefined = undefined) {
+        const [jwt] = Jwt.decode(token);
+        if (jwt.payload.exp < dayjs().unix()) {
+            throw new BadRequestException('Token expired');
+        }
+
+        // AccessToken
+        if (jwt.payload.typ === 'token') {
             this.hash_method = HashMethod.NSO;
-            this.token = token.id_token;
-            this.request_id = uuidv4();
-            const [jwt] = Jwt.decode(token.id_token);
-            if (jwt.payload.exp < dayjs().unix()) {
-                throw new BadRequestException('Token expired');
-            }
             this.na_id = jwt.payload.sub.toString();
+            this.coral_user_id = undefined;
+            this.token = token;
             return;
         }
-        if (token instanceof GameServiceTokenResponse) {
+        if (jwt.payload.typ === 'id_token') {
             this.hash_method = HashMethod.APP;
-            this.token = token.result.webApiServerCredential.accessToken;
-            this.request_id = uuidv4();
-            const [jwt] = Jwt.decode(token.result.webApiServerCredential.accessToken);
-            this.na_id = jwt.payload.sub.toString();
-            if (jwt.payload.exp < dayjs().unix()) {
-                throw new BadRequestException('Token expired');
-            }
-            this.coral_user_id = token.result.user.id.toString();
+            this.na_id = na_id;
+            this.coral_user_id = jwt.payload.sub.toString();
+            this.token = token;
             return;
         }
     }
