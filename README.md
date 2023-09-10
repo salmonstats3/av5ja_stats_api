@@ -2,10 +2,10 @@
   <img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/SalmonStats3/salmonstats_api/build.yaml">
   <img alt="GitHub" src="https://img.shields.io/github/license/salmonstats3/salmonstats_api">
   <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/SalmonStats3/salmonstats_api">
-  <img alt="Node" src="https://img.shields.io/badge/node-v16.15.0-green">
+  <img alt="Node" src="https://img.shields.io/badge/node-v18.17.0-green">
   <img alt="NestJS" src="https://img.shields.io/badge/nest-v10.1.3-blue">
   <img src="https://img.shields.io/badge/-NintendoSwitch-E60012.svg?logo=nintendoswitch&style=popout">
-  <img src="https://img.shields.io/badge/XProductVersion-2.6.0-8F8F8F.svg?logo=nintendoswitch&style=popout">
+  <img src="https://img.shields.io/badge/XProductVersion-2.7.0-8F8F8F.svg?logo=nintendoswitch&style=popout">
   <img src="https://img.shields.io/badge/XWebViewVer-4.0.0-8F8F8F.svg?logo=nintendoswitch&style=popout">
   <img src="https://img.shields.io/badge/-Prettier-F7B93E.svg?logo=prettier&style=popout">
   <img src="https://img.shields.io/badge/-Postgresql-336791.svg?logo=postgresql&style=popout">
