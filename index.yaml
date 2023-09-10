@@ -152,7 +152,7 @@ paths:
       tags: *ref_0
   /auth/authorize:
     get:
-      operationId: SessionToken
+      operationId: Authorize
       summary: ''
       description: ''
       parameters: []
@@ -590,12 +590,14 @@ components:
             - -999
             - 1
             - 2
+            - 4
             - 6
             - 7
             - 8
             - 100
             - 102
             - 103
+            - 104
           example: 1
         startTime:
           format: date-time
