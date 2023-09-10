@@ -97,7 +97,7 @@ export class OauthController {
     @Version('3')
     @ApiOperation({
         description: '',
-        operationId: 'SessionToken',
+        operationId: 'Authorize',
     })
     @ApiOkResponse({ type: SessionTokenResponse })
     async authorize(): Promise<TokenResponse> {
