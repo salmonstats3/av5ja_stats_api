@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
+import dayjs from 'dayjs';
 import { PrismaService } from 'nestjs-prisma';
 import snakecaseKeys from 'snakecase-keys';
+import { Mode } from 'src/enum/mode';
+import { Rule } from 'src/enum/rule';
+
+import schedule from '../../coop.json';
 
 import {
     CoopSchedule,
@@ -16,6 +21,27 @@ import {
 @Injectable()
 export class SchedulesService {
     constructor(private readonly prisma: PrismaService) {}
+
+    async set_schedules(): Promise<void> {
+        await this.prisma.schedule.createMany({
+            data: snakecaseKeys(schedule).map((schedule) => {
+                return {
+                    endTime: dayjs(schedule.end_time).toDate(),
+                    mode: schedule.setting === Rule.CONTEST ? Mode.LIMITED : Mode.REGULAR,
+                    rule:
+                        schedule.setting === 'CoopNormalSetting'
+                            ? Rule.REGULAR
+                            : schedule.setting === 'CoopBigRunSetting'
+                            ? Rule.BIG_RUN
+                            : Rule.CONTEST,
+                    stageId: schedule.stage_id,
+                    startTime: dayjs(schedule.start_time).toDate(),
+                    weaponList: schedule.weapon_list,
+                };
+            }),
+            skipDuplicates: true,
+        });
+    }
 
     async get_schedule(schedule_id: string): Promise<CoopScheduleStats> {
         const response = await Promise.all([

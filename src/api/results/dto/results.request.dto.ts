@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Client, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { Expose, plainToInstance, Transform, Type } from 'class-transformer';
 import {
     ArrayMaxSize,
@@ -595,14 +595,13 @@ export class CoopResultRequest {
         return true;
     }
 
-    query(version: string, client: Client): Prisma.ResultUpsertArgs {
+    query(): Prisma.ResultUpsertArgs {
         return {
             create: {
                 bossCounts: this.bossCounts,
                 bossId: this.jobResult.bossId,
                 bossKillCounts: this.bossKillCounts,
                 bronze: this.scale[0],
-                createdBy: client,
                 dangerRate: this.dangerRate,
                 failureWave: this.jobResult.failureWave,
                 gold: this.scale[2],
@@ -625,7 +624,6 @@ export class CoopResultRequest {
                     connectOrCreate: this.schedule.query,
                 },
                 silver: this.scale[1],
-                version: version,
                 waves: {
                     createMany: {
                         data: this.waveDetails.map((wave) => wave.query),

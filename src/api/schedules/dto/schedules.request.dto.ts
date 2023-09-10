@@ -61,7 +61,7 @@ export class CoopScheduleRequest {
                 weaponList: this.weaponList,
             },
             where: {
-                unique: {
+                stageId_mode_rule_weaponList_startTime_endTime: {
                     endTime: this.endTime ?? dayjs('1970-01-01T00:00:00.000Z').toDate(),
                     mode: this.mode,
                     rule: this.rule,

@@ -23,6 +23,19 @@ export class SchedulesController {
         return;
     }
 
+    @Get()
+    @ApiOperation({
+        description: '',
+        operationId: 'Schedules',
+    })
+    @ApiQuery({ name: 'limit', required: false, type: 'Number' })
+    @ApiOkResponse({ isArray: true, type: CoopSchedule })
+    @Version('3')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async set_schedules(): Promise<unknown> {
+        return this.service.set_schedules();
+    }
+
     @Get(':schedule_id')
     @ApiOperation({
         description: '',
