@@ -1,4 +1,4 @@
-import { Body, CACHE_MANAGER, Controller, Get, Headers, Inject, Post } from '@nestjs/common';
+import { Body, CACHE_MANAGER, Controller, Get, Headers, Inject, Post, Version } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -16,16 +16,6 @@ import { OauthService } from './oauth.service';
 @Controller('auth')
 export class OauthController {
     constructor(private readonly service: OauthService, @Inject(CACHE_MANAGER) private readonly manager: Cache) {}
-
-    @Get('authorize')
-    @ApiOperation({
-        description: '',
-        operationId: 'SessionToken',
-    })
-    @ApiOkResponse({ type: SessionTokenResponse })
-    async authorize(): Promise<TokenResponse> {
-        return this.service.authorize();
-    }
 
     @Post('session_token')
     @ApiOperation({
@@ -101,6 +91,17 @@ export class OauthController {
     @ApiOkResponse({ type: APIConfig })
     async config(): Promise<APIConfig> {
         return this.cache_manager('config', 60 * 60 * 24, this.service.config());
+    }
+
+    @Get('authorize')
+    @Version('3')
+    @ApiOperation({
+        description: '',
+        operationId: 'SessionToken',
+    })
+    @ApiOkResponse({ type: SessionTokenResponse })
+    async authorize(): Promise<TokenResponse> {
+        return this.service.authorize();
     }
 
     private async cache_manager<T>(id: string, ttl: number, callback: Promise<T>): Promise<T> {
