@@ -166,22 +166,10 @@ paths:
       tags: *ref_0
   /results:
     post:
-      operationId: POST
+      operationId: Results
       summary: ''
       description: ''
-      parameters:
-        - name: client
-          in: header
-          description: Client
-          required: true
-          schema:
-            type: string
-        - name: version
-          in: header
-          description: Version
-          required: true
-          schema:
-            type: string
+      parameters: []
       requestBody:
         required: true
         content:
