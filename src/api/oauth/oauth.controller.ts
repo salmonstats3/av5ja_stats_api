@@ -12,7 +12,7 @@ import { SessionTokenRequest, SessionTokenResponse } from './dto/session_tokne.d
 import { OauthService } from './oauth.service';
 
 @ApiTags('Authorize')
-@Controller('oauth')
+@Controller('auth')
 export class OauthController {
     constructor(private readonly service: OauthService, @Inject(CACHE_MANAGER) private readonly manager: Cache) {}
 

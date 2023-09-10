@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, Controller, Get, Inject, Param } from '@nestjs/common';
+import { CACHE_MANAGER, Controller, Get, Inject, Param, Version } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 
@@ -17,6 +17,7 @@ export class SchedulesController {
     })
     @ApiQuery({ name: 'limit', required: false, type: 'Number' })
     @ApiOkResponse({ isArray: true, type: CoopSchedule })
+    @Version('2')
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async schedules(): Promise<CoopSchedule[]> {
         return;
