@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { Result } from "@prisma/client";
-import { PrismaService } from "src/prisma.service";
+import { Injectable } from '@nestjs/common';
+import { Result } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
 
-import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
+import { PaginatedDto, PaginatedRequestDto } from '../dto/pagination.dto';
 
 @Injectable()
 export class ScenarioService {
@@ -20,7 +20,7 @@ export class ScenarioService {
       },
     })) as number;
     const results: Partial<Result>[] = await this.prisma.result.findMany({
-      distinct: ["scenarioCode"],
+      distinct: ['scenarioCode'],
       select: {
         bossId: true,
         dangerRate: true,

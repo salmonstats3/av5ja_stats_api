@@ -1,36 +1,36 @@
-import { BadRequestException, CACHE_MANAGER, HttpException, Inject, Injectable } from "@nestjs/common";
-import axios from "axios";
-import { Cache } from "cache-manager";
-import { plainToClass, plainToInstance } from "class-transformer";
-import dayjs from "dayjs";
-import { initializeApp } from "firebase/app";
-import { collection, doc, getDocs, getFirestore, limit, setDoc } from "firebase/firestore/lite";
+import { BadRequestException, CACHE_MANAGER, HttpException, Inject, Injectable } from '@nestjs/common';
+import axios from 'axios';
+import { Cache } from 'cache-manager';
+import { plainToClass, plainToInstance } from 'class-transformer';
+import dayjs from 'dayjs';
+import { initializeApp } from 'firebase/app';
+import { collection, doc, getDocs, getFirestore, limit, setDoc } from 'firebase/firestore/lite';
 
-import { AccessTokenRequest, AccessTokenResponse } from "../dto/authorize/access_token.dto";
-import { AppVersionResponse, AppVersionResult } from "../dto/authorize/app_version.dto";
-import { BulletTokenRequest, BulletTokenResponse } from "../dto/authorize/bullet_token.dto";
-import { GameServiceTokenRequest, GameServiceTokenResponse } from "../dto/authorize/game_service_token.dto";
-import { GameWebTokenRequest, GameWebTokenResponse } from "../dto/authorize/game_web_token.dto";
-import { IminkResponse, CoralRequest } from "../dto/authorize/imink.dto";
-import { SplatoonInkLink } from "../dto/enum/link";
-import { Setting } from "../dto/enum/setting";
-import { CoopSchedule, CoopScheduleDataResponse, CoopScheduleResponse, KingSalmonId } from "../dto/schedules/schedule.response.dto";
-import { CoopEnemyInfo, WeaponInfoMain } from "../dto/weaponinfo.dto";
-import { firebaseConfig } from "../firebase.config";
+import { AccessTokenRequest, AccessTokenResponse } from '../dto/authorize/access_token.dto';
+import { AppVersionResponse, AppVersionResult } from '../dto/authorize/app_version.dto';
+import { BulletTokenRequest, BulletTokenResponse } from '../dto/authorize/bullet_token.dto';
+import { GameServiceTokenRequest, GameServiceTokenResponse } from '../dto/authorize/game_service_token.dto';
+import { GameWebTokenRequest, GameWebTokenResponse } from '../dto/authorize/game_web_token.dto';
+import { IminkResponse, CoralRequest } from '../dto/authorize/imink.dto';
+import { SplatoonInkLink } from '../dto/enum/link';
+import { Setting } from '../dto/enum/setting';
+import { CoopSchedule, CoopScheduleDataResponse, CoopScheduleResponse, KingSalmonId } from '../dto/schedules/schedule.response.dto';
+import { CoopEnemyInfo, WeaponInfoMain } from '../dto/weaponinfo.dto';
+import { firebaseConfig } from '../firebase.config';
 
-import { AuthorizeResponse } from "./autorize.response.dto";
-import resources from "./resources.json";
+import { AuthorizeResponse } from './autorize.response.dto';
+import resources from './resources.json';
 
 @Injectable()
 export class AuthorizeService {
   private readonly app = initializeApp(firebaseConfig);
   private readonly firestore = getFirestore(this.app);
 
-  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) { }
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   private async get_schedules(bullet_token: string, web_version: string): Promise<CoopSchedule[]> {
-    const hash = "f76dd61e08f4ce1d5d5b17762a243fec";
-    const url = "https://api.lp1.av5ja.srv.nintendo.net/api/graphql";
+    const hash = 'f76dd61e08f4ce1d5d5b17762a243fec';
+    const url = 'https://api.lp1.av5ja.srv.nintendo.net/api/graphql';
     const parameters = {
       extensions: {
         persistedQuery: {
@@ -42,7 +42,7 @@ export class AuthorizeService {
     };
     const headers = {
       Authorization: `Bearer ${bullet_token}`,
-      "X-Web-View-Ver": web_version,
+      'X-Web-View-Ver': web_version,
     };
     try {
       return plainToClass(CoopScheduleResponse, (await axios.post(url, parameters, { headers: headers })).data, {
@@ -139,8 +139,8 @@ export class AuthorizeService {
   }
 
   async get_version(): Promise<{ version: string; web_version: string }> {
-    const version = await this.cacheManager.get("version");
-    const ttl: number = dayjs().ceil(30).diff(dayjs(), "second");
+    const version = await this.cacheManager.get('version');
+    const ttl: number = dayjs().ceil(30).diff(dayjs(), 'second');
     if (version !== undefined) {
       return version as { version: string; web_version: string };
     }
@@ -152,21 +152,21 @@ export class AuthorizeService {
       web_version: web_revision,
     };
 
-    this.cacheManager.set("version", response, { ttl: ttl });
+    this.cacheManager.set('version', response, { ttl: ttl });
 
     return response;
   }
 
   private async get_app_version(): Promise<AppVersionResult> {
-    const url = "https://itunes.apple.com/lookup?id=1234806557";
+    const url = 'https://itunes.apple.com/lookup?id=1234806557';
     return plainToInstance(AppVersionResponse, (await axios.get(url)).data, { excludeExtraneousValues: true }).results[0];
   }
 
   private async get_game_web_version_hash(): Promise<string> {
-    const url = "https://api.lp1.av5ja.srv.nintendo.net/";
-    const hash = new RegExp("main.([a-z0-9]{8}).js");
+    const url = 'https://api.lp1.av5ja.srv.nintendo.net/';
+    const hash = new RegExp('main.([a-z0-9]{8}).js');
     const response = (await axios.get(url)).data;
-    return hash.test(response) ? hash.exec(response)[1] : "bd36a652";
+    return hash.test(response) ? hash.exec(response)[1] : 'bd36a652';
   }
 
   private async get_web_revision(hash: string): Promise<string> {
@@ -174,11 +174,11 @@ export class AuthorizeService {
     const response = (await axios.get(url)).data;
     const version: string = (() => {
       const re = /`(\d{1}\.\d{1}\.\d{1})-/;
-      return re.test(response) ? re.exec(response)[1] : "3.1.0";
+      return re.test(response) ? re.exec(response)[1] : '3.1.0';
     })();
     const revision: string = (() => {
       const re = /REACT_APP_REVISION:"([a-f0-9]{8})/;
-      return re.test(response) ? re.exec(response)[1] : "bd36a652";
+      return re.test(response) ? re.exec(response)[1] : 'bd36a652';
     })();
 
     return `${version}-${revision}`;
@@ -191,11 +191,11 @@ export class AuthorizeService {
       return (await axios.get(url)).data as string;
     })();
     const css3: string = await (async () => {
-      const url = "https://api.lp1.av5ja.srv.nintendo.net/static/css/main.d9ea986a.css";
+      const url = 'https://api.lp1.av5ja.srv.nintendo.net/static/css/main.d9ea986a.css';
       return (await axios.get(url)).data as string;
     })();
     const css2: string = await (async () => {
-      const url = "https://app.splatoon2.nintendo.net/css/837905c36da9d9d89266d6815b0cfe70.css";
+      const url = 'https://app.splatoon2.nintendo.net/css/837905c36da9d9d89266d6815b0cfe70.css';
       return (await axios.get(url)).data as string;
     })();
     const re = /(static\/media|fonts\/bundled)\/.*?(gif|svg|png|jpg|woff2|woff)/g;
@@ -204,10 +204,10 @@ export class AuthorizeService {
   }
 
   private async get_access_token(request: AccessTokenRequest): Promise<AccessTokenResponse> {
-    const url = "https://accounts.nintendo.com/connect/1.0.0/api/token";
+    const url = 'https://accounts.nintendo.com/connect/1.0.0/api/token';
     const parameters = {
-      client_id: "71b963c1b7b6d119",
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer-session-token",
+      client_id: '71b963c1b7b6d119',
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer-session-token',
       session_token: request.session_token,
     };
     try {
@@ -218,17 +218,17 @@ export class AuthorizeService {
   }
 
   private async get_game_service_token(request: GameServiceTokenRequest) {
-    const url = "https://api-lp1.znc.srv.nintendo.net/v3/Account/Login";
+    const url = 'https://api-lp1.znc.srv.nintendo.net/v3/Account/Login';
     const headers = {
-      "X-Platform": "Android",
-      "X-ProductVersion": request.version,
+      'X-Platform': 'Android',
+      'X-ProductVersion': request.version,
     };
     const parameters = {
       parameter: {
         f: request.f,
-        language: "en-US",
-        naBirthday: "1990-01-01",
-        naCountry: "US",
+        language: 'en-US',
+        naBirthday: '1990-01-01',
+        naCountry: 'US',
         naIdToken: request.naIdToken,
         requestId: request.request_id,
         timestamp: request.timestamp,
@@ -252,9 +252,9 @@ export class AuthorizeService {
   private async get_f(request: CoralRequest, version: string) {
     const url = process.env.F_SERVER_URL;
     const headers = {
-      "User-Agent": "SplatNet3/@tkgling",
-      "X-znca-Platform": "Android",
-      "X-znca-Version": version,
+      'User-Agent': 'SplatNet3/@tkgling',
+      'X-znca-Platform': 'Android',
+      'X-znca-Version': version,
     };
     const parameters = {
       coral_user_id: request.coral_user_id,
@@ -272,11 +272,11 @@ export class AuthorizeService {
   }
 
   private async get_game_web_token(request: GameWebTokenRequest) {
-    const url = "https://api-lp1.znc.srv.nintendo.net/v2/Game/GetWebServiceToken";
+    const url = 'https://api-lp1.znc.srv.nintendo.net/v2/Game/GetWebServiceToken';
     const headers = {
       Authorization: `Bearer ${request.naIdToken}`,
-      "X-Platform": "Android",
-      "X-ProductVersion": request.version,
+      'X-Platform': 'Android',
+      'X-ProductVersion': request.version,
     };
     const parameters = {
       parameter: {
@@ -304,11 +304,11 @@ export class AuthorizeService {
   }
 
   private async get_bullet_token(request: BulletTokenRequest) {
-    const url = "https://api.lp1.av5ja.srv.nintendo.net/api/bullet_tokens";
+    const url = 'https://api.lp1.av5ja.srv.nintendo.net/api/bullet_tokens';
     const headers = {
-      "X-GameWebToken": request["X-GameWebToken"],
-      "X-NaCountry": request["X-NaCountry"],
-      "X-Web-View-Ver": request["X-Web-View-Ver"],
+      'X-GameWebToken': request['X-GameWebToken'],
+      'X-NaCountry': request['X-NaCountry'],
+      'X-Web-View-Ver': request['X-Web-View-Ver'],
     };
     try {
       const response = await axios.post(url, null, { headers: headers });
@@ -325,20 +325,21 @@ export class AuthorizeService {
   }
 
   private async get_latest_app_version(): Promise<number> {
-    const url = "https://leanny.github.io/splat3/versions.json";
+    const url = 'https://leanny.github.io/splat3/versions.json';
     return ((await axios.get(url)).data as string[]).map((version) => parseInt(version, 10)).sort((a, b) => b - a)[0];
   }
 
   private async get_stage_banner(): Promise<{ [name: string]: any }> {
     const base_url = `https://leanny.github.io/splat3/data/language/JPja.json`;
-    const stages: string[] = Object.keys((await axios.get(base_url)).data["CommonMsg/Coop/CoopStageName"]).map((stage: string) => {
-      return `https://leanny.github.io/splat3/images/stageBanner/${stage.includes("Shake") ? `Cop_${stage}.png` : stage === "Unknown" ? `${stage}.png` : `Vss_${stage}.png`
-        }`;
+    const stages: string[] = Object.keys((await axios.get(base_url)).data['CommonMsg/Coop/CoopStageName']).map((stage: string) => {
+      return `https://leanny.github.io/splat3/images/stageBanner/${
+        stage.includes('Shake') ? `Cop_${stage}.png` : stage === 'Unknown' ? `${stage}.png` : `Vss_${stage}.png`
+      }`;
     });
     return {
       stage_img: {
         banner: stages,
-        icon: stages.map((stage: string) => stage.replace("Banner", "L")),
+        icon: stages.map((stage: string) => stage.replace('Banner', 'L')),
       },
     };
   }
@@ -346,9 +347,9 @@ export class AuthorizeService {
   private async get_scale(): Promise<{ [name: string]: any }> {
     return {
       scale_img: [
-        "https://leanny.github.io/splat3/images/coop/UrocoIcon_00.png",
-        "https://leanny.github.io/splat3/images/coop/UrocoIcon_01.png",
-        "https://leanny.github.io/splat3/images/coop/UrocoIcon_02.png",
+        'https://leanny.github.io/splat3/images/coop/UrocoIcon_00.png',
+        'https://leanny.github.io/splat3/images/coop/UrocoIcon_01.png',
+        'https://leanny.github.io/splat3/images/coop/UrocoIcon_02.png',
       ],
     };
   }
@@ -367,14 +368,14 @@ export class AuthorizeService {
     const base_url = `https://leanny.github.io/splat3/data/mush/${version}/WeaponInfoMain.json`;
     const weapons: WeaponInfoMain[] = (await axios.get(base_url)).data
       .map((data: any) => plainToInstance(WeaponInfoMain, data, { excludeExtraneousValues: true }))
-      .filter((weapon: WeaponInfoMain) => weapon.row_id.includes("Bear"));
+      .filter((weapon: WeaponInfoMain) => weapon.row_id.includes('Bear'));
     return {
       weapon_illust: weapons.map((weapon: WeaponInfoMain) => weapon.url),
     };
   }
 
   private async plain_text(link: SplatoonInkLink): Promise<{ [name: string]: any }> {
-    const base_url = "https://splatoon3.ink/assets/splatnet/v2";
+    const base_url = 'https://splatoon3.ink/assets/splatnet/v2';
     const url = `${base_url}/${link}`;
     const context: string = (await axios.get(url)).data;
     const pattern = /([\w\d]{64}_0.png)/g;
@@ -401,14 +402,14 @@ export class AuthorizeService {
     const urls: { [name: string]: any } = (
       await Promise.all(
         [this.get_coop_enemy(version), this.get_stage_banner(), this.get_scale()].concat(
-          Object.entries(SplatoonInkLink).map(async ([_, value]) => {
+          Object.entries(SplatoonInkLink).map(async ([, value]) => {
             return await this.plain_text(value);
           }),
         ),
       )
     ).reduce((prev, current) => Object.assign(prev, current), {});
     const asset_urls = { ...urls, ...resources };
-    asset_urls["weapon_illust"] = asset_urls["weapon_illust"].concat(rare_weapons);
+    asset_urls['weapon_illust'] = asset_urls['weapon_illust'].concat(rare_weapons);
     return asset_urls;
   }
 }

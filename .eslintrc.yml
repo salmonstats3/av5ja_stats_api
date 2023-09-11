@@ -2,7 +2,7 @@ root: true
 env:
   node: true
   es6: true
-parser: "@typescript-eslint/parser"
+parser: '@typescript-eslint/parser'
 parserOptions:
   project: ./tsconfig.json
   sourceType: module
@@ -34,3 +34,7 @@ rules:
   sort-keys-fix/sort-keys-fix: error
   typescript-sort-keys/interface: error
   unused-imports/no-unused-imports: error
+  '@typescript-eslint/ban-ts-comment': off
+  '@typescript-eslint/no-explicit-any': off
+  '@typescript-eslint/no-unused-vars': off
+  '@typescript-eslint/no-namespace': off

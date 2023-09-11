@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Client, Prisma } from "@prisma/client";
-import { Expose, plainToClass, Transform, Type } from "class-transformer";
+import { ApiProperty } from '@nestjs/swagger';
+import { Client, Prisma } from '@prisma/client';
+import { Expose, plainToClass, Transform, Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -20,15 +20,14 @@ import {
   Min,
   MinLength,
   ValidateNested,
-} from "class-validator";
-import dayjs from "dayjs";
+} from 'class-validator';
+import dayjs from 'dayjs';
 
-import { EventType } from "../enum/event_type";
-import { Mode } from "../enum/mode";
-import { Species } from "../enum/species";
-import { WaterLevel } from "../enum/water_level";
-import { CoopScheduleRequest } from "../schedules/schedule.request.dto";
-import { cli } from "webpack";
+import { EventType } from '../enum/event_type';
+import { Mode } from '../enum/mode';
+import { Species } from '../enum/species';
+import { WaterLevel } from '../enum/water_level';
+import { CoopScheduleRequest } from '../schedules/schedule.request.dto';
 
 export class CoopJobRequest {
   @ApiProperty()
@@ -318,8 +317,8 @@ export class CoopPlayerRequest {
 }
 
 export class CoopWaveRequest {
-  @ApiProperty({ name: "id" })
-  @Expose({ name: "id" })
+  @ApiProperty({ name: 'id' })
+  @Expose({ name: 'id' })
   @IsInt()
   @Min(1)
   @Max(5)
@@ -436,7 +435,7 @@ export class CoopResultRequest {
   @Type(() => Number)
   bossKillCounts: number[];
 
-  @Expose({ name: "id" })
+  @Expose({ name: 'id' })
   @ApiProperty()
   @ValidateNested({ each: true })
   @Type(() => CoopResultIdRequest)

@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Expose, Type } from "class-transformer";
-import { ValidateNested } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 
 export class AppVersionResponse {
   @ApiProperty()
@@ -11,7 +11,7 @@ export class AppVersionResponse {
 }
 
 export class AppVersionResult {
-  @ApiProperty({ default: "2.5.0" })
+  @ApiProperty({ default: '2.5.0' })
   @Expose()
   version: string;
 }

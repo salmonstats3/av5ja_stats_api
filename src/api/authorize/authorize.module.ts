@@ -1,6 +1,6 @@
-import { CacheModule, Module } from "@nestjs/common";
+import { CacheModule, Module } from '@nestjs/common';
 
-import { AuthorizeService } from "./authorize.service";
+import { AuthorizeService } from './authorize.service';
 
 @Module({
   imports: [CacheModule.register()],
