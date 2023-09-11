@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Prisma } from "@prisma/client";
-import { Expose, Transform, Type } from "class-transformer";
+import { ApiProperty } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
+import { Expose, Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -17,19 +17,19 @@ import {
   Min,
   MinLength,
   ValidateNested,
-} from "class-validator";
-import dayjs from "dayjs";
+} from 'class-validator';
+import dayjs from 'dayjs';
 
-import { Mode } from "../enum/mode";
-import { Rule } from "../enum/rule";
-import { Species } from "../enum/species";
+import { Mode } from '../enum/mode';
+import { Rule } from '../enum/rule';
+import { Species } from '../enum/species';
 
 export enum ResultStatus {
-  VALID = "VALID",
-  INVALID = "INVALID",
-  FIXED = "FIXED",
-  UNKNOWN = "UNKNOWN",
-  PRIVATE = "PRIVATE",
+  VALID = 'VALID',
+  INVALID = 'INVALID',
+  FIXED = 'FIXED',
+  UNKNOWN = 'UNKNOWN',
+  PRIVATE = 'PRIVATE',
 }
 
 /**
@@ -84,11 +84,11 @@ export class CoopScheduleCustomRequest {
           },
           where: {
             unique: {
-              endTime: dayjs("1970-01-01T00:00:00.000Z").toDate(),
+              endTime: dayjs('1970-01-01T00:00:00.000Z').toDate(),
               mode: this.mode,
               rule: this.rule,
               stageId: this.stageId,
-              startTime: dayjs("1970-01-01T00:00:00.000Z").toDate(),
+              startTime: dayjs('1970-01-01T00:00:00.000Z').toDate(),
               weaponList: this.weaponList,
             },
           },
@@ -395,7 +395,7 @@ export class CoopPlayerCustomRequest {
 
 export class CoopResultCustomRequest {
   @ApiProperty()
-  @Expose({ name: "uuid" })
+  @Expose({ name: 'uuid' })
   @IsUUID()
   @Transform((param) => param.value.toString().toUpperCase())
   resultId: string;
@@ -572,23 +572,23 @@ export class CoopResultCustomRequest {
 
       // ムニエールのシフトだった場合
       if (
-        dayjs(this.schedule.startTime).unix() === dayjs("2022-12-23T16:00:00Z").unix() &&
-        dayjs(this.schedule.endTime).unix() === dayjs("2022-12-25T08:00:00Z").unix()
+        dayjs(this.schedule.startTime).unix() === dayjs('2022-12-23T16:00:00Z').unix() &&
+        dayjs(this.schedule.endTime).unix() === dayjs('2022-12-25T08:00:00Z').unix()
       ) {
         // 2022年のデータであれば更新
-        if (dayjs("2022-01-01T00:00:00Z").toDate() <= this.playTime && this.playTime < dayjs("2023-01-01T00:00:00Z").toDate()) {
+        if (dayjs('2022-01-01T00:00:00Z').toDate() <= this.playTime && this.playTime < dayjs('2023-01-01T00:00:00Z').toDate()) {
           // スケジュールとプレイ時間をズラす
-          this.schedule.startTime = dayjs("2022-11-19T00:00:00Z").toDate();
-          this.schedule.endTime = dayjs("2022-11-20T16:00:00Z").toDate();
+          this.schedule.startTime = dayjs('2022-11-19T00:00:00Z').toDate();
+          this.schedule.endTime = dayjs('2022-11-20T16:00:00Z').toDate();
           this.playTime = fixedPlayTime(this.playTime, this.schedule);
           this._status = isValidTime(this.playTime, this.schedule) ? ResultStatus.FIXED : ResultStatus.INVALID;
           return;
         }
         // 2023年のデータであれば更新
-        if (dayjs("2023-01-01T00:00:00Z").toDate() <= this.playTime && this.playTime < dayjs("2024-01-01T00:00:00Z").toDate()) {
+        if (dayjs('2023-01-01T00:00:00Z').toDate() <= this.playTime && this.playTime < dayjs('2024-01-01T00:00:00Z').toDate()) {
           // スケジュールとプレイ時間をズラす
-          this.schedule.startTime = dayjs("2023-04-08T08:00:00Z").toDate();
-          this.schedule.endTime = dayjs("2023-04-10T00:00:00Z").toDate();
+          this.schedule.startTime = dayjs('2023-04-08T08:00:00Z').toDate();
+          this.schedule.endTime = dayjs('2023-04-10T00:00:00Z').toDate();
           this.playTime = fixedPlayTime(this.playTime, this.schedule);
           this._status = isValidTime(this.playTime, this.schedule) ? ResultStatus.FIXED : ResultStatus.INVALID;
           return;
@@ -631,7 +631,7 @@ export class CoopResultCustomRequest {
           connectOrCreate: this.schedule.query,
         },
         silver: this.silver,
-        version: "2.1.6",
+        version: '2.1.6',
         waves: {
           createMany: {
             data: this.waves.map((wave) => wave.query),
@@ -653,14 +653,14 @@ function fixedPlayTime(playTime: Date, schedule: CoopScheduleCustomRequest): Dat
   if (schedule.startTime < playTime && playTime < schedule.endTime) {
     return playTime;
   }
-  if (schedule.startTime < dayjs(playTime).add(9, "hours").toDate() && dayjs(playTime).add(9, "hours").toDate() < schedule.endTime) {
-    return dayjs(playTime).add(9, "hours").toDate();
+  if (schedule.startTime < dayjs(playTime).add(9, 'hours').toDate() && dayjs(playTime).add(9, 'hours').toDate() < schedule.endTime) {
+    return dayjs(playTime).add(9, 'hours').toDate();
   }
   if (
-    schedule.startTime < dayjs(playTime).subtract(9, "hours").toDate() &&
-    dayjs(playTime).subtract(9, "hours").toDate() < schedule.endTime
+    schedule.startTime < dayjs(playTime).subtract(9, 'hours').toDate() &&
+    dayjs(playTime).subtract(9, 'hours').toDate() < schedule.endTime
   ) {
-    return dayjs(playTime).subtract(9, "hours").toDate();
+    return dayjs(playTime).subtract(9, 'hours').toDate();
   }
   return playTime;
 }

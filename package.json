@@ -7,22 +7,19 @@
   "license": "MIT",
   "main": "dist/index.js",
   "engines": {
-    "node": "^16.15.0",
+    "node": "^18.17.0",
     "yarn": "^1.22.19",
     "npm": "9.6.5"
   },
   "scripts": {
     "build": "yarn nest build",
-    "create": "yarn prisma migrate dev --name init --create-only ",
-    "deploy": "yarn prisma migrate deploy",
-    "format": "prettier --write --ignore-path .gitignore './**/*.{js,ts,json}'",
-    "lint": "eslint --ignore-path .gitignore './**/*.{js,ts}' --fix",
+    "format": "prettier --write '{src,tests}/**/*.ts'",
+    "format:dev": "prettier --check '{src,tests}/**/*.ts'",
+    "lint": "eslint --fix '{src,tests}/**/*.ts'",
+    "lint:dev": "eslint --max-warnings=0 --ignore-path .gitignore '{src,test}/**/*.ts'",
     "prebuild": "rimraf dist",
-    "reset:dev": "dotenv -e .env yarn prisma migrate reset --force",
-    "reset:prod": "dotenv -e .env.prod yarn prisma migrate reset --force",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
-    "start:stg": "dotenv -e .env.prod nest start --watch",
     "test": "jest",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -86,7 +83,7 @@
     "ts-loader": "^9.4.2",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.0.4"
+    "typescript": "5.1.6"
   },
   "jest": {
     "moduleFileExtensions": [

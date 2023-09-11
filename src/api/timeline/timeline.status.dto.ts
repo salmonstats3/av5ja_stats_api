@@ -1,11 +1,11 @@
-import { Expose, Transform } from "class-transformer";
-import dayjs from "dayjs";
+import { Expose, Transform } from 'class-transformer';
+import dayjs from 'dayjs';
 
 export class AnalyticsStatusResponseDto {
   @Transform((param) => dayjs(param.value).toDate())
   readonly play_time: Date;
 
-  @Expose({ name: "count" })
+  @Expose({ name: 'count' })
   readonly play_counts: number;
 
   @Expose()

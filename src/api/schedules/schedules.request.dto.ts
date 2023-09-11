@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Expose, Transform } from "class-transformer";
-import { IsInt, IsOptional, Max, Min } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Transform } from 'class-transformer';
+import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export class ScheduleRequestQuery {
   @ApiProperty({ minimum: 0, required: false })

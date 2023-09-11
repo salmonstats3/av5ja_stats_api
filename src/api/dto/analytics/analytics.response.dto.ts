@@ -1,7 +1,7 @@
-import { Schedule } from "@prisma/client";
-import { Expose, plainToInstance, Transform } from "class-transformer";
-import dayjs from "dayjs";
-import { AnalyticsStatusResponseDto } from "src/api/timeline/timeline.status.dto";
+import { Schedule } from '@prisma/client';
+import { Expose, plainToInstance, Transform } from 'class-transformer';
+import dayjs from 'dayjs';
+import { AnalyticsStatusResponseDto } from 'src/api/timeline/timeline.status.dto';
 
 export class AnalyticsResponseDto {
   @Expose()
@@ -26,13 +26,13 @@ export class AnalyticsResponseDto {
 }
 
 class EggSummary {
-  @Expose({ name: "goldenIkuraNum" })
+  @Expose({ name: 'goldenIkuraNum' })
   readonly goldenIkuraNum: number;
 
-  @Expose({ name: "goldenIkuraAssistNum" })
+  @Expose({ name: 'goldenIkuraAssistNum' })
   readonly goldenIkuraAssistNum: number;
 
-  @Expose({ name: "ikuraNum" })
+  @Expose({ name: 'ikuraNum' })
   readonly ikuraNum: number;
 }
 
@@ -49,16 +49,16 @@ export class AnalyticsScheduleDto {
 }
 
 export class AnalyticsSummaryResponseDto {
-  @Expose({ name: "_avg" })
+  @Expose({ name: '_avg' })
   readonly avg: EggSummary;
 
-  @Expose({ name: "_sum" })
+  @Expose({ name: '_sum' })
   readonly sum: EggSummary;
 
-  @Expose({ name: "_max" })
+  @Expose({ name: '_max' })
   readonly max: EggSummary;
 
-  @Expose({ name: "_count" })
+  @Expose({ name: '_count' })
   @Transform((param) => param.value.nightLess)
   readonly count: number;
 
