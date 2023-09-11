@@ -103,6 +103,6 @@ async function bootstrap() {
   }
 
   // アプリを起動
-  await app.listen(port, host);
+  await app.listen(process.env.APP_PORT || 3000, '0.0.0.0');
 }
 bootstrap();

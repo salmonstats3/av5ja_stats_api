@@ -2,9 +2,10 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native"]
-  engineType    = "binary"
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native"]
+  engineType      = "binary"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -28,11 +29,6 @@ enum Mode {
 enum Species {
   INKLING
   OCTOLING
-}
-
-enum Client {
-  SALMONIA
-  SALMDROID
 }
 
 model Schedule {
@@ -113,10 +109,6 @@ model Result {
   createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
   updatedAt            DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
-  // アップロードしたクライアント
-  createdBy            Client    @default(SALMONIA) @map("updated_by")
-  // アップロードしたクライアントバージョン
-  version              String    @db.VarChar(16)
   waves                Wave[]
   players              Player[]
   schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId])
