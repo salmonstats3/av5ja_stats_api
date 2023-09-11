@@ -96,13 +96,22 @@ paths:
       operationId: BulletToken
       summary: ''
       description: ''
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BulletTokenRequest'
+      parameters:
+        - name: X-Web-View-Ver
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: X-GameWebToken
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: X-NaCountry
+          required: true
+          in: header
+          schema:
+            type: string
       responses:
         '200':
           description: ''
@@ -292,7 +301,7 @@ components:
       required:
         - access_token
         - id_token
-    GameServiceTokenRequest:
+    GameServiceTokenParameter:
       type: object
       properties:
         timestamp:
@@ -314,6 +323,13 @@ components:
         - request_id
         - naIdToken
         - f
+    GameServiceTokenRequest:
+      type: object
+      properties:
+        parameter:
+          $ref: '#/components/schemas/GameServiceTokenParameter'
+      required:
+        - parameter
     GameServiceTokenUser:
       type: object
       properties:
@@ -362,24 +378,10 @@ components:
     GameWebTokenRequest:
       type: object
       properties:
-        naIdToken:
-          type: string
-          example: >-
-            fK0khI0DhU8KmMKxX6oixI:APA91bEcKhiHi4acYjs495cIih46knhphM1SEUJo7eBu4cCPXfBSK82XnpnDkCrowl9DWN8v7hqwN2eDnFaclhnOyUKE7N1YXtwtps4ES7oQPMQmFqb86NK_V0hblS2ojYoDpSOa7mOD
-        f:
-          type: string
-          example: >-
-            9e4e5b2e13f46e399adb5f390fd95b2b78de7e3d7e886633f8d16c479382d5e5d44caca68bc19351fe1d0b69c7
-        request_id:
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        timestamp:
-          type: number
+        parameter:
+          $ref: '#/components/schemas/GameServiceTokenParameter'
       required:
-        - naIdToken
-        - f
-        - request_id
-        - timestamp
+        - parameter
     GameWebTokenResult:
       type: object
       properties:
@@ -408,23 +410,6 @@ components:
         - status
         - result
         - correlationId
-    BulletTokenRequest:
-      type: object
-      properties:
-        X-Web-View-Ver:
-          type: string
-          example: 3.0.0-2857bc50
-        X-NaCountry:
-          type: string
-          example: US
-        X-GameWebToken:
-          type: string
-          example: >-
-            eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkpWenU0Z19FX2g3T2tHM1hldXRDS21saFkyUSIsImprdSI6Imh0dHBzOi8vYXBpLWxwMS56bmMuc3J2Lm5pbnRlbmRvLm5ldC92MS9XZWJTZXJ2aWNlL0NlcnRpZmljYXRlL0xpc3QifQ.eyJpc0NoaWxkUmVzdHJpY3RlZCI6ZmFsc2UsImF1ZCI6IjY2MzM2NzcyOTE1NTI3NjgiLCJleHAiOjE2NjUzMzk5ODAsImlhdCI6MTY2NTMxNjU4MCwiaXNzIjoiYXBpLWxwMS56bmMuc3J2Lm5pbnRlbmRvLm5ldCIsImp0aSI6IjI5NDNjYmMxLTJhMzMtNDg2NC04MDk3LTZlMjQ5YzllZjZiOSIsInN1YiI6NTE0NDgwNzEyNzQxNjgzMiwibGlua3MiOnsibmV0d29ya1NlcnZpY2VBY2NvdW50Ijp7ImlkIjoiNTNiNDg0ZDI5ZDllNjdkMSJ9fSwidHlwIjoiaWRfdG9rZW4iLCJtZW1iZXJzaGlwIjp7ImFjdGl2ZSI6dHJ1ZX19.cv_txkPBttwpZkur5L8sZnldZuvysS9qiNVa9hyEbFAw5LsgH5JCP09uYaKnyHN7eMECSP4CbrgVq9FlT_j48owqFHDTf6oKK4WxB0_dOS8CKuvHiCQa29t6e6wYClECcQ2yKl9z71WsO28zzKI7Dq-k5SM8Di0c2_kbKdG3GfUUZawAKZL2oW6WVLkCqel829mT5kJKg2mfW26rSVz_z4sJ3u6FJLzxvXcPWZFt-yQOALdAqa1bu7_sS-Y2a1c7QprKMmFUybXYHD_sos4CxSIfF8OxcqqBx22VQI8VatifCjvy37cNRV9Bs31xdrUrccJz7x5LL202ShLtTYmu8A
-      required:
-        - X-Web-View-Ver
-        - X-NaCountry
-        - X-GameWebToken
     BulletTokenResponse:
       type: object
       properties:
