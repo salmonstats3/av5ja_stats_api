@@ -234,7 +234,7 @@ export class CoopPlayerCustomRequest {
   @IsArray()
   @Min(14)
   @Max(14)
-  bossKillCounts: number;
+  bossKillCounts: number[];
 
   @ApiProperty()
   @Expose()
