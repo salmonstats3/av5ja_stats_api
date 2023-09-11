@@ -15,7 +15,7 @@ async function bootstrap() {
     app.enableVersioning({ defaultVersion: '1', prefix: 'v', type: VersioningType.URI });
     app.enableCors({
         allowedHeaders:
-            'X-Web-View-Ver, X-GameWebToken, X-NaCountry, X-ProductVersion, X-Platform, X-Znca-Platform, X-Znca-Version, Origin, Content-Type, Accept',
+            'X-Web-View-Ver, X-GameWebToken, X-NaCountry, X-ProductVersion, X-Platform, X-Znca-Platform, X-Znca-Version, Origin, Content-Type, Accept, Authorization',
         credentials: false,
         maxAge: 86400,
         optionsSuccessStatus: 200,
