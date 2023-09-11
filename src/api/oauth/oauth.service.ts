@@ -138,8 +138,8 @@ export class OauthService {
     }
 
     async f(request: CoralRequest): Promise<CoralResponse> {
-        // const url = 'http://192.168.1.100:9000/f';
-        const url = 'https://api.imink.app/f';
+        const url = 'http://192.168.1.100:9000/f';
+        // const url = 'https://api.imink.app/f';
         try {
             const headers = {
                 'Content-Type': 'application/json',
