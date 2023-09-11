@@ -17,7 +17,17 @@ import { AppVersionResponse } from './dto/version.dto';
 export class OauthService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async session_token(request: SessionTokenRequest): Promise<SessionTokenResponse> {
-        return;
+        const url = 'https://accounts.nintendo.com/connect/1.0.0/api/session_token';
+        const parameters = {
+            client_id: '71b963c1b7b6d119',
+            session_token_code: request.session_token_code,
+            session_token_code_verifier: request.session_token_code_verifier,
+        };
+        try {
+            return plainToInstance(SessionTokenResponse, (await axios.post(url, parameters)).data);
+        } catch (error) {
+            throw new HttpException(error.response.data, error.response.status);
+        }
     }
 
     async access_token(request: AccessTokenRequest): Promise<AccessTokenResponse> {
