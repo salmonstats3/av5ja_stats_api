@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Transform } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 export class SessionTokenRequest {
     @ApiProperty({
@@ -7,13 +7,14 @@ export class SessionTokenRequest {
             'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLm5pbnRlbmRvLmNvbSIsInN0YzpzY3AiOlswLDgsOSwxNywyM10sImp0aSI6IjM1NzQ1MTg5MTkxIiwic3RjOmMiOiJ0ejdaMGhfM2RLMTBYLTc5SlREWUUyaG5seGU1dWhYd0tsUldoQUdBb1ZZIiwic3RjOm0iOiJTMjU2Iiwic3ViIjoiNWFlOGY3YTc4YjBjY2E0ZCIsInR5cCI6InNlc3Npb25fdG9rZW5fY29kZSIsImV4cCI6MTYxOTQ3OTE0OSwiYXVkIjoiNzFiOTYzYzFiN2I2ZDExOSIsImlhdCI6MTYxOTQ3ODU0OX0.XSFscPYMGbcaLLJxBA-fIO0zzt1bWs4X39oZGOs4jrI',
     })
     @Expose()
-    @Transform((param) => {
-        const regex = new RegExp('session_token_code=(.*)&');
-        const session_token_code = regex.test(param.value) ? regex.exec(param.value)[1] : param.value;
-        return session_token_code;
-    })
+    // @Transform((param) => {
+    //     const regex = new RegExp('session_token_code=(.*)&');
+    //     const session_token_code = regex.test(param.value) ? regex.exec(param.value)[1] : param.value;
+    //     return session_token_code;
+    // })
     readonly session_token_code: string;
 
+    @Expose()
     @ApiProperty({
         example: 'RwKTiEojlJbQInnPCHBitkNHehgICjFsstWUvOkGQibeuukvXx',
     })

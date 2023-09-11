@@ -1,17 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 
 import { CoralResponse } from './coral.dto';
 
-export class GameServiceTokenRequest {
+class GameServiceTokenParameter {
     @ApiProperty({
         example: 1661322690000,
         required: true,
     })
     @Expose()
     @IsNotEmpty()
-    timestamp: number;
+    @Transform(({ value }) => parseInt(value, 10))
+    readonly timestamp: number;
 
     @ApiProperty({
         example: '00000000-0000-0000-0000-000000000000',
@@ -19,7 +20,7 @@ export class GameServiceTokenRequest {
     })
     @Expose()
     @IsNotEmpty()
-    request_id: string;
+    readonly request_id: string;
 
     @ApiProperty({
         example:
@@ -28,7 +29,7 @@ export class GameServiceTokenRequest {
     })
     @Expose()
     @IsNotEmpty()
-    naIdToken: string;
+    readonly naIdToken: string;
 
     @ApiProperty({
         example: '9e4e5b2e13f46e399adb5f390fd95b2b78de7e3d7e886633f8d16c479382d5e5d44caca68bc19351fe1d0b69c7',
@@ -36,13 +37,24 @@ export class GameServiceTokenRequest {
     })
     @Expose()
     @IsNotEmpty()
-    f: string;
+    readonly f: string;
+}
 
-    constructor(imink: CoralResponse, naIdToken: string) {
-        this.f = imink.f;
-        this.timestamp = imink.timestamp;
-        this.request_id = imink.request_id;
-        this.naIdToken = naIdToken;
+export class GameServiceTokenRequest {
+    @ApiProperty()
+    @Expose()
+    @Type(() => GameServiceTokenParameter)
+    readonly parameter: GameServiceTokenParameter;
+
+    static fromHash(hash: CoralResponse, naIdToken: string): GameServiceTokenRequest {
+        return plainToInstance(GameServiceTokenRequest, {
+            parameter: {
+                f: hash.f,
+                naIdToken: naIdToken,
+                request_id: hash.request_id,
+                timestamp: hash.timestamp,
+            },
+        });
     }
 }
 

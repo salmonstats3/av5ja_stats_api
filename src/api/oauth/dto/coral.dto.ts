@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Transform } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 import dayjs from 'dayjs';
 import { Jwt } from 'src/utils/jwt';
@@ -20,13 +20,13 @@ export class CoralRequest {
             'eyJraWQiOiIxZDkwOWFhNC1lZDExLTQzZWUtODEyZS00NzZhNzQ1YTY5YmUiLCJqa3UiOiJodHRwczovL2FjY291bnRzLm5pbnRlbmRvLmNvbS8xLjAuMC9jZXJ0aWZpY2F0ZXMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1YWU4ZjdhNzhiMGNjYTRkIiwiZXhwIjoxNjY1MzE1Nzg5LCJqdGkiOiJjNDMwNjQ0NS04NDBhLTQ4ZTEtYjYyZS0zYWVmYWRkOTZiNmEiLCJhYzpzY3AiOlswLDgsOSwxNywyM10sImF1ZCI6IjcxYjk2M2MxYjdiNmQxMTkiLCJhYzpncnQiOjY0LCJpc3MiOiJodHRwczovL2FjY291bnRzLm5pbnRlbmRvLmNvbSIsImlhdCI6MTY2NTMxNDg4OSwidHlwIjoidG9rZW4ifQ.bf0hGoTZE8WN962BoUBh2xyY4SQq4GGdvuYsB1C_gu5RmleCRumK5XkCqNPcR1m17Zlh68oUqJx4xaRLSWNvPmjR1m76oo37N2TkV9U5ObssC-iI-FkIIkfrxlXK0nayqcxwcHLG4kHUO1QFsLuC6st2dPHt7d4yP8r88g8n1Jx27KMeB4u_JvIr3AXFPtgW0-VA4gEn_phYz7Vi4InA61bBVryhXqQIIi_-3rKapQVPgknKMYpLG9Eig8q6meILFQyOP9moy8UYZmnIpRSCgp8BM2Ze3kia3Rt66fTp2dmAukFmWbjku-kf4BK1eb8fxPoBffv6LHXkZFfgi7JO1Q',
     })
     @Expose()
-    @Transform((param) => {
-        const [jwt] = Jwt.decode(param.value);
-        if (jwt.payload.exp < dayjs().unix()) {
-            throw new BadRequestException('Token expired');
-        }
-        return param.value;
-    })
+    // @Transform((param) => {
+    //     const [jwt] = Jwt.decode(param.value);
+    //     if (jwt.payload.exp < dayjs().unix()) {
+    //         throw new BadRequestException('Token expired');
+    //     }
+    //     return param.value;
+    // })
     token: string;
 
     @ApiProperty({ example: '5ae8f7a78b0cca4d' })
@@ -41,40 +41,46 @@ export class CoralRequest {
     @Expose()
     coral_user_id?: string;
 
-    constructor(token: string, na_id: string | undefined = undefined) {
+    static fromAccessToken(token: string): CoralRequest {
+        const request = new CoralRequest();
         const [jwt] = Jwt.decode(token);
         if (jwt.payload.exp < dayjs().unix()) {
             throw new BadRequestException('Token expired');
         }
+        request.hash_method = HashMethod.NSO;
+        request.na_id = jwt.payload.sub.toString();
+        request.coral_user_id = undefined;
+        request.token = token;
+        return request;
+    }
 
-        // AccessToken
-        if (jwt.payload.typ === 'token') {
-            this.hash_method = HashMethod.NSO;
-            this.na_id = jwt.payload.sub.toString();
-            this.coral_user_id = undefined;
-            this.token = token;
-            return;
+    static fromServiceToken(token: string, na_id: string) {
+        const request = new CoralRequest();
+        const [jwt] = Jwt.decode(token);
+        if (jwt.payload.exp < dayjs().unix()) {
+            throw new BadRequestException('Token expired');
         }
-        if (jwt.payload.typ === 'id_token') {
-            this.hash_method = HashMethod.APP;
-            this.na_id = na_id;
-            this.coral_user_id = jwt.payload.sub.toString();
-            this.token = token;
-            return;
-        }
+        request.hash_method = HashMethod.APP;
+        request.na_id = na_id;
+        request.coral_user_id = jwt.payload.sub.toString();
+        request.token = token;
+        return request;
     }
 }
 
 export class CoralResponse {
     @ApiProperty()
     @IsString()
+    @Expose()
     f: string;
 
     @ApiProperty()
     @IsNumber()
+    @Expose()
     timestamp: number;
 
     @ApiProperty()
     @IsUUID()
+    @Expose()
     request_id: string;
 }

@@ -69,8 +69,12 @@ export class OauthController {
         operationId: 'BulletToken',
     })
     @ApiOkResponse({ type: BulletTokenResponse })
-    async bullet_token(@Body() request: BulletTokenRequest): Promise<BulletTokenResponse> {
-        return this.service.bullet_token(request);
+    async bullet_token(
+        @Headers('X-Web-View-Ver') version: string,
+        @Headers('X-GameWebToken') token: string,
+        @Headers('X-NaCountry') country: string,
+    ): Promise<BulletTokenResponse> {
+        return this.service.bullet_token(BulletTokenRequest.fromToken(token, version, country));
     }
 
     @Post('f')

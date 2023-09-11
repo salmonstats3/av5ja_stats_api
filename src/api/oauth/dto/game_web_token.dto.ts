@@ -1,42 +1,53 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Type, plainToInstance } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 
 import { CoralResponse } from './coral.dto';
 
-export class GameWebTokenRequest {
+class GameServiceTokenParameter {
     @ApiProperty({
         example:
             'fK0khI0DhU8KmMKxX6oixI:APA91bEcKhiHi4acYjs495cIih46knhphM1SEUJo7eBu4cCPXfBSK82XnpnDkCrowl9DWN8v7hqwN2eDnFaclhnOyUKE7N1YXtwtps4ES7oQPMQmFqb86NK_V0hblS2ojYoDpSOa7mOD',
     })
     @Expose()
     @IsNotEmpty()
-    naIdToken: string;
+    readonly registration_token: string;
 
     @ApiProperty({
         example: '9e4e5b2e13f46e399adb5f390fd95b2b78de7e3d7e886633f8d16c479382d5e5d44caca68bc19351fe1d0b69c7',
     })
     @Expose()
     @IsNotEmpty()
-    f: string;
+    readonly f: string;
 
     @ApiProperty({
         example: '00000000-0000-0000-0000-000000000000',
     })
     @Expose()
     @IsNotEmpty()
-    request_id: string;
+    readonly request_id: string;
 
     @ApiProperty()
     @Expose()
     @IsNotEmpty()
-    timestamp: number;
+    readonly timestamp: number;
+}
 
-    constructor(imink: CoralResponse, naIdToken: string) {
-        this.f = imink.f;
-        this.request_id = imink.request_id;
-        this.timestamp = imink.timestamp;
-        this.naIdToken = naIdToken;
+export class GameWebTokenRequest {
+    @ApiProperty()
+    @Expose()
+    @Type(() => GameServiceTokenParameter)
+    readonly parameter: GameServiceTokenParameter;
+
+    static fromHash(hash: CoralResponse, naIdToken: string): GameWebTokenRequest {
+        return plainToInstance(GameWebTokenRequest, {
+            parameter: {
+                f: hash.f,
+                naIdToken: naIdToken,
+                request_id: hash.request_id,
+                timestamp: hash.timestamp,
+            },
+        });
     }
 }
 

@@ -51,12 +51,14 @@ export class Jwt<T = JwtPayload, H extends JwtHeader = JwtHeader> {
             const signature = Buffer.from(signature_str, 'base64url');
 
             if ('typ' in header && header.typ !== 'JWT') {
+                console.error(token);
                 throw new Error('Invalid JWT');
             }
 
             const jwt = new this<T, H>(header, payload);
             return [jwt, signature] as const;
         } catch {
+            console.error(token);
             throw new BadRequestException('Invalid JWT');
         }
     }
