@@ -56,8 +56,7 @@ model Schedule {
   // リザルト一覧
   results    Result[]
 
-  @@unique([stageId, mode, rule, weaponList, startTime, endTime], name: "unique")
-  @@unique([scheduleId])
+  @@unique([stageId, mode, rule, weaponList, startTime, endTime])
   @@index([stageId])
   @@index([rule])
   @@index([mode])
@@ -111,10 +110,9 @@ model Result {
   updatedAt            DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
   waves                Wave[]
   players              Player[]
-  schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId])
+  schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade)
 
-  @@id([id, playTime])
-  @@unique([id, scheduleId, playTime])
+  @@id([id, scheduleId, playTime])
   @@index([members])
   @@index([goldenIkuraNum, nightLess])
   @@index([scheduleId])
@@ -187,10 +185,9 @@ model Player {
   // 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   // リレーション
-  result               Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime])
+  result               Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime], onDelete: Cascade)
 
-  @@id([nplnUserId, playTime])
-  @@unique([nplnUserId, playTime, id])
+  @@id([nplnUserId, playTime, id])
   @@index([nplnUserId])
   @@index([scheduleId])
   @@index([name])
@@ -223,7 +220,7 @@ model Wave {
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
   updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
-  result            Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime])
+  result            Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime], onDelete: Cascade)
 
   @@id([id, waveId, playTime])
   @@index([scheduleId])
