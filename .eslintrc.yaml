@@ -1,15 +1,16 @@
 root: true
 env:
   node: true
-  es6: true
+  jest: true
+ignorePatterns:
+  - .eslintrc.yaml
 parser: "@typescript-eslint/parser"
 parserOptions:
   project: ./tsconfig.json
   sourceType: module
 extends:
-  - eslint:recommended
   - plugin:@typescript-eslint/recommended
-  - prettier
+  - plugin:prettier/recommended
 plugins:
   - import
   - sort-keys-fix
@@ -34,3 +35,7 @@ rules:
   sort-keys-fix/sort-keys-fix: error
   typescript-sort-keys/interface: error
   unused-imports/no-unused-imports: error
+  '@typescript-eslint/interface-name-prefix': 'off'
+  '@typescript-eslint/explicit-function-return-type': 'off'
+  '@typescript-eslint/explicit-module-boundary-types': 'off'
+  '@typescript-eslint/no-explicit-any': 'off'
