@@ -6,7 +6,7 @@ Prisma, Fastify で動作する DB と連携してデータを返す API です.
 
 - NodeJS 18.17.0
 - Yarn
-- Node Version Managerß
+- Node Version Manager
 
 ```zsh
 git clone https://github.com/salmonstats3/av5ja_stats_api.git

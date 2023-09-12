@@ -25,7 +25,11 @@ export namespace Token {
     readonly iat: number;
 
     get is_valid(): boolean {
-      return true;
+      return dayjs.unix(this.exp).isBefore(dayjs());
+    }
+
+    get client_id(): string {
+      return this.aud;
     }
   }
 
@@ -34,13 +38,18 @@ export namespace Token {
     readonly exp: number;
     readonly typ: TokenType;
     readonly iat: number;
-    /**
-     * NA ID
-     */
     readonly sub: string;
 
     get is_valid(): boolean {
-      return true;
+      return dayjs.unix(this.exp).isBefore(dayjs());
+    }
+
+    get na_id(): string {
+      return this.aud;
+    }
+
+    get client_id(): string {
+      return this.aud;
     }
   }
 
@@ -51,13 +60,14 @@ export namespace Token {
     readonly iat: number;
     readonly membership: Membership;
     readonly isChildRestricted: boolean;
-    /**
-     * Coral User ID
-     */
     readonly sub: number;
 
     get is_valid(): boolean {
-      return true;
+      return dayjs.unix(this.exp).isBefore(dayjs());
+    }
+
+    get coral_user_id(): number {
+      return this.sub;
     }
   }
 
@@ -67,9 +77,14 @@ export namespace Token {
     readonly typ: TokenType;
     readonly iat: number;
     readonly links: Links;
+    readonly sub: number;
 
     get is_valid(): boolean {
-      return true;
+      return dayjs.unix(this.exp).isBefore(dayjs());
+    }
+
+    get coral_user_id(): number {
+      return this.sub;
     }
   }
 }
