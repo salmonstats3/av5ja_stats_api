@@ -69,3 +69,19 @@ yarn prisma migrate reset --hard
 ```
 
 でデータを初期化した上でスキーマを反映させられます.
+
+## トークンに含まれる情報
+
+認証時に必要になる ID は、`client_id`, `na_id`, `coral_user_id`の三つです. `nsa_id`自体は何か必要になりませんが ID であるので一応載せておきます.
+
+このうち`client_id`は常に固定値`71b963c1b7b6d119`なのでここでは考えなくても問題ありません.
+
+|                  |  client_id  |    na_id    |             nsa_id             |       coral_user_id        |
+| :--------------: | :---------: | :---------: | :----------------------------: | :------------------------: |
+|   SessionToken   | payload.aud | payload.sub |               -                |             -              |
+|   AccessToken    | payload.aud | payload.sub |               -                |             -              |
+|     IdToken      | payload.aud | payload.sub |               -                |             -              |
+| GameServiceToken |      -      |      -      |       result.user.nsaId        | payload.sub/result.user.id |
+|   GameWebToken   |      -      |      -      | links.networkServiceAccount.id |        payload.sub         |
+
+`na_id`は GameServiceToken を取得する際に必要な`f`の計算に必要です. `coral_user_id`は GameWebToken を取得する際に必要な`f`の計算に必要です.
