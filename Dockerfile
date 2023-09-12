@@ -1,16 +1,19 @@
-FROM amd64/node:16.20.0-alpine3.16
-ENV NODE_ENV production
+FROM amd64/node:18.17.1-alpine3.18
 
 WORKDIR /app
-COPY --chown=node:node ./package.json ./
-COPY --chown=node:node ./yarn.lock ./
-COPY --chown=node:node ./prisma ./
-COPY --chown=node:node ./tsconfig.json ./
-COPY --chown=node:node ./tsconfig.build.json ./
-COPY --chown=node:node .nvmrc ./
-RUN yarn install --prod --frozen-lockfile
+
+COPY  ./package.json ./
+COPY  ./yarn.lock ./
+COPY  ./tsconfig.json ./
+COPY  ./tsconfig.build.json ./
+COPY  ./prisma ./
+COPY  ./src ./
+COPY  ./nest-cli.json ./
+
+RUN yarn install && yarn cache clean --all
 RUN yarn prisma generate
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 RUN yarn build
-COPY --chown=node:node . .
-USER node
+
+EXPOSE 3000
+CMD ["yarn", "start:prod"]
