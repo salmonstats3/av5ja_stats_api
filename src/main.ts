@@ -11,6 +11,7 @@ import { mkdir, writeFileSync } from "fs";
 import { exec } from "child_process";
 import * as path from "path";
 import { dump } from 'js-yaml';
+import { onSend, preValidation } from "./fastify/log";
 
 const build = (documents: OpenAPIObject) => {
   const build = path.resolve(process.cwd(), 'docs');
@@ -31,6 +32,8 @@ async function bootstrap() {
   const logLevels: LogLevel[] = isDevelopment 
   ? ["log", "error", "warn" , "debug", "verbose"]
   : ["log", "error", "warn"]
+    server.addHook('preValidation', preValidation);
+  server.addHook('onSend', onSend);
   // @ts-ignore
   const adapter = new FastifyAdapter(server);
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
