@@ -57,6 +57,7 @@ model Schedule {
   results    Result[]
 
   @@unique([stageId, mode, rule, weaponList, startTime, endTime])
+  @@index([scheduleId])
   @@index([stageId])
   @@index([rule])
   @@index([mode])
