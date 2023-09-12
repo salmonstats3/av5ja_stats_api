@@ -98,6 +98,8 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+
+# OpanAPI build / generate output
 docs
 
 # Gatsby files
