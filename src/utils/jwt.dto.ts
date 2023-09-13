@@ -18,6 +18,21 @@ interface PayloadType {
 }
 
 export namespace Token {
+  export class SessionTokenCode implements PayloadType {
+    readonly aud: string;
+    readonly exp: number;
+    readonly typ: TokenType;
+    readonly iat: number;
+
+    get is_valid(): boolean {
+      return dayjs.unix(this.exp).isBefore(dayjs());
+    }
+
+    get client_id(): string {
+      return this.aud;
+    }
+  }
+
   export class SessionToken implements PayloadType {
     readonly aud: string;
     readonly exp: number;
