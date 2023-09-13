@@ -3,8 +3,9 @@ import { Method } from "src/enum/method";
 import { JWT, Membership, Token } from "src/utils/jwt.dto";
 
 import "reflect-metadata";
+import { Headers, Parameters, RequestType, ResponseType } from "../../utils/request";
+
 import { CoralToken } from "./coral_token";
-import { Headers, Parameters, RequestType, ResponseType } from "./request";
 
 export namespace GameServiceToken {
   export class Request implements RequestType {

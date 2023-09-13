@@ -1,4 +1,5 @@
 import { CapacitorHttp, HttpOptions } from "@capacitor/core";
+import { HttpException, HttpStatus } from "@nestjs/common";
 import { Method } from "src/enum/method";
 import { snakecaseKeys } from "src/utils/snakecase_keys";
 
@@ -33,12 +34,12 @@ export async function request<T extends RequestType, U extends ReturnType<T["req
     responseType: "json",
     url: url.href,
   };
+
   const response = await CapacitorHttp.request(options);
 
-  if (response.status !== 200 && response.status !== 201) {
-    console.error(request);
-    console.error(JSON.stringify(response.data));
-    throw new Error(`Request failed with status code ${response.status}`);
+  const status_code: HttpStatus = (snakecaseKeys(response.data).status ?? response.status) as HttpStatus;
+  if (status_code !== HttpStatus.OK && status_code !== HttpStatus.CREATED) {
+    throw new HttpException(snakecaseKeys(response.data), status_code);
   }
   return request.request(snakecaseKeys(response.data)) as U;
 }

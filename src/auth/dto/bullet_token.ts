@@ -2,7 +2,7 @@ import { Transform, plainToInstance } from "class-transformer";
 import { Method } from "src/enum/method";
 import { JWT, Token } from "src/utils/jwt.dto";
 
-import { Headers, Parameters, RequestType, ResponseType } from "./request";
+import { Headers, Parameters, RequestType, ResponseType } from "../../utils/request";
 
 export namespace BulletToken {
   export class Request implements RequestType {
