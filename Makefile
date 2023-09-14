@@ -14,8 +14,8 @@ down:
 
 .PHONY: build
 build:
-	docker build -t tkgling/salmon-stats-app:${API_VER} .
+	docker build -t tkgling/salmon-stats-app:${API_VERSION} .
 
 .PHONY: push
 push:
-	docker push tkgling/salmon-stats-app:${API_VER}
+	docker push tkgling/salmon-stats-app:${API_VERSION}
