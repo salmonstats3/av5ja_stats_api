@@ -4,6 +4,7 @@ import { TokenType } from "src/enum/token";
 import { JWT, Token } from "src/utils/jwt.dto";
 
 import { Headers, Parameters, RequestType, ResponseType } from "../../utils/request";
+import { OAuthRequest } from "../auth.service";
 export namespace CoralToken {
   export class Request implements RequestType {
     readonly baseURL: string = "https://api.imink.app/";
@@ -41,6 +42,24 @@ export namespace CoralToken {
           },
         };
       }
+    }
+
+    static from(
+      request: OAuthRequest.GameServiceToken | OAuthRequest.GameWebToken,
+      headers: OAuthRequest.CoralTokenHeader,
+    ): CoralToken.Request {
+      return plainToInstance(
+        CoralToken.Request,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-znca-Platform": headers.platform,
+            "X-znca-Version": headers.version,
+          },
+          parameters: request,
+        },
+        { excludeExtraneousValues: false },
+      );
     }
 
     request(response: any): CoralToken.Response {

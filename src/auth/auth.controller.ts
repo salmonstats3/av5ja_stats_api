@@ -5,6 +5,7 @@ import { JWT, Token } from "src/utils/jwt.dto";
 import { AuthService, OAuthRequest } from "./auth.service";
 import { AccessToken } from "./dto/access_token";
 import { BulletToken } from "./dto/bullet_token";
+import { CoralToken } from "./dto/coral_token";
 import { GameServiceToken } from "./dto/game_service_token";
 import { GameWebToken } from "./dto/game_web_token";
 import { SessionToken } from "./dto/session_token";
@@ -34,8 +35,11 @@ export class AuthController {
   @ApiOperation({
     operationId: "GameServiceToken",
   })
-  async game_service_token(request: OAuthRequest.GameServiceToken, @Headers() version: string): Promise<GameServiceToken.Response> {
-    return this.service.game_service_token(request.parameter);
+  async game_service_token(
+    request: OAuthRequest.GameServiceToken,
+    @Headers("X-ProductVersion") version: string,
+  ): Promise<GameServiceToken.Response> {
+    return this.service.game_service_token(request, version);
   }
 
   @Post("Game/GetWebServiceToken")
@@ -43,8 +47,8 @@ export class AuthController {
   @ApiOperation({
     operationId: "GameWebToken",
   })
-  async game_web_token(): Promise<GameWebToken.Response> {
-    return this.service.game_web_token();
+  async game_web_token(request: OAuthRequest.GameWebToken, @Headers("X-ProductVersion") version: string): Promise<GameWebToken.Response> {
+    return this.service.game_web_token(request, version);
   }
 
   @Post("bullet_tokens")
@@ -61,9 +65,9 @@ export class AuthController {
     operationId: "GameServiceToken",
   })
   async coral_token(
-    request: OAuthRequest.GameServiceToken,
+    request: OAuthRequest.GameServiceToken | OAuthRequest.GameWebToken,
     @Headers() headers: OAuthRequest.CoralTokenHeader,
-  ): Promise<GameServiceToken.Response> {
-    return this.service.coral_token(request.parameter);
+  ): Promise<CoralToken.Response> {
+    return this.service.coral_token(request, headers);
   }
 }

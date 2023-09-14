@@ -3,7 +3,10 @@ import { Method } from "src/enum/method";
 import { JWT, Token } from "src/utils/jwt.dto";
 
 import "reflect-metadata";
+import { snakecaseKeys } from "src/utils/snakecase_keys";
+
 import { Headers, Parameters, RequestType, ResponseType } from "../../utils/request";
+import { OAuthRequest } from "../auth.service";
 
 import { CoralToken } from "./coral_token";
 
@@ -31,6 +34,21 @@ export namespace GameWebToken {
           timestamp: hash.timestamp.toString(),
         },
       };
+    }
+
+    static from(request: OAuthRequest.GameWebToken, version: string): Request {
+      return plainToInstance(
+        Request,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Platform": "Android",
+            "X-ProductVersion": version,
+          },
+          parameters: snakecaseKeys(request),
+        },
+        { excludeExtraneousValues: false },
+      );
     }
 
     request(response: any): GameWebToken.Response {

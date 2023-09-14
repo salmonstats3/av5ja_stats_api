@@ -27,22 +27,18 @@ export class AuthService {
     return request(new AccessToken.Request(session_token));
   }
 
-  async game_service_token(access_token: JWT<Token.Token>, hash: CoralToken.Response, version: string): Promise<GameServiceToken.Response> {
-    if (!access_token.is_valid) {
+  async game_service_token(req: OAuthRequest.GameServiceToken, version: string): Promise<GameServiceToken.Response> {
+    if (!req.is_valid) {
       throw new BadRequestException("Token is expired");
     }
-    return request(new GameServiceToken.Request(access_token, hash, version));
+    return request(GameServiceToken.Request.from(req, version));
   }
 
-  async game_web_token(
-    access_token: JWT<Token.GameServiceToken>,
-    hash: CoralToken.Response,
-    version: string,
-  ): Promise<GameWebToken.Response> {
-    if (!access_token.is_valid) {
+  async game_web_token(req: OAuthRequest.GameWebToken, version: string): Promise<GameWebToken.Response> {
+    if (!req.is_valid) {
       throw new BadRequestException("Token is expired");
     }
-    return request(new GameWebToken.Request(access_token, hash, version));
+    return request(GameWebToken.Request.from(req, version));
   }
 
   async bullet_token(game_web_token: JWT<Token.GameWebToken>, version: string) {
@@ -53,14 +49,13 @@ export class AuthService {
   }
 
   async coral_token(
-    token: JWT<Token.Token> | JWT<Token.GameServiceToken>,
-    na_id: string | undefined,
-    version: string,
+    req: OAuthRequest.GameWebToken | OAuthRequest.GameServiceToken,
+    headers: OAuthRequest.CoralTokenHeader,
   ): Promise<CoralToken.Response> {
-    if (!token.is_valid) {
+    if (!req.is_valid) {
       throw new BadRequestException("Token is expired");
     }
-    return request(new CoralToken.Request(token, na_id, version));
+    return request(CoralToken.Request.from(req, headers));
   }
 }
 
