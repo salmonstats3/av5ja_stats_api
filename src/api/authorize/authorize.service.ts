@@ -29,7 +29,7 @@ export class AuthorizeService {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   private async get_schedules(bullet_token: string, web_version: string): Promise<CoopSchedule[]> {
-    const hash = "f76dd61e08f4ce1d5d5b17762a243fec";
+    const hash = "9b6b90568f990b2a14f04c25dd6eb53b35cc12ac815db85ececfccee64215edd";
     const url = "https://api.lp1.av5ja.srv.nintendo.net/api/graphql";
     const parameters = {
       extensions: {
