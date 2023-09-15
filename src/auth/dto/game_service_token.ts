@@ -1,8 +1,7 @@
+import "reflect-metadata";
 import { Expose, Transform, Type, plainToInstance } from "class-transformer";
 import { Method } from "src/enum/method";
 import { JWT, Membership, Token } from "src/utils/jwt.dto";
-
-import "reflect-metadata";
 import { snakecaseKeys } from "src/utils/snakecase_keys";
 
 import { Headers, Parameters, RequestType, ResponseType } from "../../utils/request";
