@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Transform } from "class-transformer";
 import { Platform } from "src/enum/platform";
 import { JWT, Token } from "src/utils/jwt.dto";
@@ -20,11 +21,11 @@ export class AuthService {
     return request(new SessionToken.Request(code, verifier));
   }
 
-  async access_token(session_token: JWT<Token.SessionToken>): Promise<AccessToken.Response> {
-    if (!session_token.is_valid) {
+  async access_token(req: OAuthRequest.AccessToken): Promise<AccessToken.Response> {
+    if (!req.is_valid) {
       throw new BadRequestException("Token is expired");
     }
-    return request(new AccessToken.Request(session_token));
+    return request(new AccessToken.Request(req));
   }
 
   async game_service_token(req: OAuthRequest.GameServiceToken, version: string): Promise<GameServiceToken.Response> {
@@ -65,9 +66,18 @@ export namespace OAuthRequest {
   }
 
   export class SessionToken implements OAuthRequestType {
+    @Expose()
+    @ApiProperty({ example: "" })
     readonly client_id: string;
+
+    @Expose()
+    @ApiProperty({ example: "" })
     @Transform(({ value }) => new JWT<Token.SessionTokenCode>(value))
     readonly session_token_code: JWT<Token.SessionTokenCode>;
+
+    @Expose()
+    @ApiProperty({ example: "" })
+    @ApiProperty()
     readonly session_token_code_verifier: string;
 
     get is_valid(): boolean {
@@ -76,13 +86,25 @@ export namespace OAuthRequest {
   }
 
   export class AccessToken implements OAuthRequestType {
+    @Expose()
+    @ApiProperty({ example: "71b963c1b7b6d119" })
     readonly client_id: string;
+
+    @Expose()
+    @ApiProperty({
+      example:
+        "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MWI5NjNjMWI3YjZkMTE5IiwiZXhwIjoxNzQ0MTkwODY5LCJqdGkiOjExOTIyMzM1NjIyLCJ0eXAiOiJzZXNzaW9uX3Rva2VuIiwiaXNzIjoiaHR0cHM6Ly9hY2NvdW50cy5uaW50ZW5kby5jb20iLCJzdDpzY3AiOlswLDgsOSwxNywyM10sInN1YiI6IjVhZThmN2E3OGIwY2NhNGQiLCJpYXQiOjE2ODExMTg4Njl9.paHAkkBJ1VH5kfsUWRpbB3gU_W5CEB6nP19aTMcz7fg",
+    })
     @Transform(({ value }) => new JWT<Token.SessionToken>(value))
     readonly session_token: JWT<Token.SessionToken>;
+
+    @Expose()
+    @ApiProperty({ example: "urn:ietf:params:oauth:grant-type:jwt-bearer-session-token" })
     readonly grant_type: string;
 
     get is_valid(): boolean {
-      return this.session_token.is_valid && this.session_token.payload.client_id === this.client_id;
+      console.log(this.session_token.is_valid);
+      return this.session_token.is_valid && this.session_token.payload.aud === this.client_id;
     }
   }
 

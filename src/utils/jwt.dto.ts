@@ -25,7 +25,7 @@ export namespace Token {
     readonly iat: number;
 
     get is_valid(): boolean {
-      return dayjs.unix(this.exp).isBefore(dayjs());
+      return dayjs.unix(this.exp).isAfter(dayjs());
     }
 
     get client_id(): string {
@@ -40,7 +40,7 @@ export namespace Token {
     readonly iat: number;
 
     get is_valid(): boolean {
-      return dayjs.unix(this.exp).isBefore(dayjs());
+      return dayjs.unix(this.exp).isAfter(dayjs());
     }
 
     get client_id(): string {
@@ -56,7 +56,7 @@ export namespace Token {
     readonly sub: string;
 
     get is_valid(): boolean {
-      return dayjs.unix(this.exp).isBefore(dayjs());
+      return dayjs.unix(this.exp).isAfter(dayjs());
     }
 
     get na_id(): string {
@@ -78,7 +78,7 @@ export namespace Token {
     readonly sub: number;
 
     get is_valid(): boolean {
-      return dayjs.unix(this.exp).isBefore(dayjs());
+      return dayjs.unix(this.exp).isAfter(dayjs());
     }
 
     get coral_user_id(): number {
@@ -95,7 +95,7 @@ export namespace Token {
     readonly sub: number;
 
     get is_valid(): boolean {
-      return dayjs.unix(this.exp).isBefore(dayjs());
+      return dayjs.unix(this.exp).isAfter(dayjs());
     }
 
     get coral_user_id(): number {
@@ -126,7 +126,8 @@ export class JWT<T extends PayloadType> {
   signature: string;
 
   get is_valid(): boolean {
-    return dayjs(this.payload.exp).isBefore(dayjs());
+    console.log(this.payload.exp);
+    return dayjs.unix(this.payload.exp).isAfter(dayjs());
   }
 
   get raw_value(): string {

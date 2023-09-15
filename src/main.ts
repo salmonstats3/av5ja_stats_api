@@ -7,6 +7,10 @@ import { ConfigService } from "@nestjs/config";
 import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { DocumentBuilder, SwaggerModule, OpenAPIObject } from "@nestjs/swagger";
+import dayjs from "dayjs";
+import objectSupport from "dayjs/plugin/objectSupport";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import fastify from "fastify";
 import { dump } from "js-yaml";
 import { PrismaClientExceptionFilter } from "nestjs-prisma";
@@ -28,6 +32,11 @@ const build = (documents: OpenAPIObject) => {
 
 async function bootstrap() {
   const isDevelopment = process.env.NODE_ENV === "development";
+
+  dayjs.extend(objectSupport);
+  dayjs.extend(timezone);
+  dayjs.extend(utc);
+  dayjs.tz.setDefault("Etc/UTC");
 
   const server = fastify();
   // ログレベル

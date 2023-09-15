@@ -1,4 +1,4 @@
-import { Controller, Headers, Post, Version } from "@nestjs/common";
+import { Body, Controller, Headers, Post, Version } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
 import { JWT, Token } from "src/utils/jwt.dto";
 
@@ -18,7 +18,8 @@ export class AuthController {
   @ApiOperation({
     operationId: "SessionToken",
   })
-  async session_token(request: OAuthRequest.SessionToken): Promise<SessionToken.Response> {
+  async session_token(@Body() request: OAuthRequest.SessionToken): Promise<SessionToken.Response> {
+    console.log(request);
     return this.service.session_token(request.session_token_code, request.session_token_code_verifier);
   }
 
@@ -26,8 +27,8 @@ export class AuthController {
   @ApiOperation({
     operationId: "AccessToken",
   })
-  async access_token(request: OAuthRequest.AccessToken): Promise<AccessToken.Response> {
-    return this.service.access_token(request.session_token);
+  async access_token(@Body() request: OAuthRequest.AccessToken): Promise<AccessToken.Response> {
+    return this.service.access_token(request);
   }
 
   @Post("Account/Login")
@@ -36,7 +37,7 @@ export class AuthController {
     operationId: "GameServiceToken",
   })
   async game_service_token(
-    request: OAuthRequest.GameServiceToken,
+    @Body() request: OAuthRequest.GameServiceToken,
     @Headers("X-ProductVersion") version: string,
   ): Promise<GameServiceToken.Response> {
     return this.service.game_service_token(request, version);
@@ -47,7 +48,10 @@ export class AuthController {
   @ApiOperation({
     operationId: "GameWebToken",
   })
-  async game_web_token(request: OAuthRequest.GameWebToken, @Headers("X-ProductVersion") version: string): Promise<GameWebToken.Response> {
+  async game_web_token(
+    @Body() request: OAuthRequest.GameWebToken,
+    @Headers("X-ProductVersion") version: string,
+  ): Promise<GameWebToken.Response> {
     return this.service.game_web_token(request, version);
   }
 
@@ -65,7 +69,7 @@ export class AuthController {
     operationId: "GameServiceToken",
   })
   async coral_token(
-    request: OAuthRequest.GameServiceToken | OAuthRequest.GameWebToken,
+    @Body() request: OAuthRequest.GameServiceToken | OAuthRequest.GameWebToken,
     @Headers() headers: OAuthRequest.CoralTokenHeader,
   ): Promise<CoralToken.Response> {
     return this.service.coral_token(request, headers);

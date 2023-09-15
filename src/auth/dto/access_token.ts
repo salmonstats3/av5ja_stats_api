@@ -3,6 +3,7 @@ import { Method } from "src/enum/method";
 import { JWT, Token } from "src/utils/jwt.dto";
 
 import { Headers, Parameters, RequestType, ResponseType } from "../../utils/request";
+import { OAuthRequest } from "../auth.service";
 
 export namespace AccessToken {
   export class Request implements RequestType {
@@ -14,11 +15,11 @@ export namespace AccessToken {
     readonly parameters: Parameters;
     readonly path: string = "connect/1.0.0/api/token";
 
-    constructor(session_token: JWT<Token.SessionToken>) {
+    constructor(req: OAuthRequest.AccessToken) {
       this.parameters = {
-        client_id: session_token.payload.client_id,
-        grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer-session-token",
-        session_token: session_token.raw_value,
+        client_id: req.client_id,
+        grant_type: req.grant_type,
+        session_token: req.session_token.raw_value,
       };
     }
 
