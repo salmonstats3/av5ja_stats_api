@@ -44,10 +44,7 @@ export namespace CoralToken {
       }
     }
 
-    static from(
-      request: OAuthRequest.GameServiceToken | OAuthRequest.GameWebToken,
-      headers: OAuthRequest.CoralTokenHeader,
-    ): CoralToken.Request {
+    static from(request: OAuthRequest.CoralToken, headers: OAuthRequest.CoralTokenHeader): CoralToken.Request {
       return plainToInstance(
         CoralToken.Request,
         {

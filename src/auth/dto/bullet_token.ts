@@ -1,8 +1,8 @@
 import { Transform, plainToInstance } from "class-transformer";
 import { Method } from "src/enum/method";
-import { JWT, Token } from "src/utils/jwt.dto";
 
 import { Headers, Parameters, RequestType, ResponseType } from "../../utils/request";
+import { OAuthRequest } from "../auth.service";
 
 export namespace BulletToken {
   export class Request implements RequestType {
@@ -12,12 +12,12 @@ export namespace BulletToken {
     readonly parameters: Parameters;
     readonly path: string = "api/bullet_tokens";
 
-    constructor(token: JWT<Token.GameWebToken>, version: string) {
+    constructor(headers: OAuthRequest.BulletTokenHeader) {
       this.headers = {
         "Content-Type": "application/json",
-        "X-GameWebToken": token.raw_value,
-        "X-NaCountry": "US",
-        "X-Web-View-Ver": version,
+        "X-GameWebToken": headers.token.raw_value,
+        "X-NaCountry": headers.country,
+        "X-Web-View-Ver": headers.version,
       };
     }
 

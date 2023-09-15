@@ -1,6 +1,5 @@
 import { Body, Controller, Headers, Post, Version } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
-import { JWT, Token } from "src/utils/jwt.dto";
 
 import { AuthService, OAuthRequest } from "./auth.service";
 import { AccessToken } from "./dto/access_token";
@@ -38,9 +37,9 @@ export class AuthController {
   })
   async game_service_token(
     @Body() request: OAuthRequest.GameServiceToken,
-    @Headers("X-ProductVersion") version: string,
+    @Headers() headers: OAuthRequest.ProductVersionHeader,
   ): Promise<GameServiceToken.Response> {
-    return this.service.game_service_token(request, version);
+    return this.service.game_service_token(request, headers.version);
   }
 
   @Post("Game/GetWebServiceToken")
@@ -50,26 +49,26 @@ export class AuthController {
   })
   async game_web_token(
     @Body() request: OAuthRequest.GameWebToken,
-    @Headers("X-ProductVersion") version: string,
+    @Headers() headers: OAuthRequest.ProductVersionHeader,
   ): Promise<GameWebToken.Response> {
-    return this.service.game_web_token(request, version);
+    return this.service.game_web_token(request, headers.version);
   }
 
   @Post("bullet_tokens")
   @ApiOperation({
     operationId: "BulletToken",
   })
-  async bullet_token(token: JWT<Token.GameWebToken>, @Headers("X-WebViewVer") version: string): Promise<BulletToken.Response> {
-    return this.service.bullet_token(token, version);
+  async bullet_token(@Headers() headers: OAuthRequest.BulletTokenHeader): Promise<BulletToken.Response> {
+    return this.service.bullet_token(headers);
   }
 
   @Post("f")
   @Version("1")
   @ApiOperation({
-    operationId: "GameServiceToken",
+    operationId: "CoralToken",
   })
   async coral_token(
-    @Body() request: OAuthRequest.GameServiceToken | OAuthRequest.GameWebToken,
+    @Body() request: OAuthRequest.CoralToken,
     @Headers() headers: OAuthRequest.CoralTokenHeader,
   ): Promise<CoralToken.Response> {
     return this.service.coral_token(request, headers);
