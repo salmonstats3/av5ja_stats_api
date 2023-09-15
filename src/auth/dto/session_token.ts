@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Transform, plainToInstance } from "class-transformer";
 import { Method } from "src/enum/method";
 import { JWT, Token } from "src/utils/jwt.dto";
@@ -28,9 +29,11 @@ export namespace SessionToken {
   }
 
   export class Response implements ResponseType {
+    @ApiProperty()
     @Expose()
     code: string;
 
+    @ApiProperty()
     @Expose()
     @Transform(({ value }) => new JWT<Token.SessionToken>(value))
     session_token: JWT<Token.SessionToken>;

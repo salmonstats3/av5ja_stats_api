@@ -7,6 +7,7 @@ import { request } from "src/utils/request";
 
 import { AccessToken } from "./dto/access_token";
 import { BulletToken } from "./dto/bullet_token";
+import { Config } from "./dto/config";
 import { CoralToken } from "./dto/coral_token";
 import { GameServiceToken } from "./dto/game_service_token";
 import { GameWebToken } from "./dto/game_web_token";
@@ -54,6 +55,10 @@ export class AuthService {
       throw new BadRequestException("Token is expired");
     }
     return request(CoralToken.Request.from(req, headers));
+  }
+
+  async config(): Promise<Config.Response> {
+    return;
   }
 }
 

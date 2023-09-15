@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Transform, Type, plainToInstance } from "class-transformer";
 import { Method } from "src/enum/method";
 import { JWT, Membership, Token } from "src/utils/jwt.dto";
@@ -127,8 +128,10 @@ export namespace GameServiceToken {
   }
 
   export class Response implements ResponseType {
+    @ApiProperty()
     readonly status: number;
 
+    @ApiProperty()
     @Expose()
     @Type(() => Result)
     readonly result: Result;
