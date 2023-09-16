@@ -28,7 +28,6 @@ import { Mode } from "../enum/mode";
 import { Species } from "../enum/species";
 import { WaterLevel } from "../enum/water_level";
 import { CoopScheduleRequest } from "../schedules/schedule.request.dto";
-import { cli } from "webpack";
 
 export class CoopJobRequest {
   @ApiProperty()

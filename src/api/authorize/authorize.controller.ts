@@ -19,7 +19,7 @@ export class AuthorizeController {
   })
   @ApiBadRequestResponse()
   @ApiOkResponse({ type: AuthorizeResponse })
-  async authorize(): Promise<AuthorizeResponse> {
+  async authorize(): Promise<Partial<AuthorizeResponse>> {
     return this.service.authorize();
   }
 

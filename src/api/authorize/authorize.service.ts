@@ -26,7 +26,7 @@ export class AuthorizeService {
   private readonly app = initializeApp(firebaseConfig);
   private readonly firestore = getFirestore(this.app);
 
-  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) { }
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   private async get_schedules(bullet_token: string, web_version: string): Promise<CoopSchedule[]> {
     const hash = "f76dd61e08f4ce1d5d5b17762a243fec";
@@ -57,7 +57,7 @@ export class AuthorizeService {
    * スケジュールデータを書き込む
    * @returns 認証情報
    */
-  async authorize(): Promise<AuthorizeResponse> {
+  async authorize(): Promise<Partial<AuthorizeResponse>> {
     const session_token: string = process.env.SESSION_TOKEN;
     const version: string = (await this.get_app_version()).version;
     const web_version: string = process.env.WEB_VIEW_VER;
@@ -84,10 +84,8 @@ export class AuthorizeService {
         weaponList: schedule.weaponList,
       };
     });
-    console.log(schedules);
     // 最大10件のデータを取得する
     const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting)), limit(10)));
-    console.log(documents);
     const database: CoopScheduleDataResponse[] = documents
       .flatMap((document) => document.docs.map((doc) => plainToClass(CoopScheduleDataResponse, doc.data())))
       .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
@@ -108,18 +106,29 @@ export class AuthorizeService {
       await setDoc(doc(this.firestore, schedule.setting, schedule.startTime), schedule);
     });
 
-    return {
-      bullet_token: bullet_token.bulletToken,
-      friend_code: game_service_token.result.user.links.friendCode.id,
-      game_service_token: game_service_token.result.webApiServerCredential.accessToken,
-      game_web_token: game_web_token.result.accessToken,
-      name: game_service_token.result.user.name,
-      nsa_id: game_service_token.result.user.nsaId,
-      session_token: session_token,
-      thumbnail_url: game_service_token.result.user.imageUri,
-      version: version,
-      web_version: web_version,
-    };
+    if (process.env.NODE_ENV === "production") {
+      return {
+        friend_code: game_service_token.result.user.links.friendCode.id,
+        name: game_service_token.result.user.name,
+        nsa_id: game_service_token.result.user.nsaId,
+        thumbnail_url: game_service_token.result.user.imageUri,
+        version: version,
+        web_version: web_version,
+      };
+    } else {
+      return {
+        bullet_token: bullet_token.bulletToken,
+        friend_code: game_service_token.result.user.links.friendCode.id,
+        game_service_token: game_service_token.result.webApiServerCredential.accessToken,
+        game_web_token: game_web_token.result.accessToken,
+        name: game_service_token.result.user.name,
+        nsa_id: game_service_token.result.user.nsaId,
+        session_token: session_token,
+        thumbnail_url: game_service_token.result.user.imageUri,
+        version: version,
+        web_version: web_version,
+      };
+    }
   }
 
   /**
@@ -332,8 +341,9 @@ export class AuthorizeService {
   private async get_stage_banner(): Promise<{ [name: string]: any }> {
     const base_url = `https://leanny.github.io/splat3/data/language/JPja.json`;
     const stages: string[] = Object.keys((await axios.get(base_url)).data["CommonMsg/Coop/CoopStageName"]).map((stage: string) => {
-      return `https://leanny.github.io/splat3/images/stageBanner/${stage.includes("Shake") ? `Cop_${stage}.png` : stage === "Unknown" ? `${stage}.png` : `Vss_${stage}.png`
-        }`;
+      return `https://leanny.github.io/splat3/images/stageBanner/${
+        stage.includes("Shake") ? `Cop_${stage}.png` : stage === "Unknown" ? `${stage}.png` : `Vss_${stage}.png`
+      }`;
     });
     return {
       stage_img: {

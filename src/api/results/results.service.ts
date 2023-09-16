@@ -8,11 +8,10 @@ import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
 import { CoopResultCustomRequest, ResultStatus } from "../dto/results/result.custom.dto";
 import { AppVersion } from "../dto/results/result.headers.dto";
 import { CoopResultManyRequest, CoopResultRequest } from "../dto/results/result.request.dto";
-import { cli } from "webpack";
 
 @Injectable()
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   /**
    * リザルト取得API

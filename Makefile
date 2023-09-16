@@ -1,4 +1,4 @@
-include .env.prod
+include .env
 
 .PHONY: up
 up:
