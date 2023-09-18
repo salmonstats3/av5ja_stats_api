@@ -21,6 +21,26 @@ paths:
       responses:
         '201':
           description: ''
+  /users:
+    post:
+      operationId: UsersController_create
+      parameters: []
+      responses:
+        '201':
+          description: ''
+    get:
+      operationId: UsersController_find_all
+      parameters: []
+      responses:
+        '200':
+          description: ''
+  /users/{userId}:
+    get:
+      operationId: UsersController_find
+      parameters: []
+      responses:
+        '200':
+          description: ''
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
