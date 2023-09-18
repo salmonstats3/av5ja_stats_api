@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { SchedulesService } from './schedules.service';
 
@@ -9,16 +9,19 @@ export class SchedulesController {
   constructor(private readonly service: SchedulesService) {}
 
   @Post()
+  @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
   async create(@Body() request: any) {
     console.log(request);
   }
 
   @Get()
+  @ApiOperation({ description: 'Find schedules', operationId: 'Find schedules' })
   async find_all() {
     console.log();
   }
 
   @Get(':schedule_id')
+  @ApiOperation({ description: 'Find a schedule', operationId: 'Find a schedule' })
   async find(@Param('schedule_id') schedule_id: string) {
     console.log(schedule_id);
   }
