@@ -36,20 +36,25 @@ enum Species {
   OCTOLING
 }
 
+// Firebase Authenticationのユーザー情報
 model User {
   // ユーザー固有ID(FirebaseのIDを利用する)
   id           String    @id @map("id")
+  // ユーザー名
+  name         String    @map("name") @db.VarChar(32)
   // トークン
   sessionToken String    @map("session_token") @db.VarChar(255)
   // 作成日
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
   updatedAt    DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
-  Account      Account[]
+  // ユーザーに連携しているアカウント
+  accounts     Account[]
 
   @@map("users")
 }
 
+// Nintendo Service Accountの情報
 model Account {
   // ユーザー固有ID(FirebaseのIDを利用する)
   id           String
@@ -70,7 +75,7 @@ model Account {
   // 国コード
   country      String?  @map("country") @db.VarChar(2)
   // ユーザー
-  User         User?    @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user         User?    @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   // 作成日
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日

@@ -25,6 +25,7 @@ OCTOLING OCTOLING
     
   "users" {
     String id "🗝️"
+    String name 
     String session_token 
     DateTime created_at 
     DateTime updated_at 
@@ -134,8 +135,8 @@ OCTOLING OCTOLING
     DateTime updated_at 
     }
   
-    "users" o{--}o "accounts" : "Account"
-    "accounts" o|--|o "users" : "User"
+    "users" o{--}o "accounts" : "accounts"
+    "accounts" o|--|o "users" : "user"
     "schedules" o|--|| "Mode" : "enum:mode"
     "schedules" o|--|| "Rule" : "enum:rule"
     "schedules" o{--}o "results" : "results"
