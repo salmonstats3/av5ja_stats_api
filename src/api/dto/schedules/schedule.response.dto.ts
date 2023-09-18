@@ -1,12 +1,12 @@
-import { BadRequestException } from "@nestjs/common";
-import { ApiProperty } from "@nestjs/swagger";
-import { Expose, plainToClass, Transform, Type } from "class-transformer";
-import { IsDateString, IsEnum, IsOptional, ValidateNested } from "class-validator";
-import { StageKey } from "src/api/constants/stage";
-import { WeaponKey } from "src/api/constants/weapon";
+import { BadRequestException } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose, plainToClass, Transform, Type } from 'class-transformer';
+import { IsDateString, IsEnum, IsOptional, ValidateNested } from 'class-validator';
+import { StageKey } from 'src/api/constants/stage';
+import { WeaponKey } from 'src/api/constants/weapon';
 
-import { Mode } from "../enum/mode";
-import { Setting } from "../enum/setting";
+import { Mode } from '../enum/mode';
+import { Setting } from '../enum/setting';
 
 export enum KingSalmonId {
   COHOZUNA = 23,
@@ -19,12 +19,12 @@ export class CoopScheduleDataResponse {
   @Expose()
   readonly weaponList: number[];
 
-  @ApiProperty({ example: "2023-04-26T16:00:00Z" })
+  @ApiProperty({ example: '2023-04-26T16:00:00Z' })
   @IsDateString()
   @Expose()
   readonly startTime: string;
 
-  @ApiProperty({ example: "2023-04-28T08:00:00Z" })
+  @ApiProperty({ example: '2023-04-28T08:00:00Z' })
   @IsDateString()
   @Expose()
   readonly endTime: string;
@@ -81,7 +81,7 @@ export class CoopScheduleDataResponse {
 class URL {
   @Expose()
   @Transform((param) => {
-    const regexp = new RegExp("/([0-9a-f]{64})_");
+    const regexp = new RegExp('/([0-9a-f]{64})_');
     if (!regexp.test(param.obj.url)) {
       throw new BadRequestException("playTime must be given by the format of 'YYYYMMDD`T`THHmmss:");
     }
@@ -101,17 +101,17 @@ class Weapon {
 
 class CoopSetting {
   @ApiProperty()
-  @Expose({ name: "coopStage" })
+  @Expose({ name: 'coopStage' })
   @Transform((param) => StageKey.from(plainToClass(Weapon, param.value).image.url))
   coopStage: number;
 
   @ApiProperty()
-  @Expose({ name: "weapons" })
+  @Expose({ name: 'weapons' })
   @Transform((param) => param.value.map((value: any) => WeaponKey.from(plainToClass(Weapon, value).image.url)))
   weapons: number[];
 
   @ApiProperty()
-  @Expose({ name: "__isCoopSetting" })
+  @Expose({ name: '__isCoopSetting' })
   isCoopSetting: Setting;
 }
 

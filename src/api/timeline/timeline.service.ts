@@ -1,19 +1,18 @@
-import { BetaAnalyticsDataClient } from "@google-analytics/data";
-import { HttpService } from "@nestjs/axios";
-import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
-import { Sql } from "@prisma/client/runtime";
-import { Cache } from "cache-manager";
-import dayjs from "dayjs";
-import { ceil } from "src/helper";
-import { PrismaService } from "src/prisma.service";
+import { BetaAnalyticsDataClient } from '@google-analytics/data';
+import { HttpService } from '@nestjs/axios';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { Cache } from 'cache-manager';
+import dayjs from 'dayjs';
+import { ceil } from 'src/helper';
+import { PrismaService } from 'src/prisma.service';
 
 dayjs.extend(ceil);
 
 @Injectable()
 export class AnalyticsService {
   analyticsDataClient: BetaAnalyticsDataClient = new BetaAnalyticsDataClient();
-  propertyId = "334254642";
+  propertyId = '334254642';
 
   constructor(
     private readonly axios: HttpService,
@@ -24,7 +23,7 @@ export class AnalyticsService {
   async getAnalytics(scheduleId: string): Promise<any> {
     const analytics = await this.cacheManager.get(`analytics:${scheduleId}`);
     // 五分区切りの時間まであと何秒かという値を取得
-    const ttl: number = dayjs().ceil(10).diff(dayjs(), "second") - 60;
+    const ttl: number = dayjs().ceil(10).diff(dayjs(), 'second') - 60;
     if (analytics !== undefined) {
       return analytics;
     }
@@ -47,7 +46,7 @@ export class AnalyticsService {
     return response;
   }
 
-  private getIkuraDistQuery(scheduleId: string): Sql {
+  private getIkuraDistQuery(scheduleId: string): Prisma.Sql {
     return Prisma.sql`
       SELECT
       AVG(golden_ikura_num)::NUMERIC(8, 3) AS golden_ikura_num_avg,
@@ -70,7 +69,7 @@ export class AnalyticsService {
     `;
   }
 
-  private getIkuraNumQuery(scheduleId: string): Sql {
+  private getIkuraNumQuery(scheduleId: string): Prisma.Sql {
     return Prisma.sql`
       SELECT
       golden_ikura_num / 5 * 5 AS golden_ikura_num,
@@ -93,7 +92,7 @@ export class AnalyticsService {
       `;
   }
 
-  private getWavesQuery(scheduleId: string): Sql {
+  private getWavesQuery(scheduleId: string): Prisma.Sql {
     return Prisma.sql`
       SELECT
       water_level,
@@ -113,7 +112,7 @@ export class AnalyticsService {
       `;
   }
 
-  private getGradePointQuery(scheduleId: string): Sql {
+  private getGradePointQuery(scheduleId: string): Prisma.Sql {
     return Prisma.sql`
       SELECT
       grade_id,
@@ -143,7 +142,7 @@ export class AnalyticsService {
       `;
   }
 
-  private getTimelineQuery(scheduleId: string): Sql {
+  private getTimelineQuery(scheduleId: string): Prisma.Sql {
     return Prisma.sql`
     SELECT
       DATE_TRUNC('HOUR', play_time) + CAST(EXTRACT(MINUTE FROM play_time)::INT / 30 * 30 || ' MINUTES' AS INTERVAL) AS play_time,

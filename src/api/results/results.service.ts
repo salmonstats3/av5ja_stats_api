@@ -1,13 +1,13 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { Client, Prisma, Result } from "@prisma/client";
-import { Expose, Transform, plainToInstance } from "class-transformer";
-import { IsDate, IsNotEmpty, IsString } from "class-validator";
-import { PrismaService } from "src/prisma.service";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Client, Prisma, Result } from '@prisma/client';
+import { Expose, Transform, plainToInstance } from 'class-transformer';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { PrismaService } from 'src/prisma.service';
 
-import { PaginatedDto, PaginatedRequestDto } from "../dto/pagination.dto";
-import { CoopResultCustomRequest, ResultStatus } from "../dto/results/result.custom.dto";
-import { AppVersion } from "../dto/results/result.headers.dto";
-import { CoopResultManyRequest, CoopResultRequest } from "../dto/results/result.request.dto";
+import { PaginatedDto, PaginatedRequestDto } from '../dto/pagination.dto';
+import { CoopResultCustomRequest, ResultStatus } from '../dto/results/result.custom.dto';
+import { AppVersion } from '../dto/results/result.headers.dto';
+import { CoopResultManyRequest, CoopResultRequest } from '../dto/results/result.request.dto';
 
 @Injectable()
 export class ResultsService {
@@ -20,7 +20,7 @@ export class ResultsService {
    * @returns
    */
   async fetch(request: PaginatedRequestDto): Promise<PaginatedDto<Result>> {
-    console.log("Downloading...");
+    console.log('Downloading...');
     const results: Result[] = await this.prisma.result.findMany({
       include: {
         players: {
@@ -46,7 +46,7 @@ export class ResultsService {
     });
     const status: string[] = Object.values(ResultStatus).map((status) => {
       const length: number = results.filter((result) => result.status === status).length;
-      return `${status},${("0000" + length).slice(-4)}`;
+      return `${status},${('0000' + length).slice(-4)}`;
     });
     // クエリ作成
     const queries: Prisma.ResultUpsertArgs[] = results.filter((result) => result.isValid).map((result) => result.query);
@@ -63,7 +63,7 @@ export class ResultsService {
   private async write(queries: Prisma.ResultUpsertArgs[], retry = 0): Promise<boolean> {
     // 成功したものを取得する
     const success: any[] = (await Promise.allSettled(queries.map((query) => this.prisma.result.upsert(query))))
-      .filter((result) => result.status === "fulfilled")
+      .filter((result) => result.status === 'fulfilled')
       // @ts-ignore
       .map((result) => `${result.value.id.toLowerCase()}:${result.value.playTime.toISOString()}`);
     // 失敗したものを抽出する
@@ -95,11 +95,11 @@ export class ResultsService {
   ): Promise<CustomResult[]> {
     // バージョンチェック
     if (Object.values(AppVersion).find((value) => value === version) === undefined) {
-      throw new BadRequestException({ message: "Invalid Version", status: 400 });
+      throw new BadRequestException({ message: 'Invalid Version', status: 400 });
     }
 
     if (Object.values(Client).find((value) => value === client) === undefined) {
-      throw new BadRequestException({ message: "Invalid Client", status: 400 });
+      throw new BadRequestException({ message: 'Invalid Client', status: 400 });
     }
 
     // 書き込み
@@ -113,17 +113,10 @@ export class ResultsService {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function chunked<T extends any[]>(arr: T, size: number): T[] {
-  return arr.reduce((newarr, _, i) => (i % size ? newarr : [...newarr, arr.slice(i, i + size)]), [] as T[][]);
-}
-
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
-const max_retry_count: number = process.env.NODE_ENV === "production" ? 10 : 5;
-const padding = (amount: number) => ("0000" + amount).slice(-4);
+const padding = (amount: number) => ('0000' + amount).slice(-4);
 
 export class CustomResult {
-  @Expose({ name: "resultId" })
+  @Expose({ name: 'resultId' })
   @Transform(() => Math.round(Math.random() * 100000000))
   resultId: number;
 
@@ -133,7 +126,7 @@ export class CustomResult {
   @IsNotEmpty()
   uuid: string;
 
-  @Expose({ name: "playTime" })
+  @Expose({ name: 'playTime' })
   @Transform((param) => param.obj.playTime)
   @IsDate()
   playTime: Date;
