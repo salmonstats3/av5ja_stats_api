@@ -14,6 +14,28 @@ paths:
       responses:
         '201':
           description: ''
+      tags: &ref_0
+        - Schedules
+    get:
+      operationId: SchedulesController_find_all
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
+  /schedules/{schedule_id}:
+    get:
+      operationId: SchedulesController_find
+      parameters:
+        - name: schedule_id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
   /results:
     post:
       operationId: ResultsController_create
@@ -21,26 +43,81 @@ paths:
       responses:
         '201':
           description: ''
+      tags: &ref_1
+        - Results
+    get:
+      operationId: ResultsController_find_all
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
+  /results/{result_id}:
+    get:
+      operationId: ResultsController_find
+      parameters:
+        - name: result_id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
   /users:
     post:
       operationId: UsersController_create
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateDto'
       responses:
-        '201':
-          description: ''
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+      tags: &ref_2
+        - Users
+    patch:
+      operationId: UsersController_update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateDto'
+      responses:
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+      tags: *ref_2
     get:
       operationId: UsersController_find_all
       parameters: []
       responses:
         '200':
           description: ''
-  /users/{userId}:
+      tags: *ref_2
+  /users/{user_id}:
     get:
       operationId: UsersController_find
-      parameters: []
+      parameters:
+        - name: user_id
+          required: true
+          in: path
+          example: laT7IetjzweGKWkNwrd162iO5wt2
+          schema:
+            type: string
       responses:
-        '200':
-          description: ''
+        '404':
+          description: Not found
+      tags: *ref_2
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
@@ -49,4 +126,16 @@ info:
 tags: []
 servers: []
 components:
-  schemas: {}
+  schemas:
+    UserCreateDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: laT7IetjzweGKWkNwrd162iO5wt2
+        name:
+          type: string
+          example: '@tkgling'
+      required:
+        - id
+        - name
