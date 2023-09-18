@@ -39,6 +39,9 @@ jobs:
       - name: Lint
         run: yarn lint
 
+      - name: Generate
+        run: yarn prisma generate
+
       - name: Build
         run: yarn build:docs
         env:
