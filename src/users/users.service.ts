@@ -10,4 +10,14 @@ export class UsersService {
     const result = await this.prisma.user.create(request.create);
     return UserResponseDto.fromPrismaResult(result);
   }
+
+  async find(user_id: string): Promise<UserResponseDto> {
+    const result = await this.prisma.user.findUniqueOrThrow({ where: { id: user_id } });
+    return UserResponseDto.fromPrismaResult(result);
+  }
+
+  async find_all(): Promise<UserResponseDto[]> {
+    const result = await this.prisma.user.findMany();
+    return result.map(UserResponseDto.fromPrismaResult);
+  }
 }
