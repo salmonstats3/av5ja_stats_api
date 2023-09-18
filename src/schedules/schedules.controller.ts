@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ScheduleCreateDto } from 'src/dto/schedule.dto';
 
 import { SchedulesService } from './schedules.service';
 
@@ -10,7 +11,7 @@ export class SchedulesController {
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
-  async create(@Body() request: any) {
+  async create(@Body() request: ScheduleCreateDto) {
     console.log(request);
   }
 
