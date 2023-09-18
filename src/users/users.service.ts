@@ -12,12 +12,33 @@ export class UsersService {
   }
 
   async find(user_id: string): Promise<UserResponseDto> {
-    const result = await this.prisma.user.findUniqueOrThrow({ where: { id: user_id } });
+    const result = await this.prisma.user.findUniqueOrThrow({
+      select: {
+        accounts: true,
+        createdAt: true,
+        id: true,
+        name: true,
+        sessionToken: false,
+        updatedAt: true,
+      },
+      where: {
+        id: user_id,
+      },
+    });
     return UserResponseDto.fromPrismaResult(result);
   }
 
   async find_all(): Promise<UserResponseDto[]> {
-    const result = await this.prisma.user.findMany();
+    const result = await this.prisma.user.findMany({
+      select: {
+        accounts: true,
+        createdAt: true,
+        id: true,
+        name: true,
+        sessionToken: false,
+        updatedAt: true,
+      },
+    });
     return result.map(UserResponseDto.fromPrismaResult);
   }
 }

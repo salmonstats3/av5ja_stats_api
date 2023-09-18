@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma, User } from '@prisma/client';
-import { Type } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import 'reflect-metadata';
 
@@ -12,10 +12,12 @@ interface UserDto {
 export class UserCreateDto implements UserDto {
   @ApiProperty({ example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
   @IsNotEmpty()
+  @Expose()
   id: string;
 
   @ApiProperty({ example: '@tkgling', required: true })
   @IsNotEmpty()
+  @Expose()
   name: string;
 
   get create(): Prisma.UserCreateArgs {
@@ -55,7 +57,7 @@ export class UserResponseDto implements UserDto {
   @IsNotEmpty()
   updated_at: Date;
 
-  static fromPrismaResult({ createdAt, updatedAt, id, name, sessionToken }: User): UserResponseDto {
+  static fromPrismaResult({ createdAt, updatedAt, id, name, sessionToken }: Partial<User>): UserResponseDto {
     return {
       accounts: [],
       created_at: createdAt,
