@@ -9,7 +9,9 @@ paths:
           description: ''
   /schedules:
     post:
-      operationId: SchedulesController_create
+      operationId: Create schedules
+      summary: ''
+      description: Create schedules
       parameters: []
       responses:
         '201':
@@ -17,7 +19,9 @@ paths:
       tags: &ref_0
         - Schedules
     get:
-      operationId: SchedulesController_find_all
+      operationId: Find schedules
+      summary: ''
+      description: Find schedules
       parameters: []
       responses:
         '200':
@@ -25,7 +29,9 @@ paths:
       tags: *ref_0
   /schedules/{schedule_id}:
     get:
-      operationId: SchedulesController_find
+      operationId: Find a schedule
+      summary: ''
+      description: Find a schedule
       parameters:
         - name: schedule_id
           required: true
@@ -38,7 +44,9 @@ paths:
       tags: *ref_0
   /results:
     post:
-      operationId: ResultsController_create
+      operationId: Create results
+      summary: ''
+      description: Create results
       parameters: []
       responses:
         '201':
@@ -46,7 +54,9 @@ paths:
       tags: &ref_1
         - Results
     get:
-      operationId: ResultsController_find_all
+      operationId: Find results
+      summary: ''
+      description: Find results
       parameters: []
       responses:
         '200':
@@ -54,7 +64,9 @@ paths:
       tags: *ref_1
   /results/{result_id}:
     get:
-      operationId: ResultsController_find
+      operationId: Find a result
+      summary: ''
+      description: Find a result
       parameters:
         - name: result_id
           required: true
@@ -67,7 +79,9 @@ paths:
       tags: *ref_1
   /users:
     post:
-      operationId: UsersController_create
+      operationId: Create a user
+      summary: ''
+      description: Create a user
       parameters: []
       requestBody:
         required: true
@@ -76,14 +90,14 @@ paths:
             schema:
               $ref: '#/components/schemas/UserCreateDto'
       responses:
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
+        '201':
+          description: ''
       tags: &ref_2
         - Users
     patch:
-      operationId: UsersController_update
+      operationId: Update a user
+      summary: ''
+      description: Update a user
       parameters: []
       requestBody:
         required: true
@@ -92,13 +106,13 @@ paths:
             schema:
               $ref: '#/components/schemas/UserCreateDto'
       responses:
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
+        '200':
+          description: ''
       tags: *ref_2
     get:
-      operationId: UsersController_find_all
+      operationId: Find users
+      summary: ''
+      description: Find users
       parameters: []
       responses:
         '200':
@@ -106,7 +120,9 @@ paths:
       tags: *ref_2
   /users/{user_id}:
     get:
-      operationId: UsersController_find
+      operationId: Find a user
+      summary: ''
+      description: Find a user
       parameters:
         - name: user_id
           required: true
@@ -115,8 +131,8 @@ paths:
           schema:
             type: string
       responses:
-        '404':
-          description: Not found
+        '200':
+          description: ''
       tags: *ref_2
 info:
   title: Salmon Stats+
