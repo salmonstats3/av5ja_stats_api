@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post } from '@nestjs/common';
 
-import { SchedulesService } from "./schedules.service";
+import { SchedulesService } from './schedules.service';
 
-@Controller("schedules")
+@Controller('schedules')
 export class SchedulesController {
   constructor(private readonly service: SchedulesService) {}
 
