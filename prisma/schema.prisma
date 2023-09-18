@@ -8,6 +8,11 @@ generator client {
   previewFeatures = ["views"]
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "erd.md"
+}
+
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
@@ -29,6 +34,17 @@ enum Mode {
 enum Species {
   INKLING
   OCTOLING
+}
+
+model User {
+  id           String @unique @map("id")
+  nplnUserId   String @id @map("npln_user_id") @db.VarChar(20)
+  nsaId        String @unique @map("nsa_id") @db.VarChar(16)
+  name         String @db.VarChar(32)
+  coralUserId  BigInt @unique @map("coral_user_id") @db.BigInt
+  sessionToken String @map("session_token") @db.VarChar(64)
+
+  @@map("users")
 }
 
 model Schedule {
