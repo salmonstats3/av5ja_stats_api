@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   @Post()
@@ -8,12 +10,12 @@ export class UsersController {
   }
 
   @Get()
-  async find_all(@Body() request: any): Promise<void> {
-    console.log(request);
+  async find_all(): Promise<void> {
+    console.log();
   }
 
   @Get(':userId')
-  async find(@Body() request: any): Promise<void> {
-    console.log(request);
+  async find(@Param('userId') userId: string): Promise<void> {
+    console.log(userId);
   }
 }

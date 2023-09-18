@@ -11,8 +11,8 @@ import { SchedulesController } from './schedules/schedules.controller';
 import { SchedulesModule } from './schedules/schedules.module';
 import { SchedulesService } from './schedules/schedules.service';
 import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
+import { UsersService } from './users/users.service';
 
 @Module({
   controllers: [AppController, SchedulesController, ResultsController, UsersController],
