@@ -6,6 +6,12 @@ paths:
       summary: ''
       description: Create schedules
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleCreateDto'
       responses:
         '201':
           description: ''
@@ -136,6 +142,95 @@ tags: []
 servers: []
 components:
   schemas:
+    CoopSetting:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Q29vcFN0YWdlLTE=
+        __isCoopSetting:
+          type: string
+          enum:
+            - CoopNormalSetting
+            - CoopBigRunSetting
+            - CoopTeamContestSetting
+      required:
+        - id
+        - __isCoopSetting
+    ImageURL:
+      type: object
+      properties:
+        url:
+          type: string
+          example: >-
+            https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/8e134a80cd54f4235329493afd43ff754b367a65e460facfcca862b174754b0e_0.png
+      required:
+        - url
+    WeaponInfoMain:
+      type: object
+      properties:
+        image:
+          $ref: '#/components/schemas/ImageURL'
+      required:
+        - image
+    CoopSchedule:
+      type: object
+      properties:
+        start_time:
+          format: date-time
+          type: string
+          example: '2023-08-27T16:00:00Z'
+        end_time:
+          format: date-time
+          type: string
+          example: '2023-08-29T08:00:00Z'
+        setting:
+          $ref: '#/components/schemas/CoopSetting'
+        weapons:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeaponInfoMain'
+      required:
+        - start_time
+        - end_time
+        - setting
+        - weapons
+    Node:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoopSchedule'
+      required:
+        - nodes
+    ScheduleGroup:
+      type: object
+      properties:
+        regularSchedules:
+          $ref: '#/components/schemas/Node'
+        bigRunSchedules:
+          $ref: '#/components/schemas/Node'
+        teamContestSchedules:
+          $ref: '#/components/schemas/Node'
+      required:
+        - regularSchedules
+        - bigRunSchedules
+        - teamContestSchedules
+    DataClass:
+      type: object
+      properties:
+        coopGroupingSchedule:
+          $ref: '#/components/schemas/ScheduleGroup'
+      required:
+        - coopGroupingSchedule
+    ScheduleCreateDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DataClass'
+      required:
+        - data
     UserCreateDto:
       type: object
       properties:
