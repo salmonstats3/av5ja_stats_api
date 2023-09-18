@@ -42,10 +42,7 @@ export interface JwtPayload {
 type JwtVerifier = (data: Buffer, signature: Buffer, key: string) => boolean;
 
 export class Jwt<T = JwtPayload, H extends JwtHeader = JwtHeader> {
-  constructor(
-    readonly header: H,
-    readonly payload: T,
-  ) {}
+  constructor(readonly header: H, readonly payload: T) {}
 
   static decode<T = JwtPayload, H extends JwtHeader = JwtHeader>(token: string) {
     const [header_str, payload_str, signature_str] = token.split('.', 3);
