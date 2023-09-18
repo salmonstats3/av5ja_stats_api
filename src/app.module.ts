@@ -1,18 +1,27 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from 'nestjs-prisma';
 
-import { ApiModule } from './api/api.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ResultsController } from './results/results.controller';
+import { ResultsModule } from './results/results.module';
+import { ResultsService } from './results/results.service';
+import { SchedulesController } from './schedules/schedules.controller';
+import { SchedulesModule } from './schedules/schedules.module';
+import { SchedulesService } from './schedules/schedules.service';
 
 @Module({
-  controllers: [AppController],
+  controllers: [AppController, SchedulesController, ResultsController],
   imports: [
-    ApiModule,
     ConfigModule.forRoot({
-      envFilePath: ['.env'],
+      envFilePath: ['.env', '.env.local', '.env.production'],
+      isGlobal: true,
     }),
+    PrismaModule.forRoot({ isGlobal: true }),
+    SchedulesModule,
+    ResultsModule,
   ],
-  providers: [AppService],
+  providers: [AppService, SchedulesService, ResultsService],
 })
 export class AppModule {}
