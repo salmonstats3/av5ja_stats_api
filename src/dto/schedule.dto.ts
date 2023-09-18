@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { ArrayMaxSize, ArrayMinSize, ArrayNotEmpty, IsDate, IsEnum, IsInt, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
+import { id } from 'src/utils/weapon';
 
 enum CoopSettingType {
   CoopNormalSetting = 'CoopNormalSetting',
@@ -31,7 +32,11 @@ class ImageURL {
   })
   @IsInt()
   @Expose({ name: 'url' })
-  @Transform(({ value }) => -2)
+  @Transform(({ value }) => {
+    const regexp = /([a-f0-9]{64})/;
+    const match = regexp.exec(value);
+    return match === null ? -999 : id(match[0]);
+  })
   id: number;
 }
 
