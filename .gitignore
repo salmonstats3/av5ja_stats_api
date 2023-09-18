@@ -99,7 +99,7 @@ out
 .nuxt
 dist
 
-# OpanAPI build / generate output
+# OpenAPI build / generate output
 docs
 
 # Gatsby files
