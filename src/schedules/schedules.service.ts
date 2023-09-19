@@ -8,9 +8,8 @@ import { ScheduleCreateDto } from 'src/dto/schedule.dto';
 export class SchedulesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: ScheduleCreateDto): Promise<Schedule[]> {
-    const results = await this.prisma.schedule.createMany(request.create);
-    console.log(results);
+  async create(request: ScheduleCreateDto): Promise<void> {
+    await this.prisma.schedule.createMany(request.create);
     return;
   }
 

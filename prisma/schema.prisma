@@ -98,10 +98,6 @@ model Schedule {
   mode       Mode     @default(REGULAR)
   // ルール
   rule       Rule     @default(REGULAR)
-  // レアブキ
-  rareWeapon Int?     @map("rare_weapon") @db.SmallInt
-  // オカシラシャケのID
-  bossId     Int?     @map("boss_id") @db.SmallInt
   // 作成日
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
@@ -156,7 +152,6 @@ model Result {
   // オカシラシャケを討伐したかどうか
   isBossDefeated       Boolean?  @map("is_boss_defeated") @db.Boolean
   // たおしたオカシラシャケのID
-  // 不要かもしれないが残しておく
   bossId               Int?      @map("boss_id") @db.SmallInt
   // シナリオコード
   scenarioCode         String?   @map("scenario_code") @db.VarChar(16)

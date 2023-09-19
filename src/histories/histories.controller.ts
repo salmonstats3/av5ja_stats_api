@@ -11,7 +11,7 @@ export class HistoriesController {
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
-  async create(@Body() request: HistoryCreateDto) {
+  async create(@Body() request: HistoryCreateDto): Promise<void> {
     this.service.create(request);
   }
 }

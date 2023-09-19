@@ -55,8 +55,6 @@ OCTOLING OCTOLING
     Int weapon_list 
     Mode mode 
     Rule rule 
-    Int rare_weapon "❓"
-    Int boss_id "❓"
     DateTime created_at 
     DateTime updated_at 
     }

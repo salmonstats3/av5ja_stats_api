@@ -12,7 +12,7 @@ export class SchedulesController {
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
-  async create(@Body() request: ScheduleCreateDto) {
+  async create(@Body() request: ScheduleCreateDto): Promise<void> {
     this.service.create(request);
   }
 
