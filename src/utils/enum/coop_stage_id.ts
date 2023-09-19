@@ -10,4 +10,5 @@ export enum CoopStageId {
   Carousel = 100,
   Upland = 102,
   Temple = 103,
+  Factory = 104,
 }

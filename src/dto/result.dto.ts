@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule, Species } from '@prisma/client';
-import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -434,10 +434,10 @@ class MemberResult {
 
   private get textColor(): number[] {
     return [
-      this.player.nameplate.background.textColor.a,
-      this.player.nameplate.background.textColor.b,
-      this.player.nameplate.background.textColor.g,
       this.player.nameplate.background.textColor.r,
+      this.player.nameplate.background.textColor.g,
+      this.player.nameplate.background.textColor.b,
+      this.player.nameplate.background.textColor.a,
     ];
   }
 
@@ -456,7 +456,11 @@ class MemberResult {
     const specialCounts: number[] = waves.map((wave) => wave.specialWeapons.filter((weapon) => weapon.id === this.specialWeapon.id).length);
     return {
       badges: this.badges,
-      bossKillCounts: isMyself ? bossKillCounts : Object.keys(CoopBossInfoId).map(() => -1),
+      bossKillCounts: isMyself
+        ? bossKillCounts
+        : Object.values(CoopEnemyInfoId)
+            .filter((v) => !isNaN(v as CoopEnemyInfoId))
+            .map(() => -1),
       bossKillCountsTotal: this.defeatEnemyCount,
       byname: this.player.byname,
       deadCount: this.rescuedCount,
@@ -604,7 +608,6 @@ class CoopHistoryDetail {
   @Type(() => Scale)
   @Expose()
   @ValidateNested()
-  @Transform(({ value }) => (value === null ? { bronze: -1, gold: -1, silver: -1 } : plainToInstance(Scale, value)))
   readonly scale: Scale;
 
   @ApiProperty({ minimum: 0, nullable: true, required: true, type: 'integer' })
@@ -666,7 +669,7 @@ export class ResultCreateDto {
   @ValidateNested()
   readonly data: CoopResultDataClass;
 
-  private get result(): CoopHistoryDetail {
+  get result(): CoopHistoryDetail {
     return this.data.coopHistoryDetail;
   }
 
@@ -728,72 +731,109 @@ export class ResultCreateDto {
       .map((id) => this.result.enemyResults.find((enemy) => enemy.enemy.id === id)?.teamDefeatCount ?? 0);
   }
 
-  get create(): Prisma.ResultCreateArgs {
+  private create(startTime: Date, endTime: Date): Prisma.ResultCreateInput {
     return {
-      data: {
-        bossCounts: this.enemyPopCounts,
-        bossId: this.bossId,
-        bossKillCounts: this.enemyTeamDefeatCounts,
-        bronze: this.result.scale?.bronze ?? -1,
-        dangerRate: this.result.dangerRate,
-        failureWave: this.failureWave,
-        gold: this.result.scale?.gold ?? -1,
-        goldenIkuraAssistNum: this.goldenIkuraAssistNum,
-        goldenIkuraNum: this.goldenIkuraNum,
-        id: this.result.id.uuid,
-        ikuraNum: this.ikuraNum,
-        isBossDefeated: this.isBossDefeated,
-        isClear: this.isClear,
-        members: this.members,
-        nightLess: this.nightLess,
-        playTime: this.result.id.playTime,
-        players: {
-          createMany: {
-            data: this.players.map((player) =>
-              player.create(
-                this.result.afterGrade.id,
-                this.result.afterGradePoint,
-                this.result.jobBonus,
-                this.result.jobRate,
-                this.result.jobScore,
-                this.result.jobPoint,
-                this.result.smellMeter,
-                this.enemyDefeatCounts,
-                this.result.waveResults,
-              ),
+      bossCounts: this.enemyPopCounts,
+      bossId: this.bossId,
+      bossKillCounts: this.enemyTeamDefeatCounts,
+      bronze: this.result.scale?.bronze ?? null,
+      dangerRate: this.result.dangerRate,
+      failureWave: this.failureWave,
+      gold: this.result.scale?.gold ?? null,
+      goldenIkuraAssistNum: this.goldenIkuraAssistNum,
+      goldenIkuraNum: this.goldenIkuraNum,
+      id: this.result.id.uuid,
+      ikuraNum: this.ikuraNum,
+      isBossDefeated: this.isBossDefeated,
+      isClear: this.isClear,
+      members: this.members,
+      nightLess: this.nightLess,
+      playTime: this.result.id.playTime,
+      players: {
+        createMany: {
+          data: this.players.map((player) =>
+            player.create(
+              this.result.afterGrade.id,
+              this.result.afterGradePoint,
+              this.result.jobBonus,
+              this.result.jobRate,
+              this.result.jobScore,
+              this.result.jobPoint,
+              this.result.smellMeter,
+              this.enemyDefeatCounts,
+              this.result.waveResults,
             ),
-            skipDuplicates: true,
-          },
+          ),
+          skipDuplicates: true,
         },
-        scenarioCode: this.result.scenarioCode,
-        schedule: {
-          connectOrCreate: {
-            create: {
-              endTime: null,
+      },
+      scenarioCode: this.result.scenarioCode,
+      schedule: {
+        connectOrCreate: {
+          create: {
+            endTime: endTime,
+            mode: this.result.mode,
+            rule: this.result.rule,
+            stageId: this.result.coopStage.id,
+            startTime: startTime,
+            weaponList: this.result.weaponList,
+          },
+          where: {
+            stageId_mode_rule_weaponList_startTime_endTime: {
+              endTime: endTime,
               mode: this.result.mode,
               rule: this.result.rule,
               stageId: this.result.coopStage.id,
-              startTime: null,
+              startTime: startTime,
               weaponList: this.result.weaponList,
-            },
-            where: {
-              stageId_mode_rule_weaponList_startTime_endTime: {
-                endTime: null,
-                mode: this.result.mode,
-                rule: this.result.rule,
-                stageId: this.result.coopStage.id,
-                startTime: null,
-                weaponList: this.result.weaponList,
-              },
             },
           },
         },
-        silver: this.result.scale?.silver ?? -1,
-        waves: {
-          createMany: {
-            data: this.result.waveResults.map((wave) => wave.create(this.result.resultWave, this.isBossDefeated)),
-            skipDuplicates: true,
+      },
+      silver: this.result.scale?.silver ?? null,
+      waves: {
+        createMany: {
+          data: this.result.waveResults.map((wave) => wave.create(this.result.resultWave, this.isBossDefeated)),
+          skipDuplicates: true,
+        },
+      },
+    };
+  }
+
+  private get update(): Prisma.ResultUpdateInput {
+    return {
+      players: {
+        update: {
+          data: {
+            bossKillCounts: this.enemyDefeatCounts,
+            gradeId: this.result.afterGrade.id,
+            gradePoint: this.result.afterGradePoint,
+            jobBonus: this.result.jobBonus,
+            jobRate: this.result.jobRate,
+            jobScore: this.result.jobScore,
+            kumaPoint: this.result.jobPoint,
+            smellMeter: this.result.smellMeter,
           },
+          where: {
+            nplnUserId_playTime_id: {
+              id: this.result.id.uuid,
+              nplnUserId: this.result.myResult.player.id.nplnUserId,
+              playTime: this.result.id.playTime,
+            },
+          },
+        },
+      },
+    };
+  }
+
+  upsert(startTime: Date, endTime: Date): Prisma.ResultUpsertArgs {
+    return {
+      create: this.create(startTime, endTime),
+      update: this.update,
+      where: {
+        id_playTime: {
+          id: this.result.id.uuid,
+          playTime: this.result.id.playTime,
         },
       },
     };

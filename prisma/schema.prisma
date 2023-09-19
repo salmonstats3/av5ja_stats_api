@@ -167,6 +167,7 @@ model Result {
   schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([id, scheduleId, playTime])
+  @@unique([id, playTime])
   @@index([members])
   @@index([goldenIkuraNum, nightLess])
   @@index([scheduleId])

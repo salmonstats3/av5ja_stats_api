@@ -12,7 +12,7 @@ export class ResultsController {
   @Post()
   @ApiOperation({ description: 'Create results', operationId: 'Create results' })
   async create(@Body() request: ResultCreateDto) {
-    this.service.create(request);
+    await this.service.create(request);
   }
 
   @Get()
