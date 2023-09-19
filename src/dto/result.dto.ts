@@ -1,3 +1,5 @@
+import { createHash } from 'crypto';
+
 import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule, Species } from '@prisma/client';
@@ -649,6 +651,12 @@ class CoopHistoryDetail {
     }
   }
 
+  get resultId(): string {
+    return createHash('sha256')
+      .update(`${this.id.uuid}-${dayjs(this.id.playTime).unix()}`)
+      .digest('hex');
+  }
+
   get weaponList(): number[] {
     return this.weapons.map((weapon) => weapon.image.id);
   }
@@ -767,6 +775,7 @@ export class ResultCreateDto {
           skipDuplicates: true,
         },
       },
+      resultId: this.result.resultId,
       scenarioCode: this.result.scenarioCode,
       schedule: {
         connectOrCreate: {
@@ -830,17 +839,24 @@ export class ResultCreateDto {
     return {
       create: this.create(startTime, endTime),
       select: {
-        id: true,
-        playTime: true,
+        resultId: true,
         scheduleId: true,
       },
       update: this.update,
       where: {
-        id_playTime: {
-          id: this.result.id.uuid,
-          playTime: this.result.id.playTime,
-        },
+        resultId: this.result.resultId,
       },
     };
   }
+}
+
+export class ResultCreateRequest {
+  @ApiProperty({ isArray: true, maxItems: 50, minItems: 1, required: true, type: ResultCreateDto })
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMaxSize(50)
+  @Type(() => ResultCreateDto)
+  @ValidateNested({ each: true })
+  @Expose()
+  results: ResultCreateDto[];
 }

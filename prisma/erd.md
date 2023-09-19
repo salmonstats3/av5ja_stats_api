@@ -64,6 +64,7 @@ OCTOLING OCTOLING
 
   "results" {
     String id "🗝️"
+    String result_id 
     String schedule_id 
     DateTime play_time 
     Int boss_counts 

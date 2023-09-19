@@ -121,6 +121,8 @@ model Schedule {
 model Result {
   // バイトID
   id                   String    @map("id") @db.Uuid
+  // リザルトID
+  resultId             String    @unique @map("result_id") @db.VarChar(64)
   // スケジュールID
   scheduleId           String    @map("schedule_id") @db.Uuid
   // プレイ時刻
@@ -167,7 +169,6 @@ model Result {
   schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([id, scheduleId, playTime])
-  @@unique([id, playTime])
   @@index([members])
   @@index([goldenIkuraNum, nightLess])
   @@index([scheduleId])
