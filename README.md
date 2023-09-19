@@ -1,8 +1,8 @@
-## Salmon Stats+
+# Salmon Stats+
 
 Prisma, Fastify で動作する DB と連携してデータを返す API です.
 
-### 導入
+## 導入
 
 ```zsh
 git clone https://github.com/salmonstats3/av5ja_stats_api
@@ -10,112 +10,147 @@ cd av5ja_stats_api
 yarn install
 ```
 
-### データベース接続情報
+### 環境変数
 
-データベースへの接続情報は`.env`に設定します.
+以下の環境変数が利用できます.
+
+```zsh
+NODE_ENV=
+DATABASE_URL=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+API_PORT=
+API_HOST=
+API_VERSION=
+
+## DB Backup
+SCHEDULE=@every 2h
+BACKUP_KEEP_DAYS=7
+S3_REGION=
+S3_ACCESS_KEY=
+S3_SECRET_KEY=
+S3_BUCKET=
+S3_PREFIX=
+S3_ENDPOINT=
+
+## Cloudflare DDNS
+API_KEY=
+API_ZONE=
+API_SUBDOMAIN=
+API_PROXIED=true
+API_RRTYPE=AAAA
+```
+
+これらのファイルを設定します.
 
 ```zsh
 cp .env.example .env
 ```
 
-ここに任意の値を設定します. この内容は自動的に Docker で動作するデータベースに反映されます.
+#### 接続情報
 
-- NodeJS 18.17.0
-- Yarn
-- Node Version Managerß
-
-```zsh
-git clone https://github.com/salmonstats3/av5ja_stats_api.git
-cd av5ja_stats_api
-yarn install
-```
-
-### 環境変数
-
-```zsh
-DATABASE_URL=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-APP_PORT=
-API_HOST=
-API_VERSION=
-```
-
-- DATABASE_URL
+- `DATABASE_URL`
   - データベースの接続情報
   - `postgresql://{{ POSTGRES_USER }}:{{ POSTGRES_PASSWORD }}@{{ HOST }}:{{ PORT }}/{{ POSTGRES_DB }}`のフォーマット
   - `HOST`はコンテナ内からアクセスするなら`postgres`そうでないなら`localhost`を指定
   - `PORT`は特に何も考えないなら 5432 を指定
-- POSTGRES_USER
-- POSTGRES_PASSWORD
-- POSTGRES_DB
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_DB`
   - データベースの接続情報
   - `docker compose up postgres`実行時に自動で設定される
-- API_PORT
+- `API_PORT`
   - 開けたいポートを指定
   - 特に何もなければ`3030`を指定します
-- API_HOST
+- `API_HOST`
   - Fastify 用の設定
   - `0.0.0.0`を設定すれば良い
-- API_VERSION
+- `API_VERSION`
   - バージョンを指定する
   - 例えば`4.0.0`などの値が有効
 
-### データベースの起動
+#### 自動バックアップ
 
-DATABASE_URL=
-POSTGRES_DB=
-POSTGRES_PASSWORD=
-POSTGRES_USER=
+改良版[`pg-backup-s3`](https://hub.docker.com/repository/docker/tkgling/postgres-backup-s3/general)を利用してAWS S3互換のオブジェクトストレージに定期的にバックアップを取ります.
 
-````
+パラメータについては[本家のドキュメント](https://github.com/eeshugerman/postgres-backup-s3)を参照してください.
+
+> Linode Object Storageでの動作確認をしています
+
+- `SCHEDULE`
+  - バックアップ実行間隔
+- `BACKUP_KEEP_DAYS`
+  - 保存する期間
+- `S3_REGION`
+- `S3_ACCESS_KEY` 
+- `S3_SECRET_KEY`
+- `S3_BUCKET`
+- `S3_PREFIX`
+- `S3_ENDPOINT`
+  - S3互換のオブジェクトストレージの接続情報   
+
+#### Cloudflare DDNS
+
+`Cloudflare DDNS`を利用して定期的にIPv6アドレスをDNSに反映させます.
+
+- `API_KEY`
+- `API_ZONE`
+- `API_SUBDOMAIN`
+- `API_PROXIED`
+  - `true`を指定して良い　 
+- `API_RRTYPE`
+  - IPv4なら`A`、IPv6なら`AAAA`を指定
+
+
+## 実行
 
 ### データベース起動
+
+データの書き込みテストなどを行う場合、データベースを起動させる必要があります. Dockerをサポートしているのでそちらをご利用ください.
 
 ```zsh
 docker compose up postgres
 ````
 
-で環境変数で設定したユーザー名とパスワードで初期化される.
+で環境変数で設定したユーザー名とパスワードで初期化されます.
 
-#### 同期
+もしも永続的に起動したい場合は、
 
-データベースを指定したスキーマに従って初期化します.
-PGAdmin などでデータベースに接続してください.
+```zsh
+docker compsoe up -d postgres
+```
 
-### データベース初期化
+としてください.
+
+### サーバー起動
+
+Prismaのファイルに変更を加えた場合、その度に以下の操作が必要です. 
 
 ```zsh
 yarn prisma generate
 ```
 
-`yarn prisma generate`でソースコードを生成し、`yarn prisma migrate dev --create-only`でマイグレーション用の SQL を発行します.
+そうでないなら最初の一回だけで構いません.
 
 ```zsh
-yarn prisma migrate dev --create-only
-yarn prisma migrate deploy
+yarn start:dev
 ```
 
-発行済の SQL を反映させるには`migrate deploy`を実行します. このコマンドを一度に実行したい場合は、
+で[localhost:3030](http://loaclhostL3030/docs)にサーバーが起動します.
+
+> `docs`以下にドキュメントも作成されるのでそちらもご利用ください
+
+### Docker
+
+サーバーをDockerイメージにする場合は`make build`を実行してください. 現在はAMD64しかサポートしていませんが、気が向けばARM64もサポートしたいと考えています.
+
+### AMD64
 
 ```zsh
-yarn prisma migrate dev
+make build
 ```
 
-もしリセットしたい場合は、
+### ARM64
 
-```zsh
-yarn prisma migrate reset --hard
-```
-
-でデータを初期化した上でスキーマを反映させられます.
-で行えます.
-
-### データベース初期化
-
-```zsh
-yarn prisma migrate reset
-```
-
-データベースを初期化したあと、生成済みの SQL をデータベースに対して実行します.
+記事執筆中です.
