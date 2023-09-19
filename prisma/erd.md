@@ -63,7 +63,7 @@ OCTOLING OCTOLING
   
 
   "results" {
-    String id "🗝️"
+    String uuid "🗝️"
     String result_id 
     String schedule_id 
     DateTime play_time 

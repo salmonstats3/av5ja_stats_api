@@ -120,7 +120,7 @@ model Schedule {
 
 model Result {
   // バイトID
-  id                   String    @map("id") @db.Uuid
+  uuid                 String    @map("uuid") @db.Uuid
   // リザルトID
   resultId             String    @unique @map("result_id") @db.VarChar(64)
   // スケジュールID
@@ -168,7 +168,7 @@ model Result {
   players              Player[]
   schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([id, scheduleId, playTime])
+  @@id([uuid, scheduleId, playTime])
   @@index([members])
   @@index([goldenIkuraNum, nightLess])
   @@index([scheduleId])
@@ -179,7 +179,7 @@ model Result {
 
 model Player {
   // リザルトID
-  id                   String   @map("id") @db.Uuid
+  uuid                 String   @map("uuid") @db.Uuid
   // スケジュールID
   scheduleId           String   @map("schedule_id") @db.Uuid
   // 遊んだ時間
@@ -241,9 +241,9 @@ model Player {
   // 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   // リレーション
-  result               Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime], onDelete: Cascade, onUpdate: Cascade)
+  result               Result?  @relation(fields: [uuid, scheduleId, playTime], references: [uuid, scheduleId, playTime], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([nplnUserId, playTime, id])
+  @@id([nplnUserId, playTime, uuid])
   @@index([nplnUserId])
   @@index([scheduleId])
   @@index([name])
@@ -253,7 +253,7 @@ model Player {
 
 model Wave {
   // リザルトID
-  id                String   @map("id") @db.Uuid
+  uuid              String   @map("uuid") @db.Uuid
   // スケジュールID
   scheduleId        String   @map("schedule_id") @db.Uuid
   // プレイ時間
@@ -276,9 +276,9 @@ model Wave {
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
   updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
-  result            Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime], onDelete: Cascade, onUpdate: Cascade)
+  result            Result?  @relation(fields: [uuid, scheduleId, playTime], references: [uuid, scheduleId, playTime], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([id, waveId, playTime])
+  @@id([uuid, waveId, playTime])
   @@index([scheduleId])
   @@index([waterLevel])
   @@index([eventType])

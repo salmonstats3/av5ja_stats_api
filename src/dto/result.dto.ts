@@ -740,6 +740,13 @@ export class ResultCreateDto {
   }
 
   private create(startTime: Date, endTime: Date): Prisma.ResultCreateInput {
+    const scheduleId: string = createHash('sha256')
+      .update(
+        `${this.result.mode}-${this.result.rule}-${this.result.coopStage.id}-${dayjs(startTime).unix()}-${dayjs(
+          endTime,
+        ).unix()}-${this.result.weaponList.join(',')}`,
+      )
+      .digest('hex');
     return {
       bossCounts: this.enemyPopCounts,
       bossId: this.bossId,
@@ -750,7 +757,6 @@ export class ResultCreateDto {
       gold: this.result.scale?.gold ?? null,
       goldenIkuraAssistNum: this.goldenIkuraAssistNum,
       goldenIkuraNum: this.goldenIkuraNum,
-      id: this.result.id.uuid,
       ikuraNum: this.ikuraNum,
       isBossDefeated: this.isBossDefeated,
       isClear: this.isClear,
@@ -783,23 +789,18 @@ export class ResultCreateDto {
             endTime: endTime,
             mode: this.result.mode,
             rule: this.result.rule,
+            scheduleId: scheduleId,
             stageId: this.result.coopStage.id,
             startTime: startTime,
             weaponList: this.result.weaponList,
           },
           where: {
-            stageId_mode_rule_weaponList_startTime_endTime: {
-              endTime: endTime,
-              mode: this.result.mode,
-              rule: this.result.rule,
-              stageId: this.result.coopStage.id,
-              startTime: startTime,
-              weaponList: this.result.weaponList,
-            },
+            scheduleId: scheduleId,
           },
         },
       },
       silver: this.result.scale?.silver ?? null,
+      uuid: this.result.id.uuid,
       waves: {
         createMany: {
           data: this.result.waveResults.map((wave) => wave.create(this.result.resultWave, this.isBossDefeated)),
@@ -824,10 +825,10 @@ export class ResultCreateDto {
             smellMeter: this.result.smellMeter,
           },
           where: {
-            nplnUserId_playTime_id: {
-              id: this.result.id.uuid,
+            nplnUserId_playTime_uuid: {
               nplnUserId: this.result.myResult.player.id.nplnUserId,
               playTime: this.result.id.playTime,
+              uuid: this.result.id.uuid,
             },
           },
         },

@@ -1,3 +1,5 @@
+import { createHash } from 'crypto';
+
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
@@ -65,10 +67,6 @@ class CoopSetting {
   @Type(() => MainWeapon)
   @ValidateNested({ each: true })
   readonly weapons: MainWeapon[];
-
-  get weaponList(): number[] {
-    return this.weapons.map((weapon) => weapon.image.id);
-  }
 }
 
 class CoopSchedule {
@@ -90,15 +88,34 @@ class CoopSchedule {
   @ValidateNested()
   readonly setting: CoopSetting;
 
+  get scheduleId(): string {
+    return createHash('sha256')
+      .update(
+        `${this.setting.isCoopSetting}-${this.rule}-${this.setting.coopStage.id}-${dayjs(this.startTime).unix()}-${dayjs(
+          this.endTime,
+        ).unix()}-${this.weaponList.join(',')}`,
+      )
+      .digest('hex');
+  }
+
   get query(): Prisma.ScheduleCreateInput {
     return {
       endTime: this.endTime,
-      mode: Mode.REGULAR,
+      mode: this.mode,
       rule: this.rule,
+      scheduleId: this.scheduleId,
       stageId: this.setting.coopStage.id,
       startTime: this.startTime,
-      weaponList: this.setting.weaponList,
+      weaponList: this.weaponList,
     };
+  }
+
+  get weaponList(): number[] {
+    return this.setting.weapons.map((weapon) => weapon.image.id);
+  }
+
+  get mode(): Mode {
+    return this.rule === Rule.TEAM_CONTEST ? Mode.LIMITED : Mode.REGULAR;
   }
 
   get rule(): Rule {

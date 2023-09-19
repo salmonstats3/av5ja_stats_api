@@ -9,6 +9,7 @@ export class ResultsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(request: ResultCreateRequest): Promise<Partial<Result>[]> {
+    // Promise.allを利用すると競合する可能性がワンチャンあったりする......
     return Promise.all(request.results.map((result) => this.upsert(result)));
   }
 

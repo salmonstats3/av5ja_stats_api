@@ -1,3 +1,5 @@
+import { createHash } from 'crypto';
+
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
@@ -57,11 +59,22 @@ class CoopHistory {
   @ValidateNested({ each: true })
   readonly historyDetails: HistoryNode;
 
+  get scheduleId(): string {
+    return createHash('sha256')
+      .update(
+        `${this.mode}-${this.rule}-${this.historyDetails.nodes[0].coopStage.id}-${dayjs(this.startTime).unix()}-${dayjs(
+          this.endTime,
+        ).unix()}-${this.weaponList.join(',')}`,
+      )
+      .digest('hex');
+  }
+
   get query(): Prisma.ScheduleCreateInput {
     return {
       endTime: this.endTime,
       mode: this.mode,
       rule: this.rule,
+      scheduleId: this.scheduleId,
       stageId: this.historyDetails.nodes[0].coopStage.id,
       startTime: this.startTime,
       weaponList: this.weaponList,
