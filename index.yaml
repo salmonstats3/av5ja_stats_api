@@ -142,21 +142,14 @@ tags: []
 servers: []
 components:
   schemas:
-    CoopSetting:
+    CoopStage:
       type: object
       properties:
         id:
-          type: string
+          type: type
           example: Q29vcFN0YWdlLTE=
-        __isCoopSetting:
-          type: string
-          enum:
-            - CoopNormalSetting
-            - CoopBigRunSetting
-            - CoopTeamContestSetting
       required:
         - id
-        - __isCoopSetting
     ImageURL:
       type: object
       properties:
@@ -173,28 +166,42 @@ components:
           $ref: '#/components/schemas/ImageURL'
       required:
         - image
-    CoopSchedule:
+    CoopSetting:
       type: object
       properties:
-        start_time:
-          format: date-time
+        coopStage:
+          $ref: '#/components/schemas/CoopStage'
+        __isCoopSetting:
           type: string
-          example: '2023-08-27T16:00:00Z'
-        end_time:
-          format: date-time
-          type: string
-          example: '2023-08-29T08:00:00Z'
-        setting:
-          $ref: '#/components/schemas/CoopSetting'
+          enum:
+            - CoopNormalSetting
+            - CoopBigRunSetting
+            - CoopTeamContestSetting
         weapons:
           type: array
           items:
             $ref: '#/components/schemas/WeaponInfoMain'
       required:
-        - start_time
-        - end_time
-        - setting
+        - coopStage
+        - __isCoopSetting
         - weapons
+    CoopSchedule:
+      type: object
+      properties:
+        startTime:
+          format: date-time
+          type: string
+          example: '2023-08-27T16:00:00Z'
+        endTime:
+          format: date-time
+          type: string
+          example: '2023-08-29T08:00:00Z'
+        setting:
+          $ref: '#/components/schemas/CoopSetting'
+      required:
+        - startTime
+        - endTime
+        - setting
     Node:
       type: object
       properties:
