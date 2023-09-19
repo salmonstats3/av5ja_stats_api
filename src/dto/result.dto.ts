@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma, Rule, Species } from '@prisma/client';
+import { Mode, Prisma, Rule, Species } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -286,13 +286,26 @@ class Background {
   readonly id: number;
 }
 
-class NamePlate {
-  @ApiProperty({ isArray: true, required: true, type: 'integer' })
-  @IsArray()
-  @Min(3)
-  @Max(3)
+class Badge {
+  @ApiProperty({ required: true, type: 'string' })
+  @IsInt()
   @Expose()
-  readonly badges: (number | null)[];
+  @Transform(({ value }) => {
+    const regexp = /-([0-9-]*)/;
+    const match = regexp.exec(atob(value));
+    return match === null ? 1 : parseInt(match[1], 10);
+  })
+  readonly id: number;
+}
+
+class NamePlate {
+  @ApiProperty({ isArray: true, required: true, type: Badge })
+  @IsArray()
+  @ArrayMinSize(3)
+  @ArrayMaxSize(3)
+  @Expose()
+  @Type(() => Badge)
+  readonly badges: (Badge | null)[];
 
   @ApiProperty({ required: true, type: Background })
   @Expose()
@@ -334,12 +347,14 @@ class PlayerResult {
 
   @ApiProperty({ required: true, type: NamePlate })
   @Type(() => NamePlate)
+  @Expose()
   @ValidateNested()
   readonly nameplate: NamePlate;
 
   @ApiProperty({ required: true, type: Uniform })
   @Type(() => Uniform)
   @ValidateNested()
+  @Expose()
   readonly uniform: Uniform;
 
   @ApiProperty({ required: true, type: 'string' })
@@ -413,6 +428,10 @@ class MemberResult {
     return this.weapons.map((weapon) => weapon.image.id);
   }
 
+  get badges(): number[] {
+    return this.player.nameplate.badges.map((badge) => (badge === null ? -1 : badge.id));
+  }
+
   private get textColor(): number[] {
     return [
       this.player.nameplate.background.textColor.a,
@@ -436,7 +455,7 @@ class MemberResult {
     const isMyself: boolean = this.player.id.isMyself;
     const specialCounts: number[] = waves.map((wave) => wave.specialWeapons.filter((weapon) => weapon.id === this.specialWeapon.id).length);
     return {
-      badges: this.player.nameplate.badges,
+      badges: this.badges,
       bossKillCounts: isMyself ? bossKillCounts : Object.keys(CoopBossInfoId).map(() => -1),
       bossKillCountsTotal: this.defeatEnemyCount,
       byname: this.player.byname,
@@ -615,6 +634,21 @@ class CoopHistoryDetail {
   @Min(0)
   @Expose()
   readonly jobBonus: number | null;
+
+  get mode(): Mode {
+    switch (this.rule) {
+      case Rule.REGULAR:
+        return this.scenarioCode !== null ? Mode.PRIVATE_SCENARIO : this.smellMeter === null ? Mode.PRIVATE_CUSTOM : Mode.REGULAR;
+      case Rule.BIG_RUN:
+        return Mode.REGULAR;
+      case Rule.TEAM_CONTEST:
+        return Mode.LIMITED;
+    }
+  }
+
+  get weaponList(): number[] {
+    return this.weapons.map((weapon) => weapon.image.id);
+  }
 }
 
 class CoopResultDataClass {
@@ -732,6 +766,28 @@ export class ResultCreateDto {
           },
         },
         scenarioCode: this.result.scenarioCode,
+        schedule: {
+          connectOrCreate: {
+            create: {
+              endTime: null,
+              mode: this.result.mode,
+              rule: this.result.rule,
+              stageId: this.result.coopStage.id,
+              startTime: null,
+              weaponList: this.result.weaponList,
+            },
+            where: {
+              stageId_mode_rule_weaponList_startTime_endTime: {
+                endTime: null,
+                mode: this.result.mode,
+                rule: this.result.rule,
+                stageId: this.result.coopStage.id,
+                startTime: null,
+                weaponList: this.result.weaponList,
+              },
+            },
+          },
+        },
         silver: this.result.scale?.silver ?? -1,
         waves: {
           createMany: {
