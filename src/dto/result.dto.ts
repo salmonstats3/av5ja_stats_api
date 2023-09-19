@@ -829,6 +829,11 @@ export class ResultCreateDto {
   upsert(startTime: Date, endTime: Date): Prisma.ResultUpsertArgs {
     return {
       create: this.create(startTime, endTime),
+      include: {
+        players: true,
+        schedule: true,
+        waves: true,
+      },
       update: this.update,
       where: {
         id_playTime: {

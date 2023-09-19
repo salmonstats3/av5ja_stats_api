@@ -3,12 +3,13 @@ import { Mode, Result } from '@prisma/client';
 import dayjs from 'dayjs';
 import { PrismaService } from 'nestjs-prisma';
 import { ResultCreateDto } from 'src/dto/result.dto';
+import { deep_omit } from 'src/utils/omit';
 
 @Injectable()
 export class ResultsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: ResultCreateDto): Promise<Result[]> {
+  async create(request: ResultCreateDto): Promise<Partial<Result>> {
     /**
      * プライベートでない場合は、スケジュールを参照して結果を作成する
      */
@@ -30,9 +31,7 @@ export class ResultsService {
             },
           },
         });
-        const results = await this.prisma.result.upsert(request.upsert(startTime, endTime));
-        console.log(results);
-        return;
+        return deep_omit(await this.prisma.result.upsert(request.upsert(startTime, endTime)), ['createdAt', 'updatedAt']);
       } catch {
         throw new NotFoundException();
       }
@@ -40,9 +39,7 @@ export class ResultsService {
       /**
        * プライベートの場合はUnix時間0を指定して書き込む
        */
-      const results = await this.prisma.result.upsert(request.upsert(dayjs(0).toDate(), dayjs(0).toDate()));
-      console.log(results);
-      return;
+      return await this.prisma.result.upsert(request.upsert(dayjs(0).toDate(), dayjs(0).toDate()));
     }
   }
 }

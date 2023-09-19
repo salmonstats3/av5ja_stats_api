@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Result } from '@prisma/client';
 import { ResultCreateDto } from 'src/dto/result.dto';
 
 import { ResultsService } from './results.service';
@@ -10,9 +11,9 @@ export class ResultsController {
   constructor(private readonly service: ResultsService) {}
 
   @Post()
-  @ApiOperation({ description: 'Create results', operationId: 'Create results' })
-  async create(@Body() request: ResultCreateDto) {
-    await this.service.create(request);
+  @ApiOperation({ description: 'Create a result', operationId: 'Create a result' })
+  async create(@Body() request: ResultCreateDto): Promise<Partial<Result>> {
+    return await this.service.create(request);
   }
 
   @Get()
