@@ -1,25 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
-import { ArrayMaxSize, ArrayMinSize, ArrayNotEmpty, IsDate, IsEnum, IsInt, ValidateNested } from 'class-validator';
+import { IsDate, IsEnum, IsInt, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
-import { id } from 'src/utils/weapon';
+import { CoopStageId } from 'src/utils/enum/coop_stage_id';
+import { id } from 'src/utils/enum/weapon_info_main';
 
 enum CoopSettingType {
   CoopNormalSetting = 'CoopNormalSetting',
   CoopBigRunSetting = 'CoopBigRunSetting',
   CoopTeamContestSetting = 'CoopTeamContestSetting',
-}
-
-class CoopSetting {
-  @ApiProperty({ example: 'Q29vcFN0YWdlLTE=', required: true, type: 'string' })
-  @IsInt()
-  @Expose()
-  id: number;
-
-  @ApiProperty({ enum: CoopSettingType, name: '__isCoopSetting', required: true })
-  @IsEnum(CoopSettingType)
-  @Expose({ name: '__isCoopSetting' })
-  isCoopSetting: CoopSettingType;
 }
 
 class ImageURL {
@@ -47,33 +37,63 @@ class WeaponInfoMain {
   image: ImageURL;
 }
 
-class CoopSchedule {
-  @ApiProperty({ example: '2023-08-27T16:00:00Z', required: true })
-  @Transform(({ value }) => dayjs(value).toDate())
-  @IsDate()
+class CoopStage {
+  @ApiProperty({ example: 'Q29vcFN0YWdlLTE=', required: true, type: 'type' })
+  @IsEnum(CoopStageId)
   @Expose()
-  start_time: Date;
+  @Transform(({ value }) => {
+    const regexp = /-([0-9-]*)/;
+    const match = regexp.exec(atob(value));
+    return match === null ? CoopStageId.Dummy : match[1];
+  })
+  id: number;
+}
 
-  @ApiProperty({ example: '2023-08-29T08:00:00Z', required: true })
-  @Transform(({ value }) => dayjs(value).toDate())
-  @IsDate()
-  @Expose()
-  end_time: Date;
-
+class CoopSetting {
   @ApiProperty({ required: true })
+  @Type(() => CoopStage)
   @Expose()
-  @Type(() => ImageURL)
-  @ValidateNested()
-  setting: CoopSetting;
+  coopStage: CoopStage;
+
+  @ApiProperty({ enum: CoopSettingType, name: '__isCoopSetting', required: true })
+  @IsEnum(CoopSettingType)
+  @Expose({ name: '__isCoopSetting' })
+  isCoopSetting: CoopSettingType;
 
   @ApiProperty({ required: true, type: [WeaponInfoMain] })
-  @ArrayNotEmpty()
-  @ArrayMinSize(1)
-  @ArrayMaxSize(4)
   @Expose()
   @Type(() => WeaponInfoMain)
   @ValidateNested({ each: true })
   weapons: WeaponInfoMain[];
+}
+
+class CoopSchedule {
+  @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', required: true })
+  @Transform(({ value }) => dayjs(value).toDate())
+  @IsDate()
+  @Expose()
+  startTime: Date;
+
+  @ApiProperty({ example: '2023-08-29T08:00:00Z', name: 'endTime', required: true })
+  @Transform(({ value }) => dayjs(value).toDate())
+  @IsDate()
+  @Expose()
+  endTime: Date;
+
+  @ApiProperty({ required: true })
+  @Expose()
+  @Type(() => CoopSetting)
+  @ValidateNested()
+  setting: CoopSetting;
+
+  get query(): Prisma.ScheduleCreateInput {
+    return {
+      endTime: new Date(),
+      stageId: 0,
+      startTime: new Date(),
+      weaponList: [-2, -2, -2, -2],
+    };
+  }
 }
 
 class Node {
@@ -85,7 +105,7 @@ class Node {
 }
 
 class ScheduleGroup {
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, type: Node })
   @Expose()
   @Type(() => Node)
   @ValidateNested()
@@ -105,7 +125,7 @@ class ScheduleGroup {
 }
 
 class DataClass {
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, type: ScheduleGroup })
   @Expose()
   @Type(() => ScheduleGroup)
   @ValidateNested()
@@ -113,9 +133,24 @@ class DataClass {
 }
 
 export class ScheduleCreateDto {
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, type: DataClass })
   @Expose()
   @Type(() => DataClass)
-  @ValidateNested()
+  @ValidateNested({ each: true })
   data: DataClass;
+
+  get schedules(): CoopSchedule[] {
+    return [
+      ...this.data.coopGroupingSchedule.regularSchedules.nodes,
+      ...this.data.coopGroupingSchedule.bigRunSchedules.nodes,
+      ...this.data.coopGroupingSchedule.teamContestSchedules.nodes,
+    ];
+  }
+
+  get create(): Prisma.ScheduleCreateManyArgs {
+    return {
+      data: this.schedules.map((schedule) => schedule.query),
+      skipDuplicates: true,
+    };
+  }
 }

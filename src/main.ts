@@ -2,7 +2,7 @@ import { exec } from 'child_process';
 import { mkdir, writeFileSync } from 'fs';
 import * as path from 'path';
 
-import { LogLevel, VersioningType, ValidationPipe } from '@nestjs/common';
+import { LogLevel, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -12,7 +12,6 @@ import { dump } from 'js-yaml';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 import { AppModule } from './app.module';
-import { onSend, preValidation } from './fastify/log';
 
 const build = (documents: OpenAPIObject) => {
   const build = path.resolve(process.cwd(), 'docs');
@@ -33,8 +32,8 @@ async function bootstrap() {
   // ログレベル
   const logLevels: LogLevel[] = isDevelopment ? ['log', 'error', 'warn', 'debug', 'verbose'] : ['log', 'error', 'warn'];
   // ログ出力
-  server.addHook('preValidation', preValidation);
-  server.addHook('onSend', onSend);
+  // server.addHook('preValidation', preValidation);
+  // server.addHook('onSend', onSend);
   server.addHook('onRequest', (request, reply, done) => {
     const replyUnknown = reply as any;
     replyUnknown['setHeader'] = reply.header.bind(reply);
@@ -66,12 +65,15 @@ async function bootstrap() {
   // バリデーション時に変換する
   app.useGlobalPipes(
     new ValidationPipe({
+      // disableErrorMessages: false,
       transform: true,
       transformOptions: {
         excludeExtraneousValues: true,
-        exposeDefaultValues: true,
-        ignoreDecorators: true,
+        //   excludeExtraneousValues: false,
+        //   exposeDefaultValues: false,
+        //   ignoreDecorators: false,
       },
+      // validateCustomDecorators: true,
     }),
   );
 
@@ -103,6 +105,6 @@ async function bootstrap() {
   }
 
   // アプリを起動
-  await app.listen(process.env.APP_PORT || 3000, '0.0.0.0');
+  await app.listen(process.env.API_PORT || 3000, '0.0.0.0');
 }
 bootstrap();
