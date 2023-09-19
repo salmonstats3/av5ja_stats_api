@@ -272,6 +272,13 @@ components:
           example: Q29vcEdyYWRlLTg=
       required:
         - id
+    Badge:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
     TextColor:
       type: object
       properties:
@@ -313,7 +320,7 @@ components:
         badges:
           type: array
           items:
-            type: integer
+            $ref: '#/components/schemas/Badge'
         background:
           $ref: '#/components/schemas/Background'
       required:
@@ -457,6 +464,13 @@ components:
         - teamDefeatCount
         - popCount
         - enemy
+    EventWave:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
     SpecialWeaponUsage:
       type: object
       properties:
@@ -484,6 +498,8 @@ components:
             - 0
             - 1
             - 2
+        eventWave:
+          $ref: '#/components/schemas/EventWave'
         deliverNorm:
           type: integer
           minimum: 0
@@ -507,6 +523,7 @@ components:
           minimum: 0
       required:
         - waterLevel
+        - eventWave
         - deliverNorm
         - goldenPopCount
         - teamDeliverCount
@@ -541,7 +558,9 @@ components:
           items:
             $ref: '#/components/schemas/MemberResult'
         bossResult:
-          $ref: '#/components/schemas/BossResult'
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/BossResult'
         enemyResults:
           maxItems: 14
           minItems: 1
