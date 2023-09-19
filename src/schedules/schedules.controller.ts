@@ -12,8 +12,7 @@ export class SchedulesController {
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
   async create(@Body() request: ScheduleCreateDto) {
-    console.log(request.data.coopGroupingSchedule.regularSchedules.nodes[0].setting.weapons);
-    // this.service.create(request);
+    this.service.create(request);
   }
 
   @Get()

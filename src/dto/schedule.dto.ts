@@ -27,14 +27,14 @@ class ImageURL {
     const match = regexp.exec(value);
     return match === null ? -999 : id(match[0]);
   })
-  id: number;
+  readonly id: number;
 }
 
 class WeaponInfoMain {
   @ApiProperty({ required: true })
   @Expose()
   @Type(() => ImageURL)
-  image: ImageURL;
+  readonly image: ImageURL;
 }
 
 class CoopStage {
@@ -44,27 +44,31 @@ class CoopStage {
   @Transform(({ value }) => {
     const regexp = /-([0-9-]*)/;
     const match = regexp.exec(atob(value));
-    return match === null ? CoopStageId.Dummy : match[1];
+    return match === null ? CoopStageId.Dummy : parseInt(match[1], 10);
   })
-  id: number;
+  readonly id: number;
 }
 
 class CoopSetting {
   @ApiProperty({ required: true })
   @Type(() => CoopStage)
   @Expose()
-  coopStage: CoopStage;
+  readonly coopStage: CoopStage;
 
   @ApiProperty({ enum: CoopSettingType, name: '__isCoopSetting', required: true })
   @IsEnum(CoopSettingType)
   @Expose({ name: '__isCoopSetting' })
-  isCoopSetting: CoopSettingType;
+  readonly isCoopSetting: CoopSettingType;
 
   @ApiProperty({ required: true, type: [WeaponInfoMain] })
   @Expose()
   @Type(() => WeaponInfoMain)
   @ValidateNested({ each: true })
-  weapons: WeaponInfoMain[];
+  readonly weapons: WeaponInfoMain[];
+
+  get weaponList(): number[] {
+    return this.weapons.map((weapon) => weapon.image.id);
+  }
 }
 
 class CoopSchedule {
@@ -72,26 +76,26 @@ class CoopSchedule {
   @Transform(({ value }) => dayjs(value).toDate())
   @IsDate()
   @Expose()
-  startTime: Date;
+  readonly startTime: Date;
 
   @ApiProperty({ example: '2023-08-29T08:00:00Z', name: 'endTime', required: true })
   @Transform(({ value }) => dayjs(value).toDate())
   @IsDate()
   @Expose()
-  endTime: Date;
+  readonly endTime: Date;
 
   @ApiProperty({ required: true })
   @Expose()
   @Type(() => CoopSetting)
   @ValidateNested()
-  setting: CoopSetting;
+  readonly setting: CoopSetting;
 
   get query(): Prisma.ScheduleCreateInput {
     return {
-      endTime: new Date(),
-      stageId: 0,
-      startTime: new Date(),
-      weaponList: [-2, -2, -2, -2],
+      endTime: this.endTime,
+      stageId: this.setting.coopStage.id,
+      startTime: this.startTime,
+      weaponList: this.setting.weaponList,
     };
   }
 }
@@ -101,7 +105,7 @@ class Node {
   @Expose()
   @Type(() => CoopSchedule)
   @ValidateNested({ each: true })
-  nodes: CoopSchedule[];
+  readonly nodes: CoopSchedule[];
 }
 
 class ScheduleGroup {
@@ -109,19 +113,19 @@ class ScheduleGroup {
   @Expose()
   @Type(() => Node)
   @ValidateNested()
-  regularSchedules: Node;
+  readonly regularSchedules: Node;
 
   @ApiProperty({ required: true })
   @Expose()
   @Type(() => Node)
   @ValidateNested()
-  bigRunSchedules: Node;
+  readonly bigRunSchedules: Node;
 
   @ApiProperty({ required: true })
   @Expose()
   @Type(() => Node)
   @ValidateNested()
-  teamContestSchedules: Node;
+  readonly teamContestSchedules: Node;
 }
 
 class DataClass {
@@ -129,7 +133,7 @@ class DataClass {
   @Expose()
   @Type(() => ScheduleGroup)
   @ValidateNested()
-  coopGroupingSchedule: ScheduleGroup;
+  readonly coopGroupingSchedule: ScheduleGroup;
 }
 
 export class ScheduleCreateDto {
@@ -137,7 +141,7 @@ export class ScheduleCreateDto {
   @Expose()
   @Type(() => DataClass)
   @ValidateNested({ each: true })
-  data: DataClass;
+  readonly data: DataClass;
 
   get schedules(): CoopSchedule[] {
     return [
