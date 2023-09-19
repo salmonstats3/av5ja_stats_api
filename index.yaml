@@ -43,9 +43,9 @@ paths:
       tags: *ref_0
   /results:
     post:
-      operationId: Create results
+      operationId: Create a result
       summary: ''
-      description: Create results
+      description: Create a result
       parameters: []
       requestBody:
         required: true
