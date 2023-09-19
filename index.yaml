@@ -412,9 +412,24 @@ components:
         - goldenDeliverCount
         - rescueCount
         - rescuedCount
+    KingSalmonId:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Q29vcEVuZW15LTIz
+      required:
+        - id
     BossResult:
       type: object
-      properties: {}
+      properties:
+        hasDefeatBoss:
+          type: boolean
+        boss:
+          $ref: '#/components/schemas/KingSalmonId'
+      required:
+        - hasDefeatBoss
+        - boss
     CoopEnemy:
       type: object
       properties:
@@ -442,9 +457,61 @@ components:
         - teamDefeatCount
         - popCount
         - enemy
+    SpecialWeaponUsage:
+      type: object
+      properties:
+        id:
+          type: number
+          enum:
+            - -1
+            - 1
+            - 20006
+            - 20007
+            - 20009
+            - 20010
+            - 20012
+            - 20013
+            - 20014
+            - 20101
+      required:
+        - id
     WaveResult:
       type: object
-      properties: {}
+      properties:
+        waterLevel:
+          type: number
+          enum:
+            - 0
+            - 1
+            - 2
+        deliverNorm:
+          type: integer
+          minimum: 0
+          nullable: true
+        goldenPopCount:
+          type: integer
+          minimum: 0
+        teamDeliverCount:
+          type: integer
+          minimum: 0
+          nullable: true
+        specialWeapons:
+          nullable: false
+          type: array
+          items:
+            $ref: '#/components/schemas/SpecialWeaponUsage'
+            maximum: 8
+            minimum: 0
+        waveNumber:
+          type: integer
+          minimum: 0
+      required:
+        - waterLevel
+        - deliverNorm
+        - goldenPopCount
+        - teamDeliverCount
+        - specialWeapons
+        - waveNumber
     Scale:
       type: object
       properties:
