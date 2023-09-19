@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ResultCreateDto } from 'src/dto/result.dto';
 
 import { ResultsService } from './results.service';
 
@@ -10,7 +11,7 @@ export class ResultsController {
 
   @Post()
   @ApiOperation({ description: 'Create results', operationId: 'Create results' })
-  async create(@Body() request: any) {
+  async create(@Body() request: ResultCreateDto) {
     console.log(request);
   }
 

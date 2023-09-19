@@ -4,7 +4,7 @@ import { Expose, Transform, Type } from 'class-transformer';
 import { IsDate, IsEnum, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 
-import { CoopStage, WeaponInfoMain } from './schedule.dto';
+import { CoopStage, MainWeapon } from './schedule.dto';
 
 class CoopHistoryDetail {
   @ApiProperty({ required: true, type: CoopStage })
@@ -13,11 +13,11 @@ class CoopHistoryDetail {
   @ValidateNested()
   readonly coopStage: CoopStage;
 
-  @ApiProperty({ required: true, type: [WeaponInfoMain] })
+  @ApiProperty({ required: true, type: [MainWeapon] })
   @Expose()
-  @Type(() => WeaponInfoMain)
+  @Type(() => MainWeapon)
   @ValidateNested({ each: true })
-  readonly weapons: WeaponInfoMain[];
+  readonly weapons: MainWeapon[];
 }
 
 class HistoryNode {
@@ -89,7 +89,7 @@ class CoopResult {
   historyGroups: Node;
 }
 
-class DataClass {
+class CoopHistoryDataClass {
   @ApiProperty({ required: true, type: CoopResult })
   @Expose()
   @Type(() => CoopResult)
@@ -98,11 +98,11 @@ class DataClass {
 }
 
 export class HistoryCreateDto {
-  @ApiProperty({ required: true, type: DataClass })
+  @ApiProperty({ required: true, type: CoopHistoryDataClass })
   @Expose()
-  @Type(() => DataClass)
+  @Type(() => CoopHistoryDataClass)
   @ValidateNested({ each: true })
-  data: DataClass;
+  data: CoopHistoryDataClass;
 
   get histories(): CoopHistory[] {
     return this.data.coopResult.historyGroups.nodes;

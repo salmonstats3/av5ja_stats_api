@@ -9,6 +9,7 @@ export class HistoriesService {
 
   async create(request: HistoryCreateDto): Promise<Schedule[]> {
     const results = await this.prisma.schedule.createMany(request.create);
+    console.log(results);
     return;
   }
 }

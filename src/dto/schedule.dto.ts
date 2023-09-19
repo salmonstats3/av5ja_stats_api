@@ -30,7 +30,7 @@ class ImageURL {
   readonly id: number;
 }
 
-export class WeaponInfoMain {
+export class MainWeapon {
   @ApiProperty({ required: true })
   @Expose()
   @Type(() => ImageURL)
@@ -38,7 +38,7 @@ export class WeaponInfoMain {
 }
 
 export class CoopStage {
-  @ApiProperty({ example: 'Q29vcFN0YWdlLTE=', required: true, type: 'type' })
+  @ApiProperty({ example: 'Q29vcFN0YWdlLTE=', required: true, type: 'string' })
   @IsEnum(CoopStageId)
   @Expose()
   @Transform(({ value }) => {
@@ -60,11 +60,11 @@ class CoopSetting {
   @Expose({ name: '__isCoopSetting' })
   readonly isCoopSetting: CoopSettingType;
 
-  @ApiProperty({ required: true, type: [WeaponInfoMain] })
+  @ApiProperty({ required: true, type: [MainWeapon] })
   @Expose()
-  @Type(() => WeaponInfoMain)
+  @Type(() => MainWeapon)
   @ValidateNested({ each: true })
-  readonly weapons: WeaponInfoMain[];
+  readonly weapons: MainWeapon[];
 
   get weaponList(): number[] {
     return this.weapons.map((weapon) => weapon.image.id);

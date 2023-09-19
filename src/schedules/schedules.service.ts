@@ -10,6 +10,7 @@ export class SchedulesService {
 
   async create(request: ScheduleCreateDto): Promise<Schedule[]> {
     const results = await this.prisma.schedule.createMany(request.create);
+    console.log(results);
     return;
   }
 
