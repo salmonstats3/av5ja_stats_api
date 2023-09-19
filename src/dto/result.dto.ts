@@ -1,12 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Rule, Species } from '@prisma/client';
-import { Expose, Transform, Type } from 'class-transformer';
+import { Prisma, Rule, Species } from '@prisma/client';
+import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsDate,
   IsEnum,
   IsInt,
@@ -19,14 +20,35 @@ import {
   ValidateNested,
 } from 'class-validator';
 import dayjs from 'dayjs';
-import { CoopEnemyInfoId } from 'src/utils/enum/coop_enemy_id';
+import { CoopBossInfoId, CoopEnemyInfoId } from 'src/utils/enum/coop_enemy_id';
 import { CoopGradeId } from 'src/utils/enum/coop_grade_id';
 import { CoopSkinId } from 'src/utils/enum/coop_skin_id';
+import { EventId } from 'src/utils/enum/event_wave';
+import { WaterLevelId } from 'src/utils/enum/water_level';
 import { WeaponInfoSpecialId } from 'src/utils/enum/weapon_info_special';
 import { CoopPlayerId } from 'src/utils/player_id';
 import { CoopHistoryDetailId } from 'src/utils/result_id';
 
 import { CoopStage, MainWeapon } from './schedule.dto';
+
+class SpecialWeapon {
+  @ApiProperty({ enum: WeaponInfoSpecialId, name: 'weaponId', required: true })
+  @IsEnum(WeaponInfoSpecialId)
+  @Expose({ name: 'weaponId' })
+  readonly id: WeaponInfoSpecialId;
+}
+
+class SpecialWeaponUsage {
+  @ApiProperty({ enum: WeaponInfoSpecialId, name: 'id', required: true })
+  @IsEnum(WeaponInfoSpecialId)
+  @Expose({ name: 'id' })
+  @Transform(({ value }) => {
+    const regexp = /-([0-9-]*)/;
+    const match = regexp.exec(atob(value));
+    return match === null ? CoopGradeId.Grade00 : parseInt(match[1], 10);
+  })
+  readonly id: WeaponInfoSpecialId;
+}
 
 class AfterGrade {
   @ApiProperty({
@@ -42,7 +64,7 @@ class AfterGrade {
     const match = regexp.exec(atob(value));
     return match === null ? CoopGradeId.Grade00 : parseInt(match[1], 10);
   })
-  readonly id: number;
+  readonly id: CoopGradeId;
 }
 
 class Scale {
@@ -68,7 +90,61 @@ class Scale {
   readonly silver: number;
 }
 
-class WaveResult {}
+class EventWave {
+  @ApiProperty({ required: true, type: 'string' })
+  @IsEnum(EventId)
+  @Expose()
+  @Transform(({ value }) => {
+    const regexp = /-([0-9-]*)/;
+    const match = regexp.exec(atob(value));
+    return match === null ? CoopGradeId.Grade00 : parseInt(match[1], 10);
+  })
+  readonly id: EventId;
+}
+
+class WaveResult {
+  @ApiProperty({ enum: WaterLevelId, required: true })
+  @IsEnum(WaterLevelId)
+  @Expose()
+  readonly waterLevel: WaterLevelId;
+
+  readonly ventWave: EventWave;
+
+  @ApiProperty({ minimum: 0, nullable: true, required: true, type: 'integer' })
+  @IsInt()
+  @IsOptional()
+  @Min(0)
+  @Expose()
+  readonly deliverNorm: number | null;
+
+  @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+  @IsInt()
+  @Min(0)
+  @Expose()
+  readonly goldenPopCount: number;
+
+  @ApiProperty({ minimum: 0, nullable: true, required: true, type: 'integer' })
+  @IsInt()
+  @IsOptional()
+  @Min(0)
+  @Expose()
+  readonly teamDeliverCount: number | null;
+
+  @ApiProperty({ isArray: true, maximum: 8, minimum: 0, nullable: false, required: true, type: SpecialWeaponUsage })
+  @IsArray()
+  @ArrayMinSize(0)
+  @ArrayMaxSize(8)
+  @Expose()
+  @Type(() => SpecialWeaponUsage)
+  @ValidateNested({ each: true })
+  readonly specialWeapons: SpecialWeaponUsage[];
+
+  @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+  @IsInt()
+  @Min(0)
+  @Expose()
+  readonly waveNumber: number;
+}
 
 class CoopEnemy {
   @ApiProperty({ example: 'Q29vcEVuZW15LTQ=', required: true, type: 'string' })
@@ -82,7 +158,7 @@ class CoopEnemy {
     }
     return parseInt(match[1], 10);
   })
-  id: CoopEnemyInfoId;
+  readonly id: CoopEnemyInfoId;
 }
 
 class EnemyResult {
@@ -90,34 +166,53 @@ class EnemyResult {
   @IsInt()
   @Min(0)
   @Expose()
-  defeatCount: number;
+  readonly defeatCount: number;
 
   @ApiProperty({ minimum: 0, required: true, type: 'integer' })
   @IsInt()
   @Min(0)
   @Expose()
-  teamDefeatCount: number;
+  readonly teamDefeatCount: number;
 
   @ApiProperty({ minimum: 1, required: true, type: 'integer' })
   @IsInt()
   @Min(1)
   @Expose()
-  popCount: number;
+  readonly popCount: number;
 
   @ApiProperty({ required: true, type: CoopEnemy })
   @Type(() => CoopEnemy)
   @Expose()
   @ValidateNested()
-  enemy: CoopEnemy;
+  readonly enemy: CoopEnemy;
 }
 
-class BossResult {}
+class KingSalmonId {
+  @ApiProperty({ example: 'Q29vcEVuZW15LTIz', required: true, type: 'string' })
+  @IsEnum(CoopBossInfoId)
+  @Expose()
+  @Transform(({ value }) => {
+    const regexp = /-([0-9-]*)/;
+    const match = regexp.exec(atob(value));
+    if (match === null) {
+      throw new BadRequestException(`Invalid CoopEnemyInfoId: ${value}`);
+    }
+    return parseInt(match[1], 10);
+  })
+  id: CoopBossInfoId;
+}
 
-class SpecialWeapon {
-  @ApiProperty({ enum: WeaponInfoSpecialId, name: 'weaponId', required: true })
-  @IsEnum(WeaponInfoSpecialId)
-  @Expose({ name: 'weaponId' })
-  id: WeaponInfoSpecialId;
+class BossResult {
+  @ApiProperty({ required: true, type: 'boolean' })
+  @Expose()
+  @IsBoolean()
+  hasDefeatBoss: boolean;
+
+  @ApiProperty({ required: true, type: KingSalmonId })
+  @Type(() => KingSalmonId)
+  @Expose()
+  @ValidateNested()
+  boss: KingSalmonId;
 }
 
 class TextColor {
@@ -126,28 +221,28 @@ class TextColor {
   @Expose()
   @Min(0)
   @Max(1)
-  a: number;
+  readonly a: number;
 
   @ApiProperty({ maximum: 1, minimum: 0, required: true, type: Number })
   @IsNumber()
   @Expose()
   @Min(0)
   @Max(1)
-  b: number;
+  readonly b: number;
 
   @ApiProperty({ maximum: 1, minimum: 0, required: true, type: Number })
   @IsNumber()
   @Expose()
   @Min(0)
   @Max(1)
-  g: number;
+  readonly g: number;
 
   @ApiProperty({ maximum: 1, minimum: 0, required: true, type: Number })
   @IsNumber()
   @Expose()
   @Min(0)
   @Max(1)
-  r: number;
+  readonly r: number;
 }
 
 class Background {
@@ -155,7 +250,7 @@ class Background {
   @Expose()
   @Type(() => TextColor)
   @ValidateNested()
-  textColor: TextColor;
+  readonly textColor: TextColor;
 
   @ApiProperty({ example: 'TmFtZXBsYXRlQmFja2dyb3VuZC0x', required: true, type: 'string' })
   @IsInt()
@@ -165,7 +260,7 @@ class Background {
     const match = regexp.exec(atob(value));
     return match === null ? 1 : parseInt(match[1], 10);
   })
-  id: number;
+  readonly id: number;
 }
 
 class NamePlate {
@@ -180,7 +275,7 @@ class NamePlate {
   @Expose()
   @Type(() => Background)
   @ValidateNested()
-  background: Background;
+  readonly background: Background;
 }
 
 class Uniform {
@@ -192,7 +287,7 @@ class Uniform {
     const match = regexp.exec(atob(value));
     return match === null ? CoopSkinId.COP001 : parseInt(match[1], 10);
   })
-  id: number;
+  readonly id: number;
 }
 
 class PlayerResult {
@@ -200,40 +295,40 @@ class PlayerResult {
   @IsString()
   @IsNotEmpty()
   @Expose()
-  byname: string;
+  readonly byname: string;
 
   @ApiProperty({ required: true, type: 'string' })
   @IsString()
   @IsNotEmpty()
   @Expose()
-  name: string;
+  readonly name: string;
 
   @ApiProperty({ required: true, type: 'string' })
   @IsString()
   @IsNotEmpty()
   @Expose()
-  nameId: string;
+  readonly nameId: string;
 
   @ApiProperty({ required: true, type: NamePlate })
   @Type(() => NamePlate)
   @ValidateNested()
-  nameplate: NamePlate;
+  readonly nameplate: NamePlate;
 
   @ApiProperty({ required: true, type: Uniform })
   @Type(() => Uniform)
   @ValidateNested()
-  uniform: Uniform;
+  readonly uniform: Uniform;
 
   @ApiProperty({ required: true, type: 'string' })
   @Expose()
   @Type(() => CoopPlayerId)
   @Transform(({ value }) => new CoopPlayerId(value))
-  id: string;
+  readonly id: CoopPlayerId;
 
   @ApiProperty({ enum: Species, required: true })
   @IsEnum(Species)
   @Expose()
-  species: Species;
+  readonly species: Species;
 }
 
 class MemberResult {
@@ -241,19 +336,19 @@ class MemberResult {
   @Expose()
   @Type(() => PlayerResult)
   @ValidateNested()
-  player: PlayerResult;
+  readonly player: PlayerResult;
 
   @ApiProperty({ isArray: true, required: true, type: MainWeapon })
   @Expose()
   @Type(() => MainWeapon)
   @ValidateNested({ each: true })
-  weapons: MainWeapon[];
+  readonly weapons: MainWeapon[];
 
   @ApiProperty({ required: true })
   @Expose()
   @Type(() => SpecialWeapon)
   @ValidateNested()
-  specialWeapon: SpecialWeapon;
+  readonly specialWeapon: SpecialWeapon;
 
   @ApiProperty({ minimum: 0, required: true, type: 'integer' })
   @IsInt()
@@ -290,6 +385,41 @@ class MemberResult {
   @Min(0)
   @Expose()
   readonly rescuedCount: number;
+
+  get weaponList(): number[] {
+    return this.weapons.map((weapon) => weapon.image.id);
+  }
+
+  get create(): Prisma.PlayerCreateManyResultInput {
+    return {
+      badges: this.player.nameplate.badges,
+      bossKillCounts: [],
+      bossKillCountsTotal: 0,
+      byname: this.player.byname,
+      deadCount: this.rescuedCount,
+      goldenIkuraAssistNum: this.goldenAssistCount,
+      goldenIkuraNum: this.goldenDeliverCount,
+      gradeId: 0,
+      gradePoint: 0,
+      helpCount: this.rescueCount,
+      ikuraNum: this.deliverCount,
+      jobBonus: 0,
+      jobRate: 0,
+      jobScore: 0,
+      kumaPoint: 0,
+      name: this.player.name,
+      nameId: this.player.nameId,
+      nameplate: this.player.nameplate.background.id,
+      nplnUserId: this.player.id.nplnUserId,
+      smellMeter: 0,
+      specialCounts: [],
+      specialId: this.specialWeapon.id,
+      species: this.player.species,
+      textColor: [],
+      uniform: this.player.uniform.id,
+      weaponList: this.weaponList,
+    };
+  }
 }
 
 class CoopHistoryDetail {
@@ -297,17 +427,19 @@ class CoopHistoryDetail {
   @Expose()
   @Type(() => CoopHistoryDetailId)
   @Transform(({ value }) => new CoopHistoryDetailId(value))
-  id: CoopHistoryDetailId;
+  readonly id: CoopHistoryDetailId;
 
   @ApiProperty({ required: true, type: AfterGrade })
   @Expose()
-  afterGrade: AfterGrade;
+  @Type(() => AfterGrade)
+  @ValidateNested()
+  readonly afterGrade: AfterGrade;
 
   @ApiProperty()
   @Expose()
   @Type(() => MemberResult)
   @ValidateNested()
-  myResult: MemberResult;
+  readonly myResult: MemberResult;
 
   @ApiProperty({ isArray: true, maxItems: 3, minItems: 1, required: true, type: MemberResult })
   @IsArray()
@@ -316,14 +448,14 @@ class CoopHistoryDetail {
   @Expose()
   @Type(() => MemberResult)
   @ValidateNested({ each: true })
-  memberResults: MemberResult[];
+  readonly memberResults: MemberResult[];
 
   @ApiProperty({ required: true, type: BossResult })
   @IsOptional()
   @Expose()
   @Type(() => BossResult)
   @ValidateNested()
-  bossResult: BossResult | null;
+  readonly bossResult: BossResult | null;
 
   @ApiProperty({ isArray: true, maxItems: 14, minItems: 1, required: true, type: EnemyResult })
   @IsArray()
@@ -332,7 +464,7 @@ class CoopHistoryDetail {
   @Expose()
   @Type(() => EnemyResult)
   @ValidateNested({ each: true })
-  enemyResults: EnemyResult[];
+  readonly enemyResults: EnemyResult[];
 
   @ApiProperty({ isArray: true, maxItems: 5, minItems: 1, required: true, type: WaveResult })
   @IsArray()
@@ -341,41 +473,41 @@ class CoopHistoryDetail {
   @Expose()
   @Type(() => WaveResult)
   @ValidateNested({ each: true })
-  waveResults: WaveResult[];
+  readonly waveResults: WaveResult[];
 
   @ApiProperty({ maximum: 5, minimum: -1, required: true, type: 'integer' })
   @IsInt()
   @Min(-1)
   @Max(5)
   @Expose()
-  resultWave: number;
+  readonly resultWave: number;
 
   @ApiProperty({ required: true, type: Date })
   @IsDate()
   @Transform(({ value }) => dayjs(value).toDate())
   @Expose()
-  playedTime: Date;
+  readonly playedTime: Date;
 
   @ApiProperty({ enum: Rule, required: true })
   @IsEnum(Rule)
   @Expose()
-  rule: Rule;
+  readonly rule: Rule;
 
   @ApiProperty({ required: true, type: CoopStage })
   @Expose()
   @Type(() => CoopStage)
   @ValidateNested()
-  coopStage: CoopStage;
+  readonly coopStage: CoopStage;
 
   @ApiProperty({ maximum: 3.33, minimum: 0, required: true, type: 'number' })
   @Min(0)
   @Max(3.33)
   @Expose()
-  dangerRate: number;
+  readonly dangerRate: number;
 
   @ApiProperty({ nullable: true, required: true, type: 'string' })
   @Expose()
-  scenarioCode: string | null;
+  readonly scenarioCode: string | null;
 
   @ApiProperty({ maximum: 5, minimum: 0, nullable: true, required: true, type: 'integer' })
   @IsInt()
@@ -383,7 +515,7 @@ class CoopHistoryDetail {
   @Min(0)
   @Max(5)
   @Expose()
-  smellMeter: number | null;
+  readonly smellMeter: number | null;
 
   @ApiProperty({ isArray: true, maxItems: 4, minItems: 1, required: true, type: MainWeapon })
   @IsArray()
@@ -393,7 +525,7 @@ class CoopHistoryDetail {
   @Type(() => MainWeapon)
   @Expose()
   @ValidateNested({ each: true })
-  weapons: MainWeapon[];
+  readonly weapons: MainWeapon[];
 
   @ApiProperty({ maximum: 999, minimum: 0, nullable: true, required: true, type: 'integer' })
   @IsInt()
@@ -401,42 +533,42 @@ class CoopHistoryDetail {
   @Min(0)
   @Max(999)
   @Expose()
-  afterGradePoint: number | null;
+  readonly afterGradePoint: number | null;
 
   @ApiProperty({ nullable: true, required: true, type: Scale })
   @Type(() => Scale)
-  @IsOptional()
   @Expose()
   @ValidateNested()
-  scale: Scale | null;
+  @Transform(({ value }) => (value === null ? { bronze: -1, gold: -1, silver: -1 } : plainToInstance(Scale, value)))
+  readonly scale: Scale;
 
   @ApiProperty({ minimum: 0, nullable: true, required: true, type: 'integer' })
   @IsInt()
   @IsOptional()
   @Min(0)
   @Expose()
-  jobPoint: number | null;
+  readonly jobPoint: number | null;
 
   @ApiProperty({ minimum: 0, nullable: true, required: true, type: 'integer' })
   @IsInt()
   @IsOptional()
   @Min(0)
   @Expose()
-  jobScore: number | null;
+  readonly jobScore: number | null;
 
   @ApiProperty({ minimum: 0, nullable: true, required: true, type: Number })
   @IsNumber()
   @IsOptional()
   @Min(0)
   @Expose()
-  jobRate: number | null;
+  readonly jobRate: number | null;
 
   @ApiProperty({ minimum: 0, nullable: true, required: true, type: 'integer' })
   @IsInt()
   @IsOptional()
   @Min(0)
   @Expose()
-  jobBonus: number | null;
+  readonly jobBonus: number | null;
 }
 
 class CoopResultDataClass {
@@ -453,4 +585,61 @@ export class ResultCreateDto {
   @Type(() => CoopResultDataClass)
   @ValidateNested()
   readonly data: CoopResultDataClass;
+
+  get result(): CoopHistoryDetail {
+    return this.data.coopHistoryDetail;
+  }
+
+  get players(): MemberResult[] {
+    return [this.result.myResult].concat(this.result.memberResults);
+  }
+
+  get ikuraNum(): number {
+    return this.players.map((player) => player.deliverCount).reduce((a, b) => a + b);
+  }
+
+  get goldenIkuraNum(): number {
+    return this.result.waveResults.map((wave) => wave.teamDeliverCount ?? 0).reduce((a, b) => a + b);
+  }
+
+  get goldenIkuraAssistNum(): number {
+    return this.players.map((player) => player.goldenAssistCount).reduce((a, b) => a + b);
+  }
+
+  get create(): Prisma.ResultCreateArgs {
+    return {
+      data: {
+        bossCounts: [],
+        bossId: null,
+        bossKillCounts: [],
+        bronze: this.result.scale?.bronze ?? -1,
+        dangerRate: this.result.dangerRate,
+        failureWave: 0,
+        gold: this.result.scale?.gold ?? -1,
+        goldenIkuraAssistNum: this.goldenIkuraAssistNum,
+        goldenIkuraNum: this.goldenIkuraNum,
+        id: this.result.id.uuid,
+        ikuraNum: this.ikuraNum,
+        isBossDefeated: false,
+        isClear: true,
+        members: [],
+        nightLess: false,
+        playTime: this.result.id.playTime,
+        players: {
+          createMany: {
+            data: this.players.map((player) => player.create),
+            skipDuplicates: true,
+          },
+        },
+        scenarioCode: this.result.scenarioCode,
+        silver: this.result.scale?.silver ?? -1,
+        waves: {
+          createMany: {
+            data: [],
+            skipDuplicates: true,
+          },
+        },
+      },
+    };
+  }
 }
