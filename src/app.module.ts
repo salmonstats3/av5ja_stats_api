@@ -4,6 +4,9 @@ import { PrismaModule } from 'nestjs-prisma';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { HistoriesController } from './histories/histories.controller';
+import { HistoriesModule } from './histories/histories.module';
+import { HistoriesService } from './histories/histories.service';
 import { ResultsController } from './results/results.controller';
 import { ResultsModule } from './results/results.module';
 import { ResultsService } from './results/results.service';
@@ -15,7 +18,7 @@ import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
 
 @Module({
-  controllers: [AppController, SchedulesController, ResultsController, UsersController],
+  controllers: [AppController, SchedulesController, ResultsController, UsersController, HistoriesController],
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env', '.env.local', '.env.production'],
@@ -25,7 +28,8 @@ import { UsersService } from './users/users.service';
     SchedulesModule,
     ResultsModule,
     UsersModule,
+    HistoriesModule,
   ],
-  providers: [AppService, SchedulesService, ResultsService, UsersService],
+  providers: [AppService, SchedulesService, ResultsService, UsersService, HistoriesService],
 })
 export class AppModule {}

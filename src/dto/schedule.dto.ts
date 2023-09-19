@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
+import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
@@ -30,14 +30,14 @@ class ImageURL {
   readonly id: number;
 }
 
-class WeaponInfoMain {
+export class WeaponInfoMain {
   @ApiProperty({ required: true })
   @Expose()
   @Type(() => ImageURL)
   readonly image: ImageURL;
 }
 
-class CoopStage {
+export class CoopStage {
   @ApiProperty({ example: 'Q29vcFN0YWdlLTE=', required: true, type: 'type' })
   @IsEnum(CoopStageId)
   @Expose()
@@ -93,10 +93,23 @@ class CoopSchedule {
   get query(): Prisma.ScheduleCreateInput {
     return {
       endTime: this.endTime,
+      mode: Mode.REGULAR,
+      rule: this.rule,
       stageId: this.setting.coopStage.id,
       startTime: this.startTime,
       weaponList: this.setting.weaponList,
     };
+  }
+
+  get rule(): Rule {
+    switch (this.setting.isCoopSetting) {
+      case CoopSettingType.CoopBigRunSetting:
+        return Rule.BIG_RUN;
+      case CoopSettingType.CoopTeamContestSetting:
+        return Rule.TEAM_CONTEST;
+      default:
+        return Rule.REGULAR;
+    }
   }
 }
 
@@ -121,7 +134,7 @@ class ScheduleGroup {
   @ValidateNested()
   readonly bigRunSchedules: Node;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, type: Node })
   @Expose()
   @Type(() => Node)
   @ValidateNested()
