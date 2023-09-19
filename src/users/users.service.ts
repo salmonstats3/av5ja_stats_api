@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import lodash from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 import { UserCreateDto, UserResponseDto } from 'src/dto/users.dto';
 
@@ -12,19 +13,12 @@ export class UsersService {
   }
 
   async find(user_id: string): Promise<UserResponseDto> {
-    const result = await this.prisma.user.findUniqueOrThrow({
-      select: {
-        accounts: true,
-        createdAt: true,
-        id: true,
-        name: true,
-        sessionToken: false,
-        updatedAt: true,
-      },
-      where: {
-        id: user_id,
-      },
-    });
+    const result = lodash.omit(
+      await this.prisma.user.findUniqueOrThrow({
+        where: { id: user_id },
+      }),
+      ['sessionToken'],
+    );
     return UserResponseDto.fromPrismaResult(result);
   }
 
