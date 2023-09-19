@@ -21,7 +21,7 @@ export class CoopPlayerId {
     );
   }
 
-  get is_myself(): boolean {
+  get isMyself(): boolean {
     return this.nplnUserId === this.hostNplnUserId;
   }
 

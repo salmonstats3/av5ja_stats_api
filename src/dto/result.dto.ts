@@ -108,7 +108,12 @@ class WaveResult {
   @Expose()
   readonly waterLevel: WaterLevelId;
 
-  readonly ventWave: EventWave;
+  @ApiProperty({ required: true, type: EventWave })
+  @Expose()
+  @IsOptional()
+  @Type(() => EventWave)
+  @ValidateNested()
+  readonly eventWave: EventWave | null;
 
   @ApiProperty({ minimum: 0, nullable: true, required: true, type: 'integer' })
   @IsInt()
@@ -144,6 +149,24 @@ class WaveResult {
   @Min(0)
   @Expose()
   readonly waveNumber: number;
+
+  create(resultWave: number, hasDefeatBoss: boolean | null): Prisma.WaveCreateManyResultInput {
+    /**
+     * オカシラが出現していない
+     * - resultWaveの値と一致するWAVEだけ失敗
+     * オカシラが出現している
+     * - ノルマが存在するWAVEは常に成功、ノルマがない(Ex-WAVE)はhasDefeatBossの値と一致
+     */
+    return {
+      eventType: this.eventWave === null ? 0 : this.eventWave.id,
+      goldenIkuraNum: this.teamDeliverCount,
+      goldenIkuraPopNum: this.goldenPopCount,
+      isClear: hasDefeatBoss === null ? this.waveNumber !== resultWave : this.deliverNorm === null ? hasDefeatBoss : true,
+      quotaNum: this.deliverNorm,
+      waterLevel: this.waterLevel,
+      waveId: this.waveNumber,
+    };
+  }
 }
 
 class CoopEnemy {
@@ -386,36 +409,57 @@ class MemberResult {
   @Expose()
   readonly rescuedCount: number;
 
-  get weaponList(): number[] {
+  private get weaponList(): number[] {
     return this.weapons.map((weapon) => weapon.image.id);
   }
 
-  get create(): Prisma.PlayerCreateManyResultInput {
+  private get textColor(): number[] {
+    return [
+      this.player.nameplate.background.textColor.a,
+      this.player.nameplate.background.textColor.b,
+      this.player.nameplate.background.textColor.g,
+      this.player.nameplate.background.textColor.r,
+    ];
+  }
+
+  create(
+    gradeId: number | null,
+    gradePoint: number | null,
+    jobBonus: number | null,
+    jobRate: number | null,
+    jobScore: number | null,
+    kumaPoint: number | null,
+    smellMeter: number | null,
+    bossKillCounts: number[],
+    waves: WaveResult[],
+  ): Prisma.PlayerCreateManyResultInput {
+    const isMyself: boolean = this.player.id.isMyself;
+    const specialCounts: number[] = waves.map((wave) => wave.specialWeapons.filter((weapon) => weapon.id === this.specialWeapon.id).length);
     return {
       badges: this.player.nameplate.badges,
-      bossKillCounts: [],
-      bossKillCountsTotal: 0,
+      bossKillCounts: isMyself ? bossKillCounts : Object.keys(CoopBossInfoId).map(() => -1),
+      bossKillCountsTotal: this.defeatEnemyCount,
       byname: this.player.byname,
       deadCount: this.rescuedCount,
       goldenIkuraAssistNum: this.goldenAssistCount,
       goldenIkuraNum: this.goldenDeliverCount,
-      gradeId: 0,
-      gradePoint: 0,
+      gradeId: isMyself ? gradeId : null,
+      gradePoint: isMyself ? gradePoint : null,
       helpCount: this.rescueCount,
       ikuraNum: this.deliverCount,
-      jobBonus: 0,
-      jobRate: 0,
-      jobScore: 0,
-      kumaPoint: 0,
+      jobBonus: isMyself ? jobBonus : null,
+      jobRate: isMyself ? jobRate : null,
+      jobScore: isMyself ? jobScore : null,
+      kumaPoint: isMyself ? kumaPoint : null,
       name: this.player.name,
       nameId: this.player.nameId,
       nameplate: this.player.nameplate.background.id,
       nplnUserId: this.player.id.nplnUserId,
-      smellMeter: 0,
-      specialCounts: [],
+      smellMeter: isMyself ? smellMeter : null,
+      specialCounts: specialCounts,
       specialId: this.specialWeapon.id,
       species: this.player.species,
-      textColor: [],
+      textColor: this.textColor,
       uniform: this.player.uniform.id,
       weaponList: this.weaponList,
     };
@@ -450,7 +494,7 @@ class CoopHistoryDetail {
   @ValidateNested({ each: true })
   readonly memberResults: MemberResult[];
 
-  @ApiProperty({ required: true, type: BossResult })
+  @ApiProperty({ nullable: true, required: true, type: BossResult })
   @IsOptional()
   @Expose()
   @Type(() => BossResult)
@@ -506,6 +550,8 @@ class CoopHistoryDetail {
   readonly dangerRate: number;
 
   @ApiProperty({ nullable: true, required: true, type: 'string' })
+  @IsString()
+  @IsOptional()
   @Expose()
   readonly scenarioCode: string | null;
 
@@ -586,48 +632,102 @@ export class ResultCreateDto {
   @ValidateNested()
   readonly data: CoopResultDataClass;
 
-  get result(): CoopHistoryDetail {
+  private get result(): CoopHistoryDetail {
     return this.data.coopHistoryDetail;
   }
 
-  get players(): MemberResult[] {
+  private get players(): MemberResult[] {
     return [this.result.myResult].concat(this.result.memberResults);
   }
 
-  get ikuraNum(): number {
+  private get members(): string[] {
+    return this.players.map((player) => player.player.id.nplnUserId);
+  }
+
+  private get ikuraNum(): number {
     return this.players.map((player) => player.deliverCount).reduce((a, b) => a + b);
   }
 
-  get goldenIkuraNum(): number {
+  private get goldenIkuraNum(): number {
     return this.result.waveResults.map((wave) => wave.teamDeliverCount ?? 0).reduce((a, b) => a + b);
   }
 
-  get goldenIkuraAssistNum(): number {
+  private get goldenIkuraAssistNum(): number {
     return this.players.map((player) => player.goldenAssistCount).reduce((a, b) => a + b);
+  }
+
+  private get failureWave(): number | null {
+    return this.result.resultWave === 0 ? null : this.result.resultWave;
+  }
+
+  private get isBossDefeated(): boolean | null {
+    return this.result.bossResult === null ? null : this.result.bossResult.hasDefeatBoss;
+  }
+
+  private get bossId(): number | null {
+    return this.result.bossResult === null ? null : this.result.bossResult.boss.id;
+  }
+
+  private get nightLess(): boolean {
+    return this.result.waveResults.every((wave) => wave.eventWave.id === 0);
+  }
+
+  private get isClear(): boolean {
+    return this.result.resultWave === 0;
+  }
+
+  private get enemyPopCounts(): number[] {
+    return Object.values(CoopEnemyInfoId)
+      .filter((id) => !isNaN(id as number))
+      .map((id) => this.result.enemyResults.find((enemy) => enemy.enemy.id === id)?.popCount ?? 0);
+  }
+
+  private get enemyDefeatCounts(): number[] {
+    return Object.values(CoopEnemyInfoId)
+      .filter((id) => !isNaN(id as number))
+      .map((id) => this.result.enemyResults.find((enemy) => enemy.enemy.id === id)?.defeatCount ?? 0);
+  }
+
+  private get enemyTeamDefeatCounts(): number[] {
+    return Object.values(CoopEnemyInfoId)
+      .filter((id) => !isNaN(id as number))
+      .map((id) => this.result.enemyResults.find((enemy) => enemy.enemy.id === id)?.teamDefeatCount ?? 0);
   }
 
   get create(): Prisma.ResultCreateArgs {
     return {
       data: {
-        bossCounts: [],
-        bossId: null,
-        bossKillCounts: [],
+        bossCounts: this.enemyPopCounts,
+        bossId: this.bossId,
+        bossKillCounts: this.enemyTeamDefeatCounts,
         bronze: this.result.scale?.bronze ?? -1,
         dangerRate: this.result.dangerRate,
-        failureWave: 0,
+        failureWave: this.failureWave,
         gold: this.result.scale?.gold ?? -1,
         goldenIkuraAssistNum: this.goldenIkuraAssistNum,
         goldenIkuraNum: this.goldenIkuraNum,
         id: this.result.id.uuid,
         ikuraNum: this.ikuraNum,
-        isBossDefeated: false,
-        isClear: true,
-        members: [],
-        nightLess: false,
+        isBossDefeated: this.isBossDefeated,
+        isClear: this.isClear,
+        members: this.members,
+        nightLess: this.nightLess,
         playTime: this.result.id.playTime,
         players: {
           createMany: {
-            data: this.players.map((player) => player.create),
+            data: this.players.map((player) =>
+              player.create(
+                this.result.afterGrade.id,
+                this.result.afterGradePoint,
+                this.result.jobBonus,
+                this.result.jobRate,
+                this.result.jobScore,
+                this.result.jobPoint,
+                this.result.smellMeter,
+                this.enemyDefeatCounts,
+                this.result.waveResults,
+              ),
+            ),
             skipDuplicates: true,
           },
         },
@@ -635,7 +735,7 @@ export class ResultCreateDto {
         silver: this.result.scale?.silver ?? -1,
         waves: {
           createMany: {
-            data: [],
+            data: this.result.waveResults.map((wave) => wave.create(this.result.resultWave, this.isBossDefeated)),
             skipDuplicates: true,
           },
         },
