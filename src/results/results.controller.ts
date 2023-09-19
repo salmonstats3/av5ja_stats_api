@@ -19,12 +19,12 @@ export class ResultsController {
   @Get()
   @ApiOperation({ description: 'Find results', operationId: 'Find results' })
   async find_all() {
-    console.log();
+    return await this.service.find_all();
   }
 
   @Get(':result_id')
   @ApiOperation({ description: 'Find a result', operationId: 'Find a result' })
   async find(@Param('result_id') result_id: string) {
-    console.log(result_id);
+    return await this.service.find(result_id);
   }
 }
