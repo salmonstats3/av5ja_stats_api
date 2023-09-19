@@ -85,7 +85,7 @@ model Account {
 }
 
 model Schedule {
-  scheduleId String   @id @default(uuid()) @map("schedule_id") @db.Uuid
+  scheduleId String   @id @map("schedule_id") @db.VarChar(64)
   // 開始時刻
   startTime  DateTime @default("1970-01-01T00:00:00Z") @map("start_time") @db.Timestamp(0)
   // 終了時刻
@@ -124,7 +124,7 @@ model Result {
   // リザルトID
   resultId             String    @unique @map("result_id") @db.VarChar(64)
   // スケジュールID
-  scheduleId           String    @map("schedule_id") @db.Uuid
+  scheduleId           String    @map("schedule_id") @db.VarChar(64)
   // プレイ時刻
   playTime             DateTime  @map("play_time") @db.Timestamp(0)
   // オオモノ出現数
@@ -181,7 +181,7 @@ model Player {
   // リザルトID
   uuid                 String   @map("uuid") @db.Uuid
   // スケジュールID
-  scheduleId           String   @map("schedule_id") @db.Uuid
+  scheduleId           String   @map("schedule_id") @db.VarChar(64)
   // 遊んだ時間
   playTime             DateTime @map("play_time") @db.Timestamp(0)
   // プレイヤーID
@@ -255,7 +255,7 @@ model Wave {
   // リザルトID
   uuid              String   @map("uuid") @db.Uuid
   // スケジュールID
-  scheduleId        String   @map("schedule_id") @db.Uuid
+  scheduleId        String   @map("schedule_id") @db.VarChar(64)
   // プレイ時間
   playTime          DateTime @map("play_time") @db.Timestamp(0)
   // WAVE数
