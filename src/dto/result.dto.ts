@@ -28,6 +28,7 @@ import { CoopSkinId } from 'src/utils/enum/coop_skin_id';
 import { EventId } from 'src/utils/enum/event_wave';
 import { WaterLevelId } from 'src/utils/enum/water_level';
 import { WeaponInfoSpecialId } from 'src/utils/enum/weapon_info_special';
+import { scheduleHash } from 'src/utils/hash';
 import { CoopPlayerId } from 'src/utils/player_id';
 import { CoopHistoryDetailId } from 'src/utils/result_id';
 
@@ -110,7 +111,7 @@ class WaveResult {
   @Expose()
   readonly waterLevel: WaterLevelId;
 
-  @ApiProperty({ required: true, type: EventWave })
+  @ApiProperty({ nullable: true, required: true, type: EventWave })
   @Expose()
   @IsOptional()
   @Type(() => EventWave)
@@ -151,6 +152,10 @@ class WaveResult {
   @Min(0)
   @Expose()
   readonly waveNumber: number;
+
+  get eventType(): number {
+    return this.eventWave?.id ?? 0;
+  }
 
   create(resultWave: number, hasDefeatBoss: boolean | null): Prisma.WaveCreateManyResultInput {
     /**
@@ -715,7 +720,7 @@ export class ResultCreateDto {
   }
 
   private get nightLess(): boolean {
-    return this.result.waveResults.every((wave) => wave.eventWave.id === 0);
+    return this.result.waveResults.every((wave) => wave.eventType === 0);
   }
 
   private get isClear(): boolean {
@@ -741,13 +746,14 @@ export class ResultCreateDto {
   }
 
   private create(startTime: Date, endTime: Date): Prisma.ResultCreateInput {
-    const scheduleId: string = createHash('sha256')
-      .update(
-        `${this.result.mode}-${this.result.rule}-${this.result.coopStage.id}-${dayjs(startTime).unix()}-${dayjs(
-          endTime,
-        ).unix()}-${this.result.weaponList.join(',')}`,
-      )
-      .digest('hex');
+    const scheduleId: string = scheduleHash(
+      this.result.mode,
+      this.result.rule,
+      startTime,
+      endTime,
+      this.result.coopStage.id,
+      this.result.weaponList,
+    );
     return {
       bossCounts: this.enemyPopCounts,
       bossId: this.bossId,

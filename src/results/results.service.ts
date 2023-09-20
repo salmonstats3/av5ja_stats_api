@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Mode, Result } from '@prisma/client';
 import dayjs from 'dayjs';
 import lodash from 'lodash';
@@ -39,6 +39,7 @@ export class ResultsService {
      */
     if (request.result.mode !== Mode.PRIVATE_CUSTOM && request.result.mode !== Mode.PRIVATE_SCENARIO) {
       try {
+        // 該当するスケジュールを取得する
         const { startTime, endTime } = await this.prisma.schedule.findFirstOrThrow({
           where: {
             endTime: {
@@ -56,8 +57,8 @@ export class ResultsService {
           },
         });
         return await this.prisma.result.upsert(request.upsert(startTime, endTime));
-      } catch {
-        throw new NotFoundException();
+      } catch (error) {
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
     } else {
       /**
