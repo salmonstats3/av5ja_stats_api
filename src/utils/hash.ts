@@ -1,13 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Transform } from 'class-transformer';
+import { createHash } from 'crypto';
 
-export class Hash {
-  @ApiProperty()
-  @Expose({ name: 'url' })
-  @Transform(({ obj }) => {
-    const regexp = /([a-f0-9]{64})/;
-    const match = regexp.exec(obj.image.url);
-    return match === null ? obj.image.url : match[0];
-  })
-  readonly hash: string;
+import { Mode, Rule } from '@prisma/client';
+import dayjs from 'dayjs';
+
+import { CoopStageId } from './enum/coop_stage_id';
+
+export function scheduleHash(mode: Mode, rule: Rule, startTime: Date, endTime: Date, stageId: CoopStageId, weaponList: number[]): string {
+  console.log(`${mode}-${rule}-${stageId}-${dayjs(startTime).unix()}-${dayjs(endTime).unix()}-${weaponList.join(',')}`);
+  return createHash('sha256')
+    .update(`${mode}-${rule}-${stageId}-${dayjs(startTime).unix()}-${dayjs(endTime).unix()}-${weaponList.join(',')}`)
+    .digest('hex');
 }

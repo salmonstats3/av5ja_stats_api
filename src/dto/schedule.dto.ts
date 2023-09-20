@@ -1,5 +1,3 @@
-import { createHash } from 'crypto';
-
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
@@ -7,6 +5,7 @@ import { IsDate, IsEnum, IsInt, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { id } from 'src/utils/enum/weapon_info_main';
+import { scheduleHash } from 'src/utils/hash';
 
 enum CoopSettingType {
   CoopNormalSetting = 'CoopNormalSetting',
@@ -89,13 +88,7 @@ class CoopSchedule {
   readonly setting: CoopSetting;
 
   get scheduleId(): string {
-    return createHash('sha256')
-      .update(
-        `${this.setting.isCoopSetting}-${this.rule}-${this.setting.coopStage.id}-${dayjs(this.startTime).unix()}-${dayjs(
-          this.endTime,
-        ).unix()}-${this.weaponList.join(',')}`,
-      )
-      .digest('hex');
+    return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.setting.coopStage.id, this.weaponList);
   }
 
   get query(): Prisma.ScheduleCreateInput {
