@@ -8,6 +8,11 @@ generator client {
   previewFeatures = ["views"]
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "erd.md"
+}
+
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
@@ -31,8 +36,56 @@ enum Species {
   OCTOLING
 }
 
+// Firebase Authenticationのユーザー情報
+model User {
+  // ユーザー固有ID(FirebaseのIDを利用する)
+  id           String    @id @map("id")
+  // ユーザー名
+  name         String    @map("name") @db.VarChar(32)
+  // トークン
+  sessionToken String    @map("session_token") @db.VarChar(255)
+  // 作成日
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  // 更新日
+  updatedAt    DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
+  // ユーザーに連携しているアカウント
+  accounts     Account[]
+
+  @@map("users")
+}
+
+// Nintendo Service Accountの情報
+model Account {
+  // ユーザー固有ID(FirebaseのIDを利用する)
+  id           String
+  // NPLNユーザーID
+  nplnUserId   String   @id @map("npln_user_id") @db.VarChar(20)
+  // Nintendo Service Acccount ID
+  nsaId        String   @unique @map("nsa_id") @db.VarChar(16)
+  // 登録名
+  name         String   @db.VarChar(32)
+  // 登録サムネイル
+  thumbnailURL String   @map("thumbnail_url") @db.VarChar(255)
+  // Coral User ID
+  coralUserId  BigInt   @unique @map("coral_user_id") @db.BigInt
+  // フレンドコード
+  friendCode   String?  @map("friend_code") @db.VarChar(14)
+  // 言語
+  language     String?  @map("language") @db.VarChar(8)
+  // 国コード
+  country      String?  @map("country") @db.VarChar(2)
+  // ユーザー
+  user         User?    @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  // 作成日
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  // 更新日
+  updatedAt    DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
+
+  @@map("accounts")
+}
+
 model Schedule {
-  scheduleId String   @id @default(uuid()) @map("schedule_id") @db.Uuid
+  scheduleId String   @id @map("schedule_id") @db.VarChar(64)
   // 開始時刻
   startTime  DateTime @default("1970-01-01T00:00:00Z") @map("start_time") @db.Timestamp(0)
   // 終了時刻
@@ -45,10 +98,6 @@ model Schedule {
   mode       Mode     @default(REGULAR)
   // ルール
   rule       Rule     @default(REGULAR)
-  // レアブキ
-  rareWeapon Int?     @map("rare_weapon") @db.SmallInt
-  // オカシラシャケのID
-  bossId     Int?     @map("boss_id") @db.SmallInt
   // 作成日
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
@@ -67,9 +116,11 @@ model Schedule {
 
 model Result {
   // バイトID
-  id                   String    @map("id") @db.Uuid
+  uuid                 String    @map("uuid") @db.Uuid
+  // リザルトID
+  resultId             String    @unique @map("result_id") @db.VarChar(64)
   // スケジュールID
-  scheduleId           String    @map("schedule_id") @db.Uuid
+  scheduleId           String    @map("schedule_id") @db.VarChar(64)
   // プレイ時刻
   playTime             DateTime  @map("play_time") @db.Timestamp(0)
   // オオモノ出現数
@@ -101,7 +152,6 @@ model Result {
   // オカシラシャケを討伐したかどうか
   isBossDefeated       Boolean?  @map("is_boss_defeated") @db.Boolean
   // たおしたオカシラシャケのID
-  // 不要かもしれないが残しておく
   bossId               Int?      @map("boss_id") @db.SmallInt
   // シナリオコード
   scenarioCode         String?   @map("scenario_code") @db.VarChar(16)
@@ -111,9 +161,9 @@ model Result {
   updatedAt            DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
   waves                Wave[]
   players              Player[]
-  schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade)
+  schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([id, scheduleId, playTime])
+  @@id([uuid, scheduleId, playTime])
   @@index([members])
   @@index([goldenIkuraNum, nightLess])
   @@index([scheduleId])
@@ -124,9 +174,9 @@ model Result {
 
 model Player {
   // リザルトID
-  id                   String   @map("id") @db.Uuid
+  uuid                 String   @map("uuid") @db.Uuid
   // スケジュールID
-  scheduleId           String   @map("schedule_id") @db.Uuid
+  scheduleId           String   @map("schedule_id") @db.VarChar(64)
   // 遊んだ時間
   playTime             DateTime @map("play_time") @db.Timestamp(0)
   // プレイヤーID
@@ -186,9 +236,9 @@ model Player {
   // 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   // リレーション
-  result               Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime], onDelete: Cascade)
+  result               Result?  @relation(fields: [uuid, scheduleId, playTime], references: [uuid, scheduleId, playTime], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([nplnUserId, playTime, id])
+  @@id([nplnUserId, playTime, uuid])
   @@index([nplnUserId])
   @@index([scheduleId])
   @@index([name])
@@ -198,9 +248,9 @@ model Player {
 
 model Wave {
   // リザルトID
-  id                String   @map("id") @db.Uuid
+  uuid              String   @map("uuid") @db.Uuid
   // スケジュールID
-  scheduleId        String   @map("schedule_id") @db.Uuid
+  scheduleId        String   @map("schedule_id") @db.VarChar(64)
   // プレイ時間
   playTime          DateTime @map("play_time") @db.Timestamp(0)
   // WAVE数
@@ -221,9 +271,9 @@ model Wave {
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
   updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
-  result            Result?  @relation(fields: [id, scheduleId, playTime], references: [id, scheduleId, playTime], onDelete: Cascade)
+  result            Result?  @relation(fields: [uuid, scheduleId, playTime], references: [uuid, scheduleId, playTime], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([id, waveId, playTime])
+  @@id([uuid, waveId, playTime])
   @@index([scheduleId])
   @@index([waterLevel])
   @@index([eventType])
