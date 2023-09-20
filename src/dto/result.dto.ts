@@ -73,21 +73,21 @@ class Scale {
   @ApiProperty({ required: true, type: 'integer' })
   @IsInt()
   @Min(0)
-  @Max(13)
+  @Max(26)
   @Expose()
   readonly gold: number;
 
   @ApiProperty({ required: true, type: 'integer' })
   @IsInt()
   @Min(0)
-  @Max(13)
+  @Max(26)
   @Expose()
   readonly bronze: number;
 
   @ApiProperty({ required: true, type: 'integer' })
   @IsInt()
   @Min(0)
-  @Max(13)
+  @Max(26)
   @Expose()
   readonly silver: number;
 }
@@ -607,10 +607,11 @@ class CoopHistoryDetail {
   readonly afterGradePoint: number | null;
 
   @ApiProperty({ nullable: true, required: true, type: Scale })
+  @IsOptional()
   @Type(() => Scale)
   @Expose()
   @ValidateNested()
-  readonly scale: Scale;
+  readonly scale: Scale | null;
 
   @ApiProperty({ minimum: 0, nullable: true, required: true, type: 'integer' })
   @IsInt()

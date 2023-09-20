@@ -12,6 +12,7 @@ import { dump } from 'js-yaml';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 import { AppModule } from './app.module';
+import { onSend, preValidation } from './fastify/log';
 
 const build = (documents: OpenAPIObject) => {
   const build = path.resolve(process.cwd(), 'docs');
@@ -28,12 +29,12 @@ const build = (documents: OpenAPIObject) => {
 async function bootstrap() {
   const isDevelopment = process.env.NODE_ENV === 'development';
 
-  const server = fastify();
+  const server = fastify({ bodyLimit: 50 * 1024 * 1024 });
   // ログレベル
   const logLevels: LogLevel[] = isDevelopment ? ['log', 'error', 'warn', 'debug', 'verbose'] : ['log', 'error', 'warn'];
   // ログ出力
-  // server.addHook('preValidation', preValidation);
-  // server.addHook('onSend', onSend);
+  server.addHook('preValidation', preValidation);
+  server.addHook('onSend', onSend);
   server.addHook('onRequest', (request, reply, done) => {
     const replyUnknown = reply as any;
     replyUnknown['setHeader'] = reply.header.bind(reply);
