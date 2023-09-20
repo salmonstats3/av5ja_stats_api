@@ -499,7 +499,9 @@ components:
             - 1
             - 2
         eventWave:
-          $ref: '#/components/schemas/EventWave'
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/EventWave'
         deliverNorm:
           type: integer
           minimum: 0
