@@ -4,7 +4,7 @@ import { Expose, Transform, Type } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
-import { id } from 'src/utils/enum/weapon_info_main';
+import { WeaponInfoMain, id } from 'src/utils/enum/weapon_info_main';
 import { scheduleHash } from 'src/utils/hash';
 
 enum CoopSettingType {
@@ -97,10 +97,14 @@ class CoopSchedule {
       mode: this.mode,
       rule: this.rule,
       scheduleId: this.scheduleId,
-      stageId: this.setting.coopStage.id,
+      stageId: this.stageId,
       startTime: this.startTime,
       weaponList: this.weaponList,
     };
+  }
+
+  get stageId(): CoopStageId {
+    return this.setting.coopStage.id;
   }
 
   get weaponList(): number[] {
@@ -180,4 +184,13 @@ export class ScheduleCreateDto {
       skipDuplicates: true,
     };
   }
+}
+
+export class CoopScheduleResponseDto {
+  readonly startTime: string;
+  readonly endTime: string;
+  readonly mode: Mode;
+  readonly rule: Rule;
+  readonly stageId: CoopStageId;
+  readonly weaponList: WeaponInfoMain.Id[];
 }
