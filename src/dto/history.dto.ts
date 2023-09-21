@@ -3,9 +3,12 @@ import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
 import { IsDate, IsEnum, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
+import { CoopStageId } from 'src/utils/enum/coop_stage_id';
+import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
 import { scheduleHash } from 'src/utils/hash';
+import { CoopHistoryDetailId } from 'src/utils/result_id';
 
-import { CoopStage, MainWeapon } from './schedule.dto';
+import { CoopScheduleResponseDto, CoopStage, MainWeapon } from './schedule.dto';
 
 class CoopHistoryDetail {
   @ApiProperty({ required: true, type: CoopStage })
@@ -14,11 +17,18 @@ class CoopHistoryDetail {
   @ValidateNested()
   readonly coopStage: CoopStage;
 
-  @ApiProperty({ required: true, type: [MainWeapon] })
+  @ApiProperty({ isArray: true, required: true, type: MainWeapon })
   @Expose()
   @Type(() => MainWeapon)
   @ValidateNested({ each: true })
   readonly weapons: MainWeapon[];
+
+  @ApiProperty({ required: true, type: CoopHistoryDetailId })
+  @Expose()
+  @Type(() => CoopHistoryDetailId)
+  @Transform(({ value }) => new CoopHistoryDetailId(value))
+  @ValidateNested()
+  readonly id: CoopHistoryDetailId;
 }
 
 class HistoryNode {
@@ -74,7 +84,11 @@ class CoopHistory {
     };
   }
 
-  get weaponList(): number[] {
+  get stageId(): CoopStageId {
+    return this.historyDetails.nodes[0].coopStage.id;
+  }
+
+  get weaponList(): WeaponInfoMain.Id[] {
     return this.historyDetails.nodes[0].weapons.map((weapon) => weapon.image.id);
   }
 }
@@ -120,4 +134,9 @@ export class HistoryCreateDto {
       skipDuplicates: true,
     };
   }
+}
+
+export class CoopHistoryResponseDto {
+  readonly schedules: CoopScheduleResponseDto[];
+  readonly results: string[];
 }

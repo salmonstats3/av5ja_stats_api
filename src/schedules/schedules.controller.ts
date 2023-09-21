@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Schedule } from '@prisma/client';
-import { ScheduleCreateDto } from 'src/dto/schedule.dto';
+import { CoopScheduleResponseDto, ScheduleCreateDto } from 'src/dto/schedule.dto';
 
 import { SchedulesService } from './schedules.service';
 
@@ -12,8 +12,8 @@ export class SchedulesController {
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
-  async create(@Body() request: ScheduleCreateDto): Promise<void> {
-    this.service.create(request);
+  async create(@Body() request: ScheduleCreateDto): Promise<CoopScheduleResponseDto[]> {
+    return this.service.create(request);
   }
 
   @Get()
