@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { PrismaModule } from 'nestjs-prisma';
 
 import { AppController } from './app.controller';
@@ -34,6 +33,6 @@ import { UsersService } from './users/users.service';
     HistoriesModule,
     AuthModule,
   ],
-  providers: [AppService, SchedulesService, ResultsService, UsersService, HistoriesService, AuthService, JwtService],
+  providers: [AppService, SchedulesService, ResultsService, UsersService, HistoriesService, AuthService],
 })
 export class AppModule {}

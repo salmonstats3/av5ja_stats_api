@@ -69,16 +69,16 @@ async function bootstrap() {
       transform: true,
       transformOptions: {
         excludeExtraneousValues: true,
-        //   excludeExtraneousValues: false,
-        //   exposeDefaultValues: false,
-        //   ignoreDecorators: false,
+        exposeDefaultValues: false,
+        ignoreDecorators: false,
       },
-      // validateCustomDecorators: true,
+      validateCustomDecorators: true,
     }),
   );
 
   // 環境変数を読み込んで値がなければエラーを返す
   const version = config.get<string>('API_VERSION');
+  const secret = config.get<string>('API_JWT_SECRET_KEY');
   const port = config.get<number>('API_PORT');
   const host = config.get<string>('API_HOST');
 
@@ -91,13 +91,16 @@ async function bootstrap() {
   if (version === undefined) {
     throw new Error('API_VERSION is not defined');
   }
+  if (secret === undefined) {
+    throw new Error('API_JWT_SECRET_KEY is not defined');
+  }
   // 開発環境時はSwaggerを有効にする
   if (isDevelopment) {
     const documentConfig = new DocumentBuilder()
       .setTitle('Salmon Stats+')
       .setDescription('Salmon Stats for Splatoon 3 API documents.')
       .setVersion('0.0.1')
-      // .addBearerAuth()
+      .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, documentConfig);
     build(document);

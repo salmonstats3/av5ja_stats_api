@@ -19,10 +19,6 @@ export class UsersService {
     });
   }
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
-  }
-
   async find_all(): Promise<UserResponseDto[]> {
     const result = await this.prisma.user.findMany({
       select: {
@@ -36,17 +32,4 @@ export class UsersService {
     });
     return result.map(UserResponseDto.fromPrismaResult);
   }
-
-  private readonly users = [
-    {
-      password: 'changeme',
-      userId: 1,
-      username: 'john',
-    },
-    {
-      password: 'guess',
-      userId: 2,
-      username: 'maria',
-    },
-  ];
 }
