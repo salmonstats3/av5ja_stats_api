@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaModule } from 'nestjs-prisma';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
 import { HistoriesController } from './histories/histories.controller';
 import { HistoriesModule } from './histories/histories.module';
 import { HistoriesService } from './histories/histories.service';
@@ -16,12 +19,9 @@ import { SchedulesService } from './schedules/schedules.service';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
-import { AuthModule } from './auth/auth.module';
 
 @Module({
-  controllers: [AppController, SchedulesController, ResultsController, UsersController, HistoriesController, AuthController],
+  controllers: [AppController, SchedulesController, ResultsController, UsersController, HistoriesController],
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env', '.env.local', '.env.production'],
@@ -34,6 +34,6 @@ import { AuthModule } from './auth/auth.module';
     HistoriesModule,
     AuthModule,
   ],
-  providers: [AppService, SchedulesService, ResultsService, UsersService, HistoriesService, AuthService],
+  providers: [AppService, SchedulesService, ResultsService, UsersService, HistoriesService, AuthService, JwtService],
 })
 export class AppModule {}
