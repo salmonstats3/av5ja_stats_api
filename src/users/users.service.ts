@@ -26,7 +26,6 @@ export class UsersService {
         createdAt: true,
         id: true,
         name: true,
-        sessionToken: false,
         updatedAt: true,
       },
     });

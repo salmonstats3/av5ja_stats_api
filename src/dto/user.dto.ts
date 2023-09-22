@@ -25,7 +25,6 @@ export class UserCreateDto implements UserDto {
       data: {
         id: this.id,
         name: this.name,
-        sessionToken: '',
       },
     };
   }
@@ -47,23 +46,18 @@ export class UserResponseDto implements UserDto {
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  session_token: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
   created_at: Date;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
   updated_at: Date;
 
-  static fromPrismaResult({ createdAt, updatedAt, id, name, sessionToken }: Partial<User>): UserResponseDto {
+  static fromPrismaResult({ createdAt, updatedAt, id, name }: Partial<User>): UserResponseDto {
     return {
       accounts: [],
       created_at: createdAt,
       id: id,
       name: name,
-      session_token: sessionToken,
       updated_at: updatedAt,
     };
   }
