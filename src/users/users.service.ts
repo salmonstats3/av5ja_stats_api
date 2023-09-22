@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { UserCreateDto, UserResponseDto } from 'src/dto/user.dto';
+import { UserCreateDto } from 'src/dto/user.dto';
 
 export type User = any;
 
@@ -8,27 +8,17 @@ export type User = any;
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: UserCreateDto): Promise<UserResponseDto> {
-    const result = await this.prisma.user.create(request.create);
-    return UserResponseDto.fromPrismaResult(result);
+  async create(request: UserCreateDto): Promise<User> {
+    return await this.prisma.user.create(request.create);
   }
 
-  async find(user_id: string): Promise<User> {
+  async find(uid: string): Promise<User> {
     return await this.prisma.user.findUniqueOrThrow({
-      where: { id: user_id },
+      where: { uid: uid },
     });
   }
 
-  async find_all(): Promise<UserResponseDto[]> {
-    const result = await this.prisma.user.findMany({
-      select: {
-        accounts: true,
-        createdAt: true,
-        id: true,
-        name: true,
-        updatedAt: true,
-      },
-    });
-    return result.map(UserResponseDto.fromPrismaResult);
+  async find_all(): Promise<User[]> {
+    return await this.prisma.user.findMany();
   }
 }

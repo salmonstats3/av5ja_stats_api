@@ -41,7 +41,7 @@ model User {
   // ユーザー固有ID(FirebaseのIDを利用する)
   uid        String    @id
   // ユーザー固有のID(検索用のID)
-  id         String    @unique
+  id         String    @unique @db.VarChar(32)
   // ユーザー名
   name       String    @map("name") @db.VarChar(32)
   // メンバーシップ

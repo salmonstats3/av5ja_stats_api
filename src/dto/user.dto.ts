@@ -1,19 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma, User } from '@prisma/client';
-import { Expose, Type } from 'class-transformer';
+import { Prisma } from '@prisma/client';
+import { Expose } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import 'reflect-metadata';
+import randomstring from 'randomstring';
 
-interface UserDto {
-  id: string;
-  name: string;
-}
-
-export class UserCreateDto implements UserDto {
-  @ApiProperty({ example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
+export class UserCreateDto {
+  @ApiProperty({ description: 'Secret UserId', example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
   @IsNotEmpty()
   @Expose()
-  id: string;
+  uid: string;
 
   @ApiProperty({ example: '@tkgling', required: true })
   @IsNotEmpty()
@@ -23,42 +19,10 @@ export class UserCreateDto implements UserDto {
   get create(): Prisma.UserCreateArgs {
     return {
       data: {
-        id: this.id,
+        id: randomstring.generate(32),
         name: this.name,
+        uid: this.uid,
       },
-    };
-  }
-}
-
-export class UserResponseDto implements UserDto {
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  @Type(() => AccountCreateDto)
-  accounts: AccountDto[];
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  id: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  name: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  created_at: Date;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  updated_at: Date;
-
-  static fromPrismaResult({ createdAt, updatedAt, id, name }: Partial<User>): UserResponseDto {
-    return {
-      accounts: [],
-      created_at: createdAt,
-      id: id,
-      name: name,
-      updated_at: updatedAt,
     };
   }
 }

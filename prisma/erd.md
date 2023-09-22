@@ -24,9 +24,11 @@ OCTOLING OCTOLING
         }
     
   "users" {
-    String id "🗝️"
+    String uid "🗝️"
+    String id 
     String name 
-    String session_token 
+    Boolean membership 
+    Boolean is_public 
     DateTime created_at 
     DateTime updated_at 
     }

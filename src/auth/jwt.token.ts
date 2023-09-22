@@ -9,4 +9,16 @@ export interface JwtPayload {
   sub?: string | undefined;
 }
 
-export class JwtTokenPayload implements JwtPayload {}
+class Public {
+  profile: boolean;
+  result: boolean;
+}
+class Active {
+  active: boolean;
+}
+
+export class JwtTokenPayload implements JwtPayload {
+  typ: string;
+  membership: Active;
+  is_public: Public;
+}
