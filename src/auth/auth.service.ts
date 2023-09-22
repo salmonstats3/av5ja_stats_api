@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
-import { UsersService } from 'src/users/users.service';
+import { UserWithAccounts, UsersService } from 'src/users/users.service';
+
+import { JwtTokenPayload } from './jwt.token';
 
 @Injectable()
 export class AuthService {
@@ -15,8 +17,13 @@ export class AuthService {
     return await this.usersService.find(uid);
   }
 
-  async login(user: User): Promise<any> {
-    const payload = { sub: user.name, username: user.id };
+  async login(user: UserWithAccounts): Promise<any> {
+    const payload: JwtTokenPayload = {
+      aud: user.nplnUserIds,
+      iss: 'api.splatnet3.com',
+      sub: user.uid,
+      typ: 'session_token',
+    };
     return {
       session_token: this.jwtService.sign(payload),
     };

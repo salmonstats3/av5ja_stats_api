@@ -39,21 +39,25 @@ enum Species {
 // Firebase Authenticationのユーザー情報
 model User {
   // ユーザー固有ID(FirebaseのIDを利用する)
-  uid        String    @id
-  // ユーザー固有のID(検索用のID)
-  id         String    @unique @db.VarChar(32)
+  uid         String    @id
+  // ユーザー固有のID(検索用のIDで自由に変更可能)
+  id          String    @unique @db.VarChar(32)
   // ユーザー名
-  name       String    @map("name") @db.VarChar(32)
+  nickname    String    @map("name") @db.VarChar(32)
+  // プロバイダ
+  provider    String    @db.VarChar(16)
   // メンバーシップ
-  membership Boolean   @default(false)
+  membership  Boolean   @default(false)
   // リザルトの公開設定
-  isPublic   Boolean   @default(false) @map("is_public") @db.Boolean
+  isPublic    Boolean   @default(false) @map("is_public") @db.Boolean
   // 作成日
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
-  updatedAt  DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
+  updatedAt   DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
   // ユーザーに連携しているアカウント
-  accounts   Account[]
+  nplnUserIds String[]  @map("npln_user_ids") @db.VarChar(20)
+  // ユーザーに連携しているアカウント
+  accounts    Account[]
 
   @@map("users")
 }
@@ -61,13 +65,11 @@ model User {
 // Nintendo Service Accountの情報
 model Account {
   // ユーザー固有ID(FirebaseのIDを利用する)
-  id           String
-  // NPLNユーザーID
-  nplnUserId   String   @id @map("npln_user_id") @db.VarChar(20)
+  uid          String
   // Nintendo Service Acccount ID
   nsaId        String   @unique @map("nsa_id") @db.VarChar(16)
   // 登録名
-  name         String   @db.VarChar(32)
+  nickname     String   @db.VarChar(32)
   // 登録サムネイル
   thumbnailURL String   @map("thumbnail_url") @db.VarChar(255)
   // Coral User ID
@@ -76,10 +78,12 @@ model Account {
   friendCode   String?  @map("friend_code") @db.VarChar(14)
   // 言語
   language     String?  @map("language") @db.VarChar(8)
+  // 誕生日
+  birthday     String   @db.VarChar(10)
   // 国コード
   country      String?  @map("country") @db.VarChar(2)
   // ユーザー
-  user         User?    @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user         User?    @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
   // 作成日
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日

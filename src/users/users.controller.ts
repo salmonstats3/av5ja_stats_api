@@ -5,7 +5,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserCreateDto, UserResponseDto } from 'src/dto/user.dto';
 
-import { UsersService } from './users.service';
+import { UserWithAccounts, UsersService } from './users.service';
 
 @ApiTags('Users')
 @Controller('users')
@@ -19,9 +19,16 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ description: 'Create a user', operationId: 'Create a user' })
   async create(@Body() request: UserCreateDto): Promise<UserResponseDto> {
-    const user: User = await this.service.create(request);
+    const user: UserWithAccounts = await this.service.create(request);
     const session_token = await this.authService.login(user);
-    console.log(user, session_token);
+    user.accounts.forEach((account) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      account.coralUserId = Number(account.coralUserId);
+      delete account.uid;
+      delete account.createdAt;
+      delete account.updatedAt;
+    });
     return { ...user, ...session_token };
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Account, User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { UserCreateDto } from 'src/dto/user.dto';
 
@@ -7,11 +7,14 @@ import { UserCreateDto } from 'src/dto/user.dto';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: UserCreateDto): Promise<User> {
+  async create(request: UserCreateDto): Promise<UserWithAccounts> {
     try {
-      return await this.prisma.user.create(request.create);
+      return await this.prisma.user.create({
+        data: request.create.data,
+        include: { accounts: true },
+      });
     } catch (error) {
-      return await this.prisma.user.findUniqueOrThrow({ where: { uid: request.uid } });
+      return await this.prisma.user.findUniqueOrThrow({ include: { accounts: true }, where: { uid: request.uid } });
     }
   }
 
@@ -25,3 +28,7 @@ export class UsersService {
     return await this.prisma.user.findMany();
   }
 }
+
+export type UserWithAccounts = User & {
+  accounts: Account[];
+};

@@ -27,22 +27,23 @@ OCTOLING OCTOLING
     String uid "🗝️"
     String id 
     String name 
+    String provider 
     Boolean membership 
     Boolean is_public 
     DateTime created_at 
     DateTime updated_at 
+    String npln_user_ids 
     }
   
 
   "accounts" {
-    String npln_user_id 
-    String npln_user_id "🗝️"
     String nsa_id 
-    String name 
+    String nickname 
     String thumbnail_url 
     BigInt coral_user_id 
     String friend_code "❓"
     String language "❓"
+    String birthday 
     String country "❓"
     DateTime created_at 
     DateTime updated_at 

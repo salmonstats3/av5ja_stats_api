@@ -60,29 +60,29 @@ CREATE TABLE "users" (
     "uid" TEXT NOT NULL,
     "id" VARCHAR(32) NOT NULL,
     "name" VARCHAR(32) NOT NULL,
+    "provider" VARCHAR(16) NOT NULL,
     "membership" BOOLEAN NOT NULL DEFAULT false,
     "is_public" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
+    "npln_user_ids" VARCHAR(20)[],
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("uid")
 );
 
 -- CreateTable
 CREATE TABLE "accounts" (
-    "id" TEXT NOT NULL,
-    "npln_user_id" VARCHAR(20) NOT NULL,
+    "uid" TEXT NOT NULL,
     "nsa_id" VARCHAR(16) NOT NULL,
-    "name" VARCHAR(32) NOT NULL,
+    "nickname" VARCHAR(32) NOT NULL,
     "thumbnail_url" VARCHAR(255) NOT NULL,
     "coral_user_id" BIGINT NOT NULL,
     "friend_code" VARCHAR(14),
     "language" VARCHAR(8),
+    "birthday" VARCHAR(10) NOT NULL,
     "country" VARCHAR(2),
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(0) NOT NULL,
-
-    CONSTRAINT "accounts_pkey" PRIMARY KEY ("npln_user_id")
+    "updated_at" TIMESTAMP(0) NOT NULL
 );
 
 -- CreateIndex
@@ -98,7 +98,7 @@ CREATE UNIQUE INDEX "accounts_coral_user_id_key" ON "accounts"("coral_user_id");
 CREATE UNIQUE INDEX "results_result_id_key" ON "results"("result_id");
 
 -- AddForeignKey
-ALTER TABLE "accounts" ADD CONSTRAINT "accounts_id_fkey" FOREIGN KEY ("id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "accounts" ADD CONSTRAINT "accounts_uid_fkey" FOREIGN KEY ("uid") REFERENCES "users"("uid") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "results" ADD CONSTRAINT "results_schedule_id_fkey" FOREIGN KEY ("schedule_id") REFERENCES "schedules"("schedule_id") ON DELETE CASCADE ON UPDATE CASCADE;

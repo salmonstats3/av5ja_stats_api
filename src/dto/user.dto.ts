@@ -1,9 +1,85 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { Expose } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import { IsInt, IsNotEmpty, IsString, Length, ValidateNested } from 'class-validator';
 import 'reflect-metadata';
-import randomstring from 'randomstring';
+
+interface AccountDto {
+  readonly coral_user_id: number;
+  readonly country: string;
+  readonly friend_code: string;
+  readonly id: string;
+  readonly language: string;
+  readonly name: string;
+  readonly nsa_id: string;
+  readonly thumbnail_url: string;
+}
+
+export class AccountCreateDto {
+  @ApiProperty({ required: true })
+  @IsInt()
+  @IsNotEmpty()
+  @Expose()
+  readonly coralUserId: number;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  @Expose()
+  readonly country: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  @Length(14, 14)
+  @Expose()
+  readonly friendCode: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  @Expose()
+  readonly language: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  @Length(10, 10)
+  @Expose()
+  readonly birthday: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  @Expose()
+  readonly nickname: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  @Length(16, 16)
+  @Expose()
+  readonly nsaId: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  @Expose()
+  readonly thumbnailUrl: string;
+
+  get create(): Prisma.AccountCreateManyUserInput {
+    return {
+      birthday: this.birthday,
+      coralUserId: this.coralUserId,
+      country: this.country,
+      friendCode: this.friendCode,
+      language: this.language,
+      nickname: this.nickname,
+      nsaId: this.nsaId,
+      thumbnailURL: this.thumbnailUrl,
+    };
+  }
+}
 
 export class UserCreateDto {
   @ApiProperty({ description: 'Secret UserId', example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
@@ -14,14 +90,40 @@ export class UserCreateDto {
   @ApiProperty({ example: '@tkgling', required: true })
   @IsNotEmpty()
   @Expose()
-  readonly name: string;
+  readonly nickname: string;
+
+  @ApiProperty({ example: 'twitter.com', required: true })
+  @IsNotEmpty()
+  @Expose()
+  readonly provider: string;
+
+  @ApiProperty({ example: 'twitter.com', required: true })
+  @IsNotEmpty()
+  @Expose()
+  readonly id: string;
+
+  @ApiProperty({ isArray: true, required: false, type: AccountCreateDto })
+  @Expose()
+  @Type(() => AccountCreateDto)
+  @ValidateNested({ each: true })
+  readonly accounts: AccountCreateDto[];
 
   get create(): Prisma.UserCreateArgs {
     return {
       data: {
-        id: randomstring.generate(32),
-        name: this.name,
+        accounts: {
+          createMany: {
+            data: this.accounts.map((account) => account.create),
+            skipDuplicates: true,
+          },
+        },
+        id: this.id,
+        nickname: this.nickname,
+        provider: this.provider,
         uid: this.uid,
+      },
+      include: {
+        accounts: true,
       },
     };
   }
@@ -29,58 +131,4 @@ export class UserCreateDto {
 
 export class UserResponseDto extends UserCreateDto {
   readonly session_token: string;
-}
-
-interface AccountDto {
-  readonly coral_user_id: number;
-  readonly country: string;
-  readonly friend_code: string;
-  readonly id: string;
-  readonly language: string;
-  readonly name: string;
-  readonly npln_user_id: string;
-  readonly nsa_id: string;
-  readonly thumbnail_url: string;
-}
-
-export class AccountCreateDto implements AccountDto {
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly coral_user_id: number;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly country: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly friend_code: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly id: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly language: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly name: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly npln_user_id: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly nsa_id: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly thumbnail_url: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  readonly updated_at: Date;
 }
