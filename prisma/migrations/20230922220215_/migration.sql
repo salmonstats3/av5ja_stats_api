@@ -58,6 +58,7 @@ ADD CONSTRAINT "waves_pkey" PRIMARY KEY ("uuid", "wave_id", "play_time");
 -- CreateTable
 CREATE TABLE "users" (
     "uid" TEXT NOT NULL,
+    "password" VARCHAR(64) NOT NULL,
     "id" VARCHAR(32) NOT NULL,
     "name" VARCHAR(32) NOT NULL,
     "provider" VARCHAR(16) NOT NULL,

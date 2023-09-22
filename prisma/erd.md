@@ -25,6 +25,7 @@ OCTOLING OCTOLING
     
   "users" {
     String uid "🗝️"
+    String password 
     String id 
     String name 
     String provider 
