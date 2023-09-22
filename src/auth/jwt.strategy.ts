@@ -11,7 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new Error('API_JWT_SECRET_KEYis undefined.');
     }
     super({
-      algorithms: ['HS256'],
+      algorithms: ['HS512'],
       ignoreExpiration: false,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: secret,

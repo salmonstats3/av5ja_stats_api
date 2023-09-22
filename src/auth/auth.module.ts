@@ -20,7 +20,7 @@ import { LocalStrategy } from './local.stragegy';
         if (!secret) {
           throw new Error('API_JWT_SECRET_KEYis undefined.');
         }
-        return { secret: secret, signOptions: { algorithm: 'HS256' } };
+        return { secret: secret, signOptions: { algorithm: 'HS512', header: { alg: 'HS512', jku: 'https://api.splatnet3.com' } } };
       },
     }),
   ],

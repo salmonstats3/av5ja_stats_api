@@ -39,17 +39,21 @@ enum Species {
 // Firebase Authenticationのユーザー情報
 model User {
   // ユーザー固有ID(FirebaseのIDを利用する)
-  id           String    @id @map("id")
+  uid        String    @id
+  // ユーザー固有のID(検索用のID)
+  id         String    @unique
   // ユーザー名
-  name         String    @map("name") @db.VarChar(32)
-  // トークン
-  sessionToken String    @map("session_token") @db.VarChar(255)
+  name       String    @map("name") @db.VarChar(32)
+  // メンバーシップ
+  membership Boolean   @default(false)
+  // リザルトの公開設定
+  isPublic   Boolean   @default(false) @map("is_public") @db.Boolean
   // 作成日
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   // 更新日
-  updatedAt    DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
+  updatedAt  DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
   // ユーザーに連携しているアカウント
-  accounts     Account[]
+  accounts   Account[]
 
   @@map("users")
 }
