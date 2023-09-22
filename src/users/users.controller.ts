@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { UserCreateDto, UserResponseDto } from 'src/dto/user.dto';
 
 import { UsersService } from './users.service';
@@ -23,6 +24,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(LocalAuthGuard)
   @ApiOperation({ description: 'Find users', operationId: 'Find users' })
   async find_all(): Promise<Partial<UserResponseDto>[]> {
     return this.service.find_all();

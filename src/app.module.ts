@@ -16,9 +16,12 @@ import { SchedulesService } from './schedules/schedules.service';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  controllers: [AppController, SchedulesController, ResultsController, UsersController, HistoriesController],
+  controllers: [AppController, SchedulesController, ResultsController, UsersController, HistoriesController, AuthController],
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env', '.env.local', '.env.production'],
@@ -29,7 +32,8 @@ import { UsersService } from './users/users.service';
     ResultsModule,
     UsersModule,
     HistoriesModule,
+    AuthModule,
   ],
-  providers: [AppService, SchedulesService, ResultsService, UsersService, HistoriesService],
+  providers: [AppService, SchedulesService, ResultsService, UsersService, HistoriesService, AuthService],
 })
 export class AppModule {}
