@@ -9,12 +9,12 @@ export class UserCreateDto {
   @ApiProperty({ description: 'Secret UserId', example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
   @IsNotEmpty()
   @Expose()
-  uid: string;
+  readonly uid: string;
 
   @ApiProperty({ example: '@tkgling', required: true })
   @IsNotEmpty()
   @Expose()
-  name: string;
+  readonly name: string;
 
   get create(): Prisma.UserCreateArgs {
     return {
@@ -27,56 +27,60 @@ export class UserCreateDto {
   }
 }
 
+export class UserResponseDto extends UserCreateDto {
+  readonly session_token: string;
+}
+
 interface AccountDto {
-  coral_user_id: number;
-  country: string;
-  friend_code: string;
-  id: string;
-  language: string;
-  name: string;
-  npln_user_id: string;
-  nsa_id: string;
-  thumbnail_url: string;
+  readonly coral_user_id: number;
+  readonly country: string;
+  readonly friend_code: string;
+  readonly id: string;
+  readonly language: string;
+  readonly name: string;
+  readonly npln_user_id: string;
+  readonly nsa_id: string;
+  readonly thumbnail_url: string;
 }
 
 export class AccountCreateDto implements AccountDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  coral_user_id: number;
+  readonly coral_user_id: number;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  country: string;
+  readonly country: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  friend_code: string;
+  readonly friend_code: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  id: string;
+  readonly id: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  language: string;
+  readonly language: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  name: string;
+  readonly name: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  npln_user_id: string;
+  readonly npln_user_id: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  nsa_id: string;
+  readonly nsa_id: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  thumbnail_url: string;
+  readonly thumbnail_url: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  updated_at: Date;
+  readonly updated_at: Date;
 }
