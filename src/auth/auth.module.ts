@@ -18,7 +18,7 @@ import { LocalStrategy } from './local.stragegy';
       useFactory: (configService: ConfigService) => {
         const secret = configService.get<string>('API_JWT_SECRET_KEY');
         if (!secret) {
-          throw new Error('API_JWT_SECRET_KEYis undefined.');
+          throw new Error('API_JWT_SECRET_KEY is undefined.');
         }
         return {
           secret: secret,
