@@ -1,5 +1,14 @@
 openapi: 3.0.0
 paths:
+  /auth/login:
+    post:
+      operationId: AppController_login
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Auth
   /schedules:
     post:
       operationId: Create schedules
@@ -95,7 +104,7 @@ paths:
             schema:
               $ref: '#/components/schemas/UserCreateDto'
       responses:
-        '201':
+        '200':
           description: ''
       tags: &ref_2
         - Users
@@ -123,6 +132,8 @@ paths:
         '200':
           description: ''
       tags: *ref_2
+      security:
+        - bearer: []
   /users/{user_id}:
     get:
       operationId: Find a user
@@ -159,7 +170,6 @@ paths:
 info:
   title: Salmon Stats+
   description: Salmon Stats for Splatoon 3 API documents.
-  version: 4.0.0
   contact: {}
 tags: []
 servers: []
@@ -680,18 +690,60 @@ components:
             $ref: '#/components/schemas/ResultCreateDto'
       required:
         - results
+    AccountCreateDto:
+      type: object
+      properties:
+        coralUserId:
+          type: number
+        country:
+          type: string
+        friendCode:
+          type: string
+        language:
+          type: string
+        birthday:
+          type: string
+        nickname:
+          type: string
+        nsaId:
+          type: string
+        thumbnailUrl:
+          type: string
+      required:
+        - coralUserId
+        - country
+        - friendCode
+        - language
+        - birthday
+        - nickname
+        - nsaId
+        - thumbnailUrl
     UserCreateDto:
       type: object
       properties:
-        id:
+        uid:
           type: string
+          description: Secret UserId
           example: laT7IetjzweGKWkNwrd162iO5wt2
-        name:
+        pid:
+          type: string
+          description: Password Hash
+          example: laT7IetjzweGKWkNwrd162iO5wt2
+        nickname:
           type: string
           example: '@tkgling'
+        provider:
+          type: string
+          example: twitter.com
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountCreateDto'
       required:
-        - id
-        - name
+        - uid
+        - pid
+        - nickname
+        - provider
     CoopResult:
       type: object
       properties:
