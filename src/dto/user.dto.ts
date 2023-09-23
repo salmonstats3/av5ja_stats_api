@@ -1,19 +1,11 @@
+import { createHash } from 'crypto';
+
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { Expose, Type } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString, Length, ValidateNested } from 'class-validator';
 import 'reflect-metadata';
-
-interface AccountDto {
-  readonly coral_user_id: number;
-  readonly country: string;
-  readonly friend_code: string;
-  readonly id: string;
-  readonly language: string;
-  readonly name: string;
-  readonly nsa_id: string;
-  readonly thumbnail_url: string;
-}
+import randomstring from 'randomstring';
 
 export class AccountCreateDto {
   @ApiProperty({ required: true })
@@ -87,6 +79,12 @@ export class UserCreateDto {
   @Expose()
   readonly uid: string;
 
+  @ApiProperty({ description: 'Password Hash', example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
+  @IsNotEmpty()
+  @Expose()
+  @Transform(({ value }) => createHash('sha256').update(value).digest('hex'))
+  readonly pid: string;
+
   @ApiProperty({ example: '@tkgling', required: true })
   @IsNotEmpty()
   @Expose()
@@ -96,11 +94,6 @@ export class UserCreateDto {
   @IsNotEmpty()
   @Expose()
   readonly provider: string;
-
-  @ApiProperty({ example: 'twitter.com', required: true })
-  @IsNotEmpty()
-  @Expose()
-  readonly id: string;
 
   @ApiProperty({ isArray: true, required: false, type: AccountCreateDto })
   @Expose()
@@ -117,8 +110,9 @@ export class UserCreateDto {
             skipDuplicates: true,
           },
         },
-        id: this.id,
+        id: randomstring.generate(32),
         nickname: this.nickname,
+        password: this.pid,
         provider: this.provider,
         uid: this.uid,
       },

@@ -12,8 +12,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  /**
+   * 指定されたUIDとPIDをもつユーザーを返す、いなければ新規作成する
+   * @param uid
+   * @param hash
+   * @returns
+   */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async validateUser(uid: string, hash: string): Promise<User> {
+  async validateUser(uid: string, pid: string): Promise<Partial<User>> {
     return await this.usersService.find(uid);
   }
 
