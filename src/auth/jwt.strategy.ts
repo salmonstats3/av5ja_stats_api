@@ -8,7 +8,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(configService: ConfigService) {
     const secret = configService.get<string>('API_JWT_SECRET_KEY');
     if (!secret) {
-      throw new Error('API_JWT_SECRET_KEYis undefined.');
+      throw new Error('API_JWT_SECRET_KEY is undefined.');
     }
     super({
       algorithms: ['HS512'],

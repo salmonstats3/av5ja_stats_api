@@ -15,11 +15,10 @@ export class UsersService {
           data: request.create.data,
           include: { accounts: true },
         }),
-        ['uid', 'password', 'createdAt', 'updatedAt'],
+        ['password', 'createdAt', 'updatedAt'],
       );
     } catch (error) {
       return lodash.omit(await this.prisma.user.findUniqueOrThrow({ include: { accounts: true }, where: { uid: request.uid } }), [
-        'uid',
         'password',
         'createdAt',
         'updatedAt',
@@ -32,12 +31,12 @@ export class UsersService {
       await this.prisma.user.findUniqueOrThrow({
         where: { uid: uid },
       }),
-      ['uid', 'password', 'createdAt', 'updatedAt'],
+      ['password', 'createdAt', 'updatedAt'],
     );
   }
 
   async find_all(): Promise<Partial<User>[]> {
-    return (await this.prisma.user.findMany()).map((user) => lodash.omit(user, ['uid', 'password', 'createdAt', 'updatedAt']));
+    return (await this.prisma.user.findMany()).map((user) => lodash.omit(user, ['password', 'createdAt', 'updatedAt']));
   }
 }
 

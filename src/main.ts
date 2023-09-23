@@ -99,7 +99,7 @@ async function bootstrap() {
     const documentConfig = new DocumentBuilder()
       .setTitle('Salmon Stats+')
       .setDescription('Salmon Stats for Splatoon 3 API documents.')
-      .setVersion('0.0.1')
+      .setVersion(version)
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, documentConfig);

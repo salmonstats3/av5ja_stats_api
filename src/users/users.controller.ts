@@ -21,6 +21,7 @@ export class UsersController {
   async create(@Body() request: UserCreateDto): Promise<UserResponseDto> {
     const user: UserWithAccounts = await this.service.create(request);
     const session_token = await this.authService.login(user);
+    delete user.uid;
     user.accounts.forEach((account) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
