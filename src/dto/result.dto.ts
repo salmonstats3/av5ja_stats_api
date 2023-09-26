@@ -867,4 +867,12 @@ export class ResultCreateRequest {
   @ValidateNested({ each: true })
   @Expose()
   results: ResultCreateDto[];
+
+  get nplnUserId(): string {
+    const resultIds: Set<string> = new Set(this.results.map((result) => result.data.coopHistoryDetail.myResult.player.id.nplnUserId));
+    if (resultIds.size !== 1) {
+      throw new BadRequestException('Invalid nplnUserId');
+    }
+    return [...resultIds.values()][0];
+  }
 }

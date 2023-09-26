@@ -28,9 +28,15 @@ export class ResultsService {
     return results.map((result) => lodash.omit(result, ['createdAt', 'updatedAt', 'scheduleId']));
   }
 
-  async create(request: ResultCreateRequest): Promise<Partial<Result>[]> {
+  async createV1(request: ResultCreateRequest): Promise<Partial<Result>[]> {
     // Promise.allを利用すると競合する可能性がワンチャンあったりする......
     return Promise.all(request.results.map((result) => this.upsert(result)));
+  }
+
+  async createV2(request: ResultCreateRequest): Promise<ResultCreateRequest> {
+    // Promise.allを利用すると競合する可能性がワンチャンあったりする......
+    Promise.all(request.results.map((result) => this.upsert(result)));
+    return request;
   }
 
   private async upsert(request: ResultCreateDto): Promise<Partial<Result>> {
