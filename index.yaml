@@ -54,7 +54,7 @@ paths:
     post:
       operationId: Create a result
       summary: ''
-      description: Create a result
+      description: Create a result(v2)
       parameters: []
       requestBody:
         required: true
