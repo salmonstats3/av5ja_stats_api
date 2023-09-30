@@ -56,8 +56,8 @@ ALTER COLUMN "schedule_id" SET DATA TYPE VARCHAR(64),
 ADD CONSTRAINT "waves_pkey" PRIMARY KEY ("uuid", "wave_id", "play_time");
 
 -- CreateTable
-CREATE TABLE "accounts" (
-    "uid" TEXT NOT NULL,
+CREATE TABLE "users" (
+    "user_id" TEXT NOT NULL,
     "password" VARCHAR(64) NOT NULL,
     "provider" VARCHAR(16) NOT NULL,
     "nsa_id" VARCHAR(16) NOT NULL,
@@ -72,17 +72,19 @@ CREATE TABLE "accounts" (
     "membership" BOOLEAN NOT NULL DEFAULT false,
     "is_public" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(0) NOT NULL
+    "updated_at" TIMESTAMP(0) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("user_id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "accounts_nsa_id_key" ON "accounts"("nsa_id");
+CREATE UNIQUE INDEX "users_nsa_id_key" ON "users"("nsa_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "accounts_coral_user_id_key" ON "accounts"("coral_user_id");
+CREATE UNIQUE INDEX "users_coral_user_id_key" ON "users"("coral_user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "accounts_npln_user_id_key" ON "accounts"("npln_user_id");
+CREATE UNIQUE INDEX "users_npln_user_id_key" ON "users"("npln_user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "results_result_id_key" ON "results"("result_id");

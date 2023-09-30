@@ -37,9 +37,9 @@ enum Species {
 }
 
 /// Nintendo Service Accountの情報
-model Account {
+model User {
   /// ユーザー固有ID(FirebaseのIDを利用する)
-  uid          String
+  userId       String   @id @map("user_id")
   /// パスワード(ハッシュ)
   password     String   @db.VarChar(64)
   /// プロバイダ
@@ -71,7 +71,7 @@ model Account {
   /// 更新日
   updatedAt    DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
 
-  @@map("accounts")
+  @@map("users")
 }
 
 model Schedule {

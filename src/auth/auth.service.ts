@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
-import { UserWithAccounts, UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/users.service';
 
 import { JwtTokenPayload } from './jwt.token';
 
@@ -19,11 +19,12 @@ export class AuthService {
    * @returns
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async validateUser(uid: string, pid: string): Promise<Partial<User>> {
-    return await this.usersService.find(uid);
+  async validate(uid: string, pid: string): Promise<Partial<User>> {
+    console.log('Validate', uid, pid);
+    return;
   }
 
-  async login(user: UserWithAccounts): Promise<any> {
+  async login(user: any): Promise<any> {
     const payload: JwtTokenPayload = {
       aud: user.nplnUserIds,
       iss: 'api.splatnet3.com',

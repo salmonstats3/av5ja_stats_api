@@ -1,123 +1,102 @@
-import { createHash } from 'crypto';
+import { createHmac } from 'crypto';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { Expose, Transform, Type } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsString, Length, ValidateNested } from 'class-validator';
+import { Expose, Transform } from 'class-transformer';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Length, Min } from 'class-validator';
 import 'reflect-metadata';
-import randomstring from 'randomstring';
-
-export class AccountCreateDto {
-  @ApiProperty({ required: true })
-  @IsInt()
-  @IsNotEmpty()
-  @Expose()
-  readonly coralUserId: number;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  @Expose()
-  readonly country: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  @Length(14, 14)
-  @Expose()
-  readonly friendCode: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  @Expose()
-  readonly language: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  @Length(10, 10)
-  @Expose()
-  readonly birthday: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  @Expose()
-  readonly nickname: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  @Length(16, 16)
-  @Expose()
-  readonly nsaId: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  @Expose()
-  readonly thumbnailUrl: string;
-
-  get create(): Prisma.AccountCreateManyUserInput {
-    return {
-      birthday: this.birthday,
-      coralUserId: this.coralUserId,
-      country: this.country,
-      friendCode: this.friendCode,
-      language: this.language,
-      nickname: this.nickname,
-      nsaId: this.nsaId,
-      thumbnailURL: this.thumbnailUrl,
-    };
-  }
-}
 
 export class UserCreateDto {
-  @ApiProperty({ description: 'Secret UserId', example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
+  @ApiProperty({ description: 'Secret UserId', example: 'XWTHgv6472P1x7DGqvQdgO8QyX83', required: true })
   @IsNotEmpty()
   @Expose()
-  readonly uid: string;
+  readonly userId: string;
 
-  @ApiProperty({ description: 'Password Hash', example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
+  @ApiProperty({ description: 'Provider Id', example: '1599967240048496640', name: 'pid', required: true })
   @IsNotEmpty()
-  @Expose()
-  @Transform(({ value }) => createHash('sha256').update(value).digest('hex'))
-  readonly pid: string;
-
-  @ApiProperty({ example: '@tkgling', required: true })
-  @IsNotEmpty()
-  @Expose()
-  readonly nickname: string;
+  @Length(64, 64)
+  @Expose({ name: 'pid' })
+  @Transform(({ value }) => {
+    const secret: string | undefined = process.env.API_PASSWORD_SALT;
+    if (secret === undefined) throw new Error('API_PASSWORD_SALT is not defined');
+    return createHmac('sha256', secret).update(value).digest('hex');
+  })
+  readonly password: string;
 
   @ApiProperty({ example: 'twitter.com', required: true })
   @IsNotEmpty()
   @Expose()
   readonly provider: string;
 
-  @ApiProperty({ isArray: true, required: false, type: AccountCreateDto })
+  @ApiProperty({ example: '3f89c3791c43ea57', required: true })
+  @IsNotEmpty()
+  @Length(16, 16)
   @Expose()
-  @Type(() => AccountCreateDto)
-  @ValidateNested({ each: true })
-  readonly accounts: AccountCreateDto[];
+  readonly nsaId: string;
+
+  @ApiProperty({ example: 'tkgling', required: true })
+  @IsNotEmpty()
+  @Length(1, 32)
+  @Expose()
+  readonly nickname: string;
+
+  @ApiProperty({ example: 'https://cdn-image-e0d67c509fb203858ebcb2fe3f88c2aa.baas.nintendo.com/1/873635dd214b5768', required: true })
+  @IsNotEmpty()
+  @Length(16, 16)
+  @Expose()
+  @Transform(({ value }) => value.split('/').at(-1))
+  readonly thumbnailUrl: string;
+
+  @ApiProperty({ example: 4737360831381504, required: true, type: 'integer' })
+  @IsInt()
+  @Min(0)
+  @Expose()
+  readonly coralUserId: number;
+
+  @ApiProperty({ example: 'a7grz65rxkvhfsbwmxmm', required: true, type: String })
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @Length(20, 20)
+  @Expose()
+  readonly nplnUserId: string;
+
+  @ApiProperty({ example: '4462-9670-6032', required: true, type: String })
+  @IsNotEmpty()
+  @Length(14, 14)
+  @Expose()
+  readonly friendCode: string;
+
+  @ApiProperty({ example: 'en-US', required: true, type: String })
+  @IsNotEmpty()
+  @Expose()
+  readonly language: string;
+
+  @ApiProperty({ example: 'US', required: true, type: String })
+  @IsNotEmpty()
+  @Expose()
+  readonly country: string;
+
+  @ApiProperty({ example: '2004-09-01', required: true, type: String })
+  @IsNotEmpty()
+  @Expose()
+  readonly birthday: string;
 
   get create(): Prisma.UserCreateArgs {
     return {
       data: {
-        accounts: {
-          createMany: {
-            data: this.accounts.map((account) => account.create),
-            skipDuplicates: true,
-          },
-        },
-        id: randomstring.generate(32),
+        birthday: this.birthday,
+        coralUserId: this.coralUserId,
+        country: this.country,
+        friendCode: this.friendCode,
+        language: this.language,
         nickname: this.nickname,
-        password: this.pid,
+        nplnUserId: this.nplnUserId,
+        nsaId: this.nsaId,
+        password: this.password,
         provider: this.provider,
-        uid: this.uid,
-      },
-      include: {
-        accounts: true,
+        thumbnailURL: this.thumbnailUrl,
+        userId: this.userId,
       },
     };
   }

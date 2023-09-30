@@ -23,8 +23,8 @@ PRIVATE_SCENARIO PRIVATE_SCENARIO
 OCTOLING OCTOLING
         }
     
-  "accounts" {
-    String uid 
+  "users" {
+    String user_id "🗝️"
     String password 
     String provider 
     String nsa_id 
