@@ -2,6 +2,8 @@
 
 Prisma, Fastify で動作する DB と連携してデータを返す API です.
 
+詳しいAPIのドキュメントについては[こちら](docs/Usage.md)をどうぞ.
+
 ## 導入
 
 ```zsh
@@ -83,12 +85,12 @@ cp .env.example .env
 - `BACKUP_KEEP_DAYS`
   - 保存する期間
 - `S3_REGION`
-- `S3_ACCESS_KEY` 
+- `S3_ACCESS_KEY`
 - `S3_SECRET_KEY`
 - `S3_BUCKET`
 - `S3_PREFIX`
 - `S3_ENDPOINT`
-  - S3互換のオブジェクトストレージの接続情報   
+  - S3互換のオブジェクトストレージの接続情報
 
 #### Cloudflare DDNS
 
@@ -98,10 +100,9 @@ cp .env.example .env
 - `API_ZONE`
 - `API_SUBDOMAIN`
 - `API_PROXIED`
-  - `true`を指定して良い　 
+  - `true`を指定して良い
 - `API_RRTYPE`
   - IPv4なら`A`、IPv6なら`AAAA`を指定
-
 
 ## 実行
 
@@ -111,7 +112,7 @@ cp .env.example .env
 
 ```zsh
 docker compose up postgres
-````
+```
 
 で環境変数で設定したユーザー名とパスワードで初期化されます.
 
@@ -125,7 +126,7 @@ docker compsoe up -d postgres
 
 ### サーバー起動
 
-Prismaのファイルに変更を加えた場合、その度に以下の操作が必要です. 
+Prismaのファイルに変更を加えた場合、その度に以下の操作が必要です.
 
 ```zsh
 yarn prisma generate
@@ -159,11 +160,11 @@ make build
 
 SplatNet3の生データに対応しています. 何も考えずに取得したJSONをそのままリクエストのBodyに突っ込んでPOSTすれば良いです.
 
-| SplatNet3              | API          | 処理             | 
-| :--------------------: | :----------: | :--------------: | 
-| CoopHistoryQuery       | v1/histories | スケジュール追加 | 
-| CoopHistoryDetailQuery | v1/results   | リザルト追加     | 
-| StageScheduleQuery     | v1/schedules | スケジュール追加 | 
+|       SplatNet3        |     API      |       処理       |
+| :--------------------: | :----------: | :--------------: |
+|    CoopHistoryQuery    | v1/histories | スケジュール追加 |
+| CoopHistoryDetailQuery |  v1/results  |   リザルト追加   |
+|   StageScheduleQuery   | v1/schedules | スケジュール追加 |
 
 Salmon Statsにスケジュールが登録されていないリザルトは404エラーを返すため書き込むことができません. プライベートバイトの場合はこの制約を無視できますが、通常のスケジュールでは必ず対象のリザルトのスケジュールが既に登録されている必要があります. リザルトの書き込みに失敗する場合、まずはスケジュールが正しく書き込まれているかを確認してください.
 
