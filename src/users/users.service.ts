@@ -5,9 +5,10 @@ import { UserCreateDto } from 'src/dto/user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(request: UserCreateDto): Promise<User> {
+    console.log(request);
     return;
   }
 
@@ -21,16 +22,7 @@ export class UsersService {
   }
 
   async login(user_id: string, hash: string): Promise<User> {
-    try {
-      const user: User = await this.prismaService.user.findUniqueOrThrow({
-        where: { userId: user_id },
-      });
-      /// ハッシュが一致しなければ認証不可
-      if (user.password !== hash) throw new Error('Unauthorized');
-      return user;
-    } catch (e) {
-      await this.prismaService.user.create(
-      })
+    console.log(user_id, hash);
+    return;
   }
-}
 }

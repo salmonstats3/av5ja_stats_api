@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Request, UseGuards, Version } from 
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Result } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ResultCreateManyRequest } from 'src/dto/paginated.dto';
 import { ResultCreateRequest } from 'src/dto/result.dto';
 import { UsersService } from 'src/users/users.service';
 
@@ -26,7 +27,7 @@ export class ResultsController {
   @Post()
   @Version('2')
   @ApiOperation({ description: 'Create a result without authentication', operationId: 'Create a result' })
-  async createV2(@Body() request: ResultCreateRequest): Promise<ResultCreateRequest> {
+  async createV2(@Body() request: ResultCreateManyRequest): Promise<ResultCreateRequest> {
     console.log(request);
     return;
   }
