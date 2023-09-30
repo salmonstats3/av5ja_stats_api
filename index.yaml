@@ -2,7 +2,9 @@ openapi: 3.0.0
 paths:
   /auth/login:
     post:
-      operationId: AppController_login
+      operationId: Login
+      summary: ''
+      description: Login
       parameters: []
       responses:
         '200':
@@ -22,8 +24,14 @@ paths:
             schema:
               $ref: '#/components/schemas/ScheduleCreateDto'
       responses:
-        '201':
+        '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduleDto'
       tags: &ref_0
         - Schedules
     get:
@@ -52,7 +60,7 @@ paths:
       tags: *ref_0
   /results:
     post:
-      operationId: Create a result with authentication
+      operationId: Create results V2
       summary: ''
       description: Create a result with authentication
       parameters: []
@@ -271,6 +279,33 @@ components:
           $ref: '#/components/schemas/DataClass'
       required:
         - data
+    ScheduleDto:
+      type: object
+      properties:
+        scheduleId:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        stageId:
+          type: number
+        weaponList:
+          type: array
+          items:
+            type: string
+        mode:
+          type: string
+        rule:
+          type: string
+      required:
+        - scheduleId
+        - startTime
+        - endTime
+        - stageId
+        - weaponList
+        - mode
+        - rule
     CoopScheduleRequest:
       type: object
       properties:
