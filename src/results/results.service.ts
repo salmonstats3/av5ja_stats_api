@@ -8,7 +8,7 @@ import { ResultCreateDto, ResultCreateRequest } from 'src/dto/result.dto';
 
 @Injectable()
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async find(id: string): Promise<Partial<Result>> {
     return lodash.omit(

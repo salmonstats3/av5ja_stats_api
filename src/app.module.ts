@@ -1,5 +1,7 @@
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { PrismaModule } from 'nestjs-prisma';
 
 import { AppController } from './app.controller';
@@ -26,6 +28,10 @@ import { UsersService } from './users/users.service';
       envFilePath: ['.env', '.env.local', '.env.production'],
       isGlobal: true,
     }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60 * 60 * 1000,
+    }),
     PrismaModule.forRoot({ isGlobal: true }),
     SchedulesModule,
     ResultsModule,
@@ -33,6 +39,17 @@ import { UsersService } from './users/users.service';
     HistoriesModule,
     AuthModule,
   ],
-  providers: [AppService, SchedulesService, ResultsService, UsersService, HistoriesService, AuthService],
+  providers: [
+    AppService,
+    SchedulesService,
+    ResultsService,
+    UsersService,
+    HistoriesService,
+    AuthService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Version } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Schedule } from '@prisma/client';
 import { CoopScheduleResponseDto, ScheduleCreateDto } from 'src/dto/schedule.dto';
 
-import { SchedulesService } from './schedules.service';
+import { ScheduleDto, SchedulesService } from './schedules.service';
 
 @ApiTags('Schedules')
 @Controller('schedules')
@@ -17,9 +17,16 @@ export class SchedulesController {
   }
 
   @Get()
-  @ApiOperation({ description: 'Find schedules', operationId: 'Find schedules' })
-  async find_all(): Promise<Partial<Schedule>[]> {
-    return this.service.find_all();
+  @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'Find schedules V1' })
+  async find_allV1(): Promise<Partial<Schedule>[]> {
+    return this.service.find_allV1();
+  }
+
+  @Get()
+  @Version('2')
+  @ApiOperation({ description: 'Find schedules', operationId: 'Find schedules V2' })
+  async find_allV2(): Promise<Partial<ScheduleDto>[]> {
+    return this.service.find_allV2();
   }
 
   @Get(':schedule_id')

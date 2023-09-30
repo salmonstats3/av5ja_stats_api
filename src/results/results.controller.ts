@@ -14,7 +14,7 @@ export class ResultsController {
   constructor(
     private readonly service: ResultsService,
     private readonly userService: UsersService,
-  ) { }
+  ) {}
 
   @Post()
   @ApiOperation({

@@ -7,7 +7,7 @@ import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { WeaponInfoMain, id } from 'src/utils/enum/weapon_info_main';
 import { scheduleHash } from 'src/utils/hash';
 
-enum CoopSettingType {
+export enum Setting {
   CoopNormalSetting = 'CoopNormalSetting',
   CoopBigRunSetting = 'CoopBigRunSetting',
   CoopTeamContestSetting = 'CoopTeamContestSetting',
@@ -56,10 +56,10 @@ class CoopSetting {
   @Expose()
   readonly coopStage: CoopStage;
 
-  @ApiProperty({ enum: CoopSettingType, name: '__isCoopSetting', required: true })
-  @IsEnum(CoopSettingType)
+  @ApiProperty({ enum: Setting, name: '__isCoopSetting', required: true })
+  @IsEnum(Setting)
   @Expose({ name: '__isCoopSetting' })
-  readonly isCoopSetting: CoopSettingType;
+  readonly isCoopSetting: Setting;
 
   @ApiProperty({ required: true, type: [MainWeapon] })
   @Expose()
@@ -117,9 +117,9 @@ class CoopSchedule {
 
   get rule(): Rule {
     switch (this.setting.isCoopSetting) {
-      case CoopSettingType.CoopBigRunSetting:
+      case Setting.CoopBigRunSetting:
         return Rule.BIG_RUN;
-      case CoopSettingType.CoopTeamContestSetting:
+      case Setting.CoopTeamContestSetting:
         return Rule.TEAM_CONTEST;
       default:
         return Rule.REGULAR;
