@@ -54,14 +54,14 @@ paths:
     post:
       operationId: Create a result
       summary: ''
-      description: Create a result(v2)
+      description: Create a result without authentication
       parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResultCreateRequest'
+              $ref: '#/components/schemas/ResultCreateManyRequest'
       responses:
         '201':
           description: ''
@@ -95,7 +95,7 @@ paths:
     post:
       operationId: Create a user
       summary: ''
-      description: Create a user
+      description: Create a user with Firebase authentication
       parameters: []
       requestBody:
         required: true
@@ -104,7 +104,7 @@ paths:
             schema:
               $ref: '#/components/schemas/UserCreateDto'
       responses:
-        '200':
+        '201':
           description: ''
       tags: &ref_2
         - Users
@@ -690,60 +690,330 @@ components:
             $ref: '#/components/schemas/ResultCreateDto'
       required:
         - results
-    AccountCreateDto:
+    CoopScheduleRequest:
       type: object
       properties:
-        coralUserId:
+        stageId:
           type: number
-        country:
+        startTime:
+          format: date-time
           type: string
-        friendCode:
+        endTime:
+          format: date-time
           type: string
-        language:
+        weaponList:
+          type: array
+          items:
+            type: string
+        rareWeapon:
+          type: number
+        mode:
           type: string
-        birthday:
-          type: string
-        nickname:
-          type: string
-        nsaId:
-          type: string
-        thumbnailUrl:
+        rule:
           type: string
       required:
-        - coralUserId
-        - country
-        - friendCode
-        - language
-        - birthday
-        - nickname
-        - nsaId
-        - thumbnailUrl
+        - stageId
+        - startTime
+        - endTime
+        - weaponList
+        - rareWeapon
+        - mode
+        - rule
+    CoopJobRequest:
+      type: object
+      properties:
+        bossId:
+          type: number
+        isBossDefeated:
+          type: boolean
+        failureWave:
+          type: number
+        isClear:
+          type: boolean
+      required:
+        - bossId
+        - isBossDefeated
+        - failureWave
+        - isClear
+    CoopResultIdRequest:
+      type: object
+      properties:
+        nplnUserId:
+          type: string
+        playTime:
+          format: date-time
+          type: string
+        uuid:
+          type: string
+      required:
+        - nplnUserId
+        - playTime
+        - uuid
+    CoopTextColorRequest:
+      type: object
+      properties:
+        r:
+          type: number
+        g:
+          type: number
+        b:
+          type: number
+        a:
+          type: number
+      required:
+        - r
+        - g
+        - b
+        - a
+    CoopBackgroundRequest:
+      type: object
+      properties:
+        id:
+          type: number
+        textColor:
+          $ref: '#/components/schemas/CoopTextColorRequest'
+      required:
+        - id
+        - textColor
+    CoopNameplateRequest:
+      type: object
+      properties:
+        badges:
+          type: array
+          items:
+            type: string
+        background:
+          $ref: '#/components/schemas/CoopBackgroundRequest'
+      required:
+        - badges
+        - background
+    CoopPlayerRequest:
+      type: object
+      properties:
+        bossKillCounts:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+        byname:
+          type: string
+        bossKillCountsTotal:
+          type: number
+        specialCounts:
+          type: array
+          items:
+            type: string
+        ikuraNum:
+          type: number
+        isMyself:
+          type: boolean
+        nameplate:
+          $ref: '#/components/schemas/CoopNameplateRequest'
+        nplnUserId:
+          type: string
+        helpCount:
+          type: number
+        deadCount:
+          type: number
+        weaponList:
+          type: array
+          items:
+            type: string
+        nameId:
+          type: string
+        goldenIkuraAssistNum:
+          type: number
+        species:
+          type: string
+        specialId:
+          type: number
+        goldenIkuraNum:
+          type: number
+        uniform:
+          type: number
+        smellMeter:
+          type: number
+        jobBonus:
+          type: number
+        jobScore:
+          type: number
+        jobRate:
+          type: number
+        gradeId:
+          type: number
+        gradePoint:
+          type: number
+        kumaPoint:
+          type: number
+      required:
+        - bossKillCounts
+        - name
+        - byname
+        - bossKillCountsTotal
+        - specialCounts
+        - ikuraNum
+        - isMyself
+        - nameplate
+        - nplnUserId
+        - helpCount
+        - deadCount
+        - weaponList
+        - nameId
+        - goldenIkuraAssistNum
+        - species
+        - specialId
+        - goldenIkuraNum
+        - uniform
+        - smellMeter
+        - jobBonus
+        - jobScore
+        - jobRate
+        - gradeId
+        - gradePoint
+        - kumaPoint
+    CoopResultRequest:
+      type: object
+      properties:
+        jobBonus:
+          type: number
+        gradeId:
+          type: number
+        waveDetails:
+          type: array
+          items:
+            type: string
+        ikuraNum:
+          type: number
+        jobScore:
+          type: number
+        kumaPoint:
+          type: number
+        jobRate:
+          type: number
+        goldenIkuraNum:
+          type: number
+        schedule:
+          $ref: '#/components/schemas/CoopScheduleRequest'
+        jobResult:
+          $ref: '#/components/schemas/CoopJobRequest'
+        bossKillCounts:
+          type: array
+          items:
+            type: string
+        resultId:
+          $ref: '#/components/schemas/CoopResultIdRequest'
+        scale:
+          type: array
+          items:
+            type: string
+        smellMeter:
+          type: number
+        goldenIkuraAssistNum:
+          type: number
+        gradePoint:
+          type: number
+        dangerRate:
+          type: number
+        myResult:
+          $ref: '#/components/schemas/CoopPlayerRequest'
+        scenarioCode:
+          type: string
+        bossCounts:
+          type: array
+          items:
+            type: string
+        otherResults:
+          type: array
+          items:
+            type: string
+      required:
+        - jobBonus
+        - gradeId
+        - waveDetails
+        - ikuraNum
+        - jobScore
+        - kumaPoint
+        - jobRate
+        - goldenIkuraNum
+        - schedule
+        - jobResult
+        - bossKillCounts
+        - resultId
+        - scale
+        - smellMeter
+        - goldenIkuraAssistNum
+        - gradePoint
+        - dangerRate
+        - myResult
+        - scenarioCode
+        - bossCounts
+        - otherResults
+    ResultCreateManyRequest:
+      type: object
+      properties:
+        results:
+          deprecated: true
+          type: array
+          items:
+            $ref: '#/components/schemas/CoopResultRequest'
+      required:
+        - results
     UserCreateDto:
       type: object
       properties:
-        uid:
+        userId:
           type: string
           description: Secret UserId
-          example: laT7IetjzweGKWkNwrd162iO5wt2
+          example: XWTHgv6472P1x7DGqvQdgO8QyX83
         pid:
           type: string
-          description: Password Hash
-          example: laT7IetjzweGKWkNwrd162iO5wt2
-        nickname:
-          type: string
-          example: '@tkgling'
+          description: Provider Id
+          example: '1599967240048496640'
         provider:
           type: string
           example: twitter.com
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountCreateDto'
+        nsaId:
+          type: string
+          example: 3f89c3791c43ea57
+        nickname:
+          type: string
+          example: tkgling
+        thumbnailUrl:
+          type: string
+          example: >-
+            https://cdn-image-e0d67c509fb203858ebcb2fe3f88c2aa.baas.nintendo.com/1/873635dd214b5768
+        coralUserId:
+          type: integer
+          example: 4737360831381504
+        nplnUserId:
+          type: string
+          example: a7grz65rxkvhfsbwmxmm
+        friendCode:
+          type: string
+          example: 4462-9670-6032
+        language:
+          type: string
+          example: en-US
+        country:
+          type: string
+          example: US
+        birthday:
+          type: string
+          example: '2004-09-01'
       required:
-        - uid
+        - userId
         - pid
-        - nickname
         - provider
+        - nsaId
+        - nickname
+        - thumbnailUrl
+        - coralUserId
+        - nplnUserId
+        - friendCode
+        - language
+        - country
+        - birthday
     CoopResult:
       type: object
       properties:
