@@ -7,7 +7,7 @@ import { CoopScheduleResponseDto, ScheduleCreateDto } from 'src/dto/schedule.dto
 
 @Injectable()
 export class SchedulesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(request: ScheduleCreateDto): Promise<CoopScheduleResponseDto[]> {
     await this.prisma.schedule.createMany(request.create);
@@ -21,6 +21,10 @@ export class SchedulesService {
         weaponList: schedule.weaponList,
       };
     });
+  }
+
+  async find(schedule_id: string): Promise<Partial<Schedule>> {
+    return lodash.omit(await this.prisma.schedule.findUniqueOrThrow({ where: { scheduleId: schedule_id } }), ['createdAt', 'updatedAt']);
   }
 
   async find_all(): Promise<Partial<Schedule>[]> {

@@ -14,7 +14,7 @@ export class ResultsController {
   constructor(
     private readonly service: ResultsService,
     private readonly userService: UsersService,
-  ) {}
+  ) { }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -33,12 +33,14 @@ export class ResultsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ description: 'Find results', operationId: 'Find results' })
   async find_all() {
     return await this.service.find_all();
   }
 
   @Get(':result_id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ description: 'Find a result', operationId: 'Find a result' })
   async find(@Param('result_id') result_id: string) {
     return await this.service.find(result_id);
