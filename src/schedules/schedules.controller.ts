@@ -7,7 +7,7 @@ import { ScheduleDto, SchedulesService } from './schedules.service';
 @ApiTags('Schedules')
 @Controller('schedules')
 export class SchedulesController {
-  constructor(private readonly service: SchedulesService) { }
+  constructor(private readonly service: SchedulesService) {}
 
   @Post()
   @ApiOkResponse({ isArray: true, type: ScheduleDto })
