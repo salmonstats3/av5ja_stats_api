@@ -466,8 +466,8 @@ class MemberResult {
       bossKillCounts: isMyself
         ? bossKillCounts
         : Object.values(CoopEnemyInfoId)
-            .filter((v) => !isNaN(v as CoopEnemyInfoId))
-            .map(() => -1),
+          .filter((v) => !isNaN(v as CoopEnemyInfoId))
+          .map(() => -1),
       bossKillCountsTotal: this.defeatEnemyCount,
       byname: this.player.byname,
       deadCount: this.rescuedCount,

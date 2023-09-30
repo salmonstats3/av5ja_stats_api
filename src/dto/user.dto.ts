@@ -1,5 +1,3 @@
-import { createHmac } from 'crypto';
-
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { Expose, Transform } from 'class-transformer';
@@ -7,22 +5,6 @@ import { IsInt, IsNotEmpty, IsOptional, IsString, Length, Min } from 'class-vali
 import 'reflect-metadata';
 
 export class UserCreateDto {
-  @ApiProperty({ description: 'Secret UserId', example: 'XWTHgv6472P1x7DGqvQdgO8QyX83', required: true })
-  @IsNotEmpty()
-  @Expose()
-  readonly userId: string;
-
-  @ApiProperty({ description: 'Provider Id', example: '1599967240048496640', name: 'pid', required: true })
-  @IsNotEmpty()
-  @Length(64, 64)
-  @Expose({ name: 'pid' })
-  @Transform(({ value }) => {
-    const secret: string | undefined = process.env.API_PASSWORD_SALT;
-    if (secret === undefined) throw new Error('API_PASSWORD_SALT is not defined');
-    return createHmac('sha256', secret).update(value).digest('hex');
-  })
-  readonly password: string;
-
   @ApiProperty({ example: 'twitter.com', required: true })
   @IsNotEmpty()
   @Expose()
@@ -93,10 +75,7 @@ export class UserCreateDto {
         nickname: this.nickname,
         nplnUserId: this.nplnUserId,
         nsaId: this.nsaId,
-        password: this.password,
-        provider: this.provider,
         thumbnailURL: this.thumbnailUrl,
-        userId: this.userId,
       },
     };
   }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Request, UseGuards, Version } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, Version } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Result } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -17,19 +17,21 @@ export class ResultsController {
   ) { }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @ApiOperation({ deprecated: true, description: 'Create a result with authentication', operationId: 'Create a result' })
-  async createV1(@Body() request: ResultCreateRequest, @Request() req: any): Promise<Partial<Result>[]> {
-    console.log(request, req);
-    return;
+  @ApiOperation({
+    deprecated: true,
+    description: 'Create a result without authentication',
+    operationId: 'Create a result without authentication',
+  })
+  async createV1(@Body() request: ResultCreateManyRequest): Promise<Partial<Result>[]> {
+    return this.service.createV1(request);
   }
 
   @Post()
   @Version('2')
-  @ApiOperation({ description: 'Create a result without authentication', operationId: 'Create a result' })
-  async createV2(@Body() request: ResultCreateManyRequest): Promise<ResultCreateRequest> {
-    console.log(request);
-    return;
+  // @UseGuards(JwtAuthGuard)
+  @ApiOperation({ description: 'Create a result with authentication', operationId: 'Create a result with authentication' })
+  async createV2(@Body() request: ResultCreateRequest): Promise<Partial<Result>[]> {
+    return this.service.createV2(request);
   }
 
   @Get()

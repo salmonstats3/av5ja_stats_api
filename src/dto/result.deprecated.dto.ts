@@ -1,3 +1,5 @@
+import { createHash } from 'crypto';
+
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule, Species } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
@@ -29,31 +31,38 @@ import { scheduleHash } from 'src/utils/hash';
 export namespace ResultDeprecatedDto {
   class CoopScheduleRequest {
     @ApiProperty()
+    @Expose()
     readonly stageId: number;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsDate()
     @Transform((param) => (param.value === null ? dayjs('1970-01-01T00:00:00.000Z').toDate() : dayjs(param.value).toDate()))
     readonly startTime: Date;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsDate()
     @Transform((param) => (param.value === null ? dayjs('1970-01-01T00:00:00.000Z').toDate() : dayjs(param.value).toDate()))
     readonly endTime: Date;
 
     @ApiProperty()
+    @Expose()
     readonly weaponList: number[];
 
     @ApiProperty()
+    @Expose()
     readonly rareWeapon: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsEnum(Mode)
     readonly mode: Mode;
 
     @ApiProperty()
+    @Expose()
     @IsEnum(Rule)
     readonly rule: Rule;
 
@@ -81,21 +90,25 @@ export namespace ResultDeprecatedDto {
 
   class CoopJobRequest {
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     readonly bossId: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsBoolean()
     readonly isBossDefeated: boolean | null;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     readonly failureWave: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsBoolean()
     readonly isClear: boolean;
   }
@@ -163,19 +176,22 @@ export namespace ResultDeprecatedDto {
 
   class CoopResultIdRequest {
     @ApiProperty()
+    @Expose()
     @IsString()
     @MinLength(20)
     @MaxLength(20)
     readonly nplnUserId: string;
 
     @ApiProperty()
+    @Expose()
     @IsDate()
     @Transform((param) => dayjs(param.value).toDate())
     readonly playTime: Date;
 
     @ApiProperty()
+    @Expose()
     @IsUUID()
-    @Transform((param) => param.value)
+    @Transform((param) => param.value.toLowerCase())
     readonly uuid: string;
   }
 
@@ -306,7 +322,7 @@ export namespace ResultDeprecatedDto {
     @IsOptional()
     @IsInt()
     @Min(0)
-    @Min(100)
+    @Max(100)
     @Transform(({ value }) => (value === undefined ? null : value))
     readonly jobBonus: number | null;
 
@@ -395,10 +411,12 @@ export namespace ResultDeprecatedDto {
     readonly waveId: number;
 
     @ApiProperty({ enum: EventId })
+    @Expose()
     @IsEnum(EventId)
     readonly eventType: EventId;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     @Min(1)
@@ -406,22 +424,26 @@ export namespace ResultDeprecatedDto {
     readonly quotaNum: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly goldenIkuraNum: number | null;
 
     @ApiProperty({ enum: WaterLevelId })
+    @Expose()
     @IsEnum(WaterLevelId)
     readonly waterLevel: WaterLevelId;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly goldenIkuraPopNum: number;
 
     @ApiProperty()
+    @Expose()
     @IsBoolean()
     readonly isClear: boolean;
 
@@ -440,11 +462,13 @@ export namespace ResultDeprecatedDto {
 
   export class CoopResultRequest {
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     readonly jobBonus: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     @Min(0)
@@ -452,6 +476,7 @@ export namespace ResultDeprecatedDto {
     readonly gradeId: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(0)
@@ -461,44 +486,52 @@ export namespace ResultDeprecatedDto {
     readonly waveDetails: CoopWaveRequest[];
 
     @ApiProperty()
+    @Expose()
     @IsInt()
     @Min(0)
     readonly ikuraNum: number;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly jobScore: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     @Min(0)
     readonly kumaPoint: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsNumber()
     @Min(0)
     readonly jobRate: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsInt()
     @Min(0)
     readonly goldenIkuraNum: number;
 
     @ApiProperty()
+    @Expose()
     @ValidateNested({ each: true })
     @Type(() => CoopScheduleRequest)
     readonly schedule: CoopScheduleRequest;
 
     @ApiProperty()
+    @Expose()
     @ValidateNested({ each: true })
     @Type(() => CoopJobRequest)
     readonly jobResult: CoopJobRequest;
 
     @ApiProperty()
+    @Expose()
     @IsArray()
     @ArrayMinSize(14)
     @ArrayMaxSize(14)
@@ -506,16 +539,19 @@ export namespace ResultDeprecatedDto {
     readonly bossKillCounts: number[];
 
     @Expose({ name: 'id' })
+    @Expose()
     @ApiProperty()
     @ValidateNested({ each: true })
     @Type(() => CoopResultIdRequest)
     readonly resultId: CoopResultIdRequest;
 
     @ApiProperty()
+    @Expose()
     @Type(() => Number)
     readonly scale: number[];
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     @Min(0)
@@ -523,11 +559,13 @@ export namespace ResultDeprecatedDto {
     readonly smellMeter: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsInt()
     @Min(0)
     readonly goldenIkuraAssistNum: number;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsInt()
     @Min(0)
@@ -535,12 +573,14 @@ export namespace ResultDeprecatedDto {
     readonly gradePoint: number | null;
 
     @ApiProperty()
+    @Expose()
     @IsNumber()
     @Min(0)
     @Max(3.33)
     readonly dangerRate: number;
 
     @ApiProperty()
+    @Expose()
     @Type(() => CoopPlayerRequest)
     @ValidateNested({ each: true })
     @Transform(({ value, obj }) => {
@@ -560,11 +600,13 @@ export namespace ResultDeprecatedDto {
     readonly myResult: CoopPlayerRequest;
 
     @ApiProperty()
+    @Expose()
     @IsOptional()
     @IsString()
     readonly scenarioCode: string | null;
 
     @ApiProperty()
+    @Expose()
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(14)
@@ -573,6 +615,7 @@ export namespace ResultDeprecatedDto {
     readonly bossCounts: number[];
 
     @ApiProperty()
+    @Expose()
     @IsArray()
     @IsNotEmpty()
     @ArrayMinSize(1)
@@ -580,7 +623,7 @@ export namespace ResultDeprecatedDto {
     @ValidateNested({ each: true })
     @Type(() => CoopPlayerRequest)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Transform((param) => param.value.map((player: any) => plainToInstance(CoopPlayerRequest, player)))
+    @Transform(({ value }) => value.map((player: any) => plainToInstance(CoopPlayerRequest, player)))
     readonly otherResults: CoopPlayerRequest[];
 
     /**
@@ -627,71 +670,89 @@ export namespace ResultDeprecatedDto {
       return true;
     }
 
+    private get resultHash(): string {
+      return createHash('sha256')
+        .update(`${this.resultId.uuid.toLowerCase()}-${dayjs(this.resultId.playTime).unix()}`)
+        .digest('hex');
+    }
+
     private get players(): CoopPlayerRequest[] {
       return [this.myResult].concat(this.otherResults);
     }
 
-    get create(): Prisma.ResultUpsertArgs {
+    private get create(): Prisma.ResultCreateInput {
       return {
-        create: {
-          bossCounts: this.bossCounts,
-          bossId: this.jobResult.bossId,
-          bossKillCounts: this.bossKillCounts,
-          bronze: this.scale[0],
-          dangerRate: this.dangerRate,
-          failureWave: this.jobResult.failureWave,
-          gold: this.scale[2],
-          goldenIkuraAssistNum: this.goldenIkuraAssistNum,
-          goldenIkuraNum: this.goldenIkuraNum,
-          ikuraNum: this.ikuraNum,
-          isBossDefeated: this.jobResult.isBossDefeated,
-          isClear: this.jobResult.isClear,
-          members: this.members,
-          nightLess: this.nightLess,
-          playTime: this.resultId.playTime,
-          players: {
-            createMany: {
-              data: this.players.map((player) => player.create),
-              skipDuplicates: true,
+        bossCounts: this.bossCounts,
+        bossId: this.jobResult.bossId,
+        bossKillCounts: this.bossKillCounts,
+        bronze: this.scale[0],
+        dangerRate: this.dangerRate,
+        failureWave: this.jobResult.failureWave,
+        gold: this.scale[2],
+        goldenIkuraAssistNum: this.goldenIkuraAssistNum,
+        goldenIkuraNum: this.goldenIkuraNum,
+        ikuraNum: this.ikuraNum,
+        isBossDefeated: this.jobResult.isBossDefeated,
+        isClear: this.jobResult.isClear,
+        members: this.members,
+        nightLess: this.nightLess,
+        playTime: this.resultId.playTime,
+        players: {
+          createMany: {
+            data: this.players.map((player) => player.create),
+            skipDuplicates: true,
+          },
+        },
+        resultId: this.resultHash,
+        scenarioCode: this.scenarioCode,
+        schedule: {
+          connectOrCreate: this.schedule.connectOrCreate,
+        },
+        silver: this.scale[1],
+        uuid: this.resultId.uuid,
+        waves: {
+          createMany: {
+            data: this.waveDetails.map((wave) => wave.create),
+            skipDuplicates: true,
+          },
+        },
+      };
+    }
+
+    private get update(): Prisma.ResultUpdateInput {
+      return {
+        players: {
+          update: {
+            data: {
+              bossKillCounts: this.myResult.bossKillCounts,
+              gradeId: this.myResult.gradeId,
+              gradePoint: this.myResult.gradePoint,
+              jobBonus: this.myResult.jobBonus,
+              jobRate: this.myResult.jobRate,
+              jobScore: this.myResult.jobScore,
+              kumaPoint: this.myResult.kumaPoint,
+              smellMeter: this.myResult.smellMeter,
             },
-          },
-          resultId: this.resultId.uuid,
-          scenarioCode: this.scenarioCode,
-          schedule: {
-            connectOrCreate: this.schedule.connectOrCreate,
-          },
-          silver: this.scale[1],
-          uuid: this.resultId.uuid,
-          waves: {
-            createMany: {
-              data: this.waveDetails.map((wave) => wave.create),
-              skipDuplicates: true,
+            where: {
+              nplnUserId_playTime_uuid: {
+                nplnUserId: this.myResult.nplnUserId,
+                playTime: this.resultId.playTime,
+                uuid: this.resultId.uuid,
+              },
             },
           },
         },
-        update: {
-          players: {
-            update: {
-              data: {
-                bossKillCounts: this.myResult.bossKillCounts,
-                gradeId: this.myResult.gradeId,
-                gradePoint: this.myResult.gradePoint,
-                jobBonus: this.myResult.jobBonus,
-                jobRate: this.myResult.jobRate,
-                jobScore: this.myResult.jobScore,
-                kumaPoint: this.myResult.kumaPoint,
-                smellMeter: this.myResult.smellMeter,
-              },
-              where: {
-                nplnUserId_playTime_uuid: {
-                  nplnUserId: this.myResult.nplnUserId,
-                  playTime: this.resultId.playTime,
-                  uuid: this.resultId.uuid,
-                },
-              },
-            },
-          },
+      };
+    }
+
+    get upsert(): Prisma.ResultUpsertArgs {
+      return {
+        create: this.create,
+        select: {
+          resultId: true,
+          scheduleId: true,
         },
+        update: this.update,
         where: {
           uuid_scheduleId_playTime: {
             playTime: this.resultId.playTime,

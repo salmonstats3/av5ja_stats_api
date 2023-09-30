@@ -57,9 +57,6 @@ ADD CONSTRAINT "waves_pkey" PRIMARY KEY ("uuid", "wave_id", "play_time");
 
 -- CreateTable
 CREATE TABLE "users" (
-    "user_id" TEXT NOT NULL,
-    "password" VARCHAR(64) NOT NULL,
-    "provider" VARCHAR(16) NOT NULL,
     "nsa_id" VARCHAR(16) NOT NULL,
     "nickname" VARCHAR(32) NOT NULL,
     "thumbnail_url" VARCHAR(255) NOT NULL,
@@ -74,11 +71,8 @@ CREATE TABLE "users" (
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
 
-    CONSTRAINT "users_pkey" PRIMARY KEY ("user_id")
+    CONSTRAINT "users_pkey" PRIMARY KEY ("nsa_id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_nsa_id_key" ON "users"("nsa_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_coral_user_id_key" ON "users"("coral_user_id");

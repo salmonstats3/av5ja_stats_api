@@ -24,10 +24,7 @@ OCTOLING OCTOLING
         }
     
   "users" {
-    String user_id "🗝️"
-    String password 
-    String provider 
-    String nsa_id 
+    String nsa_id "🗝️"
     String nickname 
     String thumbnail_url 
     BigInt coral_user_id 
