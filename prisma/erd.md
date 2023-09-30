@@ -24,24 +24,17 @@ OCTOLING OCTOLING
         }
     
   "users" {
-    String id "🗝️"
-    String name 
-    String session_token 
-    DateTime created_at 
-    DateTime updated_at 
-    }
-  
-
-  "accounts" {
-    String npln_user_id 
-    String npln_user_id "🗝️"
-    String nsa_id 
-    String name 
+    String nsa_id "🗝️"
+    String nickname 
     String thumbnail_url 
     BigInt coral_user_id 
     String friend_code "❓"
     String language "❓"
+    String birthday 
     String country "❓"
+    String npln_user_id "❓"
+    Boolean membership 
+    Boolean is_public 
     DateTime created_at 
     DateTime updated_at 
     }
@@ -134,8 +127,6 @@ OCTOLING OCTOLING
     DateTime updated_at 
     }
   
-    "users" o{--}o "accounts" : "accounts"
-    "accounts" o|--|o "users" : "user"
     "schedules" o|--|| "Mode" : "enum:mode"
     "schedules" o|--|| "Rule" : "enum:rule"
     "schedules" o{--}o "results" : "results"

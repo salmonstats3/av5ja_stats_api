@@ -745,7 +745,7 @@ export class ResultCreateDto {
       .map((id) => this.result.enemyResults.find((enemy) => enemy.enemy.id === id)?.teamDefeatCount ?? 0);
   }
 
-  private create(startTime: Date, endTime: Date): Prisma.ResultCreateInput {
+  private connectOrCreate(startTime: Date, endTime: Date): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
     const scheduleId: string = scheduleHash(
       this.result.mode,
       this.result.rule,
@@ -754,6 +754,23 @@ export class ResultCreateDto {
       this.result.coopStage.id,
       this.result.weaponList,
     );
+    return {
+      create: {
+        endTime: endTime,
+        mode: this.result.mode,
+        rule: this.result.rule,
+        scheduleId: scheduleId,
+        stageId: this.result.coopStage.id,
+        startTime: startTime,
+        weaponList: this.result.weaponList,
+      },
+      where: {
+        scheduleId: scheduleId,
+      },
+    };
+  }
+
+  private create(startTime: Date, endTime: Date): Prisma.ResultCreateInput {
     return {
       bossCounts: this.enemyPopCounts,
       bossId: this.bossId,
@@ -791,20 +808,7 @@ export class ResultCreateDto {
       resultId: this.result.resultId,
       scenarioCode: this.result.scenarioCode,
       schedule: {
-        connectOrCreate: {
-          create: {
-            endTime: endTime,
-            mode: this.result.mode,
-            rule: this.result.rule,
-            scheduleId: scheduleId,
-            stageId: this.result.coopStage.id,
-            startTime: startTime,
-            weaponList: this.result.weaponList,
-          },
-          where: {
-            scheduleId: scheduleId,
-          },
-        },
+        connectOrCreate: this.connectOrCreate(startTime, endTime),
       },
       silver: this.result.scale?.silver ?? null,
       uuid: this.result.id.uuid,
@@ -867,4 +871,12 @@ export class ResultCreateRequest {
   @ValidateNested({ each: true })
   @Expose()
   results: ResultCreateDto[];
+
+  get nplnUserId(): string {
+    const resultIds: Set<string> = new Set(this.results.map((result) => result.data.coopHistoryDetail.myResult.player.id.nplnUserId));
+    if (resultIds.size !== 1) {
+      throw new BadRequestException('Invalid nplnUserId');
+    }
+    return [...resultIds.values()][0];
+  }
 }

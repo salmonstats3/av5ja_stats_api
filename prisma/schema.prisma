@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+/// This is your Prisma schema file,
+/// learn more about it in the docs: https:///pris.ly/d/prisma-schema
 
 generator client {
   provider        = "prisma-client-js"
@@ -36,73 +36,57 @@ enum Species {
   OCTOLING
 }
 
-// Firebase Authenticationのユーザー情報
+/// Nintendo Service Accountの情報
 model User {
-  // ユーザー固有ID(FirebaseのIDを利用する)
-  id           String    @id @map("id")
-  // ユーザー名
-  name         String    @map("name") @db.VarChar(32)
-  // トークン
-  sessionToken String    @map("session_token") @db.VarChar(255)
-  // 作成日
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
-  // 更新日
-  updatedAt    DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
-  // ユーザーに連携しているアカウント
-  accounts     Account[]
+  /// Nintendo Service Acccount ID
+  nsaId        String   @id @map("nsa_id") @db.VarChar(16)
+  /// 登録名
+  nickname     String   @db.VarChar(32)
+  /// 登録サムネイル
+  thumbnailURL String   @map("thumbnail_url") @db.VarChar(255)
+  /// Coral User ID
+  coralUserId  BigInt   @unique @map("coral_user_id") @db.BigInt
+  /// フレンドコード
+  friendCode   String?  @map("friend_code") @db.VarChar(14)
+  /// 言語
+  language     String?  @map("language") @db.VarChar(8)
+  /// 誕生日
+  birthday     String   @db.VarChar(10)
+  /// 国コード
+  country      String?  @map("country") @db.VarChar(2)
+  /// NplnUserId
+  nplnUserId   String?  @unique @map("npln_user_id") @db.VarChar(20)
+  /// メンバーシップ
+  membership   Boolean  @default(false)
+  /// リザルトの公開設定
+  isPublic     Boolean  @default(false) @map("is_public") @db.Boolean
+  /// 作成日
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  /// 更新日
+  updatedAt    DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
 
   @@map("users")
 }
 
-// Nintendo Service Accountの情報
-model Account {
-  // ユーザー固有ID(FirebaseのIDを利用する)
-  id           String
-  // NPLNユーザーID
-  nplnUserId   String   @id @map("npln_user_id") @db.VarChar(20)
-  // Nintendo Service Acccount ID
-  nsaId        String   @unique @map("nsa_id") @db.VarChar(16)
-  // 登録名
-  name         String   @db.VarChar(32)
-  // 登録サムネイル
-  thumbnailURL String   @map("thumbnail_url") @db.VarChar(255)
-  // Coral User ID
-  coralUserId  BigInt   @unique @map("coral_user_id") @db.BigInt
-  // フレンドコード
-  friendCode   String?  @map("friend_code") @db.VarChar(14)
-  // 言語
-  language     String?  @map("language") @db.VarChar(8)
-  // 国コード
-  country      String?  @map("country") @db.VarChar(2)
-  // ユーザー
-  user         User?    @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  // 作成日
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  // 更新日
-  updatedAt    DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
-
-  @@map("accounts")
-}
-
 model Schedule {
   scheduleId String   @id @map("schedule_id") @db.VarChar(64)
-  // 開始時刻
+  /// 開始時刻
   startTime  DateTime @default("1970-01-01T00:00:00Z") @map("start_time") @db.Timestamp(0)
-  // 終了時刻
+  /// 終了時刻
   endTime    DateTime @default("1970-01-01T00:00:00Z") @map("end_time") @db.Timestamp(0)
-  // ステージID
+  /// ステージID
   stageId    Int      @map("stage_id") @db.SmallInt
-  // 支給ブキID
+  /// 支給ブキID
   weaponList Int[]    @map("weapon_list")
-  // モード
+  /// モード
   mode       Mode     @default(REGULAR)
-  // ルール
+  /// ルール
   rule       Rule     @default(REGULAR)
-  // 作成日
+  /// 作成日
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  // 更新日
+  /// 更新日
   updatedAt  DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
-  // リザルト一覧
+  /// リザルト一覧
   results    Result[]
 
   @@unique([stageId, mode, rule, weaponList, startTime, endTime])
@@ -115,49 +99,49 @@ model Schedule {
 }
 
 model Result {
-  // バイトID
+  /// バイトID
   uuid                 String    @map("uuid") @db.Uuid
-  // リザルトID
+  /// リザルトID
   resultId             String    @unique @map("result_id") @db.VarChar(64)
-  // スケジュールID
+  /// スケジュールID
   scheduleId           String    @map("schedule_id") @db.VarChar(64)
-  // プレイ時刻
+  /// プレイ時刻
   playTime             DateTime  @map("play_time") @db.Timestamp(0)
-  // オオモノ出現数
+  /// オオモノ出現数
   bossCounts           Int[]     @map("boss_counts") @db.SmallInt
-  // オオモノ討伐数
+  /// オオモノ討伐数
   bossKillCounts       Int[]     @map("boss_kill_counts") @db.SmallInt
-  // イクラ数
+  /// イクラ数
   ikuraNum             Int       @map("ikura_num") @db.SmallInt
-  // 金イクラ数
+  /// 金イクラ数
   goldenIkuraNum       Int       @map("golden_ikura_num") @db.SmallInt
-  // 金イクラ数
+  /// 金イクラ数
   goldenIkuraAssistNum Int       @map("golden_ikura_assist_num") @db.SmallInt
-  // 夜イベントを含むかどうか
+  /// 夜イベントを含むかどうか
   nightLess            Boolean   @map("night_less") @db.Boolean
-  // キケン度
+  /// キケン度
   dangerRate           Decimal   @map("danger_rate") @db.Decimal(4, 3)
-  // プレイヤーのID配列(ソート済み)
+  /// プレイヤーのID配列(ソート済み)
   members              String[]  @db.VarChar(20)
-  // ドウウロコの枚数
+  /// ドウウロコの枚数
   bronze               Int?      @db.SmallInt
-  // ギンウロコの枚数
+  /// ギンウロコの枚数
   silver               Int?      @db.SmallInt
-  // キンウロコの枚数
+  /// キンウロコの枚数
   gold                 Int?      @db.SmallInt
-  // クリアしたかどうか
+  /// クリアしたかどうか
   isClear              Boolean   @map("is_clear") @db.Boolean
-  // 失敗したWAVE
+  /// 失敗したWAVE
   failureWave          Int?      @map("failure_wave") @db.SmallInt
-  // オカシラシャケを討伐したかどうか
+  /// オカシラシャケを討伐したかどうか
   isBossDefeated       Boolean?  @map("is_boss_defeated") @db.Boolean
-  // たおしたオカシラシャケのID
+  /// たおしたオカシラシャケのID
   bossId               Int?      @map("boss_id") @db.SmallInt
-  // シナリオコード
+  /// シナリオコード
   scenarioCode         String?   @map("scenario_code") @db.VarChar(16)
-  // 作成日
+  /// 作成日
   createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
-  // 更新日
+  /// 更新日
   updatedAt            DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
   waves                Wave[]
   players              Player[]
@@ -173,69 +157,69 @@ model Result {
 }
 
 model Player {
-  // リザルトID
+  /// リザルトID
   uuid                 String   @map("uuid") @db.Uuid
-  // スケジュールID
+  /// スケジュールID
   scheduleId           String   @map("schedule_id") @db.VarChar(64)
-  // 遊んだ時間
+  /// 遊んだ時間
   playTime             DateTime @map("play_time") @db.Timestamp(0)
-  // プレイヤーID
+  /// プレイヤーID
   nplnUserId           String   @map("npln_user_id") @db.VarChar(20)
-  // 名前
+  /// 名前
   name                 String   @db.VarChar(32)
-  // 称号
+  /// 称号
   byname               String   @db.VarChar(64)
-  // 名前ID
+  /// 名前ID
   nameId               String   @map("name_id") @db.VarChar(8)
-  // バッジ 
+  /// バッジ 
   badges               Int[]    @db.Integer
-  // ネームプレート
+  /// ネームプレート
   nameplate            Int      @db.SmallInt
-  // ネームプレート
+  /// ネームプレート
   textColor            Float[]  @map("text_color") @db.DoublePrecision
-  // ユニフォーム
+  /// ユニフォーム
   uniform              Int      @db.SmallInt
-  // オオモノ討伐数合計
+  /// オオモノ討伐数合計
   bossKillCountsTotal  Int      @map("boss_kill_counts_total") @db.SmallInt
-  // オオモノ討伐数
+  /// オオモノ討伐数
   bossKillCounts       Int[]    @map("boss_kill_counts") @db.SmallInt
-  // 被救助数
+  /// 被救助数
   deadCount            Int      @map("dead_count") @db.SmallInt
-  // 救助数
+  /// 救助数
   helpCount            Int      @map("help_count") @db.SmallInt
-  // イクラ数
+  /// イクラ数
   ikuraNum             Int      @map("ikura_num") @db.SmallInt
-  // 金イクラ数
+  /// 金イクラ数
   goldenIkuraNum       Int      @map("golden_ikura_num") @db.SmallInt
-  // 金イクラアシスト数
+  /// 金イクラアシスト数
   goldenIkuraAssistNum Int      @map("golden_ikura_assist_num") @db.SmallInt
-  // バイトボーナス
+  /// バイトボーナス
   jobBonus             Int?     @map("job_bonus") @db.SmallInt
-  // バイトレート
+  /// バイトレート
   jobRate              Float?   @map("job_rate") @db.Real
-  // バイトスコア
+  /// バイトスコア
   jobScore             Int?     @map("job_score") @db.SmallInt
-  // クマサンポイント
+  /// クマサンポイント
   kumaPoint            Int?     @map("kuma_point") @db.SmallInt
-  // 称号
+  /// 称号
   gradeId              Int?     @map("grade_id") @db.SmallInt
-  // 評価レート
+  /// 評価レート
   gradePoint           Int?     @map("grade_point") @db.SmallInt
-  // オカシラメーター
+  /// オカシラメーター
   smellMeter           Int?     @map("smell_meter") @db.SmallInt
-  // 種族
+  /// 種族
   species              Species  @default(INKLING)
-  // スペシャルID
+  /// スペシャルID
   specialId            Int?     @map("special_id") @db.SmallInt
-  // スペシャル使用数
+  /// スペシャル使用数
   specialCounts        Int[]    @map("special_count") @db.SmallInt
-  // 支給されたブキのリスト
+  /// 支給されたブキのリスト
   weaponList           Int[]    @map("weapon_list") @db.SmallInt
-  // 作成日
+  /// 作成日
   createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  // 更新日
+  /// 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
-  // リレーション
+  /// リレーション
   result               Result?  @relation(fields: [uuid, scheduleId, playTime], references: [uuid, scheduleId, playTime], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([nplnUserId, playTime, uuid])
@@ -247,29 +231,29 @@ model Player {
 }
 
 model Wave {
-  // リザルトID
+  /// リザルトID
   uuid              String   @map("uuid") @db.Uuid
-  // スケジュールID
+  /// スケジュールID
   scheduleId        String   @map("schedule_id") @db.VarChar(64)
-  // プレイ時間
+  /// プレイ時間
   playTime          DateTime @map("play_time") @db.Timestamp(0)
-  // WAVE数
+  /// WAVE数
   waveId            Int      @map("wave_id") @db.SmallInt
-  // 潮位
+  /// 潮位
   waterLevel        Int      @map("water_level") @db.SmallInt
-  // イベント
+  /// イベント
   eventType         Int      @map("event_type") @db.SmallInt
-  // 金イクラ数
+  /// 金イクラ数
   goldenIkuraNum    Int?     @map("golden_ikura_num") @db.SmallInt
-  // 金イクラドロップ数
+  /// 金イクラドロップ数
   goldenIkuraPopNum Int      @map("golden_ikura_pop_num") @db.SmallInt
-  // 金イクラドロップ数
+  /// 金イクラドロップ数
   quotaNum          Int?     @map("quota_num") @db.SmallInt
-  // クリアしたか
+  /// クリアしたか
   isClear           Boolean  @map("is_clear") @db.Boolean
-  // 作成日
+  /// 作成日
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  // 更新日
+  /// 更新日
   updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   result            Result?  @relation(fields: [uuid, scheduleId, playTime], references: [uuid, scheduleId, playTime], onDelete: Cascade, onUpdate: Cascade)
 

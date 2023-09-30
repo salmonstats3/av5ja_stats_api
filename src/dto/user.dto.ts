@@ -1,124 +1,86 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma, User } from '@prisma/client';
-import { Expose, Type } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { Prisma } from '@prisma/client';
+import { Expose, Transform } from 'class-transformer';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Length, Min } from 'class-validator';
 import 'reflect-metadata';
 
-interface UserDto {
-  id: string;
-  name: string;
-}
-
-export class UserCreateDto implements UserDto {
-  @ApiProperty({ example: 'laT7IetjzweGKWkNwrd162iO5wt2', required: true })
+export class UserCreateDto {
+  @ApiProperty({ example: 'twitter.com', required: true })
   @IsNotEmpty()
   @Expose()
-  id: string;
+  readonly provider: string;
 
-  @ApiProperty({ example: '@tkgling', required: true })
+  @ApiProperty({ example: '3f89c3791c43ea57', required: true })
+  @IsNotEmpty()
+  @Length(16, 16)
+  @Expose()
+  readonly nsaId: string;
+
+  @ApiProperty({ example: 'tkgling', required: true })
+  @IsNotEmpty()
+  @Length(1, 32)
+  @Expose()
+  readonly nickname: string;
+
+  @ApiProperty({ example: 'https://cdn-image-e0d67c509fb203858ebcb2fe3f88c2aa.baas.nintendo.com/1/873635dd214b5768', required: true })
+  @IsNotEmpty()
+  @Length(16, 16)
+  @Expose()
+  @Transform(({ value }) => value.split('/').at(-1))
+  readonly thumbnailUrl: string;
+
+  @ApiProperty({ example: 4737360831381504, required: true, type: 'integer' })
+  @IsInt()
+  @Min(0)
+  @Expose()
+  readonly coralUserId: number;
+
+  @ApiProperty({ example: 'a7grz65rxkvhfsbwmxmm', required: true, type: String })
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  @Length(20, 20)
+  @Expose()
+  readonly nplnUserId: string;
+
+  @ApiProperty({ example: '4462-9670-6032', required: true, type: String })
+  @IsNotEmpty()
+  @Length(14, 14)
+  @Expose()
+  readonly friendCode: string;
+
+  @ApiProperty({ example: 'en-US', required: true, type: String })
   @IsNotEmpty()
   @Expose()
-  name: string;
+  readonly language: string;
+
+  @ApiProperty({ example: 'US', required: true, type: String })
+  @IsNotEmpty()
+  @Expose()
+  readonly country: string;
+
+  @ApiProperty({ example: '2004-09-01', required: true, type: String })
+  @IsNotEmpty()
+  @Expose()
+  readonly birthday: string;
 
   get create(): Prisma.UserCreateArgs {
     return {
       data: {
-        id: this.id,
-        name: this.name,
-        sessionToken: '',
+        birthday: this.birthday,
+        coralUserId: this.coralUserId,
+        country: this.country,
+        friendCode: this.friendCode,
+        language: this.language,
+        nickname: this.nickname,
+        nplnUserId: this.nplnUserId,
+        nsaId: this.nsaId,
+        thumbnailURL: this.thumbnailUrl,
       },
     };
   }
 }
 
-export class UserResponseDto implements UserDto {
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  @Type(() => AccountCreateDto)
-  accounts: AccountDto[];
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  id: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  name: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  session_token: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  created_at: Date;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  updated_at: Date;
-
-  static fromPrismaResult({ createdAt, updatedAt, id, name, sessionToken }: Partial<User>): UserResponseDto {
-    return {
-      accounts: [],
-      created_at: createdAt,
-      id: id,
-      name: name,
-      session_token: sessionToken,
-      updated_at: updatedAt,
-    };
-  }
-}
-
-interface AccountDto {
-  coral_user_id: number;
-  country: string;
-  friend_code: string;
-  id: string;
-  language: string;
-  name: string;
-  npln_user_id: string;
-  nsa_id: string;
-  thumbnail_url: string;
-}
-
-export class AccountCreateDto implements AccountDto {
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  coral_user_id: number;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  country: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  friend_code: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  id: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  language: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  name: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  npln_user_id: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  nsa_id: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  thumbnail_url: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  updated_at: Date;
+export class UserResponseDto extends UserCreateDto {
+  readonly session_token: string;
 }

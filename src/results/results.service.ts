@@ -3,6 +3,7 @@ import { Mode, Result } from '@prisma/client';
 import dayjs from 'dayjs';
 import lodash from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
+import { ResultCreateManyRequest } from 'src/dto/paginated.dto';
 import { ResultCreateDto, ResultCreateRequest } from 'src/dto/result.dto';
 
 @Injectable()
@@ -28,7 +29,12 @@ export class ResultsService {
     return results.map((result) => lodash.omit(result, ['createdAt', 'updatedAt', 'scheduleId']));
   }
 
-  async create(request: ResultCreateRequest): Promise<Partial<Result>[]> {
+  async createV1(request: ResultCreateManyRequest): Promise<Partial<Result>[]> {
+    // Promise.allを利用すると競合する可能性がワンチャンあったりする......
+    return Promise.all(request.results.map((result) => this.prisma.result.upsert(result.upsert)));
+  }
+
+  async createV2(request: ResultCreateRequest): Promise<Partial<Result>[]> {
     // Promise.allを利用すると競合する可能性がワンチャンあったりする......
     return Promise.all(request.results.map((result) => this.upsert(result)));
   }
