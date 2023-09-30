@@ -36,38 +36,14 @@ enum Species {
   OCTOLING
 }
 
-/// Firebase Authenticationのユーザー情報
-model User {
-  /// 非公開ID(FirebaseID)
-  uid         String    @id
-  /// パスワード(ハッシュ)
-  password    String    @db.VarChar(64)
-  /// ユーザー固有のID(検索用のIDで自由に変更可能)
-  id          String    @unique @db.VarChar(32)
-  /// ユーザー名
-  nickname    String    @map("name") @db.VarChar(32)
-  /// プロバイダ
-  provider    String    @db.VarChar(16)
-  /// メンバーシップ
-  membership  Boolean   @default(false)
-  /// リザルトの公開設定
-  isPublic    Boolean   @default(false) @map("is_public") @db.Boolean
-  /// 作成日
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
-  /// 更新日
-  updatedAt   DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
-  /// ユーザーに連携しているアカウント
-  nplnUserIds String[]  @map("npln_user_ids") @db.VarChar(20)
-  /// ユーザーに連携しているアカウント
-  accounts    Account[]
-
-  @@map("users")
-}
-
 /// Nintendo Service Accountの情報
 model Account {
   /// ユーザー固有ID(FirebaseのIDを利用する)
   uid          String
+  /// パスワード(ハッシュ)
+  password     String   @db.VarChar(64)
+  /// プロバイダ
+  provider     String   @db.VarChar(16)
   /// Nintendo Service Acccount ID
   nsaId        String   @unique @map("nsa_id") @db.VarChar(16)
   /// 登録名
@@ -84,8 +60,12 @@ model Account {
   birthday     String   @db.VarChar(10)
   /// 国コード
   country      String?  @map("country") @db.VarChar(2)
-  /// ユーザー
-  user         User?    @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
+  /// NplnUserId
+  nplnUserId   String?  @unique @map("npln_user_id") @db.VarChar(20)
+  /// メンバーシップ
+  membership   Boolean  @default(false)
+  /// リザルトの公開設定
+  isPublic     Boolean  @default(false) @map("is_public") @db.Boolean
   /// 作成日
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   /// 更新日

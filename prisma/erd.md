@@ -23,21 +23,10 @@ PRIVATE_SCENARIO PRIVATE_SCENARIO
 OCTOLING OCTOLING
         }
     
-  "users" {
-    String uid "🗝️"
-    String password 
-    String id 
-    String name 
-    String provider 
-    Boolean membership 
-    Boolean is_public 
-    DateTime created_at 
-    DateTime updated_at 
-    String npln_user_ids 
-    }
-  
-
   "accounts" {
+    String uid 
+    String password 
+    String provider 
     String nsa_id 
     String nickname 
     String thumbnail_url 
@@ -46,6 +35,9 @@ OCTOLING OCTOLING
     String language "❓"
     String birthday 
     String country "❓"
+    String npln_user_id "❓"
+    Boolean membership 
+    Boolean is_public 
     DateTime created_at 
     DateTime updated_at 
     }
@@ -138,8 +130,6 @@ OCTOLING OCTOLING
     DateTime updated_at 
     }
   
-    "users" o{--}o "accounts" : "accounts"
-    "accounts" o|--|o "users" : "user"
     "schedules" o|--|| "Mode" : "enum:mode"
     "schedules" o|--|| "Rule" : "enum:rule"
     "schedules" o{--}o "results" : "results"
