@@ -1,5 +1,5 @@
 import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
@@ -10,6 +10,7 @@ export class AppController {
 
   @ApiTags('Auth')
   @Post('auth/login')
+  @ApiOperation({ description: 'Login', operationId: 'Login' })
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   async login(@Request() request: any) {

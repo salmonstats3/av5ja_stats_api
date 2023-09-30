@@ -187,10 +187,21 @@ export class ScheduleCreateDto {
 }
 
 export class CoopScheduleResponseDto {
+  @ApiProperty()
   readonly startTime: string;
+
+  @ApiProperty()
   readonly endTime: string;
+
+  @ApiProperty({ enum: Mode })
   readonly mode: Mode;
+
+  @ApiProperty({ enum: Rule })
   readonly rule: Rule;
+
+  @ApiProperty({ enum: CoopStageId })
   readonly stageId: CoopStageId;
+
+  @ApiProperty({ enum: WeaponInfoMain.Id, isArray: true })
   readonly weaponList: WeaponInfoMain.Id[];
 }

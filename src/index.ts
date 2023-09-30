@@ -16,7 +16,7 @@ const build = async () => {
   const options = new DocumentBuilder()
     .setTitle(process.env.OPENAPI_TITLE)
     .setDescription(process.env.OPENAPI_DESCRIPTION)
-    .setVersion(process.env.API_VER)
+    .setVersion(process.env.OPENAPI_VERSION)
     .build();
   const build = path.resolve(process.cwd(), 'docs');
   const output = path.resolve(build, 'index');

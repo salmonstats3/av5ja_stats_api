@@ -77,7 +77,7 @@ async function bootstrap() {
   );
 
   // 環境変数を読み込んで値がなければエラーを返す
-  const version = config.get<string>('API_VERSION');
+  const version = config.get<string>('OPENAPI_VERSION');
   const secret = config.get<string>('API_JWT_SECRET_KEY');
   const port = config.get<number>('API_PORT');
   const host = config.get<string>('API_HOST');

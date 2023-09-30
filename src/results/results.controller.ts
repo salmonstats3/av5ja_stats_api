@@ -20,7 +20,7 @@ export class ResultsController {
   @ApiOperation({
     deprecated: true,
     description: 'Create a result without authentication',
-    operationId: 'Create a result without authentication',
+    operationId: 'Create results V1',
   })
   async createV1(@Body() request: ResultCreateManyRequest): Promise<Partial<Result>[]> {
     return this.service.createV1(request);
@@ -29,7 +29,7 @@ export class ResultsController {
   @Post()
   @Version('2')
   // @UseGuards(JwtAuthGuard)
-  @ApiOperation({ description: 'Create a result with authentication', operationId: 'Create a result with authentication' })
+  @ApiOperation({ description: 'Create a result with authentication', operationId: 'Create results V2' })
   async createV2(@Body() request: ResultCreateRequest): Promise<Partial<Result>[]> {
     return this.service.createV2(request);
   }

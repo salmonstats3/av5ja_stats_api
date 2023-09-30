@@ -2,15 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Rule, Schedule } from '@prisma/client';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
-import dayjs from 'dayjs';
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getDocs, getFirestore, setDoc } from 'firebase/firestore/lite';
 import lodash from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
-import { CoopScheduleResponseDto, ScheduleCreateDto, Setting } from 'src/dto/schedule.dto';
+import { ScheduleCreateDto, Setting } from 'src/dto/schedule.dto';
 import { firebaseConfig } from 'src/firebase.config';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { scheduleHash } from 'src/utils/hash';
+
+import dayjs from '../utils/dayjs';
 
 export class ScheduleDto {
   @ApiProperty()
@@ -20,11 +21,13 @@ export class ScheduleDto {
 
   @ApiProperty()
   @Expose()
-  startTime: Date;
+  @Transform(({ value }) => dayjs(value).format('YYYY-MM-DDTHH:mm:ssZ'))
+  startTime: string;
 
   @ApiProperty()
   @Expose()
-  endTime: Date;
+  @Transform(({ value }) => dayjs(value).format('YYYY-MM-DDTHH:mm:ssZ'))
+  endTime: string;
 
   @ApiProperty()
   @Expose()
@@ -45,24 +48,29 @@ export class ScheduleDto {
 
 @Injectable()
 export class SchedulesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   private readonly firestore = getFirestore(initializeApp(firebaseConfig));
 
-  async create(request: ScheduleCreateDto): Promise<CoopScheduleResponseDto[]> {
+  async create(request: ScheduleCreateDto): Promise<ScheduleDto[]> {
     // Firebaseにスケジュール追加
     await this.update(request);
     // データベースにスケジュール追加
     await this.prisma.schedule.createMany(request.create);
     return request.schedules.map((schedule) => {
-      return {
-        endTime: dayjs(schedule.endTime).format('YYYY-MM-DDTHH:mm:ssZ'),
-        mode: schedule.mode,
-        rule: schedule.rule,
-        stageId: schedule.stageId,
-        startTime: dayjs(schedule.startTime).format('YYYY-MM-DDTHH:mm:ssZ'),
-        weaponList: schedule.weaponList,
-      };
+      return plainToInstance(
+        ScheduleDto,
+        {
+          endTime: schedule.endTime,
+          mode: schedule.mode,
+          rule: schedule.rule,
+          scheduleId: schedule.scheduleId,
+          stageId: schedule.stageId,
+          startTime: schedule.startTime,
+          weaponList: schedule.weaponList,
+        },
+        { excludeExtraneousValues: true },
+      );
     });
   }
 
@@ -70,16 +78,59 @@ export class SchedulesService {
     return lodash.omit(await this.prisma.schedule.findUniqueOrThrow({ where: { scheduleId: schedule_id } }), ['createdAt', 'updatedAt']);
   }
 
-  async find_allV1(): Promise<Partial<Schedule>[]> {
-    return (await this.prisma.schedule.findMany()).map((schedule) => lodash.omit(schedule, ['createdAt', 'updatedAt']));
+  async find_allV1(): Promise<ScheduleDto[]> {
+    return (await this.prisma.schedule.findMany()).map((schedule) =>
+      plainToInstance(ScheduleDto, schedule, { excludeExtraneousValues: true }),
+    );
   }
 
+  /**
+   * Firebaseからデータを取得する
+   * @returns
+   */
   async find_allV2(): Promise<ScheduleDto[]> {
     const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))));
-    const schedules: ScheduleDto[] = documents
-      .flatMap((document) => document.docs.map((doc) => plainToInstance(ScheduleDto, doc.data(), { excludeExtraneousValues: true })))
-      .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
+    const schedules: ScheduleDto[] = documents.flatMap((document) =>
+      document.docs
+        .map((doc) => {
+          const data = doc.data();
+          return plainToInstance(
+            ScheduleDto,
+            {
+              ...data,
+              ...{
+                mode: this.mode(data.setting),
+                rule: this.rule(data.setting),
+              },
+            },
+            { excludeExtraneousValues: true },
+          );
+        })
+        .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix()),
+    );
     return schedules;
+  }
+
+  private rule(setting: Setting): Rule {
+    switch (setting) {
+      case Setting.CoopBigRunSetting:
+        return Rule.BIG_RUN;
+      case Setting.CoopTeamContestSetting:
+        return Rule.TEAM_CONTEST;
+      default:
+        return Rule.REGULAR;
+    }
+  }
+
+  private mode(setting: Setting): Mode {
+    switch (setting) {
+      case Setting.CoopBigRunSetting:
+        return Mode.REGULAR;
+      case Setting.CoopTeamContestSetting:
+        return Mode.LIMITED;
+      default:
+        return Mode.REGULAR;
+    }
   }
 
   /**
