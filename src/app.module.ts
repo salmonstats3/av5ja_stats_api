@@ -52,4 +52,4 @@ import { UsersService } from './users/users.service';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

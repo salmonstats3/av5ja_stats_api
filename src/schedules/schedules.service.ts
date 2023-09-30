@@ -45,7 +45,7 @@ export class ScheduleDto {
 
 @Injectable()
 export class SchedulesService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   private readonly firestore = getFirestore(initializeApp(firebaseConfig));
 
