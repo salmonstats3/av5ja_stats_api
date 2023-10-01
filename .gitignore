@@ -100,7 +100,9 @@ out
 dist
 
 # OpenAPI build / generate output
-docs
+docs/*.html
+docs/*.json
+docs/*.yaml
 
 # Gatsby files
 .cache/
