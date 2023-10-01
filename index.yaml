@@ -2,9 +2,7 @@ openapi: 3.0.0
 paths:
   /auth/login:
     post:
-      operationId: Login
-      summary: ''
-      description: Login
+      operationId: AppController_login
       parameters: []
       responses:
         '200':
@@ -24,14 +22,8 @@ paths:
             schema:
               $ref: '#/components/schemas/ScheduleCreateDto'
       responses:
-        '200':
+        '201':
           description: ''
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ScheduleDto'
       tags: &ref_0
         - Schedules
     get:
@@ -60,7 +52,7 @@ paths:
       tags: *ref_0
   /results:
     post:
-      operationId: Create results V2
+      operationId: Create a result with authentication
       summary: ''
       description: Create a result with authentication
       parameters: []
@@ -279,33 +271,6 @@ components:
           $ref: '#/components/schemas/DataClass'
       required:
         - data
-    ScheduleDto:
-      type: object
-      properties:
-        scheduleId:
-          type: string
-        startTime:
-          type: string
-        endTime:
-          type: string
-        stageId:
-          type: number
-        weaponList:
-          type: array
-          items:
-            type: string
-        mode:
-          type: string
-        rule:
-          type: string
-      required:
-        - scheduleId
-        - startTime
-        - endTime
-        - stageId
-        - weaponList
-        - mode
-        - rule
     CoopScheduleRequest:
       type: object
       properties:
@@ -517,7 +482,7 @@ components:
           type: array
           items:
             type: string
-        resultId:
+        id:
           $ref: '#/components/schemas/CoopResultIdRequest'
         scale:
           type: array
@@ -555,7 +520,7 @@ components:
         - schedule
         - jobResult
         - bossKillCounts
-        - resultId
+        - id
         - scale
         - smellMeter
         - goldenIkuraAssistNum
