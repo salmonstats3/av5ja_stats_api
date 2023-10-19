@@ -53,4 +53,4 @@ import { VersionService } from './version/version.service';
     ResourceService,
   ],
 })
-export class AppModule { }
+export class AppModule {}
