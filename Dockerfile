@@ -1,19 +1,38 @@
-FROM amd64/node:18.17.1-alpine3.18
-
-WORKDIR /app
+FROM node:18.17.1 AS build
+WORKDIR /tmp
 
 COPY  ./package.json ./
 COPY  ./yarn.lock ./
 COPY  ./tsconfig.json ./
 COPY  ./tsconfig.build.json ./
-COPY  ./prisma ./
-COPY  ./src ./
+COPY  ./prisma ./prisma
+COPY  ./src ./src
 COPY  ./nest-cli.json ./
 
-RUN yarn install && yarn cache clean --all
+RUN yarn install
 RUN yarn prisma generate
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 RUN yarn build
 
+FROM node:18.17.1 AS module
+WORKDIR /tmp
+
+COPY  ./package.json ./
+COPY  ./yarn.lock ./
+COPY  ./tsconfig.json ./
+COPY  ./tsconfig.build.json ./
+COPY  ./prisma ./prisma
+COPY  ./src ./src
+COPY  ./nest-cli.json ./
+
+RUN yarn install --prod
+RUN yarn prisma generate
+
+FROM node:18.17.1-alpine3.18 AS dist
+WORKDIR /app
+
+COPY --from=build /tmp/dist ./dist
+COPY --from=build /tmp/package.json ./
+COPY --from=module /tmp/node_modules ./node_modules
+
 EXPOSE 3000
-CMD ["yarn", "start:prod"]
+CMD ["node", "dist/main"]

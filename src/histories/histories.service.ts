@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import dayjs from 'dayjs';
+import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'nestjs-prisma';
-import { CoopHistoryResponseDto, HistoryCreateDto } from 'src/dto/history.dto';
+import { CoopHistoryQuery } from 'src/dto/history.dto';
 
 @Injectable()
 export class HistoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: HistoryCreateDto): Promise<CoopHistoryResponseDto> {
+  async create(request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response> {
     await this.prisma.schedule.createMany(request.create);
     return {
-      results: request.histories.flatMap((history) => history.historyDetails.nodes.map((node) => node.id.raw_value)),
-      schedules: request.histories.map((history) => {
-        return {
-          endTime: dayjs(history.endTime).format('YYYY-MM-DDTHH:mm:ssZ'),
-          mode: history.mode,
-          rule: history.rule,
-          stageId: history.stageId,
-          startTime: dayjs(history.startTime).format('YYYY-MM-DDTHH:mm:ssZ'),
-          weaponList: history.weaponList,
-        };
+      results: request.schedules.flatMap((schedule) => schedule.historyDetails.nodes.map((node) => node.id.rawValue)),
+      schedules: request.schedules.map((schedule) => {
+        return plainToInstance(CoopHistoryQuery.Schedule, {
+          endTime: schedule.endTime,
+          mode: schedule.mode,
+          rule: schedule.rule,
+          stageId: schedule.stageId,
+          startTime: schedule.startTime,
+          weaponList: schedule.weaponList,
+        });
       }),
     };
   }

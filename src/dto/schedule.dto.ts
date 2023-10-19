@@ -4,7 +4,7 @@ import { Expose, Transform, Type } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
-import { WeaponInfoMain, id } from 'src/utils/enum/weapon_info_main';
+import { id } from 'src/utils/enum/weapon_info_main';
 import { scheduleHash } from 'src/utils/hash';
 
 export enum Setting {
@@ -38,159 +38,152 @@ export class MainWeapon {
   readonly image: ImageURL;
 }
 
-export class CoopStage {
-  @ApiProperty({ example: 'Q29vcFN0YWdlLTE=', required: true, type: 'string' })
-  @IsEnum(CoopStageId)
-  @Expose()
-  @Transform(({ value }) => {
-    const regexp = /-([0-9-]*)/;
-    const match = regexp.exec(atob(value));
-    return match === null ? CoopStageId.Dummy : parseInt(match[1], 10);
-  })
-  readonly id: number;
-}
-
-class CoopSetting {
-  @ApiProperty({ required: true })
-  @Type(() => CoopStage)
-  @Expose()
-  readonly coopStage: CoopStage;
-
-  @ApiProperty({ enum: Setting, name: '__isCoopSetting', required: true })
-  @IsEnum(Setting)
-  @Expose({ name: '__isCoopSetting' })
-  readonly isCoopSetting: Setting;
-
-  @ApiProperty({ required: true, type: [MainWeapon] })
-  @Expose()
-  @Type(() => MainWeapon)
-  @ValidateNested({ each: true })
-  readonly weapons: MainWeapon[];
-}
-
-class CoopSchedule {
-  @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', required: true })
-  @Transform(({ value }) => dayjs(value).toDate())
-  @IsDate()
-  @Expose()
-  readonly startTime: Date;
-
-  @ApiProperty({ example: '2023-08-29T08:00:00Z', name: 'endTime', required: true })
-  @Transform(({ value }) => dayjs(value).toDate())
-  @IsDate()
-  @Expose()
-  readonly endTime: Date;
-
-  @ApiProperty({ required: true })
-  @Expose()
-  @Type(() => CoopSetting)
-  @ValidateNested()
-  readonly setting: CoopSetting;
-
-  get scheduleId(): string {
-    return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.setting.coopStage.id, this.weaponList);
+export namespace StageScheduleQuery {
+  export class CoopStage {
+    @ApiProperty({ example: 'Q29vcFN0YWdlLTE=', required: true, type: 'string' })
+    @IsEnum(CoopStageId)
+    @Expose()
+    @Transform(({ value }) => {
+      const regexp = /-([0-9-]*)/;
+      const match = regexp.exec(atob(value));
+      return match === null ? CoopStageId.Dummy : parseInt(match[1], 10);
+    })
+    readonly id: number;
   }
 
-  get query(): Prisma.ScheduleCreateInput {
-    return {
-      endTime: this.endTime,
-      mode: this.mode,
-      rule: this.rule,
-      scheduleId: this.scheduleId,
-      stageId: this.stageId,
-      startTime: this.startTime,
-      weaponList: this.weaponList,
-    };
+  class CoopSetting {
+    @ApiProperty({ required: true })
+    @Type(() => CoopStage)
+    @Expose()
+    readonly coopStage: CoopStage;
+
+    @ApiProperty({ enum: Setting, name: '__isCoopSetting', required: true })
+    @IsEnum(Setting)
+    @Expose({ name: '__isCoopSetting' })
+    readonly isCoopSetting: Setting;
+
+    @ApiProperty({ required: true, type: [MainWeapon] })
+    @Expose()
+    @Type(() => MainWeapon)
+    @ValidateNested({ each: true })
+    readonly weapons: MainWeapon[];
   }
 
-  get stageId(): CoopStageId {
-    return this.setting.coopStage.id;
-  }
+  class CoopSchedule {
+    @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', required: true })
+    @Transform(({ value }) => dayjs(value).toDate())
+    @IsDate()
+    @Expose()
+    readonly startTime: Date;
 
-  get weaponList(): number[] {
-    return this.setting.weapons.map((weapon) => weapon.image.id);
-  }
+    @ApiProperty({ example: '2023-08-29T08:00:00Z', name: 'endTime', required: true })
+    @Transform(({ value }) => dayjs(value).toDate())
+    @IsDate()
+    @Expose()
+    readonly endTime: Date;
 
-  get mode(): Mode {
-    return this.rule === Rule.TEAM_CONTEST ? Mode.LIMITED : Mode.REGULAR;
-  }
+    @ApiProperty({ required: true })
+    @Expose()
+    @Type(() => CoopSetting)
+    @ValidateNested()
+    readonly setting: CoopSetting;
 
-  get rule(): Rule {
-    switch (this.setting.isCoopSetting) {
-      case Setting.CoopBigRunSetting:
-        return Rule.BIG_RUN;
-      case Setting.CoopTeamContestSetting:
-        return Rule.TEAM_CONTEST;
-      default:
-        return Rule.REGULAR;
+    get scheduleId(): string {
+      return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.setting.coopStage.id, this.weaponList);
+    }
+
+    get query(): Prisma.ScheduleCreateInput {
+      return {
+        endTime: this.endTime,
+        mode: this.mode,
+        rule: this.rule,
+        scheduleId: this.scheduleId,
+        stageId: this.stageId,
+        startTime: this.startTime,
+        weaponList: this.weaponList,
+      };
+    }
+
+    get stageId(): CoopStageId {
+      return this.setting.coopStage.id;
+    }
+
+    get weaponList(): number[] {
+      return this.setting.weapons.map((weapon) => weapon.image.id);
+    }
+
+    get mode(): Mode {
+      return this.rule === Rule.TEAM_CONTEST ? Mode.LIMITED : Mode.REGULAR;
+    }
+
+    get rule(): Rule {
+      switch (this.setting.isCoopSetting) {
+        case Setting.CoopBigRunSetting:
+          return Rule.BIG_RUN;
+        case Setting.CoopTeamContestSetting:
+          return Rule.TEAM_CONTEST;
+        default:
+          return Rule.REGULAR;
+      }
     }
   }
-}
 
-class Node {
-  @ApiProperty({ required: true, type: [CoopSchedule] })
-  @Expose()
-  @Type(() => CoopSchedule)
-  @ValidateNested({ each: true })
-  readonly nodes: CoopSchedule[];
-}
-
-class ScheduleGroup {
-  @ApiProperty({ required: true, type: Node })
-  @Expose()
-  @Type(() => Node)
-  @ValidateNested()
-  readonly regularSchedules: Node;
-
-  @ApiProperty({ required: true })
-  @Expose()
-  @Type(() => Node)
-  @ValidateNested()
-  readonly bigRunSchedules: Node;
-
-  @ApiProperty({ required: true, type: Node })
-  @Expose()
-  @Type(() => Node)
-  @ValidateNested()
-  readonly teamContestSchedules: Node;
-}
-
-class DataClass {
-  @ApiProperty({ required: true, type: ScheduleGroup })
-  @Expose()
-  @Type(() => ScheduleGroup)
-  @ValidateNested()
-  readonly coopGroupingSchedule: ScheduleGroup;
-}
-
-export class ScheduleCreateDto {
-  @ApiProperty({ required: true, type: DataClass })
-  @Expose()
-  @Type(() => DataClass)
-  @ValidateNested({ each: true })
-  readonly data: DataClass;
-
-  get schedules(): CoopSchedule[] {
-    return [
-      ...this.data.coopGroupingSchedule.regularSchedules.nodes,
-      ...this.data.coopGroupingSchedule.bigRunSchedules.nodes,
-      ...this.data.coopGroupingSchedule.teamContestSchedules.nodes,
-    ];
+  class Node {
+    @ApiProperty({ required: true, type: [CoopSchedule] })
+    @Expose()
+    @Type(() => CoopSchedule)
+    @ValidateNested({ each: true })
+    readonly nodes: CoopSchedule[];
   }
 
-  get create(): Prisma.ScheduleCreateManyArgs {
-    return {
-      data: this.schedules.map((schedule) => schedule.query),
-      skipDuplicates: true,
-    };
-  }
-}
+  class ScheduleGroup {
+    @ApiProperty({ required: true, type: Node })
+    @Expose()
+    @Type(() => Node)
+    @ValidateNested()
+    readonly regularSchedules: Node;
 
-export class CoopScheduleResponseDto {
-  readonly startTime: string;
-  readonly endTime: string;
-  readonly mode: Mode;
-  readonly rule: Rule;
-  readonly stageId: CoopStageId;
-  readonly weaponList: WeaponInfoMain.Id[];
+    @ApiProperty({ required: true })
+    @Expose()
+    @Type(() => Node)
+    @ValidateNested()
+    readonly bigRunSchedules: Node;
+
+    @ApiProperty({ required: true, type: Node })
+    @Expose()
+    @Type(() => Node)
+    @ValidateNested()
+    readonly teamContestSchedules: Node;
+  }
+
+  class DataClass {
+    @ApiProperty({ required: true, type: ScheduleGroup })
+    @Expose()
+    @Type(() => ScheduleGroup)
+    @ValidateNested()
+    readonly coopGroupingSchedule: ScheduleGroup;
+  }
+
+  export class Request {
+    @ApiProperty({ required: true, type: DataClass })
+    @Expose()
+    @Type(() => DataClass)
+    @ValidateNested({ each: true })
+    readonly data: DataClass;
+
+    get schedules(): CoopSchedule[] {
+      return [
+        ...this.data.coopGroupingSchedule.regularSchedules.nodes,
+        ...this.data.coopGroupingSchedule.bigRunSchedules.nodes,
+        ...this.data.coopGroupingSchedule.teamContestSchedules.nodes,
+      ];
+    }
+
+    get create(): Prisma.ScheduleCreateManyArgs {
+      return {
+        data: this.schedules.map((schedule) => schedule.query),
+        skipDuplicates: true,
+      };
+    }
+  }
 }

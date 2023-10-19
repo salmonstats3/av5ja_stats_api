@@ -23,23 +23,6 @@ PRIVATE_SCENARIO PRIVATE_SCENARIO
 OCTOLING OCTOLING
         }
     
-  "users" {
-    String nsa_id "🗝️"
-    String nickname 
-    String thumbnail_url 
-    BigInt coral_user_id 
-    String friend_code "❓"
-    String language "❓"
-    String birthday 
-    String country "❓"
-    String npln_user_id "❓"
-    Boolean membership 
-    Boolean is_public 
-    DateTime created_at 
-    DateTime updated_at 
-    }
-  
-
   "schedules" {
     String schedule_id "🗝️"
     DateTime start_time 
@@ -54,8 +37,8 @@ OCTOLING OCTOLING
   
 
   "results" {
-    String uuid "🗝️"
     String result_id 
+    String uuid "🗝️"
     String schedule_id 
     DateTime play_time 
     Int boss_counts 
@@ -80,8 +63,6 @@ OCTOLING OCTOLING
   
 
   "players" {
-    String schedule_id 
-    DateTime play_time 
     String npln_user_id 
     String name 
     String byname 
@@ -110,12 +91,11 @@ OCTOLING OCTOLING
     Int weapon_list 
     DateTime created_at 
     DateTime updated_at 
+    DateTime play_time 
     }
   
 
   "waves" {
-    String schedule_id 
-    DateTime play_time 
     Int wave_id 
     Int water_level 
     Int event_type 
@@ -125,6 +105,7 @@ OCTOLING OCTOLING
     Boolean is_clear 
     DateTime created_at 
     DateTime updated_at 
+    DateTime play_time 
     }
   
     "schedules" o|--|| "Mode" : "enum:mode"

@@ -1,37 +1,21 @@
-import { exec } from 'child_process';
-import { mkdir, writeFileSync } from 'fs';
-import * as path from 'path';
-
 import { LogLevel, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { DocumentBuilder, SwaggerModule, OpenAPIObject } from '@nestjs/swagger';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import fastify from 'fastify';
-import { dump } from 'js-yaml';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 import { AppModule } from './app.module';
-
-const build = (documents: OpenAPIObject) => {
-  const build = path.resolve(process.cwd(), 'docs');
-  const output = path.resolve(build, 'index');
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  mkdir(build, { recursive: true }, () => {});
-  writeFileSync(`${output}.json`, JSON.stringify(documents), {
-    encoding: 'utf8',
-  });
-  writeFileSync(`${output}.yaml`, dump(documents, {}));
-  exec(`npx redoc-cli build ${output}.json -o ${output}.html`);
-};
+import { ceil } from './helper';
 
 async function bootstrap() {
   const isDevelopment = process.env.NODE_ENV === 'development';
-
   const server = fastify({ bodyLimit: 50 * 1024 * 1024 });
-  // ログレベル
   const logLevels: LogLevel[] = isDevelopment ? ['log', 'error', 'warn', 'debug', 'verbose'] : ['log', 'error', 'warn'];
-  // ログ出力
   // server.addHook('preValidation', preValidation);
   // server.addHook('onSend', onSend);
   // server.addHook('onRequest', (request, reply, done) => {
@@ -46,9 +30,12 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
     logger: logLevels,
   });
-  // 設定ファイル読み込み
-  const config = app.get(ConfigService);
-  // バージョンとCORSの設定
+
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  dayjs.extend(ceil);
+  dayjs.tz.setDefault('Asia/Tokyo');
+
   app.enableVersioning({ defaultVersion: '1', type: VersioningType.URI });
   app.enableCors({
     allowedHeaders:
@@ -59,13 +46,13 @@ async function bootstrap() {
     origin: '*',
     preflightContinue: false,
   });
-  // フィルターの追加(意味はよくわかっていない)
+
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
-  // バリデーション時に変換する
+
   app.useGlobalPipes(
     new ValidationPipe({
-      // disableErrorMessages: false,
+      disableErrorMessages: !isDevelopment,
       transform: true,
       transformOptions: {
         excludeExtraneousValues: true,
@@ -76,38 +63,32 @@ async function bootstrap() {
     }),
   );
 
-  // 環境変数を読み込んで値がなければエラーを返す
-  const version = config.get<string>('API_VERSION');
-  const secret = config.get<string>('API_JWT_SECRET_KEY');
-  const port = config.get<number>('API_PORT');
-  const host = config.get<string>('API_HOST');
+  const config = app.get(ConfigService);
+  const configuration = {
+    host: config.get<string>('API_HOST'),
+    port: config.get<number>('API_PORT'),
+    version: config.get<string>('API_VERSION'),
+  };
+  if (configuration.version === undefined) {
+    throw new Error('API_VERSION is not defined.');
+  }
+  if (configuration.host === undefined) {
+    throw new Error('API_HOST is not defined.');
+  }
+  if (configuration.port === undefined) {
+    throw new Error('API_PORT is not defined.');
+  }
 
-  if (port === Number.NaN) {
-    throw new Error('API_PORT is not a number');
-  }
-  if (host === undefined) {
-    throw new Error('API_HOST is not defined');
-  }
-  if (version === undefined) {
-    throw new Error('API_VERSION is not defined');
-  }
-  if (secret === undefined) {
-    throw new Error('API_JWT_SECRET_KEY is not defined');
-  }
-  // 開発環境時はSwaggerを有効にする
   if (isDevelopment) {
     const documentConfig = new DocumentBuilder()
       .setTitle('Salmon Stats+')
       .setDescription('Salmon Stats for Splatoon 3 API documents.')
-      .setVersion(version)
+      .setVersion(configuration.version)
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, documentConfig);
-    build(document);
     SwaggerModule.setup('docs', app, document);
   }
-
-  // アプリを起動
-  await app.listen(process.env.API_PORT || 3000, '0.0.0.0');
+  await app.listen(configuration.port || 3000, configuration.host || '0.0.0.0');
 }
 bootstrap();

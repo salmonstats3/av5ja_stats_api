@@ -1,4 +1,4 @@
-name: CI
+name: Continuous Integration
 
 on:
   push:
@@ -21,16 +21,16 @@ jobs:
 
       - name: Cache CDK Dependencies
         uses: actions/cache@v3
-        id: cache_cdk_dependency_id
+        id: cache_cdk_dependency_build
         env:
-          cache-name: cache-cdk-dependency
+          cache-name: cache-cdk-build-dependency
         with:
           path: node_modules
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}
 
       - name: Install Dependencies
-        if: ${{ steps.cache_cdk_dependency_id.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache_cdk_dependency_build.outputs.cache-hit != 'true' }}
         run: yarn install
 
       - name: Format
