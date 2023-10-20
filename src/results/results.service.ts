@@ -5,6 +5,7 @@ import lodash from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 import { CoopHistoryDetailQuery } from 'src/dto/history.detail.request.dto';
 import { CoopResultQuery } from 'src/dto/history.detail.response.dto';
+import { scheduleHash } from 'src/utils/hash';
 import { zip } from 'src/utils/zip';
 
 @Injectable()
@@ -32,23 +33,28 @@ export class ResultsService {
 
   async create(request: CoopHistoryDetailQuery.Paginated | CoopResultQuery.Paginated): Promise<CoopResultQuery.Paginated> {
     const results: CoopResultQuery.Request[] = await (async () => {
-      const schedules = await Promise.all(request.results.map((result: any) => this.connectOrCreate(result)));
-      return zip(request.results as CoopHistoryDetailQuery.Request[], schedules);
+      if (request instanceof CoopHistoryDetailQuery.Paginated) {
+        const schedules = await Promise.all(request.results.map((result: any) => this.connectOrCreate(result)));
+        return zip(request.results as CoopHistoryDetailQuery.Request[], schedules);
+      }
+      if (request instanceof CoopResultQuery.Paginated) {
+        return request.results as CoopResultQuery.Request[];
+      }
+      return [] as CoopResultQuery.Request[];
     })();
     await this.prisma.$transaction(results.map((result) => this.prisma.result.upsert(result.upsert)));
     return plainToInstance(CoopResultQuery.Paginated, { results: results });
-    return;
   }
 
   /**
-   * - レギュラー
-   * スケジュールがあればその値を、なければエラーを返す
-   * - プライベート
-   * スケジュールがあればその値を、なければ作成してその値を返す
+   * リザルトに対応するスケジュールを返す
    * @param request
    * @returns
    */
-  private async connectOrCreate(request: CoopHistoryDetailQuery.Request | CoopResultQuery.Request): Promise<Schedule> {
+  private async connectOrCreate(request: CoopHistoryDetailQuery.Request): Promise<Schedule> {
+    /**
+     * プライベートバイトであれば検索して見つからなければ作成する
+     */
     if (request.mode === Mode.PRIVATE_CUSTOM || request.mode === Mode.PRIVATE_SCENARIO) {
       try {
         return await this.prisma.schedule.findFirstOrThrow({
@@ -64,11 +70,16 @@ export class ResultsService {
           },
         });
       } catch {
+        /**
+         * プライベートバイトであればハッシュがリザルトから計算できるので作成する
+         */
+        const scheduleId: string = scheduleHash(request.mode, request.rule, null, null, request.stageId, request.weaponList);
         return await this.prisma.schedule.create({
           data: {
             endTime: null,
             mode: request.mode,
             rule: request.rule,
+            scheduleId: scheduleId,
             stageId: request.stageId,
             startTime: null,
             weaponList: request.weaponList,
@@ -76,6 +87,9 @@ export class ResultsService {
         });
       }
     } else {
+      /**
+       * レギュラーの場合はなければエラーを返す
+       */
       return await this.prisma.schedule.findFirstOrThrow({
         where: {
           endTime: {

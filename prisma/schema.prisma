@@ -38,7 +38,7 @@ enum Species {
 
 model Schedule {
   /// スケジュールID
-  scheduleId String    @id @default(dbgenerated("md5(random()::text)")) @map("schedule_id") @db.VarChar(32)
+  scheduleId String    @id @map("schedule_id") @db.VarChar(32)
   /// 開始時刻
   startTime  DateTime? @map("start_time") @db.Timestamp(3)
   /// 終了時刻
@@ -68,7 +68,7 @@ model Schedule {
 
 model Result {
   /// リザルトID
-  resultId             String    @unique @default(dbgenerated("md5(random()::text)")) @map("result_id") @db.VarChar(32)
+  resultId             String    @unique @map("result_id") @db.VarChar(32)
   /// バイトID
   uuid                 String    @map("uuid") @db.Uuid
   /// スケジュールID

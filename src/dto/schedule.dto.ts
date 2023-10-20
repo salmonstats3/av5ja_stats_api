@@ -97,6 +97,7 @@ export namespace StageScheduleQuery {
         endTime: this.endTime,
         mode: this.mode,
         rule: this.rule,
+        scheduleId: this.scheduleId,
         stageId: this.stageId,
         startTime: this.startTime,
         weaponList: this.weaponList,

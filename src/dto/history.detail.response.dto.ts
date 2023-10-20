@@ -27,7 +27,7 @@ import { EventId } from 'src/utils/enum/event_wave';
 import { WaterLevelId } from 'src/utils/enum/water_level';
 import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
 import { WeaponInfoSpecial } from 'src/utils/enum/weapon_info_special';
-import { resultHash } from 'src/utils/hash';
+import { resultHash, scheduleHash } from 'src/utils/hash';
 
 import { Common } from './common.dto';
 import { CoopHistoryDetailQuery } from './history.detail.request.dto';
@@ -716,6 +716,10 @@ export namespace CoopResultQuery {
       };
     }
 
+    get scheduleId(): string {
+      return scheduleHash(this.mode, this.rule, this.schedule.startTime, this.schedule.endTime, this.stageId, this.weaponList);
+    }
+
     private get resultId(): string {
       return resultHash(this.id.uuid, this.id.playTime);
     }
@@ -756,6 +760,7 @@ export namespace CoopResultQuery {
           players: {
             createMany: this.players,
           },
+          resultId: resultHash(this.id.uuid, this.id.playTime),
           scenarioCode: this.scenarioCode,
           schedule: {
             connectOrCreate: this.schedule.connectOrCreate,
