@@ -716,18 +716,30 @@ export namespace CoopResultQuery {
       };
     }
 
+    /**
+     * スケジュールのハッシュ
+     */
     get scheduleId(): string {
       return scheduleHash(this.mode, this.rule, this.schedule.startTime, this.schedule.endTime, this.stageId, this.weaponList);
     }
 
+    /**
+     * リザルトのハッシュ
+     */
     private get resultId(): string {
       return resultHash(this.id.uuid, this.id.playTime);
     }
 
+    /**
+     * ルール
+     */
     get rule(): Rule {
       return this.schedule.rule;
     }
 
+    /**
+     * モード
+     */
     get mode(): Mode {
       return this.schedule.mode;
     }

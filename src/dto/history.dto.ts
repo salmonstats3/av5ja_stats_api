@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
-import { IsDate, IsEnum, IsOptional, IsString, Length, ValidateNested } from 'class-validator';
+import { IsDate, IsEnum, IsOptional, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
@@ -41,12 +41,6 @@ export namespace CoopHistoryQuery {
   }
 
   export class Schedule {
-    @ApiProperty({ example: '0', name: 'scheduleId', required: true })
-    @IsString()
-    @Length(32, 32)
-    @Expose()
-    readonly scheduleId: string;
-
     @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', required: true })
     @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
     @IsDate()
@@ -83,21 +77,8 @@ export namespace CoopHistoryQuery {
     @Transform(({ obj }) => obj.weaponList ?? obj.historyDetails.nodes[0].weapons.map((weapon: any) => weapon.image.id))
     readonly weaponList: WeaponInfoMain.Id[];
 
-    // get scheduleId(): string {
-    //   return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.stageId, this.weaponList);
-    // }
-
-    get connect(): Prisma.ScheduleWhereUniqueInput {
-      return {
-        startTime_endTime_stageId_mode_rule_weaponList: {
-          endTime: this.endTime,
-          mode: this.mode,
-          rule: this.rule,
-          stageId: this.stageId,
-          startTime: this.startTime,
-          weaponList: this.weaponList,
-        },
-      };
+    get scheduleId(): string {
+      return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.stageId, this.weaponList);
     }
 
     get connectOrCreate(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
@@ -149,14 +130,23 @@ export namespace CoopHistoryQuery {
     @Expose()
     readonly historyDetails: HistoryNode;
 
+    /**
+     * スケジュールのハッシュ
+     */
     get scheduleId(): string {
       return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.historyDetails.nodes[0].coopStage.id, this.weaponList);
     }
 
+    /**
+     * ブキ一覧
+     */
     get weaponList(): WeaponInfoMain.Id[] {
       return this.historyDetails.nodes[0].weapons.map((weapon) => weapon.image.id);
     }
 
+    /**
+     * ステージID
+     */
     get stageId(): CoopStageId {
       return this.historyDetails.nodes[0].coopStage.id;
     }
@@ -205,6 +195,9 @@ export namespace CoopHistoryQuery {
     @ValidateNested({ each: true })
     data: CoopHistoryDataClass;
 
+    /**
+     * スケジュール一覧
+     */
     get schedules(): CoopSchedule[] {
       return this.data.coopResult.historyGroups.nodes;
     }
