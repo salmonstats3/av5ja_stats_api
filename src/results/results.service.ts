@@ -10,7 +10,7 @@ import { zip } from 'src/utils/zip';
 
 @Injectable()
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async find(resultId: string): Promise<Partial<Result>> {
     return lodash.omit(
@@ -35,12 +35,12 @@ export class ResultsService {
     const results: CoopResultQuery.Request[] = await (async () => {
       if (request instanceof CoopHistoryDetailQuery.Paginated) {
         const schedules = await Promise.all(request.results.map((result: any) => this.connectOrCreate(result)));
-        return zip(request.results as CoopHistoryDetailQuery.Request[], schedules);
+        return zip(request, schedules);
       }
       if (request instanceof CoopResultQuery.Paginated) {
         return request.results as CoopResultQuery.Request[];
       }
-      return [] as CoopResultQuery.Request[];
+      return [];
     })();
     await this.prisma.$transaction(results.map((result) => this.prisma.result.upsert(result.upsert)));
     return plainToInstance(CoopResultQuery.Paginated, { results: results });
