@@ -9,9 +9,9 @@ import { zip } from 'src/utils/zip';
 
 @Injectable()
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-  async find(resultId: number): Promise<Partial<Result>> {
+  async find(resultId: string): Promise<Partial<Result>> {
     return lodash.omit(
       await this.prisma.result.findUnique({
         include: this.include,

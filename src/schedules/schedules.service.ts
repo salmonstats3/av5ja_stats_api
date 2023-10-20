@@ -46,7 +46,7 @@ export class ScheduleDto {
 
 @Injectable()
 export class SchedulesService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   private readonly firestore = getFirestore(initializeApp(firebaseConfig));
 
@@ -67,15 +67,29 @@ export class SchedulesService {
     });
   }
 
-  async find(schedule_id: string): Promise<Partial<Schedule>> {
-    return;
-    // return lodash.omit(await this.prisma.schedule.findUniqueOrThrow({ where: { scheduleId: schedule_id } }), ['createdAt', 'updatedAt']);
+  /**
+   * スケジュール取得
+   * @param scheduleId
+   * @returns
+   */
+  async find(scheduleId: string): Promise<Partial<Schedule>> {
+    return lodash.omit(await this.prisma.schedule.findUniqueOrThrow({ where: { scheduleId: scheduleId } }), ['createdAt', 'updatedAt']);
   }
 
+  /**
+   * スケジュール一覧取得
+   * @param scheduleId
+   * @returns
+   */
   async find_allV1(): Promise<Partial<Schedule>[]> {
     return (await this.prisma.schedule.findMany()).map((schedule) => lodash.omit(schedule, ['createdAt', 'updatedAt']));
   }
 
+  /**
+   * スケジュール一覧取得
+   * @param scheduleId
+   * @returns
+   */
   async find_allV2(): Promise<ScheduleDto[]> {
     const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))));
     const schedules: ScheduleDto[] = documents
@@ -85,7 +99,7 @@ export class SchedulesService {
   }
 
   /**
-   * スケジュールのデータを書き込む
+   * Firabaseにスケジュールのデータを書き込む
    * @param request スケジュール
    */
   private async update(request: StageScheduleQuery.Request) {

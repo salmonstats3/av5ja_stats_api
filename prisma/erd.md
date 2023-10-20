@@ -24,7 +24,7 @@ OCTOLING OCTOLING
         }
     
   "schedules" {
-    Int schedule_id "🗝️"
+    String schedule_id "🗝️"
     DateTime start_time "❓"
     DateTime end_time "❓"
     Int stage_id 
@@ -37,9 +37,9 @@ OCTOLING OCTOLING
   
 
   "results" {
-    Int result_id 
+    String result_id 
     String uuid "🗝️"
-    Int schedule_id 
+    String schedule_id 
     DateTime play_time 
     Int boss_counts 
     Int boss_kill_counts 

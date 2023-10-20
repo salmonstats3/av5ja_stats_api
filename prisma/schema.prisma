@@ -38,7 +38,7 @@ enum Species {
 
 model Schedule {
   /// スケジュールID
-  scheduleId Int       @id @default(autoincrement()) @map("schedule_id") @db.Integer
+  scheduleId String    @id @default(dbgenerated("md5(random()::text)")) @map("schedule_id") @db.VarChar(32)
   /// 開始時刻
   startTime  DateTime? @map("start_time") @db.Timestamp(3)
   /// 終了時刻
@@ -68,13 +68,13 @@ model Schedule {
 
 model Result {
   /// リザルトID
-  resultId             Int       @unique @default(autoincrement()) @map("result_id") @db.Integer
+  resultId             String    @unique @default(dbgenerated("md5(random()::text)")) @map("result_id") @db.VarChar(32)
   /// バイトID
   uuid                 String    @map("uuid") @db.Uuid
   /// スケジュールID
-  scheduleId           Int       @map("schedule_id") @db.Integer
+  scheduleId           String    @map("schedule_id") @db.VarChar(32)
   /// プレイ時刻
-  playTime             DateTime  @map("play_time") @db.Date
+  playTime             DateTime  @map("play_time") @db.Timestamp(3)
   /// オオモノ出現数
   bossCounts           Int[]     @map("boss_counts") @db.SmallInt
   /// オオモノ討伐数
@@ -185,7 +185,7 @@ model Player {
   /// 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   /// 遊んだ時間
-  playTime             DateTime @map("play_time") @db.Date
+  playTime             DateTime @map("play_time") @db.Timestamp(3)
   /// UUID
   uuid                 String   @map("uuid") @db.Uuid
   /// Result
@@ -218,7 +218,7 @@ model Wave {
   /// 更新日
   updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
   /// 遊んだ時間
-  playTime          DateTime @map("play_time") @db.Date
+  playTime          DateTime @map("play_time") @db.Timestamp(3)
   /// UUID
   uuid              String   @map("uuid") @db.Uuid
   /// Result

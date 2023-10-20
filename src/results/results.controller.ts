@@ -8,7 +8,7 @@ import { ResultsService } from './results.service';
 @ApiTags('Results')
 @Controller('results')
 export class ResultsController {
-  constructor(private readonly service: ResultsService) { }
+  constructor(private readonly service: ResultsService) {}
 
   @Post()
   @ApiOperation({
@@ -35,7 +35,7 @@ export class ResultsController {
 
   @Get(':result_id')
   @ApiOperation({ description: 'Find a result', operationId: 'FIND' })
-  async find(@Param('result_id') resultId: number) {
+  async find(@Param('result_id') resultId: string) {
     return await this.service.find(resultId);
   }
 }

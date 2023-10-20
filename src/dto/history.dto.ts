@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
-import { IsDate, IsEnum, IsInt, IsOptional, ValidateNested } from 'class-validator';
+import { IsDate, IsEnum, IsOptional, IsString, Length, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
@@ -42,10 +42,10 @@ export namespace CoopHistoryQuery {
 
   export class Schedule {
     @ApiProperty({ example: '0', name: 'scheduleId', required: true })
-    @IsInt()
-    @IsOptional()
+    @IsString()
+    @Length(32, 32)
     @Expose()
-    readonly scheduleId: number;
+    readonly scheduleId: string;
 
     @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', required: true })
     @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))

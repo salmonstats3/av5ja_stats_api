@@ -406,6 +406,10 @@ export namespace CoopResultQuery {
       return this.isMyself ? kumaPoint : null;
     }
 
+    private smellMeter(smellMeter: number | null): number | null {
+      return this.isMyself ? smellMeter : null;
+    }
+
     update(
       id: Common.ResultId,
       gradeId: number | null,
@@ -414,6 +418,7 @@ export namespace CoopResultQuery {
       jobScore: number | null,
       kumaPoint: number | null,
       jobRate: number | null,
+      smellMeter: number | null,
     ): Prisma.PlayerUpdateArgs {
       return {
         data: {
@@ -436,6 +441,7 @@ export namespace CoopResultQuery {
           nameId: this.nameId,
           nameplate: this.nameplate.background.id,
           nplnUserId: this.nplnUserId,
+          smellMeter: smellMeter,
           specialCounts: this.specialCounts,
           specialId: this.specialId,
           species: this.species,
@@ -460,6 +466,7 @@ export namespace CoopResultQuery {
       jobBonus: number | null,
       jobScore: number | null,
       kumaPoint: number | null,
+      smellMeter: number | null,
     ): Prisma.PlayerCreateManyResultInput {
       return {
         badges: this.nameplate.badges.map((badge) => (badge === null ? -1 : badge)),
@@ -481,6 +488,7 @@ export namespace CoopResultQuery {
         nameId: this.nameId,
         nameplate: this.nameplate.background.id,
         nplnUserId: this.nplnUserId,
+        smellMeter: this.smellMeter(smellMeter),
         specialCounts: this.specialCounts,
         specialId: this.specialId,
         species: this.species,
@@ -695,7 +703,7 @@ export namespace CoopResultQuery {
     private get players(): Prisma.PlayerCreateManyResultInputEnvelope {
       return {
         data: [this.myResult, ...this.otherResults].map((player) =>
-          player.create(this.gradeId, this.gradePoint, this.jobRate, this.jobBonus, this.jobScore, this.kumaPoint),
+          player.create(this.gradeId, this.gradePoint, this.jobRate, this.jobBonus, this.jobScore, this.kumaPoint, this.smellMeter),
         ),
         skipDuplicates: true,
       };
@@ -768,6 +776,7 @@ export namespace CoopResultQuery {
               this.jobScore,
               this.kumaPoint,
               this.jobRate,
+              this.smellMeter,
             ),
           },
         },

@@ -9,7 +9,7 @@ CREATE TYPE "Species" AS ENUM ('INKLING', 'OCTOLING');
 
 -- CreateTable
 CREATE TABLE "schedules" (
-    "schedule_id" SERIAL NOT NULL,
+    "schedule_id" VARCHAR(32) NOT NULL DEFAULT md5(random()::text),
     "start_time" TIMESTAMP(3),
     "end_time" TIMESTAMP(3),
     "stage_id" SMALLINT NOT NULL,
@@ -24,10 +24,10 @@ CREATE TABLE "schedules" (
 
 -- CreateTable
 CREATE TABLE "results" (
-    "result_id" SERIAL NOT NULL,
+    "result_id" VARCHAR(32) NOT NULL DEFAULT md5(random()::text),
     "uuid" UUID NOT NULL,
-    "schedule_id" INTEGER NOT NULL,
-    "play_time" DATE NOT NULL,
+    "schedule_id" VARCHAR(32) NOT NULL,
+    "play_time" TIMESTAMP(3) NOT NULL,
     "boss_counts" SMALLINT[],
     "boss_kill_counts" SMALLINT[],
     "ikura_num" SMALLINT NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE "players" (
     "weapon_list" SMALLINT[],
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
-    "play_time" DATE NOT NULL,
+    "play_time" TIMESTAMP(3) NOT NULL,
     "uuid" UUID NOT NULL,
 
     CONSTRAINT "players_pkey" PRIMARY KEY ("play_time","uuid","npln_user_id")
@@ -97,7 +97,7 @@ CREATE TABLE "waves" (
     "is_clear" BOOLEAN NOT NULL,
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
-    "play_time" DATE NOT NULL,
+    "play_time" TIMESTAMP(3) NOT NULL,
     "uuid" UUID NOT NULL,
 
     CONSTRAINT "waves_pkey" PRIMARY KEY ("play_time","uuid","wave_id")

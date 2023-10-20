@@ -8,7 +8,7 @@ import { AppVersion, Result, Version } from 'src/dto/version.dto';
 
 @Injectable()
 export class VersionService {
-  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) { }
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   async getVersion(): Promise<Version> {
     const version = await this.cacheManager.get('version');
