@@ -8,29 +8,10 @@ CREATE TYPE "Mode" AS ENUM ('REGULAR', 'LIMITED', 'PRIVATE_CUSTOM', 'PRIVATE_SCE
 CREATE TYPE "Species" AS ENUM ('INKLING', 'OCTOLING');
 
 -- CreateTable
-CREATE TABLE "users" (
-    "nsa_id" VARCHAR(16) NOT NULL,
-    "nickname" VARCHAR(32) NOT NULL,
-    "thumbnail_url" VARCHAR(255) NOT NULL,
-    "coral_user_id" BIGINT NOT NULL,
-    "friend_code" VARCHAR(14) NOT NULL,
-    "language" VARCHAR(8) NOT NULL,
-    "birthday" VARCHAR(10) NOT NULL,
-    "country" VARCHAR(2) NOT NULL,
-    "npln_user_id" VARCHAR(20),
-    "membership" BOOLEAN NOT NULL DEFAULT false,
-    "is_public" BOOLEAN NOT NULL DEFAULT false,
-    "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(0) NOT NULL,
-
-    CONSTRAINT "users_pkey" PRIMARY KEY ("nsa_id")
-);
-
--- CreateTable
 CREATE TABLE "schedules" (
-    "schedule_id" VARCHAR(32) NOT NULL,
-    "start_time" TIMESTAMP(0) NOT NULL DEFAULT '1970-01-01 00:00:00 +00:00',
-    "end_time" TIMESTAMP(0) NOT NULL DEFAULT '1970-01-01 00:00:00 +00:00',
+    "schedule_id" SERIAL NOT NULL,
+    "start_time" TIMESTAMP(3),
+    "end_time" TIMESTAMP(3),
     "stage_id" SMALLINT NOT NULL,
     "weapon_list" INTEGER[],
     "mode" "Mode" NOT NULL DEFAULT 'REGULAR',
@@ -43,10 +24,10 @@ CREATE TABLE "schedules" (
 
 -- CreateTable
 CREATE TABLE "results" (
-    "result_id" VARCHAR(32) NOT NULL,
+    "result_id" SERIAL NOT NULL,
     "uuid" UUID NOT NULL,
-    "schedule_id" VARCHAR(32) NOT NULL,
-    "play_time" TIMESTAMP(0) NOT NULL,
+    "schedule_id" INTEGER NOT NULL,
+    "play_time" DATE NOT NULL,
     "boss_counts" SMALLINT[],
     "boss_kill_counts" SMALLINT[],
     "ikura_num" SMALLINT NOT NULL,
@@ -99,7 +80,7 @@ CREATE TABLE "players" (
     "weapon_list" SMALLINT[],
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
-    "play_time" TIMESTAMP(0) NOT NULL,
+    "play_time" DATE NOT NULL,
     "uuid" UUID NOT NULL,
 
     CONSTRAINT "players_pkey" PRIMARY KEY ("play_time","uuid","npln_user_id")
@@ -116,17 +97,11 @@ CREATE TABLE "waves" (
     "is_clear" BOOLEAN NOT NULL,
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
-    "play_time" TIMESTAMP(0) NOT NULL,
+    "play_time" DATE NOT NULL,
     "uuid" UUID NOT NULL,
 
     CONSTRAINT "waves_pkey" PRIMARY KEY ("play_time","uuid","wave_id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_coral_user_id_key" ON "users"("coral_user_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_npln_user_id_key" ON "users"("npln_user_id");
 
 -- CreateIndex
 CREATE INDEX "schedules_stage_id_idx" ON "schedules"("stage_id");
@@ -139,6 +114,9 @@ CREATE INDEX "schedules_mode_idx" ON "schedules"("mode");
 
 -- CreateIndex
 CREATE INDEX "schedules_rule_mode_idx" ON "schedules"("rule", "mode");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "schedules_start_time_end_time_stage_id_mode_rule_weapon_lis_key" ON "schedules"("start_time", "end_time", "stage_id", "mode", "rule", "weapon_list");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "results_result_id_key" ON "results"("result_id");

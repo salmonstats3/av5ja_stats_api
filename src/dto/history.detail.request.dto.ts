@@ -120,6 +120,7 @@ export namespace CoopHistoryDetailQuery {
       type: 'string',
     })
     @IsEnum(CoopGradeId)
+    @IsOptional()
     @Expose()
     @Transform(({ value }) => {
       const regexp = /-([0-9-]*)/;
@@ -495,7 +496,7 @@ export namespace CoopHistoryDetailQuery {
 
     @ApiProperty({ required: true, type: AfterGrade })
     @Expose()
-    @Type(() => AfterGrade)
+    @Transform(({ value }) => plainToInstance(AfterGrade, value === null ? { id: null } : value))
     @ValidateNested()
     readonly afterGrade: AfterGrade;
 
@@ -521,18 +522,18 @@ export namespace CoopHistoryDetailQuery {
     @ValidateNested()
     readonly bossResult: BossResult | null;
 
-    @ApiProperty({ isArray: true, maxItems: 14, minItems: 1, required: true, type: EnemyResult })
+    @ApiProperty({ isArray: true, maxItems: 14, minItems: 0, required: true, type: EnemyResult })
     @IsArray()
-    @ArrayMinSize(1)
+    @ArrayMinSize(0)
     @ArrayMaxSize(14)
     @Expose()
     @Type(() => EnemyResult)
     @ValidateNested({ each: true })
     readonly enemyResults: EnemyResult[];
 
-    @ApiProperty({ isArray: true, maxItems: 5, minItems: 1, required: true, type: WaveResult })
+    @ApiProperty({ isArray: true, maxItems: 5, minItems: 0, required: true, type: WaveResult })
     @IsArray()
-    @ArrayMinSize(1)
+    @ArrayMinSize(0)
     @ArrayMaxSize(5)
     @Expose()
     @Type(() => WaveResult)
@@ -583,10 +584,10 @@ export namespace CoopHistoryDetailQuery {
     @Expose()
     readonly smellMeter: number | null;
 
-    @ApiProperty({ isArray: true, maxItems: 4, minItems: 1, required: true, type: MainWeapon })
+    @ApiProperty({ isArray: true, maxItems: 4, minItems: 0, required: true, type: MainWeapon })
     @IsArray()
     @ArrayNotEmpty()
-    @ArrayMinSize(1)
+    @ArrayMinSize(0)
     @ArrayMaxSize(4)
     @Type(() => MainWeapon)
     @Expose()

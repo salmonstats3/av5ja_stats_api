@@ -5,15 +5,12 @@ services:
     image: tkgling/salmon_stats_app:latest
     container_name: salmon_stats_app
     ports:
-      - $OPENAPI_PORT:$OPENAPI_PORT
+      - $API_PORT:$API_PORT
     environment:
-      NODE_ENV: production
       DATABASE_URL: $DATABASE_URL
-      API_JWT_SECRET_KEY: $API_JWT_SECRET_KEY
-      API_PASSWORD_SALT: $API_PASSWORD_SALT
-      OPENAPI_VERSION: $OPENAPI_VERSION
-      OPENAPI_PORT: $OPENAPI_PORT
-      OPENAPI_HOST: $OPENAPI_HOST
+      API_VERSION: $API_VERSION
+      API_PORT: $API_PORT
+      API_HOST: $API_HOST
 
   db:
     image: postgres:16.0

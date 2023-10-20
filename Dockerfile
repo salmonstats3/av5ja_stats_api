@@ -31,6 +31,7 @@ FROM node:18.17.1-alpine3.18 AS dist
 WORKDIR /app
 
 COPY --from=build /tmp/dist ./dist
+COPY --from=build /tmp/prisma ./prisma
 COPY --from=build /tmp/package.json ./
 COPY --from=module /tmp/node_modules ./node_modules
 

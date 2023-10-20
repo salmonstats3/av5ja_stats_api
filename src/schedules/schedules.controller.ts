@@ -9,7 +9,7 @@ import { ScheduleDto, SchedulesService } from './schedules.service';
 @ApiTags('Schedules')
 @Controller('schedules')
 export class SchedulesController {
-  constructor(private readonly service: SchedulesService) {}
+  constructor(private readonly service: SchedulesService) { }
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
@@ -33,7 +33,6 @@ export class SchedulesController {
   @Get(':schedule_id')
   @ApiOperation({ description: 'Find a schedule', operationId: 'Find a schedule' })
   async find(@Param('schedule_id') schedule_id: string) {
-    console.log(schedule_id);
     return this.service.find(schedule_id);
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Result, Schedule } from '@prisma/client';
+import { Mode, Result, Schedule } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 import lodash from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
@@ -9,14 +9,14 @@ import { zip } from 'src/utils/zip';
 
 @Injectable()
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async find(id: string): Promise<Partial<Result>> {
+  async find(resultId: number): Promise<Partial<Result>> {
     return lodash.omit(
       await this.prisma.result.findUnique({
         include: this.include,
         where: {
-          resultId: id,
+          resultId: resultId,
         },
       }),
       ['createdAt', 'updatedAt', 'scheduleId'],
@@ -32,41 +32,67 @@ export class ResultsService {
 
   async create(request: CoopHistoryDetailQuery.Paginated | CoopResultQuery.Paginated): Promise<CoopResultQuery.Paginated> {
     const results: CoopResultQuery.Request[] = await (async () => {
-      if (request instanceof CoopResultQuery.Paginated) {
-        return request.results as CoopResultQuery.Request[];
-      }
-      if (request instanceof CoopHistoryDetailQuery.Paginated) {
-        const schedules = await Promise.all(request.results.map((result) => this.schedule(result)));
-        return zip(request.results as CoopHistoryDetailQuery.Request[], schedules);
-      }
-      return [];
+      const schedules = await Promise.all(request.results.map((result: any) => this.connectOrCreate(result)));
+      return zip(request.results as CoopHistoryDetailQuery.Request[], schedules);
     })();
     await this.prisma.$transaction(results.map((result) => this.prisma.result.upsert(result.upsert)));
     return plainToInstance(CoopResultQuery.Paginated, { results: results });
+    return;
   }
 
   /**
-   * スケジュールを返す
+   * - レギュラー
+   * スケジュールがあればその値を、なければエラーを返す
+   * - プライベート
+   * スケジュールがあればその値を、なければ作成してその値を返す
    * @param request
    * @returns
    */
-  private async schedule(request: CoopHistoryDetailQuery.Request): Promise<Schedule> {
-    return await this.prisma.schedule.findFirstOrThrow({
-      where: {
-        endTime: {
-          gte: request.playTime,
+  private async connectOrCreate(request: CoopHistoryDetailQuery.Request | CoopResultQuery.Request): Promise<Schedule> {
+    if (request.mode === Mode.PRIVATE_CUSTOM || request.mode === Mode.PRIVATE_SCENARIO) {
+      try {
+        return await this.prisma.schedule.findFirstOrThrow({
+          where: {
+            endTime: null,
+            mode: request.mode,
+            rule: request.rule,
+            stageId: request.stageId,
+            startTime: null,
+            weaponList: {
+              equals: request.weaponList,
+            },
+          },
+        });
+      } catch {
+        return await this.prisma.schedule.create({
+          data: {
+            endTime: null,
+            mode: request.mode,
+            rule: request.rule,
+            stageId: request.stageId,
+            startTime: null,
+            weaponList: request.weaponList,
+          },
+        });
+      }
+    } else {
+      return await this.prisma.schedule.findFirstOrThrow({
+        where: {
+          endTime: {
+            gte: request.playTime,
+          },
+          mode: request.mode,
+          rule: request.rule,
+          stageId: request.stageId,
+          startTime: {
+            lte: request.playTime,
+          },
+          weaponList: {
+            equals: request.weaponList,
+          },
         },
-        mode: request.mode,
-        rule: request.rule,
-        stageId: request.stageId,
-        startTime: {
-          lte: request.playTime,
-        },
-        weaponList: {
-          equals: request.weaponList,
-        },
-      },
-    });
+      });
+    }
   }
 
   private include = {

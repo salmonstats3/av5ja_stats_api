@@ -66,7 +66,7 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const configuration = {
     host: config.get<string>('API_HOST'),
-    port: config.get<number>('API_PORT'),
+    port: parseInt(config.get<string>('API_PORT'), 10),
     version: config.get<string>('API_VERSION'),
   };
   if (configuration.version === undefined) {

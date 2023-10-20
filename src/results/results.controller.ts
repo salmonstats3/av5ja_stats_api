@@ -8,13 +8,13 @@ import { ResultsService } from './results.service';
 @ApiTags('Results')
 @Controller('results')
 export class ResultsController {
-  constructor(private readonly service: ResultsService) {}
+  constructor(private readonly service: ResultsService) { }
 
   @Post()
   @ApiOperation({
     deprecated: true,
-    description: 'Create a result without authentication',
-    operationId: 'Create a result V1',
+    description: 'Create a result',
+    operationId: 'CREATE_V1',
   })
   async createV1(@Body() request: CoopHistoryDetailQuery.Paginated): Promise<CoopResultQuery.Paginated> {
     return this.service.create(request);
@@ -22,21 +22,20 @@ export class ResultsController {
 
   @Post()
   @Version('2')
-  // @UseGuards(JwtAuthGuard)
-  @ApiOperation({ description: 'Create a result with authentication', operationId: 'Create a result V2' })
+  @ApiOperation({ description: 'Create a result', operationId: 'CREATE_V2' })
   async createV2(@Body() request: CoopResultQuery.Paginated): Promise<CoopResultQuery.Paginated> {
     return this.service.create(request);
   }
 
   @Get()
-  @ApiOperation({ description: 'Find results', operationId: 'Find results' })
+  @ApiOperation({ description: 'Find results', operationId: 'FIND_ALL' })
   async find_all() {
     return await this.service.find_all();
   }
 
   @Get(':result_id')
-  @ApiOperation({ description: 'Find a result', operationId: 'Find a result' })
-  async find(@Param('result_id') result_id: string) {
-    return await this.service.find(result_id);
+  @ApiOperation({ description: 'Find a result', operationId: 'FIND' })
+  async find(@Param('result_id') resultId: number) {
+    return await this.service.find(resultId);
   }
 }

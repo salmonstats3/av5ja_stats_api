@@ -46,7 +46,7 @@ export class ScheduleDto {
 
 @Injectable()
 export class SchedulesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   private readonly firestore = getFirestore(initializeApp(firebaseConfig));
 
@@ -68,7 +68,8 @@ export class SchedulesService {
   }
 
   async find(schedule_id: string): Promise<Partial<Schedule>> {
-    return lodash.omit(await this.prisma.schedule.findUniqueOrThrow({ where: { scheduleId: schedule_id } }), ['createdAt', 'updatedAt']);
+    return;
+    // return lodash.omit(await this.prisma.schedule.findUniqueOrThrow({ where: { scheduleId: schedule_id } }), ['createdAt', 'updatedAt']);
   }
 
   async find_allV1(): Promise<Partial<Schedule>[]> {

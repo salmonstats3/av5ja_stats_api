@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma, Species } from '@prisma/client';
+import { Mode, Prisma, Rule, Schedule, Species } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -22,6 +22,7 @@ import {
 import dayjs from 'dayjs';
 import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
 import { CoopGradeId } from 'src/utils/enum/coop_grade_id';
+import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { EventId } from 'src/utils/enum/event_wave';
 import { WaterLevelId } from 'src/utils/enum/water_level';
 import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
@@ -644,7 +645,7 @@ export namespace CoopResultQuery {
     @Expose()
     readonly scenarioCode: string | null;
 
-    static from(result: CoopHistoryDetailQuery.CoopHistoryDetail, schedule: Partial<CoopHistoryQuery.Schedule>): CoopResultQuery.Request {
+    static from(result: CoopHistoryDetailQuery.CoopHistoryDetail, schedule: Partial<Schedule>): CoopResultQuery.Request {
       return plainToInstance(
         CoopResultQuery.Request,
         {
@@ -711,6 +712,22 @@ export namespace CoopResultQuery {
       return resultHash(this.id.uuid, this.id.playTime);
     }
 
+    get rule(): Rule {
+      return this.schedule.rule;
+    }
+
+    get mode(): Mode {
+      return this.schedule.mode;
+    }
+
+    get stageId(): CoopStageId {
+      return this.schedule.stageId;
+    }
+
+    get weaponList(): WeaponInfoMain.Id[] {
+      return this.schedule.weaponList;
+    }
+
     get upsert(): Prisma.ResultUpsertArgs {
       return {
         create: {
@@ -731,7 +748,6 @@ export namespace CoopResultQuery {
           players: {
             createMany: this.players,
           },
-          resultId: this.resultId,
           scenarioCode: this.scenarioCode,
           schedule: {
             connectOrCreate: this.schedule.connectOrCreate,
@@ -756,7 +772,10 @@ export namespace CoopResultQuery {
           },
         },
         where: {
-          resultId: this.resultId,
+          playTime_uuid: {
+            playTime: this.playTime,
+            uuid: this.uuid,
+          },
         },
       };
     }
