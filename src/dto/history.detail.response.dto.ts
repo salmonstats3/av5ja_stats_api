@@ -166,7 +166,7 @@ export namespace CoopResultQuery {
     @Expose()
     readonly isClear: boolean;
 
-    static from(wave: CoopHistoryDetailQuery.WaveResult, resultWave: number, hasDefeatBoss: boolean): WaveResult {
+    static from(wave: CoopHistoryDetailQuery.WaveResult, resultWave: number, isBossDefeated: boolean | null): WaveResult {
       return plainToInstance(
         CoopResultQuery.WaveResult,
         {
@@ -174,7 +174,7 @@ export namespace CoopResultQuery {
           goldenIkuraNum: wave.goldenIkuraNum,
           goldenIkuraPopNum: wave.goldenIkuraPopNum,
           id: wave.id,
-          isClear: hasDefeatBoss === null ? wave.id !== resultWave : wave.quotaNum === null ? hasDefeatBoss : true,
+          isClear: isBossDefeated === null ? wave.id !== resultWave : wave.quotaNum === null ? isBossDefeated : true,
           quotaNum: wave.quotaNum,
           waterLevel: wave.waterLevel,
         },
@@ -684,7 +684,7 @@ export namespace CoopResultQuery {
           schedule: schedule,
           smellMeter: result.smellMeter,
           uuid: result.id.uuid,
-          waveDetails: result.waveResults.map((wave) => WaveResult.from(wave, result.resultWave, result.bossResult?.hasDefeatBoss)),
+          waveDetails: result.waveResults.map((wave) => WaveResult.from(wave, result.resultWave, result.isBossDefeated)),
         },
         { excludeExtraneousValues: true },
       );
