@@ -10,7 +10,7 @@ import { zip } from 'src/utils/zip';
 
 @Injectable()
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async find(resultId: string): Promise<Partial<Result>> {
     return lodash.omit(
