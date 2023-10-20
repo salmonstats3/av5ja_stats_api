@@ -9,7 +9,7 @@ CREATE TYPE "Species" AS ENUM ('INKLING', 'OCTOLING');
 
 -- CreateTable
 CREATE TABLE "schedules" (
-    "schedule_id" VARCHAR(32) NOT NULL DEFAULT md5(random()::text),
+    "schedule_id" VARCHAR(32) NOT NULL,
     "start_time" TIMESTAMP(3),
     "end_time" TIMESTAMP(3),
     "stage_id" SMALLINT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE "schedules" (
 
 -- CreateTable
 CREATE TABLE "results" (
-    "result_id" VARCHAR(32) NOT NULL DEFAULT md5(random()::text),
+    "result_id" VARCHAR(32) NOT NULL,
     "uuid" UUID NOT NULL,
     "schedule_id" VARCHAR(32) NOT NULL,
     "play_time" TIMESTAMP(3) NOT NULL,
