@@ -67,14 +67,14 @@ model Schedule {
 }
 
 model Result {
-  /// リザルトID
-  resultId             String    @unique @map("result_id") @db.VarChar(32)
-  /// バイトID
-  uuid                 String    @map("uuid") @db.Uuid
   /// スケジュールID
   scheduleId           String    @map("schedule_id") @db.VarChar(32)
-  /// プレイ時刻
+  /// 遊んだ時間
   playTime             DateTime  @map("play_time") @db.Timestamp(3)
+  /// UUID
+  uuid                 String    @map("uuid") @db.Uuid
+  /// リザルトID
+  resultId             String    @unique @map("result_id") @db.VarChar(32)
   /// オオモノ出現数
   bossCounts           Int[]     @map("boss_counts") @db.SmallInt
   /// オオモノ討伐数
@@ -118,7 +118,7 @@ model Result {
   /// Schedule
   schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade, onUpdate: Cascade)
 
-  @@id([playTime, uuid])
+  @@id([playTime, uuid, scheduleId])
   @@index([members])
   @@index([goldenIkuraNum, nightLess])
   @@index([scheduleId])
@@ -128,6 +128,12 @@ model Result {
 }
 
 model Player {
+  /// スケジュールID
+  scheduleId           String   @map("schedule_id") @db.VarChar(32)
+  /// 遊んだ時間
+  playTime             DateTime @map("play_time") @db.Timestamp(3)
+  /// UUID
+  uuid                 String   @map("uuid") @db.Uuid
   /// プレイヤーID
   nplnUserId           String   @map("npln_user_id") @db.VarChar(20)
   /// 名前
@@ -184,12 +190,8 @@ model Player {
   createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   /// 更新日
   updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
-  /// 遊んだ時間
-  playTime             DateTime @map("play_time") @db.Timestamp(3)
-  /// UUID
-  uuid                 String   @map("uuid") @db.Uuid
   /// Result
-  result               Result?  @relation(fields: [playTime, uuid], references: [playTime, uuid], onDelete: Cascade, onUpdate: Cascade)
+  result               Result?  @relation(fields: [playTime, uuid, scheduleId], references: [playTime, uuid, scheduleId], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([playTime, uuid, nplnUserId])
   @@index([nplnUserId])
@@ -199,6 +201,12 @@ model Player {
 }
 
 model Wave {
+  /// スケジュールID
+  scheduleId        String   @map("schedule_id") @db.VarChar(32)
+  /// 遊んだ時間
+  playTime          DateTime @map("play_time") @db.Timestamp(3)
+  /// UUID
+  uuid              String   @map("uuid") @db.Uuid
   /// WAVE数
   waveId            Int      @map("wave_id") @db.SmallInt
   /// 潮位
@@ -217,12 +225,8 @@ model Wave {
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(0)
   /// 更新日
   updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
-  /// 遊んだ時間
-  playTime          DateTime @map("play_time") @db.Timestamp(3)
-  /// UUID
-  uuid              String   @map("uuid") @db.Uuid
   /// Result
-  result            Result?  @relation(fields: [playTime, uuid], references: [playTime, uuid], onDelete: Cascade, onUpdate: Cascade)
+  result            Result?  @relation(fields: [playTime, uuid, scheduleId], references: [playTime, uuid, scheduleId], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([playTime, uuid, waveId])
   @@index([waterLevel])
