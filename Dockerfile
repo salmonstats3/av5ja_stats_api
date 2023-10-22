@@ -6,11 +6,11 @@ COPY  ./yarn.lock ./
 COPY  ./tsconfig.json ./
 COPY  ./tsconfig.build.json ./
 COPY  ./prisma ./prisma
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
-COPY  ./src ./src
 COPY  ./nest-cli.json ./
 
 RUN yarn install
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
+COPY  ./src ./src
 RUN yarn prisma generate
 RUN yarn build
 
@@ -22,11 +22,11 @@ COPY  ./yarn.lock ./
 COPY  ./tsconfig.json ./
 COPY  ./tsconfig.build.json ./
 COPY  ./prisma ./prisma
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
-COPY  ./src ./src
 COPY  ./nest-cli.json ./
 
 RUN yarn install --prod
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
+COPY  ./src ./src
 RUN yarn prisma generate
 
 FROM node:18.17.1-slim AS dist
