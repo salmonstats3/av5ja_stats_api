@@ -1,5 +1,5 @@
 import { Controller, Get, HttpCode, HttpStatus, Version } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { VersionService } from './version.service';
 
@@ -11,7 +11,16 @@ export class VersionController {
   @Get('authorize/version')
   @HttpCode(HttpStatus.OK)
   @Version('3')
-  async version() {
+  @ApiOperation({ deprecated: true, operationId: 'GET_VERSION', summary: 'Get version' })
+  async version_v1() {
+    return this.service.getVersion();
+  }
+
+  @Get('version')
+  @HttpCode(HttpStatus.OK)
+  @Version('1')
+  @ApiOperation({ operationId: 'GET_VERSION', summary: 'Get version' })
+  async version_v2() {
     return this.service.getVersion();
   }
 }
