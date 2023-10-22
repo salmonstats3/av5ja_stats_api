@@ -8,7 +8,7 @@ import { ResultsService } from './results.service';
 @ApiTags('Results')
 @Controller('results')
 export class ResultsController {
-  constructor(private readonly service: ResultsService) { }
+  constructor(private readonly service: ResultsService) {}
 
   @Post()
   @ApiOperation({
