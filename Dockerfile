@@ -27,13 +27,16 @@ COPY  ./nest-cli.json ./
 RUN yarn install --prod
 RUN yarn prisma generate
 
-FROM node:18.17.1-alpine3.18 AS dist
+FROM node:18.17.1-slim AS dist
+ARG VIRTUAL_PORT
 WORKDIR /app
 
+RUN apt-get update -y
+RUN apt-get install -y openssl
 COPY --from=build /tmp/dist ./dist
 COPY --from=build /tmp/prisma ./prisma
 COPY --from=build /tmp/package.json ./
 COPY --from=module /tmp/node_modules ./node_modules
 
-EXPOSE 3000
+EXPOSE ${VIRTUAL_PORT}
 CMD ["node", "dist/main"]

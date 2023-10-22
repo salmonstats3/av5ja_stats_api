@@ -4,11 +4,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { VersionService } from './version.service';
 
 @ApiTags('Version')
-@Controller('version')
+@Controller('')
 export class VersionController {
-  constructor(private readonly service: VersionService) {}
+  constructor(private readonly service: VersionService) { }
 
-  @Get('')
+  @Get('authorize/version')
   @HttpCode(HttpStatus.OK)
   @Version('3')
   async version() {
