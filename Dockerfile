@@ -6,6 +6,7 @@ COPY  ./yarn.lock ./
 COPY  ./tsconfig.json ./
 COPY  ./tsconfig.build.json ./
 COPY  ./prisma ./prisma
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 COPY  ./src ./src
 COPY  ./nest-cli.json ./
 
@@ -21,6 +22,7 @@ COPY  ./yarn.lock ./
 COPY  ./tsconfig.json ./
 COPY  ./tsconfig.build.json ./
 COPY  ./prisma ./prisma
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 COPY  ./src ./src
 COPY  ./nest-cli.json ./
 
