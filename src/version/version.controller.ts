@@ -6,7 +6,7 @@ import { VersionService } from './version.service';
 @ApiTags('Version')
 @Controller('')
 export class VersionController {
-  constructor(private readonly service: VersionService) { }
+  constructor(private readonly service: VersionService) {}
 
   @Get('authorize/version')
   @HttpCode(HttpStatus.OK)
