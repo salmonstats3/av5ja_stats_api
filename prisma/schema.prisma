@@ -67,12 +67,12 @@ model Schedule {
 }
 
 model Result {
+  /// UUID
+  uuid                 String    @map("uuid") @db.Uuid
   /// スケジュールID
   scheduleId           String    @map("schedule_id") @db.VarChar(32)
   /// 遊んだ時間
   playTime             DateTime  @map("play_time") @db.Timestamp(3)
-  /// UUID
-  uuid                 String    @map("uuid") @db.Uuid
   /// リザルトID
   resultId             String    @unique @map("result_id") @db.VarChar(32)
   /// オオモノ出現数
@@ -128,12 +128,12 @@ model Result {
 }
 
 model Player {
+  /// UUID
+  uuid                 String   @map("uuid") @db.Uuid
   /// スケジュールID
   scheduleId           String   @map("schedule_id") @db.VarChar(32)
   /// 遊んだ時間
   playTime             DateTime @map("play_time") @db.Timestamp(3)
-  /// UUID
-  uuid                 String   @map("uuid") @db.Uuid
   /// プレイヤーID
   nplnUserId           String   @map("npln_user_id") @db.VarChar(20)
   /// 名前
@@ -201,12 +201,12 @@ model Player {
 }
 
 model Wave {
+  /// UUID
+  uuid              String   @map("uuid") @db.Uuid
   /// スケジュールID
   scheduleId        String   @map("schedule_id") @db.VarChar(32)
   /// 遊んだ時間
   playTime          DateTime @map("play_time") @db.Timestamp(3)
-  /// UUID
-  uuid              String   @map("uuid") @db.Uuid
   /// WAVE数
   waveId            Int      @map("wave_id") @db.SmallInt
   /// 潮位

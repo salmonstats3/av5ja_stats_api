@@ -37,10 +37,10 @@ OCTOLING OCTOLING
   
 
   "results" {
-    String result_id 
     String uuid "🗝️"
     String schedule_id 
     DateTime play_time 
+    String result_id 
     Int boss_counts 
     Int boss_kill_counts 
     Int ikura_num 
@@ -63,6 +63,8 @@ OCTOLING OCTOLING
   
 
   "players" {
+    String schedule_id 
+    DateTime play_time 
     String npln_user_id 
     String name 
     String byname 
@@ -91,11 +93,12 @@ OCTOLING OCTOLING
     Int weapon_list 
     DateTime created_at 
     DateTime updated_at 
-    DateTime play_time 
     }
   
 
   "waves" {
+    String schedule_id 
+    DateTime play_time 
     Int wave_id 
     Int water_level 
     Int event_type 
@@ -105,7 +108,6 @@ OCTOLING OCTOLING
     Boolean is_clear 
     DateTime created_at 
     DateTime updated_at 
-    DateTime play_time 
     }
   
     "schedules" o|--|| "Mode" : "enum:mode"

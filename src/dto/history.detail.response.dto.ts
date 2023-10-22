@@ -798,8 +798,9 @@ export namespace CoopResultQuery {
           },
         },
         where: {
-          playTime_uuid: {
+          playTime_uuid_scheduleId: {
             playTime: this.playTime,
+            scheduleId: this.scheduleId,
             uuid: this.uuid,
           },
         },

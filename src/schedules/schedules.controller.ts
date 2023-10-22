@@ -20,14 +20,14 @@ export class SchedulesController {
   @Get()
   @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND_ALL_V1' })
   async find_allV1(): Promise<Partial<Schedule>[]> {
-    return this.service.find_allV1();
+    return this.service.find_all_v1();
   }
 
   @Get()
   @Version('2')
   @ApiOperation({ description: 'Find schedules', operationId: 'FIND_ALL_V2' })
   async find_allV2(): Promise<Partial<ScheduleDto>[]> {
-    return this.service.find_allV2();
+    return this.service.find_all_v2();
   }
 
   @Get(':schedule_id')

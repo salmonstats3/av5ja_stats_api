@@ -81,8 +81,24 @@ export class SchedulesService {
    * @param scheduleId
    * @returns
    */
-  async find_allV1(): Promise<Partial<Schedule>[]> {
-    return (await this.prisma.schedule.findMany()).map((schedule) => lodash.omit(schedule, ['createdAt', 'updatedAt']));
+  async find_all_v1(): Promise<Partial<Schedule>[]> {
+    return (
+      await this.prisma.schedule.findMany({
+        orderBy: [
+          {
+            endTime: 'asc',
+          },
+          {
+            startTime: 'asc',
+          },
+        ],
+        where: {
+          mode: {
+            in: [Mode.REGULAR, Mode.LIMITED],
+          },
+        },
+      })
+    ).map((schedule) => lodash.omit(schedule, ['createdAt', 'updatedAt']));
   }
 
   /**
@@ -90,7 +106,7 @@ export class SchedulesService {
    * @param scheduleId
    * @returns
    */
-  async find_allV2(): Promise<ScheduleDto[]> {
+  async find_all_v2(): Promise<ScheduleDto[]> {
     const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))));
     const schedules: ScheduleDto[] = documents
       .flatMap((document) => document.docs.map((doc) => plainToInstance(ScheduleDto, doc.data(), { excludeExtraneousValues: true })))
