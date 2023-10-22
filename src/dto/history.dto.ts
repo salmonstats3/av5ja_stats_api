@@ -82,6 +82,7 @@ export namespace CoopHistoryQuery {
     }
 
     get connectOrCreate(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
+      console.log(this, this.scheduleId);
       return {
         create: {
           endTime: this.endTime,

@@ -11,20 +11,20 @@ export class ResultsController {
   constructor(private readonly service: ResultsService) {}
 
   @Post()
-  @ApiOperation({
-    deprecated: true,
-    description: 'Create a result',
-    operationId: 'CREATE_V1',
-  })
-  @Version('2')
-  async createV1(@Body() request: CoopHistoryDetailQuery.Paginated): Promise<CoopResultQuery.Paginated> {
+  @Version('1')
+  @ApiOperation({ description: 'Create a result', operationId: 'CREATE_V1' })
+  async createV2(@Body() request: CoopResultQuery.Paginated): Promise<CoopResultQuery.Paginated> {
     return this.service.create(request);
   }
 
   @Post()
-  @Version('1')
-  @ApiOperation({ description: 'Create a result', operationId: 'CREATE_V2' })
-  async createV2(@Body() request: CoopResultQuery.Paginated): Promise<CoopResultQuery.Paginated> {
+  @ApiOperation({
+    deprecated: true,
+    description: 'Create a result',
+    operationId: 'CREATE_V2',
+  })
+  @Version('2')
+  async createV1(@Body() request: CoopHistoryDetailQuery.Paginated): Promise<CoopResultQuery.Paginated> {
     return this.service.create(request);
   }
 
