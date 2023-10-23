@@ -574,7 +574,7 @@ export namespace CoopResultQuery {
     readonly gradePoint: number | null;
 
     @ApiProperty({ nullable: true, required: true, type: 'integer' })
-    @IsInt()
+    @IsNumber()
     @IsOptional()
     @Min(0)
     @Max(3.33)
