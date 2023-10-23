@@ -6,23 +6,24 @@ import { PrismaModule } from 'nestjs-prisma';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { AuthService } from './auth/auth.service';
 import { HistoriesController } from './histories/histories.controller';
 import { HistoriesModule } from './histories/histories.module';
 import { HistoriesService } from './histories/histories.service';
+import { ResourceController } from './resource/resource.controller';
+import { ResourceModule } from './resource/resource.module';
+import { ResourceService } from './resource/resource.service';
 import { ResultsController } from './results/results.controller';
 import { ResultsModule } from './results/results.module';
 import { ResultsService } from './results/results.service';
 import { SchedulesController } from './schedules/schedules.controller';
 import { SchedulesModule } from './schedules/schedules.module';
 import { SchedulesService } from './schedules/schedules.service';
-import { UsersController } from './users/users.controller';
-import { UsersModule } from './users/users.module';
-import { UsersService } from './users/users.service';
+import { VersionController } from './version/version.controller';
+import { VersionModule } from './version/version.module';
+import { VersionService } from './version/version.service';
 
 @Module({
-  controllers: [AppController, SchedulesController, ResultsController, UsersController, HistoriesController],
+  controllers: [AppController, SchedulesController, ResultsController, HistoriesController, VersionController, ResourceController],
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env', '.env.local', '.env.production'],
@@ -35,21 +36,21 @@ import { UsersService } from './users/users.service';
     PrismaModule.forRoot({ isGlobal: true }),
     SchedulesModule,
     ResultsModule,
-    UsersModule,
     HistoriesModule,
-    AuthModule,
+    VersionModule,
+    ResourceModule,
   ],
   providers: [
     AppService,
     SchedulesService,
     ResultsService,
-    UsersService,
     HistoriesService,
-    AuthService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },
+    VersionService,
+    ResourceService,
   ],
 })
 export class AppModule {}

@@ -23,27 +23,10 @@ PRIVATE_SCENARIO PRIVATE_SCENARIO
 OCTOLING OCTOLING
         }
     
-  "users" {
-    String nsa_id "🗝️"
-    String nickname 
-    String thumbnail_url 
-    BigInt coral_user_id 
-    String friend_code "❓"
-    String language "❓"
-    String birthday 
-    String country "❓"
-    String npln_user_id "❓"
-    Boolean membership 
-    Boolean is_public 
-    DateTime created_at 
-    DateTime updated_at 
-    }
-  
-
   "schedules" {
     String schedule_id "🗝️"
-    DateTime start_time 
-    DateTime end_time 
+    DateTime start_time "❓"
+    DateTime end_time "❓"
     Int stage_id 
     Int weapon_list 
     Mode mode 
@@ -55,9 +38,9 @@ OCTOLING OCTOLING
 
   "results" {
     String uuid "🗝️"
-    String result_id 
     String schedule_id 
     DateTime play_time 
+    String result_id 
     Int boss_counts 
     Int boss_kill_counts 
     Int ikura_num 

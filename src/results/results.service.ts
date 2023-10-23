@@ -1,21 +1,23 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Mode, Result } from '@prisma/client';
-import dayjs from 'dayjs';
+import { Injectable } from '@nestjs/common';
+import { Mode, Result, Schedule } from '@prisma/client';
+import { plainToInstance } from 'class-transformer';
 import lodash from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
-import { ResultCreateManyRequest } from 'src/dto/paginated.dto';
-import { ResultCreateDto, ResultCreateRequest } from 'src/dto/result.dto';
+import { CoopHistoryDetailQuery } from 'src/dto/history.detail.request.dto';
+import { CoopResultQuery } from 'src/dto/history.detail.response.dto';
+import { scheduleHash } from 'src/utils/hash';
+import { zip } from 'src/utils/zip';
 
 @Injectable()
 export class ResultsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async find(id: string): Promise<Partial<Result>> {
+  async find(resultId: string): Promise<Partial<Result>> {
     return lodash.omit(
       await this.prisma.result.findUnique({
         include: this.include,
         where: {
-          resultId: id,
+          resultId: resultId,
         },
       }),
       ['createdAt', 'updatedAt', 'scheduleId'],
@@ -29,48 +31,81 @@ export class ResultsService {
     return results.map((result) => lodash.omit(result, ['createdAt', 'updatedAt', 'scheduleId']));
   }
 
-  async createV1(request: ResultCreateManyRequest): Promise<Partial<Result>[]> {
-    // Promise.allを利用すると競合する可能性がワンチャンあったりする......
-    return Promise.all(request.results.map((result) => this.prisma.result.upsert(result.upsert)));
+  async create(request: CoopHistoryDetailQuery.Paginated | CoopResultQuery.Paginated): Promise<CoopResultQuery.Paginated> {
+    const results: CoopResultQuery.Request[] = await (async () => {
+      if (request instanceof CoopHistoryDetailQuery.Paginated) {
+        const schedules = await Promise.all(request.results.map((result: any) => this.connectOrCreate(result)));
+        return zip(request, schedules);
+      }
+      if (request instanceof CoopResultQuery.Paginated) {
+        return request.results as CoopResultQuery.Request[];
+      }
+      return [];
+    })();
+    await this.prisma.$transaction(results.map((result) => this.prisma.result.upsert(result.upsert)));
+    return plainToInstance(CoopResultQuery.Paginated, { results: results });
   }
 
-  async createV2(request: ResultCreateRequest): Promise<Partial<Result>[]> {
-    // Promise.allを利用すると競合する可能性がワンチャンあったりする......
-    return Promise.all(request.results.map((result) => this.upsert(result)));
-  }
-
-  private async upsert(request: ResultCreateDto): Promise<Partial<Result>> {
+  /**
+   * リザルトに対応するスケジュールを返す
+   * @param request
+   * @returns
+   */
+  private async connectOrCreate(request: CoopHistoryDetailQuery.Request): Promise<Schedule> {
     /**
-     * プライベートでない場合は、スケジュールを参照して結果を作成する
+     * プライベートバイトであれば検索して見つからなければ作成する
      */
-    if (request.result.mode !== Mode.PRIVATE_CUSTOM && request.result.mode !== Mode.PRIVATE_SCENARIO) {
+    if (request.mode === Mode.PRIVATE_CUSTOM || request.mode === Mode.PRIVATE_SCENARIO) {
       try {
-        // 該当するスケジュールを取得する
-        const { startTime, endTime } = await this.prisma.schedule.findFirstOrThrow({
+        return await this.prisma.schedule.findFirstOrThrow({
           where: {
-            endTime: {
-              gte: request.result.id.playTime,
-            },
-            mode: request.result.mode,
-            rule: request.result.rule,
-            stageId: request.result.coopStage.id,
-            startTime: {
-              lte: request.result.id.playTime,
-            },
+            endTime: null,
+            mode: request.mode,
+            rule: request.rule,
+            stageId: request.stageId,
+            startTime: null,
             weaponList: {
-              equals: request.result.weaponList,
+              equals: request.weaponList,
             },
           },
         });
-        return await this.prisma.result.upsert(request.upsert(startTime, endTime));
-      } catch (error) {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      } catch {
+        /**
+         * プライベートバイトであればハッシュがリザルトから計算できるので作成する
+         */
+        const scheduleId: string = scheduleHash(request.mode, request.rule, null, null, request.stageId, request.weaponList);
+        return await this.prisma.schedule.create({
+          data: {
+            endTime: null,
+            mode: request.mode,
+            rule: request.rule,
+            scheduleId: scheduleId,
+            stageId: request.stageId,
+            startTime: null,
+            weaponList: request.weaponList,
+          },
+        });
       }
     } else {
       /**
-       * プライベートの場合はUnix時間0を指定して書き込む
+       * レギュラーの場合はなければエラーを返す
        */
-      return await this.prisma.result.upsert(request.upsert(dayjs(0).toDate(), dayjs(0).toDate()));
+      return await this.prisma.schedule.findFirstOrThrow({
+        where: {
+          endTime: {
+            gte: request.playTime,
+          },
+          mode: request.mode,
+          rule: request.rule,
+          stageId: request.stageId,
+          startTime: {
+            lte: request.playTime,
+          },
+          weaponList: {
+            equals: request.weaponList,
+          },
+        },
+      });
     }
   }
 
