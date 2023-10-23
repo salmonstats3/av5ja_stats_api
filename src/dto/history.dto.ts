@@ -212,7 +212,13 @@ export namespace CoopHistoryQuery {
   }
 
   export class Response {
+    @ApiProperty({ isArray: true, type: Schedule })
+    @Type(() => Schedule)
+    @ValidateNested({ each: true })
     readonly schedules: Schedule[];
+
+    @ApiProperty({ isArray: true, type: String })
+    @Type(() => String)
     readonly results: string[];
   }
 }
