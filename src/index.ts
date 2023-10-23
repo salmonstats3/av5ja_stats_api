@@ -29,7 +29,6 @@ const build = async () => {
     .setVersion(content.version)
     .addBearerAuth()
     .build();
-  console.log(options);
   const build = path.resolve(process.cwd(), 'docs');
   const output = path.resolve(build, 'index');
   // eslint-disable-next-line @typescript-eslint/no-empty-function
