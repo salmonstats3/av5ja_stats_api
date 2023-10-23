@@ -7,7 +7,7 @@ import { ResourceService } from './resource.service';
 @ApiTags('Resource')
 @Controller('resource')
 export class ResourceController {
-  constructor(private readonly service: ResourceService) { }
+  constructor(private readonly service: ResourceService) {}
 
   @Get('')
   @HttpCode(HttpStatus.OK)

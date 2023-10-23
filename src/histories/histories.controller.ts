@@ -7,7 +7,7 @@ import { HistoriesService } from './histories.service';
 @ApiTags('Histories')
 @Controller('histories')
 export class HistoriesController {
-  constructor(private readonly service: HistoriesService) { }
+  constructor(private readonly service: HistoriesService) {}
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })

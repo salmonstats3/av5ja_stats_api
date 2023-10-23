@@ -32,7 +32,7 @@ const build = async () => {
   const build = path.resolve(process.cwd(), 'docs');
   const output = path.resolve(build, 'index');
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  mkdir(build, { recursive: true }, () => { });
+  mkdir(build, { recursive: true }, () => {});
   const config = path.resolve(build, 'CNAME');
   const documents = SwaggerModule.createDocument(app, options);
   writeFileSync(config, 'docs.splatnet3.com', {
