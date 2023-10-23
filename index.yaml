@@ -1,17 +1,8 @@
 openapi: 3.0.0
 paths:
-  /auth/login:
-    post:
-      operationId: AppController_login
-      parameters: []
-      responses:
-        '200':
-          description: ''
-      tags:
-        - Auth
   /schedules:
     post:
-      operationId: Create schedules
+      operationId: CREATE
       summary: ''
       description: Create schedules
       parameters: []
@@ -27,7 +18,7 @@ paths:
       tags: &ref_0
         - Schedules
     get:
-      operationId: Find schedules V2
+      operationId: FIND_ALL_V2
       summary: ''
       description: Find schedules
       parameters: []
@@ -37,7 +28,7 @@ paths:
       tags: *ref_0
   /schedules/{schedule_id}:
     get:
-      operationId: Find a schedule
+      operationId: FIND
       summary: ''
       description: Find a schedule
       parameters:
@@ -52,9 +43,10 @@ paths:
       tags: *ref_0
   /results:
     post:
-      operationId: Create a result V2
+      operationId: CREATE_V2
       summary: ''
-      description: Create a result with authentication
+      deprecated: true
+      description: Create a result
       parameters: []
       requestBody:
         required: true
@@ -68,7 +60,7 @@ paths:
       tags: &ref_1
         - Results
     get:
-      operationId: Find results
+      operationId: FIND_ALL
       summary: ''
       description: Find results
       parameters: []
@@ -78,7 +70,7 @@ paths:
       tags: *ref_1
   /results/{result_id}:
     get:
-      operationId: Find a result
+      operationId: FIND
       summary: ''
       description: Find a result
       parameters:
@@ -91,65 +83,6 @@ paths:
         '200':
           description: ''
       tags: *ref_1
-  /users:
-    post:
-      operationId: Create a user
-      summary: ''
-      description: Create a user with Firebase authentication
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserCreateDto'
-      responses:
-        '201':
-          description: ''
-      tags: &ref_2
-        - Users
-    patch:
-      operationId: Update a user
-      summary: ''
-      description: Update a user
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserCreateDto'
-      responses:
-        '200':
-          description: ''
-      tags: *ref_2
-    get:
-      operationId: Find users
-      summary: ''
-      description: Find users
-      parameters: []
-      responses:
-        '200':
-          description: ''
-      tags: *ref_2
-      security:
-        - bearer: []
-  /users/{user_id}:
-    get:
-      operationId: Find a user
-      summary: ''
-      description: Find a user
-      parameters:
-        - name: user_id
-          required: true
-          in: path
-          example: laT7IetjzweGKWkNwrd162iO5wt2
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-      tags: *ref_2
   /histories:
     post:
       operationId: Create schedules
@@ -167,13 +100,48 @@ paths:
           description: ''
       tags:
         - Histories
+  /authorize/version:
+    get:
+      operationId: GET_VERSION
+      summary: Get version
+      deprecated: true
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: &ref_2
+        - Version
+  /version:
+    get:
+      operationId: GET_VERSION
+      summary: Get version
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_2
+  /resource:
+    get:
+      operationId: ResourceController_resource
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Resource
 info:
-  title: Salmon Stats+
+  title: av5ja_stats_api
   description: Salmon Stats for Splatoon 3 API documents.
+  version: 4.0.0
   contact: {}
 tags: []
 servers: []
 components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
   schemas:
     CoopStage:
       type: object
@@ -281,51 +249,6 @@ components:
             $ref: '#/components/schemas/Request'
       required:
         - results
-    UserCreateDto:
-      type: object
-      properties:
-        provider:
-          type: string
-          example: twitter.com
-        nsaId:
-          type: string
-          example: 3f89c3791c43ea57
-        nickname:
-          type: string
-          example: tkgling
-        thumbnailUrl:
-          type: string
-          example: >-
-            https://cdn-image-e0d67c509fb203858ebcb2fe3f88c2aa.baas.nintendo.com/1/873635dd214b5768
-        coralUserId:
-          type: integer
-          example: 4737360831381504
-        nplnUserId:
-          type: string
-          example: a7grz65rxkvhfsbwmxmm
-        friendCode:
-          type: string
-          example: 4462-9670-6032
-        language:
-          type: string
-          example: en-US
-        country:
-          type: string
-          example: US
-        birthday:
-          type: string
-          example: '2004-09-01'
-      required:
-        - provider
-        - nsaId
-        - nickname
-        - thumbnailUrl
-        - coralUserId
-        - nplnUserId
-        - friendCode
-        - language
-        - country
-        - birthday
     CoopHistoryNode:
       type: object
       properties:
