@@ -9,6 +9,8 @@ import utc from 'dayjs/plugin/utc';
 import fastify from 'fastify';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
+import content from '../package.json';
+
 import { AppModule } from './app.module';
 import { onSend, preValidation } from './fastify/log';
 import { ceil } from './helper';
@@ -84,9 +86,9 @@ async function bootstrap() {
 
   if (isDevelopment) {
     const documentConfig = new DocumentBuilder()
-      .setTitle('Salmon Stats+')
-      .setDescription('Salmon Stats for Splatoon 3 API documents.')
-      .setVersion(configuration.version)
+      .setTitle(content.name)
+      .setDescription(content.description)
+      .setVersion(content.version)
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, documentConfig);
