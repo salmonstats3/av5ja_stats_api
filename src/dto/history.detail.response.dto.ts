@@ -608,8 +608,9 @@ export namespace CoopResultQuery {
     @Expose()
     readonly dangerRate: number;
 
-    @ApiProperty({ required: true, type: Number })
+    @ApiProperty({ nullable: true, required: true, type: Number })
     @IsNumber()
+    @IsOptional()
     @Min(0)
     @Max(100)
     @Expose()
