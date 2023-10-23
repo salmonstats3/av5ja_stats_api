@@ -78,6 +78,8 @@ paths:
         '200':
           description: ''
       tags: *ref_1
+      security:
+        - bearer: []
   /results/{result_id}:
     get:
       operationId: FIND
@@ -93,6 +95,8 @@ paths:
         '200':
           description: ''
       tags: *ref_1
+      security:
+        - bearer: []
   /histories:
     post:
       operationId: Create schedules
