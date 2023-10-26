@@ -8,11 +8,6 @@ generator client {
   previewFeatures = ["views"]
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "erd.md"
-}
-
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
