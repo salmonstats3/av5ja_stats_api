@@ -2,7 +2,9 @@ version: '3.9'
 
 services:
   app:
-    image: tkgling/salmon_stats_app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: salmon_stats_app
     restart: unless-stopped
     ports:

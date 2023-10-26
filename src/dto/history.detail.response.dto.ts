@@ -745,14 +745,26 @@ export namespace CoopResultQuery {
       return this.schedule.mode;
     }
 
+    /**
+     * ステージID
+     */
     get stageId(): CoopStageId {
       return this.schedule.stageId;
     }
 
+    /**
+     * 支給ブキ
+     */
     get weaponList(): WeaponInfoMain.Id[] {
       return this.schedule.weaponList;
     }
 
+    /**
+     * メンバー一覧
+     */
+    get members(): string[] {
+      return [this.myResult].concat(this.otherResults).map((player) => player.nplnUserId);
+    }
     get upsert(): Prisma.ResultUpsertArgs {
       return {
         create: {
@@ -768,12 +780,13 @@ export namespace CoopResultQuery {
           ikuraNum: this.ikuraNum,
           isBossDefeated: this.jobResult.isBossDefeated,
           isClear: this.jobResult.isClear,
+          members: this.members,
           nightLess: this.nightLess,
           playTime: this.playTime,
           players: {
             createMany: this.players,
           },
-          resultId: resultHash(this.id.uuid, this.id.playTime),
+          resultId: this.resultId,
           scenarioCode: this.scenarioCode,
           schedule: {
             connectOrCreate: this.schedule.connectOrCreate,
