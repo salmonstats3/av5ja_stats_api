@@ -1,8 +1,10 @@
-ALTER SYSTEM SET max_connections TO '500';
--- ALTER SYSTEM SET synchronous_commit TO 'OFF';
+ALTER SYSTEM SET max_connections TO '10';
+ALTER SYSTEM SET synchronous_commit TO 'OFF';
 ALTER SYSTEM SET client_encoding TO 'UTF8';
 ALTER SYSTEM SET statement_timeout TO '300min';
 ALTER SYSTEM SET max_standby_archive_delay TO '60000';
 ALTER SYSTEM SET max_standby_streaming_delay TO '60000';
-ALTER SYSTEM SET shared_buffers TO '1048576';
-ALTER SYSTEM SET max_wal_size TO '8192MB'
+ALTER SYSTEM SET shared_buffers TO '4096MB';
+ALTER SYSTEM SET checkpoint_timeout TO '30min';
+ALTER SYSTEM SET max_wal_size TO '32768MB';
+ALTER SYSTEM SET checkpoint_completion_target TO '0.9';

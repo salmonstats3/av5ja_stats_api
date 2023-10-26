@@ -15,6 +15,9 @@ import { ResourceService } from './resource/resource.service';
 import { ResultsController } from './results/results.controller';
 import { ResultsModule } from './results/results.module';
 import { ResultsService } from './results/results.service';
+import { ScenariosController } from './scenarios/scenarios.controller';
+import { ScenariosModule } from './scenarios/scenarios.module';
+import { ScenariosService } from './scenarios/scenarios.service';
 import { SchedulesController } from './schedules/schedules.controller';
 import { SchedulesModule } from './schedules/schedules.module';
 import { SchedulesService } from './schedules/schedules.service';
@@ -23,7 +26,15 @@ import { VersionModule } from './version/version.module';
 import { VersionService } from './version/version.service';
 
 @Module({
-  controllers: [AppController, SchedulesController, ResultsController, HistoriesController, VersionController, ResourceController],
+  controllers: [
+    AppController,
+    SchedulesController,
+    ResultsController,
+    HistoriesController,
+    VersionController,
+    ResourceController,
+    ScenariosController,
+  ],
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env', '.env.local', '.env.production'],
@@ -39,12 +50,14 @@ import { VersionService } from './version/version.service';
     HistoriesModule,
     VersionModule,
     ResourceModule,
+    ScenariosModule,
   ],
   providers: [
     AppService,
     SchedulesService,
     ResultsService,
     HistoriesService,
+    ScenariosService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
