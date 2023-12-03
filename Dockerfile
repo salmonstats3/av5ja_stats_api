@@ -1,4 +1,4 @@
-FROM node:18.17.1 AS build
+FROM node:20.10.0 AS build
 WORKDIR /build
 
 COPY  ./package.json ./
@@ -8,13 +8,15 @@ COPY  ./tsconfig.build.json ./
 COPY  ./prisma ./prisma
 COPY  ./nest-cli.json ./
 
+RUN yarn set version 1.22.19
+RUN yarn -v
 RUN yarn install
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 COPY  ./src ./src
 RUN yarn prisma generate
 RUN yarn build
 
-FROM node:18.17.1 AS module
+FROM node:20.10.0 AS module
 WORKDIR /module
 
 COPY  ./package.json ./
@@ -24,12 +26,13 @@ COPY  ./tsconfig.build.json ./
 COPY  ./prisma ./prisma
 COPY  ./nest-cli.json ./
 
+RUN yarn set version 1.22.19
 RUN yarn install --prod
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 COPY  ./src ./src
 RUN npx prisma generate
 
-FROM gcr.io/distroless/nodejs18-debian12 AS dist
+FROM gcr.io/distroless/nodejs20-debian12 AS dist
 ARG VIRTUAL_PORT
 WORKDIR /app
 

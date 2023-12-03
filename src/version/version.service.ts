@@ -20,7 +20,7 @@ export class VersionService {
     const hash: string = await this.getGameWebVersionHash();
     const [app_version, web_revision] = await Promise.all([this.getAppVersion(), this.getWebRevision(hash)]);
     const response = {
-      version: app_version.version,
+      version: process.env.APP_VERSION ?? app_version.version,
       web_version: web_revision,
     };
 

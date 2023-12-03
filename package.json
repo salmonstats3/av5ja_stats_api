@@ -6,9 +6,7 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "^18.17.1",
-    "yarn": "^1.22.19",
-    "npm": "^9.6.5"
+    "node": "^20.10.0"
   },
   "scripts": {
     "build": "nest build",
@@ -106,5 +104,6 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "packageManager": "yarn@4.0.2"
 }
