@@ -32,7 +32,7 @@ export namespace Common {
     get rawValue(): string {
       // 逆変換時にはJSTからUTCに変換する
       return btoa(
-        `${this.type}-${this.prefix}-${this.nplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${this.uuid}`,
+        `${this.type}-${this.prefix}-${this.nplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${this.uuid.toLowerCase()}`,
       );
     }
 
@@ -83,8 +83,7 @@ export namespace Common {
     get rawValue(): string {
       // 逆変換時にはJSTからUTCに変換する
       return btoa(
-        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${
-          this.uuid
+        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${this.uuid
         }:${this.suffix}-${this.nplnUserId}`,
       );
     }
