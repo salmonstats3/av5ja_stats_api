@@ -149,6 +149,7 @@ export class ResultsService {
         stageId: true,
         startTime: true,
         weaponList: true,
+        bossId: true,
       },
     },
     waves: {
