@@ -19,6 +19,12 @@ export class HistoriesService {
           stageId: schedule.stageId,
           startTime: schedule.startTime,
           weaponList: schedule.weaponList,
+          highest: {
+            goldenIkuraNum: schedule.highest.goldenIkuraNum,
+            grade: schedule.highest.grade,
+            gradePoint: schedule.highest.gradePoint,
+            trophy: schedule.highest.trophy,
+          }
         });
       }),
     };

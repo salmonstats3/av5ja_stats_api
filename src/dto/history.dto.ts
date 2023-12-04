@@ -10,6 +10,8 @@ import { scheduleHash } from 'src/utils/hash';
 
 import { Common } from './common.dto';
 import { MainWeapon, StageScheduleQuery } from './schedule.dto';
+import { CoopGradeId } from 'src/utils/enum/coop_grade_id';
+import { CoopEnemyInfoId } from 'src/utils/enum/coop_enemy_id';
 
 export namespace CoopHistoryQuery {
   class CoopHistoryDetail {
@@ -188,6 +190,11 @@ export namespace CoopHistoryQuery {
     @ValidateNested()
     @Expose()
     readonly historyDetails: HistoryNode;
+
+    @ApiProperty()
+    @Expose({ name: "highestResult" })
+    @Type(() => HighestResult)
+    readonly highest: HighestResult;
 
     /**
      * スケジュールのハッシュ
