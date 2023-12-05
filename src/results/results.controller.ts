@@ -5,6 +5,7 @@ import { CoopHistoryDetailQuery } from 'src/dto/history.detail.request.dto';
 import { CoopResultQuery } from 'src/dto/history.detail.response.dto';
 
 import { ResultsService } from './results.service';
+import { Response } from 'src/dto/response.dto';
 
 @ApiTags('Results')
 @Controller('results')
@@ -14,23 +15,23 @@ export class ResultsController {
   @Post()
   @Version('1')
   @ApiOperation({ description: 'Create a result', operationId: 'CREATE_V1', summary: 'Create a result' })
-  @ApiOkResponse({ type: CoopResultQuery.Paginated })
-  async createV2(@Body() request: CoopResultQuery.Paginated): Promise<CoopResultQuery.Paginated> {
+  @ApiOkResponse({ type: Response.CoopHistoryDetail })
+  async create(@Body() request: CoopHistoryDetailQuery.Request): Promise<Response.CoopHistoryDetail> {
     return this.service.create(request);
   }
 
-  @Post()
-  @Version('2')
-  @ApiOperation({
-    deprecated: true,
-    description: 'Create a result',
-    operationId: 'CREATE_V2',
-    summary: 'Create a result',
-  })
-  @ApiOkResponse({ type: CoopResultQuery.Paginated })
-  async createV1(@Body() request: CoopHistoryDetailQuery.Paginated): Promise<CoopResultQuery.Paginated> {
-    return this.service.create(request);
-  }
+  // @Post()
+  // @Version('2')
+  // @ApiOperation({
+  //   deprecated: true,
+  //   description: 'Create a result',
+  //   operationId: 'CREATE_V2',
+  //   summary: 'Create a result',
+  // })
+  // @ApiOkResponse({ type: CoopResultQuery.Paginated })
+  // async createV1(@Body() request: CoopHistoryDetailQuery.Paginated): Promise<CoopResultQuery.Paginated> {
+  //   return this.service.create(request);
+  // }
 
   @Get()
   @ApiOperation({ description: 'Find results', operationId: 'FIND_ALL', summary: 'Find results' })

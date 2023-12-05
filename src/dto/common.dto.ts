@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
 import dayjs from 'dayjs';
+import { resultHash } from 'src/utils/hash';
 
 export namespace Common {
   export class ResultId {
@@ -36,6 +37,10 @@ export namespace Common {
           .subtract(9, 'hour')
           .format('YYYYMMDDTHHmmss')}_${this.uuid.toLowerCase()}`,
       );
+    }
+
+    get hash(): string {
+      return resultHash(this.uuid, this.playTime)
     }
 
     static from(rawValue: string): ResultId {
@@ -85,8 +90,7 @@ export namespace Common {
     get rawValue(): string {
       // 逆変換時にはJSTからUTCに変換する
       return btoa(
-        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${
-          this.uuid
+        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${this.uuid
         }:${this.suffix}-${this.nplnUserId}`,
       );
     }

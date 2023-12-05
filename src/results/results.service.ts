@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
 import { Mode, Result, Schedule } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 import lodash from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 import { CoopHistoryDetailQuery } from 'src/dto/history.detail.request.dto';
 import { CoopResultQuery } from 'src/dto/history.detail.response.dto';
+import { Response } from 'src/dto/response.dto';
 import { scheduleHash } from 'src/utils/hash';
 import { zip } from 'src/utils/zip';
 
@@ -31,19 +32,23 @@ export class ResultsService {
     return results.map((result) => lodash.omit(result, ['createdAt', 'updatedAt', 'scheduleId']));
   }
 
-  async create(request: CoopHistoryDetailQuery.Paginated | CoopResultQuery.Paginated): Promise<CoopResultQuery.Paginated> {
-    const results: CoopResultQuery.Request[] = await (async () => {
-      if (request instanceof CoopHistoryDetailQuery.Paginated) {
-        const schedules = await Promise.all(request.results.map((result: any) => this.connectOrCreate(result)));
-        return zip(request, schedules);
-      }
-      if (request instanceof CoopResultQuery.Paginated) {
-        return request.results as CoopResultQuery.Request[];
-      }
-      return [];
-    })();
-    await this.prisma.$transaction(results.map((result) => this.prisma.result.upsert(result.upsert)));
-    return plainToInstance(CoopResultQuery.Paginated, { results: results });
+  async create(request: CoopHistoryDetailQuery.Request): Promise<Response.CoopHistoryDetail> {
+    /// 対応するスケジュール
+    const schedule: Response.Schedule = await this.connectOrCreate(request);
+    return new Response.CoopHistoryDetail(request.data.coopHistoryDetail, schedule)
+    // return plainToInstance(Response.CoopHistoryDetail, CoopResultQuery.Request.from(request.data.coopHistoryDetail, schedule), { excludeExtraneousValues: false })
+    // const results: CoopResultQuery.Request[] = await (async () => {
+    //   if (request instanceof CoopHistoryDetailQuery.Paginated) {
+    //     const schedules = await Promise.all(request.results.map((result: any) => this.connectOrCreate(result)));
+    //     return zip(request, schedules);
+    //   }
+    //   if (request instanceof CoopResultQuery.Paginated) {
+    //     return request.results as CoopResultQuery.Request[];
+    //   }
+    //   return [];
+    // })();
+    // await this.prisma.$transaction(results.map((result) => this.prisma.result.upsert(result.upsert)));
+    // return plainToInstance(CoopResultQuery.Paginated, { results: results });
   }
 
   /**
@@ -51,13 +56,13 @@ export class ResultsService {
    * @param request
    * @returns
    */
-  private async connectOrCreate(request: CoopHistoryDetailQuery.Request): Promise<Schedule> {
+  private async connectOrCreate(request: CoopHistoryDetailQuery.Request): Promise<Response.Schedule> {
     /**
      * プライベートバイトであれば検索して見つからなければ作成する
      */
     if (request.mode === Mode.PRIVATE_CUSTOM || request.mode === Mode.PRIVATE_SCENARIO) {
       try {
-        return await this.prisma.schedule.findFirstOrThrow({
+        return plainToInstance(Response.Schedule, await this.prisma.schedule.findFirstOrThrow({
           where: {
             endTime: null,
             mode: request.mode,
@@ -68,13 +73,13 @@ export class ResultsService {
               equals: request.weaponList,
             },
           },
-        });
+        }), { excludeExtraneousValues: true });
       } catch {
         /**
          * プライベートバイトであればハッシュがリザルトから計算できるので作成する
          */
         const scheduleId: string = scheduleHash(request.mode, request.rule, null, null, request.stageId, request.weaponList);
-        return await this.prisma.schedule.create({
+        return plainToInstance(Response.Schedule, await this.prisma.schedule.create({
           data: {
             endTime: null,
             mode: request.mode,
@@ -84,13 +89,13 @@ export class ResultsService {
             startTime: null,
             weaponList: request.weaponList,
           },
-        });
+        }), { excludeExtraneousValues: true });
       }
     } else {
       /**
        * レギュラーの場合はなければエラーを返す
        */
-      return await this.prisma.schedule.findFirstOrThrow({
+      return plainToInstance(Response.Schedule, await this.prisma.schedule.findFirstOrThrow({
         where: {
           endTime: {
             gte: request.playTime,
@@ -105,7 +110,7 @@ export class ResultsService {
             equals: request.weaponList,
           },
         },
-      });
+      }), { excludeExtraneousValues: true });
     }
   }
 
