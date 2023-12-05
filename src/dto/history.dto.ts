@@ -328,22 +328,48 @@ export namespace CoopHistoryQuery {
 
   export namespace Response {
     class CoopJobResult {
+      @ApiProperty()
       readonly bossId: CoopBossInfoId | null;
+
+      @ApiProperty()
       readonly isBossDefeated: boolean | null;
+
+      @ApiProperty()
       readonly failureWave: number | null;
+
+      @ApiProperty()
       readonly isClear: boolean;
     }
 
     class CoopHistoryDetail {
-      readonly id: Common.ResultId
-      readonly hash: string
-      readonly stageId: CoopStageId
-      readonly weaponList: WeaponInfoMain.Id[]
-      readonly gradeId: CoopGradeId | null
-      readonly gradePoint: number | null
-      readonly ikuraNum: number
-      readonly goldenIkuraNum: number
-      readonly jobResult: CoopJobResult
+      @ApiProperty()
+      @Type(() => Common.ResultId)
+      readonly id: Common.ResultId;
+
+      @ApiProperty()
+      readonly hash: string;
+
+      @ApiProperty()
+      readonly stageId: CoopStageId;
+
+      @ApiProperty()
+      readonly weaponList: WeaponInfoMain.Id[];
+
+      @ApiProperty()
+      readonly gradeId: CoopGradeId | null;
+
+      @ApiProperty()
+      readonly gradePoint: number | null;
+
+      @ApiProperty()
+      readonly ikuraNum: number;
+
+      @ApiProperty()
+      readonly goldenIkuraNum: number;
+
+      @ApiProperty()
+      @Type(() => CoopJobResult)
+      readonly jobResult: CoopJobResult;
     }
 
     export class Schedules {
@@ -363,27 +389,15 @@ export namespace CoopHistoryQuery {
       readonly id: string;
 
       @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', required: true })
-      @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
-      @IsDate()
-      @IsOptional()
-      @Expose()
       readonly startTime: Date | null;
 
       @ApiProperty({ example: '2023-08-29T08:00:00Z', name: 'endTime', required: true })
-      @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
-      @IsDate()
-      @IsOptional()
-      @Expose()
       readonly endTime: Date | null;
 
       @ApiProperty({ enum: Mode, required: true })
-      @Expose()
-      @IsEnum(Mode)
       readonly mode: Mode;
 
       @ApiProperty({ enum: Rule, required: true })
-      @Expose()
-      @IsEnum(Rule)
       readonly rule: Rule;
 
       @ApiProperty({ enum: CoopBossInfoId, required: true })
@@ -399,15 +413,9 @@ export namespace CoopHistoryQuery {
       readonly rareWeapons: WeaponInfoMain.Id[];
 
       @ApiProperty({ enum: CoopStageId, required: true })
-      @Expose()
-      @IsEnum(CoopStageId)
-      @Transform(({ obj }) => obj.stageId ?? obj.historyDetails.nodes[0].coopStage.id)
       readonly stageId: CoopStageId;
 
       @ApiProperty({ enum: WeaponInfoMain.Id, isArray: true, required: true })
-      @Expose()
-      @IsEnum(WeaponInfoMain.Id, { each: true })
-      @Transform(({ obj }) => obj.weaponList ?? obj.historyDetails.nodes[0].weapons.map((weapon: any) => weapon.image.id))
       readonly weaponList: WeaponInfoMain.Id[];
 
       static from(schedule: any): Schedule {
@@ -630,7 +638,7 @@ export namespace CoopHistoryQuery {
 
     export class Response {
       @ApiProperty()
-      @Expose()
+      @Type(() => Schedule)
       readonly schedule: Schedule;
 
       @ApiProperty()
