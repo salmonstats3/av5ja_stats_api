@@ -3,6 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CoopHistoryQuery } from 'src/dto/history.dto';
 
 import { HistoriesService } from './histories.service';
+import { Response } from 'src/dto/response.dto';
 
 @ApiTags('Histories')
 @Controller('histories')
@@ -11,8 +12,8 @@ export class HistoriesController {
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
-  @ApiOkResponse({ type: CoopHistoryQuery.Response.Response })
-  async create(@Body() request: CoopHistoryQuery.Request.Request): Promise<CoopHistoryQuery.Response.Response[]> {
+  @ApiOkResponse({ type: Response.CoopHistoryQuery })
+  async create(@Body() request: CoopHistoryQuery.Request): Promise<Response.CoopHistoryQuery> {
     return this.service.create(request);
   }
 }

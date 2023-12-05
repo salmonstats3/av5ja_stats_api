@@ -1,42 +1,48 @@
 import { Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'nestjs-prisma';
 import { CoopHistoryQuery } from 'src/dto/history.dto';
+import { Response } from 'src/dto/response.dto';
 
 @Injectable()
 export class HistoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: CoopHistoryQuery.Request.Request): Promise<CoopHistoryQuery.Response.Response[]> {
+  async create(request: CoopHistoryQuery.Request): Promise<Response.CoopHistoryQuery> {
     await this.prisma.schedule.createMany(request.create);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return request.nodes.map((node) => {
-      return {
-        results: node.historyDetails.nodes.map((result) => {
-          return {
-            goldenIkuraNum: result.goldenIkuraNum,
-            gradeId: result.gradeId,
-            gradePoint: result.gradePoint,
-            hash: result.hash,
-            id: result.id,
-            ikuraNum: result.ikuraNum,
-            jobResult: {
-              isClear: result.isClear,
-            },
-            stageId: result.coopStage.id,
-            weaponList: result.weaponList,
-          };
-        }),
-        schedule: {
-          endTime: node.endTime,
-          id: node.scheduleId,
-          mode: node.mode,
-          rule: node.rule,
-          stageId: node.stageId,
-          startTime: node.startTime,
-          weaponList: node.weaponList,
-        },
-      };
-    });
+    return plainToInstance(Response.CoopHistoryQuery, {
+      histories: request.nodes.map((node) => {
+        return {
+          schedule: {
+            id: node.scheduleId,
+            startTime: node.startTime,
+            endTime: node.endTime,
+            mode: node.mode,
+            rule: node.rule,
+            stageId: node.stageId,
+            bossId: undefined,
+            weaponList: node.weaponList
+          },
+          results: node.historyDetails.nodes.map((detail) => {
+            return {
+              id: detail.id,
+              hash: detail.hash,
+              stageId: detail.coopStage.id,
+              weaponList: detail.weaponList,
+              gradeId: detail.gradeId,
+              gradePoint: detail.gradePoint,
+              ikuraNum: detail.ikuraNum,
+              goldenIkuraNum: detail.goldenIkuraNum,
+              jobResult: {
+                failureWave: null,
+                isClear: detail.isClear,
+                bossId: detail.bossResult.id,
+                isBossDefeated: detail.bossResult.isBossDefeated
+              },
+            }
+          })
+        }
+      })
+    })
   }
 }
