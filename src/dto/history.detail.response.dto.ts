@@ -616,11 +616,11 @@ export namespace CoopResultQuery {
     @Expose()
     readonly jobBonus: number;
 
-    @ApiProperty({ required: true, type: CoopHistoryQuery.Schedule })
-    @Type(() => CoopHistoryQuery.Schedule)
+    @ApiProperty({ required: true, type: CoopHistoryQuery.Response.Schedule })
+    @Type(() => CoopHistoryQuery.Response.Schedule)
     @ValidateNested()
     @Expose()
-    readonly schedule: CoopHistoryQuery.Schedule;
+    readonly schedule: CoopHistoryQuery.Response.Schedule;
 
     @ApiProperty({ required: true, type: 'integer' })
     @IsInt()

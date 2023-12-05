@@ -6,8 +6,9 @@ import { CoopHistoryQuery } from 'src/dto/history.dto';
 export class HistoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response[]> {
+  async create(request: CoopHistoryQuery.Request.Request): Promise<CoopHistoryQuery.Response.Response[]> {
     await this.prisma.schedule.createMany(request.create);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return request.nodes.map((node) => {
       return {
@@ -16,13 +17,13 @@ export class HistoriesService {
             goldenIkuraNum: result.goldenIkuraNum,
             gradeId: result.gradeId,
             gradePoint: result.gradePoint,
-            id: result.id,
-            stageId: result.coopStage.id,
             hash: result.hash,
+            id: result.id,
             ikuraNum: result.ikuraNum,
             jobResult: {
               isClear: result.isClear,
             },
+            stageId: result.coopStage.id,
             weaponList: result.weaponList,
           };
         }),
