@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'nestjs-prisma';
 import { CoopHistoryQuery } from 'src/dto/history.dto';
 
@@ -7,38 +6,36 @@ import { CoopHistoryQuery } from 'src/dto/history.dto';
 export class HistoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response> {
+  async create(request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response[]> {
     await this.prisma.schedule.createMany(request.create);
-    return {
-      results: request.schedules.flatMap((schedule) => schedule.historyDetails.nodes.map((node) => {
-        return {
-          id: node.id.rawValue,
-          hash: node.hash,
-          stageId: node.coopStage.id,
+    // @ts-ignore
+    return request.nodes.map((node) => {
+      return {
+        results: node.historyDetails.nodes.map((result) => {
+          return {
+            goldenIkuraNum: result.goldenIkuraNum,
+            gradeId: result.gradeId,
+            gradePoint: result.gradePoint,
+            id: result.id,
+            stageId: result.coopStage.id,
+            hash: result.hash,
+            ikuraNum: result.ikuraNum,
+            jobResult: {
+              isClear: result.isClear,
+            },
+            weaponList: result.weaponList,
+          };
+        }),
+        schedule: {
+          endTime: node.endTime,
+          id: node.scheduleId,
+          mode: node.mode,
+          rule: node.rule,
+          stageId: node.stageId,
+          startTime: node.startTime,
           weaponList: node.weaponList,
-          gradeId: node.gradeId,
-          gradePoint: node.gradePoint,
-          ikuraNum: node.ikuraNum,
-          goldenIkuraNum: node.goldenIkuraNum,
-          bossResult: node.bossResult,
-        }
-      })),
-      schedules: request.schedules.map((schedule) => {
-        return plainToInstance(CoopHistoryQuery.Schedule, {
-          endTime: schedule.endTime,
-          mode: schedule.mode,
-          rule: schedule.rule,
-          stageId: schedule.stageId,
-          startTime: schedule.startTime,
-          weaponList: schedule.weaponList,
-          highest: {
-            goldenIkuraNum: schedule.highest.goldenIkuraNum,
-            grade: schedule.highest.grade,
-            gradePoint: schedule.highest.gradePoint,
-            trophy: schedule.highest.trophy,
-          }
-        });
-      }),
-    };
+        },
+      };
+    });
   }
 }

@@ -142,6 +142,7 @@ export class ResultsService {
     },
     schedule: {
       select: {
+        bossId: true,
         endTime: true,
         mode: true,
         rule: true,
@@ -149,7 +150,6 @@ export class ResultsService {
         stageId: true,
         startTime: true,
         weaponList: true,
-        bossId: true,
       },
     },
     waves: {

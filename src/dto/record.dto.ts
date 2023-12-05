@@ -1,11 +1,11 @@
-import { BadRequestException } from "@nestjs/common";
-import { ApiProperty } from "@nestjs/swagger";
-import { Expose, Transform, Type, plainToInstance } from "class-transformer";
-import { IsArray, IsBoolean, IsDate, IsDateString, IsEnum, IsIn, IsInt, IsString, Max, Min, Validate, ValidateNested } from "class-validator";
-import dayjs from "dayjs";
-import { CoopBossInfoId, CoopEnemyInfoId } from "src/utils/enum/coop_enemy_id";
-import { CoopGradeId } from "src/utils/enum/coop_grade_id";
-import { CoopStageId } from "src/utils/enum/coop_stage_id";
+import { BadRequestException } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Transform, Type } from 'class-transformer';
+import { IsArray, IsDateString, IsEnum, IsInt, IsString, Max, Min, ValidateNested } from 'class-validator';
+import dayjs from 'dayjs';
+import { CoopBossInfoId, CoopEnemyInfoId } from 'src/utils/enum/coop_enemy_id';
+import { CoopGradeId } from 'src/utils/enum/coop_grade_id';
+import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 
 export namespace CoopRecordQuery {
   class CoopStage {
@@ -13,7 +13,7 @@ export namespace CoopRecordQuery {
     @Expose()
     @Transform(({ value }) => {
       const regexp = /-([0-9-]*)/;
-      console.log(value)
+      console.log(value);
       const match = regexp.exec(atob(value));
       if (match === null) {
         throw new BadRequestException(`Invalid CoopStageId: ${value}`);
@@ -21,7 +21,7 @@ export namespace CoopRecordQuery {
       return parseInt(match[1], 10);
     })
     @IsEnum(CoopStageId)
-    readonly id: CoopStageId
+    readonly id: CoopStageId;
   }
 
   class StageHighestRecord {
@@ -29,7 +29,7 @@ export namespace CoopRecordQuery {
     @Expose()
     @Type(() => CoopStage)
     @ValidateNested()
-    readonly coopStage: CoopStage
+    readonly coopStage: CoopStage;
 
     @ApiProperty()
     @Expose()
@@ -41,14 +41,14 @@ export namespace CoopRecordQuery {
       }
       return parseInt(match[1], 10);
     })
-    readonly grade: number
+    readonly grade: number;
 
     @ApiProperty()
     @Expose()
     @IsInt()
     @Min(0)
     @Max(999)
-    readonly gradePoint: number
+    readonly gradePoint: number;
   }
 
   class Node {
@@ -56,27 +56,27 @@ export namespace CoopRecordQuery {
     @Expose()
     @IsDateString()
     @Transform(({ value }) => dayjs(value).toDate())
-    readonly startTime: Date
+    readonly startTime: Date;
 
     @ApiProperty()
     @Expose()
     @IsDateString()
     @Transform(({ value }) => dayjs(value).toDate())
-    readonly endTime: Date
+    readonly endTime: Date;
 
     @ApiProperty()
     @Expose()
     @IsString()
-    readonly trophy: string
+    readonly trophy: string;
 
     @ApiProperty()
     @Expose()
     @Type(() => CoopStage)
     @ValidateNested()
-    readonly coopStage: CoopStage
+    readonly coopStage: CoopStage;
 
     @ApiProperty()
-    @Expose({ name: "highestGrade" })
+    @Expose({ name: 'highestGrade' })
     @IsEnum(CoopGradeId)
     @Transform(({ value }) => {
       const regexp = /-([0-9-]*)/;
@@ -86,28 +86,28 @@ export namespace CoopRecordQuery {
       }
       return parseInt(match[1], 10);
     })
-    readonly grade: CoopGradeId
+    readonly grade: CoopGradeId;
 
     @ApiProperty()
-    @Expose({ name: "highestGradePoint" })
+    @Expose({ name: 'highestGradePoint' })
     @IsInt()
     @Min(0)
     @Max(999)
-    readonly gradePoint: number
+    readonly gradePoint: number;
 
     @ApiProperty()
-    @Expose({ name: "highestJobScore" })
+    @Expose({ name: 'highestJobScore' })
     @IsInt()
     @Min(0)
     @Max(999)
-    readonly goldenIkuraNum: number
+    readonly goldenIkuraNum: number;
   }
 
   class Edge {
     @ApiProperty()
     @Expose()
     @Type(() => Node)
-    readonly node: Node
+    readonly node: Node;
   }
 
   class Record {
@@ -116,67 +116,67 @@ export namespace CoopRecordQuery {
     @IsArray()
     @Type(() => Edge)
     @ValidateNested({ each: true })
-    readonly edges: Edge[]
+    readonly edges: Edge[];
   }
 
   class BigRunRecord {
     @ApiProperty()
     @Expose()
     @Type(() => Record)
-    readonly records: Record
+    readonly records: Record;
 
     get stageRecords(): CoopStageRecord[] {
       return this.records.edges.map((edge) => {
         return {
+          endTime: edge.node.endTime,
           goldenIkuraNum: edge.node.goldenIkuraNum,
           grade: edge.node.grade,
           gradePoint: edge.node.gradePoint,
           stageId: edge.node.coopStage.id,
           startTime: edge.node.startTime,
-          endTime: edge.node.endTime,
         };
-      })
+      });
     }
   }
 
   class CoopEnemy {
     @ApiProperty()
-    @Expose({ name: "coopEnemyId" })
+    @Expose({ name: 'coopEnemyId' })
     @IsEnum(CoopEnemyInfoId)
-    readonly id: CoopEnemyInfoId
+    readonly id: CoopEnemyInfoId;
   }
 
   class CoopBoss {
     @ApiProperty()
-    @Expose({ name: "coopEnemyId" })
+    @Expose({ name: 'coopEnemyId' })
     @IsEnum(CoopBossInfoId)
-    readonly id: CoopBossInfoId
+    readonly id: CoopBossInfoId;
   }
 
   class DefeatEnemyRecord {
     @ApiProperty()
     @Expose()
     @Type(() => CoopEnemy)
-    readonly enemy: CoopEnemy
+    readonly enemy: CoopEnemy;
 
     @ApiProperty()
-    @Expose({ name: "defeatCount" })
+    @Expose({ name: 'defeatCount' })
     @IsInt()
     @Min(0)
-    readonly count: number
+    readonly count: number;
   }
 
   class DefeatBossRecord {
     @ApiProperty()
     @Expose()
     @Type(() => CoopBoss)
-    readonly enemy: CoopBoss
+    readonly enemy: CoopBoss;
 
     @ApiProperty()
-    @Expose({ name: "defeatCount" })
+    @Expose({ name: 'defeatCount' })
     @IsInt()
     @Min(0)
-    readonly count: number
+    readonly count: number;
   }
 
   class CoopRecord {
@@ -208,14 +208,14 @@ export namespace CoopRecordQuery {
     private get stageRecords(): CoopStageRecord[] {
       return this.stageHighestRecords.map((stage) => {
         return {
+          endTime: null,
           goldenIkuraNum: null,
           grade: stage.grade,
           gradePoint: stage.gradePoint,
           stageId: stage.coopStage.id,
           startTime: null,
-          endTime: null,
         };
-      })
+      });
     }
 
     get records(): CoopStageRecord[] {
@@ -225,19 +225,19 @@ export namespace CoopRecordQuery {
     get enemies(): CoopEnemyRecord[] {
       return this.defeatEnemyRecords.map((enemy) => {
         return {
+          count: enemy.count,
           id: enemy.enemy.id,
-          count: enemy.count
-        }
-      })
+        };
+      });
     }
 
     get bosses(): CoopEnemyRecord[] {
       return this.defeatBossRecords.map((enemy) => {
         return {
+          count: enemy.count,
           id: enemy.enemy.id,
-          count: enemy.count
-        }
-      })
+        };
+      });
     }
   }
 
@@ -254,32 +254,32 @@ export namespace CoopRecordQuery {
     @Expose()
     @Type(() => DataClass)
     @ValidateNested()
-    readonly data: DataClass
+    readonly data: DataClass;
 
     get record(): Response {
       return {
+        enemyRecords: this.data.coopRecord.enemies.concat(this.data.coopRecord.bosses),
         stageRecords: this.data.coopRecord.records,
-        enemyRecords: this.data.coopRecord.enemies.concat(this.data.coopRecord.bosses)
-      }
+      };
     }
   }
 
   class CoopStageRecord {
-    readonly goldenIkuraNum: number | null
-    readonly grade: CoopGradeId
-    readonly gradePoint: number
-    readonly stageId: CoopStageId
-    readonly startTime: Date | null
-    readonly endTime: Date | null
+    readonly goldenIkuraNum: number | null;
+    readonly grade: CoopGradeId;
+    readonly gradePoint: number;
+    readonly stageId: CoopStageId;
+    readonly startTime: Date | null;
+    readonly endTime: Date | null;
   }
 
   class CoopEnemyRecord {
-    readonly id: CoopEnemyInfoId | CoopBossInfoId
-    readonly count: number
+    readonly id: CoopEnemyInfoId | CoopBossInfoId;
+    readonly count: number;
   }
 
   export class Response {
-    readonly stageRecords: CoopStageRecord[]
-    readonly enemyRecords: CoopEnemyRecord[]
+    readonly stageRecords: CoopStageRecord[];
+    readonly enemyRecords: CoopEnemyRecord[];
   }
 }

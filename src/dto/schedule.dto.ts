@@ -126,11 +126,11 @@ export namespace StageScheduleQuery {
 
     get query(): Prisma.ScheduleCreateInput {
       return {
+        bossId: this.setting.bossId,
         endTime: this.endTime,
         mode: this.mode,
         rule: this.rule,
         scheduleId: this.scheduleId,
-        bossId: this.setting.bossId,
         stageId: this.stageId,
         startTime: this.startTime,
         weaponList: this.weaponList,

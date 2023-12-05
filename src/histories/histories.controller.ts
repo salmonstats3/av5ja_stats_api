@@ -12,7 +12,7 @@ export class HistoriesController {
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'Create schedules' })
   @ApiOkResponse({ type: CoopHistoryQuery.Response })
-  async create(@Body() request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response> {
+  async create(@Body() request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response[]> {
     return this.service.create(request);
   }
 }
