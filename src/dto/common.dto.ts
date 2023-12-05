@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
 import dayjs from 'dayjs';
-import { resultHash } from 'src/utils/hash';
+import { playerHash, resultHash } from 'src/utils/hash';
 
 export namespace Common {
   export class ResultId {
@@ -93,6 +93,10 @@ export namespace Common {
         `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${this.uuid
         }:${this.suffix}-${this.nplnUserId}`,
       );
+    }
+
+    get hash(): string {
+      return playerHash(this.uuid, this.playTime, this.nplnUserId)
     }
 
     get rawId(): string {

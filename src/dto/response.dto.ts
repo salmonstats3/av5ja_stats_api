@@ -8,35 +8,43 @@ import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
 
 import { Common } from './common.dto';
 import { CoopSkinId } from 'src/utils/enum/coop_skin_id';
-import { resultHash, scheduleHash } from 'src/utils/hash';
+import { resultHash, scheduleHash, waveHash } from 'src/utils/hash';
 import { Expose, Transform } from 'class-transformer';
 import { CoopHistoryDetailQuery } from './history.detail.request.dto';
+import { WeaponInfoSpecial } from 'src/utils/enum/weapon_info_special';
 
 export namespace Response {
   export class Schedule {
     @Expose()
     @Transform(({ obj }) => scheduleHash(obj.mode, obj.rule, obj.startTime, obj.endTime, obj.stageId, obj.weaponList))
     readonly id: string;
+
     @Expose()
     readonly startTime: Date | null;
+
     @Expose()
     readonly endTime: Date | null;
+
     @Expose()
     @Transform(({ value }) => value === undefined ? Mode.REGULAR : value)
     readonly mode: Mode;
+
     @Expose()
     @Transform(({ value }) => value === undefined ? Rule.REGULAR : value)
     readonly rule: Rule;
+
     @Expose()
     readonly stageId: CoopStageId;
+
     @Expose()
     readonly bossId: CoopBossInfoId | null;
+
     @Expose()
     readonly weaponList: WeaponInfoMain.Id[];
 
-    private get scheduleId(): string {
-      return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.stageId, this.weaponList);
-    }
+    // private get scheduleId(): string {
+    //   return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.stageId, this.weaponList);
+    // }
 
     get connectOrCreate(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
       return {
@@ -44,13 +52,13 @@ export namespace Response {
           endTime: this.endTime,
           mode: this.mode,
           rule: this.rule,
-          scheduleId: this.scheduleId,
+          scheduleId: this.id,
           stageId: this.stageId,
           startTime: this.startTime,
           weaponList: this.weaponList,
         },
         where: {
-          scheduleId: this.scheduleId,
+          scheduleId: this.id,
         },
       };
     }
@@ -105,6 +113,7 @@ export namespace Response {
   }
 
   export class MemberResult {
+    readonly hash: string
     readonly id: Common.PlayerId
     readonly goldenIkuraNum: number
     readonly bossKillCounts: number[]
@@ -123,6 +132,7 @@ export namespace Response {
     readonly species: Species
     readonly name: string
     readonly byname: string
+    readonly specialId: WeaponInfoSpecial.Id
 
     // 追加
     readonly gradeId: CoopGradeId | null;
@@ -133,13 +143,15 @@ export namespace Response {
     readonly kumaPoint: number | null;
     readonly jobRate: number | null
 
-    constructor(result: CoopHistoryDetailQuery.MemberResult, bossKillCounts: number[], gradeId: CoopGradeId | null, gradePoint: number | null, smellMeter: number | null, jobBonus: number | null, jobScore: number | null, kumaPoint: number | null, jobRate: number | null) {
-      this.id = new Common.PlayerId(result.id)
+    constructor(result: CoopHistoryDetailQuery.MemberResult, counts: number[], bossKillCounts: number[], gradeId: CoopGradeId | null, gradePoint: number | null, smellMeter: number | null, jobBonus: number | null, jobScore: number | null, kumaPoint: number | null, jobRate: number | null) {
+      this.id = result.player.id
+      this.hash = result.player.id.hash
       this.goldenIkuraNum = result.goldenIkuraNum
-      this.bossKillCounts = this.isMyself ? bossKillCounts : Array.from({ length: 14 }, () => null)
+      this.bossKillCounts = result.isMyself ? bossKillCounts : Array.from({ length: 14 }, () => null)
       this.uniform = result.player.uniform.id
       this.bossKillCountsTotal = result.bossKillCountsTotal
-      // this.specialCounts = result.specialCounts
+      this.specialCounts = counts
+      this.specialId = result.specialWeapon.id
       this.ikuraNum = result.ikuraNum
       this.isMyself = result.isMyself
       this.nameplate = new NamePlate(result.background, result.badges, new TextColor(result.textColor[0], result.textColor[1], result.textColor[2], result.textColor[3]))
@@ -163,15 +175,17 @@ export namespace Response {
   }
 
   export class WaveResult {
+    readonly hash: string
     readonly id: number;
     readonly eventType: EventId;
     readonly quotaNum: number;
     readonly goldenIkuraNum: number;
     readonly waterLevel: WaterLevelId;
     readonly goldenIkuraPopNum: number;
-    // readonly isClear: boolean;
+    readonly isClear: boolean;
 
-    constructor(result: CoopHistoryDetailQuery.WaveResult) {
+    constructor(result: CoopHistoryDetailQuery.WaveResult, id: Common.ResultId, resultWave: number, bossDefeated: boolean | null) {
+      this.hash = waveHash(id.uuid, id.playTime, result.id)
       this.id = result.id
       this.eventType = result.eventType
       this.quotaNum = result.quotaNum
@@ -179,7 +193,7 @@ export namespace Response {
       this.waterLevel = result.waterLevel
       this.goldenIkuraNum = result.goldenIkuraNum
       this.goldenIkuraPopNum = result.goldenIkuraPopNum
-      // this.isClear = result
+      this.isClear = (bossDefeated !== null) ? (result.quotaNum === null ? bossDefeated : true) : !(result.id == resultWave)
     }
   }
 
@@ -198,8 +212,6 @@ export namespace Response {
   export class CoopHistoryDetail {
     readonly id: Common.ResultId;
     readonly hash: string;
-    // readonly stageId: CoopStageId;
-    // readonly weaponList: WeaponInfoMain.Id[];
     readonly ikuraNum: number | null;
     readonly goldenIkuraNum: number;
     readonly jobResult: JobResult;
@@ -211,12 +223,11 @@ export namespace Response {
     readonly schedule: Schedule;
     readonly scenarioCode: string | null;
     readonly goldenIkuraAssistNum: number;
-    // readonly myResult: MemberResult;
-    // readonly otherResults: MemberResult[];
     readonly playTime: Date;
     readonly members: MemberResult[];
 
     constructor(result: CoopHistoryDetailQuery.CoopHistoryDetail, schedule: Schedule) {
+      const specialCounts: WeaponInfoSpecial.Id[][] = result.waveResults.map(wave => wave.specialWeapons.map(special => special.id))
       this.hash = result.id.hash
       this.bossCounts = result.bossCounts
       this.bossKillCounts = result.teamBossKillCounts
@@ -229,9 +240,11 @@ export namespace Response {
       this.scenarioCode = result.scenarioCode
       this.schedule = schedule
       this.jobResult = new JobResult(result)
-      // this.weaponList = result.weaponList
-      this.waveDetails = result.waveResults.map(wave => new WaveResult(wave))
-      this.members = result.players.map(member => new MemberResult(member, result.teamBossKillCounts, result.gradeId, result.gradePoint, result.smellMeter, result.jobBonus, result.jobScore, result.kumaPoint, result.jobRate))
+      this.waveDetails = result.waveResults.map(wave => new WaveResult(wave, result.id, result.resultWave, result.isBossDefeated))
+      this.members = result.players.map(member => {
+        const counts: number[] = specialCounts.map(special => special.filter(id => id === member.specialWeapon.id).length)
+        return new MemberResult(member, counts, result.bossKillCounts, result.gradeId, result.gradePoint, result.smellMeter, result.jobBonus, result.jobScore, result.kumaPoint, result.jobRate)
+      })
       this.scale = [result.scale.bronze, result.scale.silver, result.scale.gold]
     }
   }
