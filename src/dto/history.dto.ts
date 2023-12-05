@@ -11,9 +11,42 @@ import { scheduleHash } from 'src/utils/hash';
 import { Common } from './common.dto';
 import { MainWeapon, StageScheduleQuery } from './schedule.dto';
 import { CoopGradeId } from 'src/utils/enum/coop_grade_id';
-import { CoopEnemyInfoId } from 'src/utils/enum/coop_enemy_id';
+import { CoopBossInfoId, CoopEnemyInfoId } from 'src/utils/enum/coop_enemy_id';
 
 export namespace CoopHistoryQuery {
+  class CoopPlayerResult {
+    @ApiProperty()
+    @Expose({ name: "deliverCount" })
+    @IsInt()
+    @Min(0)
+    @Max(9999)
+    readonly ikuraNum: number
+  }
+
+  class CoopBossResult {
+    @ApiProperty()
+    @Expose()
+    @IsEnum(CoopBossInfoId)
+    @IsOptional()
+    readonly id: CoopBossInfoId | null
+
+    @ApiProperty()
+    @Expose()
+    @IsBoolean()
+    @IsOptional()
+    readonly isBossDefeated: boolean | null
+  }
+
+  class CoopWaveResult {
+    @ApiProperty()
+    @Expose({ name: "teamDeliverCount" })
+    @IsInt()
+    @Min(0)
+    @Max(999)
+    @IsOptional()
+    readonly goldenIkuraNum: number | null
+  }
+
   class CoopHistoryDetail {
     @ApiProperty({ required: true, type: StageScheduleQuery.CoopStage })
     @Expose()
@@ -33,6 +66,75 @@ export namespace CoopHistoryQuery {
     @Transform(({ value }) => Common.ResultId.from(value))
     @ValidateNested()
     readonly id: Common.ResultId;
+
+    @ApiProperty()
+    @Expose({ name: "afterGrade" })
+    @IsEnum(CoopGradeId)
+    @IsOptional()
+    @Transform(({ value }) => {
+      const regexp = /-([0-9-]*)/;
+      const match = regexp.exec(atob(value.id));
+      return match === null ? null : parseInt(match[1], 10);
+    })
+    readonly gradeId: CoopGradeId | null
+
+    @ApiProperty()
+    @Expose({ name: "afterGradePoint" })
+    @IsInt()
+    @IsOptional()
+    @Min(0)
+    @Max(999)
+    readonly gradePoint: number | null
+
+    @ApiProperty()
+    @Expose()
+    @Type(() => CoopWaveResult)
+    @ValidateNested({ each: true })
+    readonly waveResults: CoopWaveResult[]
+
+    // @ApiProperty()
+    // @Expose({ name: "afterGrade" })
+    // @IsEnum(CoopGradeId)
+    // @IsOptional()
+    // @Transform(({ value }) => {
+    //   const regexp = /-([0-9-]*)/;
+    //   const match = regexp.exec(atob(value.id));
+    //   return match === null ? null : parseInt(match[1], 10);
+    // })
+    // readonly bossResult: CoopBossInfoId | null
+
+    @ApiProperty()
+    @Expose()
+    @Min(-1)
+    @Max(5)
+    readonly resultWave: number
+
+    @ApiProperty()
+    @Expose()
+    @Type(() => CoopPlayerResult)
+    @ValidateNested({ each: true })
+    readonly memberResults: CoopPlayerResult[]
+
+    @ApiProperty()
+    @Expose()
+    @Type(() => CoopPlayerResult)
+    readonly myResult: CoopPlayerResult
+
+    get ikuraNum(): number {
+      return [this.myResult].concat(this.memberResults).map((member) => member.ikuraNum).reduce((a, b) => a + b, 0)
+    }
+
+    get goldenIkuraNum(): number {
+      return this.waveResults.map((wave) => wave.goldenIkuraNum ?? 0).reduce((a, b) => a + b, 0);
+    }
+
+    get isClear(): boolean {
+      return this.resultWave === 0
+    }
+
+    get weaponList(): WeaponInfoMain.Id[] {
+      return this.weapons.map((weapon) => weapon.image.id);
+    }
   }
 
   class HistoryNode {
@@ -40,7 +142,7 @@ export namespace CoopHistoryQuery {
     @Expose()
     @Type(() => CoopHistoryDetail)
     @ValidateNested({ each: true })
-    nodes: CoopHistoryDetail[];
+    readonly nodes: CoopHistoryDetail[];
   }
 
   export class Schedules {
@@ -235,7 +337,50 @@ export namespace CoopHistoryQuery {
     @Expose()
     @Type(() => CoopSchedule)
     @ValidateNested({ each: true })
-    nodes: CoopSchedule[];
+    readonly nodes: CoopSchedule[];
+  }
+
+  class CoopPointCard {
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly defeatBossCount: number
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly deliverCount: number
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly goldenDeliverCount: number
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    @IsOptional()
+    readonly limitedPoint: number | null
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly playCount: number
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly regularPoint: number
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly rescueCount: number
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly totalPoint: number
   }
 
   class CoopHistoryGroup {
@@ -243,7 +388,13 @@ export namespace CoopHistoryQuery {
     @Expose()
     @Type(() => CoopHistoryNode)
     @ValidateNested({ each: true })
-    historyGroups: CoopHistoryNode;
+    readonly historyGroups: CoopHistoryNode;
+
+    @ApiProperty({ required: true, type: CoopPointCard })
+    @Expose()
+    @Type(() => CoopPointCard)
+    @ValidateNested({ each: true })
+    readonly pointCard: CoopPointCard
   }
 
   class CoopHistoryDataClass {
@@ -251,7 +402,7 @@ export namespace CoopHistoryQuery {
     @Expose()
     @Type(() => CoopHistoryGroup)
     @ValidateNested({ each: true })
-    coopResult: CoopHistoryGroup;
+    readonly coopResult: CoopHistoryGroup;
   }
 
   export class Request {
@@ -259,7 +410,7 @@ export namespace CoopHistoryQuery {
     @Expose()
     @Type(() => CoopHistoryDataClass)
     @ValidateNested({ each: true })
-    data: CoopHistoryDataClass;
+    readonly data: CoopHistoryDataClass;
 
     /**
      * スケジュール一覧
@@ -283,7 +434,7 @@ export namespace CoopHistoryQuery {
     readonly schedules: Schedule[];
 
     @ApiProperty({ isArray: true, type: String })
-    @Type(() => String)
-    readonly results: string[];
+    // @Type(() => String)
+    readonly results: any[];
   }
 }

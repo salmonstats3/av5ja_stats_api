@@ -10,7 +10,17 @@ export class HistoriesService {
   async create(request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response> {
     await this.prisma.schedule.createMany(request.create);
     return {
-      results: request.schedules.flatMap((schedule) => schedule.historyDetails.nodes.map((node) => node.id.rawValue)),
+      results: request.schedules.flatMap((schedule) => schedule.historyDetails.nodes.map((node) => {
+        return {
+          id: node.id.rawValue,
+          stageId: node.coopStage.id,
+          weaponList: node.weaponList,
+          gradeId: node.gradeId,
+          gradePoint: node.gradePoint,
+          ikuraNum: node.ikuraNum,
+          goldenIkuraNum: node.goldenIkuraNum,
+        }
+      })),
       schedules: request.schedules.map((schedule) => {
         return plainToInstance(CoopHistoryQuery.Schedule, {
           endTime: schedule.endTime,
