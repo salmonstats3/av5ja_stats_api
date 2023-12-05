@@ -3,10 +3,9 @@ import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import { IsArray, IsDate, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
-import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
-import { scheduleHash } from 'src/utils/hash';
+import { resultHash, scheduleHash } from 'src/utils/hash';
 
 import { Common } from './common.dto';
 import { MainWeapon, StageScheduleQuery } from './schedule.dto';
@@ -25,13 +24,18 @@ export namespace CoopHistoryQuery {
 
   class CoopBossResult {
     @ApiProperty()
-    @Expose()
+    @Expose({ name: "boss" })
+    @Transform(({ value }) => {
+      const regexp = /-([0-9-]*)/;
+      const match = regexp.exec(atob(value.id));
+      return match === null ? null : parseInt(match[1], 10);
+    })
     @IsEnum(CoopBossInfoId)
     @IsOptional()
     readonly id: CoopBossInfoId | null
 
     @ApiProperty()
-    @Expose()
+    @Expose({ name: "hasDefeatBoss" })
     @IsBoolean()
     @IsOptional()
     readonly isBossDefeated: boolean | null
@@ -92,16 +96,18 @@ export namespace CoopHistoryQuery {
     @ValidateNested({ each: true })
     readonly waveResults: CoopWaveResult[]
 
-    // @ApiProperty()
-    // @Expose({ name: "afterGrade" })
-    // @IsEnum(CoopGradeId)
-    // @IsOptional()
-    // @Transform(({ value }) => {
-    //   const regexp = /-([0-9-]*)/;
-    //   const match = regexp.exec(atob(value.id));
-    //   return match === null ? null : parseInt(match[1], 10);
-    // })
-    // readonly bossResult: CoopBossInfoId | null
+    @ApiProperty()
+    @Expose()
+    @Type(() => CoopBossResult)
+    @Transform(({ value }) => {
+      return value === null ? {
+        id: null,
+        isBossDefeated: null,
+      }
+        : value
+    })
+    @ValidateNested()
+    readonly bossResult: CoopBossResult
 
     @ApiProperty()
     @Expose()
@@ -134,6 +140,10 @@ export namespace CoopHistoryQuery {
 
     get weaponList(): WeaponInfoMain.Id[] {
       return this.weapons.map((weapon) => weapon.image.id);
+    }
+
+    get hash(): string {
+      return resultHash(this.id.uuid, this.id.playTime)
     }
   }
 

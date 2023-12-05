@@ -13,12 +13,14 @@ export class HistoriesService {
       results: request.schedules.flatMap((schedule) => schedule.historyDetails.nodes.map((node) => {
         return {
           id: node.id.rawValue,
+          hash: node.hash,
           stageId: node.coopStage.id,
           weaponList: node.weaponList,
           gradeId: node.gradeId,
           gradePoint: node.gradePoint,
           ikuraNum: node.ikuraNum,
           goldenIkuraNum: node.goldenIkuraNum,
+          bossResult: node.bossResult,
         }
       })),
       schedules: request.schedules.map((schedule) => {
