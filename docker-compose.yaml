@@ -20,7 +20,7 @@ services:
       NODE_ENV: $NODE_ENV
 
   db:
-    image: postgres:16.0
+    image: postgres:15.4
     container_name: salmon_stats_db
     restart: unless-stopped
     ports:
@@ -61,6 +61,22 @@ services:
     depends_on:
       nginx_proxy:
         condition: service_started
+
+  dns:
+    build:
+      context: ./docker/dns
+      dockerfile: Dockerfile
+    restart: always
+    container_name: dnsmask
+    environment:
+      TZ: "Asia/Tokyo"
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    volumes:
+      - "./docker/dns/dnsmasq.conf:/etc/dnsmasq.conf"
+    cap_add:
+      - NET_ADMIN
 
   pg_backup_s3:
     image: tkgling/postgres-backup-s3:1.0.0
