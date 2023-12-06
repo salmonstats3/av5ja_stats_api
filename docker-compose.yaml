@@ -29,6 +29,22 @@ services:
       interval: 5s
       retries: 20
 
+  dns:
+    build:
+      context: ./docker/dns
+      dockerfile: Dockerfile
+    restart: always
+    container_name: dnsmask
+    environment:
+      TZ: "Asia/Tokyo"
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    volumes:
+      - "./docker/dns/dnsmasq.conf:/etc/dnsmasq.conf"
+    cap_add:
+      - NET_ADMIN
+
   pg_backup_s3:
     image: tkgling/postgres-backup-s3:latest
     container_name: postgres_backup_s3
