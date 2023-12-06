@@ -370,6 +370,7 @@ components:
             - 102
             - 103
             - 104
+            - 105
         weaponList:
           type: array
           items:
