@@ -41,8 +41,11 @@ jobs:
 
       - name: Generate
         run: yarn prisma generate
+      
+      - name: Generate Docs
+        run: yarn generate:docs
 
-      - name: Build
+      - name: Build Docs
         run: yarn build:docs
 
       - name: Deploy
