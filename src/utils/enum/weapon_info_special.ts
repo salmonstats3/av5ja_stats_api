@@ -9,6 +9,8 @@ export namespace WeaponInfoSpecial {
     SpChariot = 20012,
     SpSkewer = 20013,
     SpTripleTornado = 20014,
+    SpCastle = 20017,
+    SpPogo = 20018,
     SpSuperLanding = 20101,
   }
 }

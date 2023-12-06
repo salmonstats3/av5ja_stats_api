@@ -11,4 +11,5 @@ export enum CoopStageId {
   Upland = 102,
   Temple = 103,
   Factory = 104,
+  Section = 105,
 }

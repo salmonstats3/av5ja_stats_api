@@ -18,4 +18,5 @@ export enum CoopEnemyInfoId {
 export enum CoopBossInfoId {
   SakelienGiant = 23,
   SakeRope = 24,
+  SakeJaw = 25,
 }
