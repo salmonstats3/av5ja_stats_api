@@ -2,10 +2,9 @@ import { Body, Controller, Get, Param, Post, Version } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Result } from '@prisma/client';
 import { CoopHistoryDetailQuery } from 'src/dto/history.detail.request.dto';
-import { CoopResultQuery } from 'src/dto/history.detail.response.dto';
+import { Response } from 'src/dto/response.dto';
 
 import { ResultsService } from './results.service';
-import { Response } from 'src/dto/response.dto';
 
 @ApiTags('Results')
 @Controller('results')

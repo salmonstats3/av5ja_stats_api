@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CoopHistoryQuery } from 'src/dto/history.dto';
+import { Response } from 'src/dto/response.dto';
 
 import { HistoriesService } from './histories.service';
-import { Response } from 'src/dto/response.dto';
 
 @ApiTags('Histories')
 @Controller('histories')

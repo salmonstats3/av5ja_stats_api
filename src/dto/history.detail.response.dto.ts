@@ -31,7 +31,6 @@ import { resultHash, scheduleHash } from 'src/utils/hash';
 
 import { Common } from './common.dto';
 import { CoopHistoryDetailQuery } from './history.detail.request.dto';
-import { CoopHistoryQuery } from './history.dto';
 import { Response } from './response.dto';
 
 /**

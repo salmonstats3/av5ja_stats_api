@@ -15,11 +15,11 @@ export function scheduleHash(
 ): string {
   return startTime === null || endTime === null
     ? createHash('md5')
-      .update(`${mode}-${rule}-${stageId}-${weaponList.join(',')}`)
-      .digest('hex')
+        .update(`${mode}-${rule}-${stageId}-${weaponList.join(',')}`)
+        .digest('hex')
     : createHash('md5')
-      .update(`${mode}-${rule}-${stageId}-${dayjs(startTime).unix()}-${dayjs(endTime).unix()}-${weaponList.join(',')}`)
-      .digest('hex');
+        .update(`${mode}-${rule}-${stageId}-${dayjs(startTime).unix()}-${dayjs(endTime).unix()}-${weaponList.join(',')}`)
+        .digest('hex');
 }
 
 export function resultHash(uuid: string, playTime: Date): string {

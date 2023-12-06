@@ -13,36 +13,36 @@ export class HistoriesService {
     return plainToInstance(Response.CoopHistoryQuery, {
       histories: request.nodes.map((node) => {
         return {
+          results: node.historyDetails.nodes.map((detail) => {
+            return {
+              goldenIkuraNum: detail.goldenIkuraNum,
+              gradeId: detail.gradeId,
+              gradePoint: detail.gradePoint,
+              hash: detail.hash,
+              id: detail.id,
+              ikuraNum: detail.ikuraNum,
+              jobResult: {
+                bossId: detail.bossResult.id,
+                failureWave: null,
+                isBossDefeated: detail.bossResult.isBossDefeated,
+                isClear: detail.isClear,
+              },
+              stageId: detail.coopStage.id,
+              weaponList: detail.weaponList,
+            };
+          }),
           schedule: {
-            id: node.scheduleId,
-            startTime: node.startTime,
+            bossId: undefined,
             endTime: node.endTime,
+            id: node.scheduleId,
             mode: node.mode,
             rule: node.rule,
             stageId: node.stageId,
-            bossId: undefined,
-            weaponList: node.weaponList
+            startTime: node.startTime,
+            weaponList: node.weaponList,
           },
-          results: node.historyDetails.nodes.map((detail) => {
-            return {
-              id: detail.id,
-              hash: detail.hash,
-              stageId: detail.coopStage.id,
-              weaponList: detail.weaponList,
-              gradeId: detail.gradeId,
-              gradePoint: detail.gradePoint,
-              ikuraNum: detail.ikuraNum,
-              goldenIkuraNum: detail.goldenIkuraNum,
-              jobResult: {
-                failureWave: null,
-                isClear: detail.isClear,
-                bossId: detail.bossResult.id,
-                isBossDefeated: detail.bossResult.isBossDefeated
-              },
-            }
-          })
-        }
-      })
-    })
+        };
+      }),
+    });
   }
 }

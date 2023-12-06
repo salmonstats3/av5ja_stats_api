@@ -40,7 +40,7 @@ export namespace Common {
     }
 
     get hash(): string {
-      return resultHash(this.uuid, this.playTime)
+      return resultHash(this.uuid, this.playTime);
     }
 
     static from(rawValue: string): ResultId {
@@ -90,13 +90,14 @@ export namespace Common {
     get rawValue(): string {
       // 逆変換時にはJSTからUTCに変換する
       return btoa(
-        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${this.uuid
+        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${
+          this.uuid
         }:${this.suffix}-${this.nplnUserId}`,
       );
     }
 
     get hash(): string {
-      return playerHash(this.uuid, this.playTime, this.nplnUserId)
+      return playerHash(this.uuid, this.playTime, this.nplnUserId);
     }
 
     get rawId(): string {
