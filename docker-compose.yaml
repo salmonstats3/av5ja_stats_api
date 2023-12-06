@@ -17,7 +17,7 @@ services:
   db:
     image: postgres:15.4
     container_name: salmon_stats_db
-    restart: unless-stopped
+    # restart: unless-stopped
     ports:
       - 5432:5432
     environment:
@@ -30,7 +30,7 @@ services:
       retries: 20
 
   pg_backup_s3:
-    image: tkgling/postgres-backup-s3:1.0.0
+    image: tkgling/postgres-backup-s3:latest
     container_name: postgres_backup_s3
     environment:
       SCHEDULE: $SCHEDULE
