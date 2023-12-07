@@ -29,6 +29,12 @@ services:
       interval: 5s
       retries: 20
 
+  cloudflare_tunnel:
+    restart: always
+    image: cloudflare/cloudflared
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: $TUNNEL_TOKEN
   dns:
     build:
       context: ./docker/dns
