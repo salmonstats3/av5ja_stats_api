@@ -23,7 +23,7 @@ export class SchedulesService {
 
   async create(request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedule[]> {
     await this.prisma.schedule.createMany(request.create);
-    return []
+    return request.schedules.map((schedule) => plainToInstance(CoopHistoryQuery.Schedule, schedule, { excludeExtraneousValues: true }));
   }
 
   /**
@@ -50,23 +50,5 @@ export class SchedulesService {
     const documents = await Promise.all(Object.values(CoopSetting).map(async (setting) => getDocs(collection(this.firestore, setting))))
     return documents.flatMap((document) => document.docs.map((doc) => plainToInstance(CoopHistoryQuery.Schedule, doc.data(), { excludeExtraneousValues: true })))
       .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix());
-  }
-
-  /**
-   * Firabaseにスケジュールのデータを書き込む
-   * @param request スケジュール
-   */
-  private async update(request: StageScheduleQuery.Request) {
-    request.schedules.forEach(async (schedule) => {
-      await setDoc(doc(this.firestore, schedule.setting.isCoopSetting, dayjs(schedule.startTime).toISOString()), {
-        endTime: dayjs(schedule.endTime).toISOString(),
-        mode: schedule.mode,
-        rule: schedule.rule,
-        setting: schedule.setting.isCoopSetting,
-        stageId: schedule.stageId,
-        startTime: dayjs(schedule.startTime).toISOString(),
-        weaponList: schedule.weaponList,
-      });
-    });
   }
 }

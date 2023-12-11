@@ -3,6 +3,7 @@ import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
+import { CoopBossInfoId, CoopEnemyInfoId } from 'src/utils/enum/coop_enemy_id';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { id } from 'src/utils/enum/weapon_info_main';
 import { scheduleHash } from 'src/utils/hash';
@@ -51,6 +52,18 @@ export namespace StageScheduleQuery {
     readonly id: number;
   }
 
+  class CoopBoss {
+    @ApiProperty({ example: 'Q29vcEVuZW15LTI0', required: true, type: 'string' })
+    @IsEnum(CoopBossInfoId)
+    @Expose()
+    @Transform(({ value }) => {
+      const regexp = /-([0-9-]*)/;
+      const match = regexp.exec(atob(value));
+      return match === null ? null : parseInt(match[1], 10);
+    })
+    readonly id: CoopBossInfoId
+  }
+
   class CoopSetting {
     @ApiProperty({ required: true })
     @Type(() => CoopStage)
@@ -67,6 +80,12 @@ export namespace StageScheduleQuery {
     @Type(() => MainWeapon)
     @ValidateNested({ each: true })
     readonly weapons: MainWeapon[];
+
+    @ApiProperty({ required: true })
+    @Expose()
+    @Type(() => CoopBoss)
+    @ValidateNested()
+    readonly boss: CoopBoss
   }
 
   class CoopSchedule {
@@ -102,6 +121,10 @@ export namespace StageScheduleQuery {
         startTime: this.startTime,
         weaponList: this.weaponList,
       };
+    }
+
+    get bossId(): CoopBossInfoId {
+      return this.setting.boss.id;
     }
 
     get stageId(): CoopStageId {

@@ -80,6 +80,7 @@ export namespace CoopHistoryQuery {
 
     @ApiProperty({ enum: WeaponInfoMain.Id, isArray: true, required: true })
     @Expose()
+    @Transform(({ value }) => value ?? [])
     @IsEnum(WeaponInfoMain.Id, { each: true })
     readonly rareWeapons: WeaponInfoMain.Id[];
 
