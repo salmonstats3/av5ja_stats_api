@@ -17,7 +17,7 @@ services:
   db:
     image: postgres:15.4
     container_name: salmon_stats_db
-    # restart: unless-stopped
+    restart: unless-stopped
     ports:
       - 5432:5432
     environment:
@@ -35,6 +35,7 @@ services:
     command: tunnel run
     environment:
       TUNNEL_TOKEN: $TUNNEL_TOKEN
+
   dns:
     build:
       context: ./docker/dns
@@ -50,6 +51,8 @@ services:
       - "./docker/dns/dnsmasq.conf:/etc/dnsmasq.conf"
     cap_add:
       - NET_ADMIN
+    profiles:
+      - development
 
   pg_backup_s3:
     image: tkgling/postgres-backup-s3:latest
