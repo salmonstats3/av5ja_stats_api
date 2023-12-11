@@ -3,7 +3,7 @@ import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, IsOptional, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
-import { CoopBossInfoId, CoopEnemyInfoId } from 'src/utils/enum/coop_enemy_id';
+import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { id } from 'src/utils/enum/weapon_info_main';
 import { scheduleHash } from 'src/utils/hash';
@@ -62,7 +62,7 @@ export namespace StageScheduleQuery {
       return match === null ? null : parseInt(match[1], 10);
     })
     @IsOptional()
-    readonly id: CoopBossInfoId | null
+    readonly id: CoopBossInfoId | null;
   }
 
   class CoopSetting {
@@ -84,10 +84,10 @@ export namespace StageScheduleQuery {
 
     @ApiProperty({ required: true })
     @Expose()
-    @Transform(({ value }) => value === undefined ? plainToInstance(CoopBoss, { id: null }) : value)
+    @Transform(({ value }) => (value === undefined ? plainToInstance(CoopBoss, { id: null }) : value))
     @Type(() => CoopBoss)
     @ValidateNested()
-    readonly boss: CoopBoss
+    readonly boss: CoopBoss;
   }
 
   class CoopSchedule {

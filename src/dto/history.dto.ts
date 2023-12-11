@@ -3,13 +3,13 @@ import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import { IsDate, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
+import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
 import { scheduleHash } from 'src/utils/hash';
 
 import { Common } from './common.dto';
 import { MainWeapon, StageScheduleQuery } from './schedule.dto';
-import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
 
 export namespace CoopHistoryQuery {
   class CoopHistoryDetail {
@@ -76,7 +76,7 @@ export namespace CoopHistoryQuery {
     @Expose()
     @IsEnum(CoopBossInfoId)
     @IsOptional()
-    readonly bossId: CoopBossInfoId | null
+    readonly bossId: CoopBossInfoId | null;
 
     @ApiProperty({ enum: WeaponInfoMain.Id, isArray: true, required: true })
     @Expose()
@@ -97,21 +97,25 @@ export namespace CoopHistoryQuery {
     readonly weaponList: WeaponInfoMain.Id[];
 
     static from(schedule: any): Schedule {
-      const stageId: CoopStageId = schedule.stage
-      const mode: Mode = schedule.waves === undefined ? Mode.REGULAR : Mode.LIMITED
-      const rule: Rule = mode === Mode.LIMITED ? Rule.TEAM_CONTEST : (stageId >= 100 ? Rule.BIG_RUN : Rule.REGULAR)
-      const weaponList: WeaponInfoMain.Id[] = schedule.weapons
-      const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons
+      const stageId: CoopStageId = schedule.stage;
+      const mode: Mode = schedule.waves === undefined ? Mode.REGULAR : Mode.LIMITED;
+      const rule: Rule = mode === Mode.LIMITED ? Rule.TEAM_CONTEST : stageId >= 100 ? Rule.BIG_RUN : Rule.REGULAR;
+      const weaponList: WeaponInfoMain.Id[] = schedule.weapons;
+      const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons;
 
-      return plainToInstance(Schedule, {
-        endTime: schedule.endTime,
-        mode: mode,
-        rule: rule,
-        stageId: stageId,
-        startTime: schedule.startTime,
-        weaponList: weaponList,
-        rareWeapons: rareWeapons
-      }, { excludeExtraneousValues: true });
+      return plainToInstance(
+        Schedule,
+        {
+          endTime: schedule.endTime,
+          mode: mode,
+          rareWeapons: rareWeapons,
+          rule: rule,
+          stageId: stageId,
+          startTime: schedule.startTime,
+          weaponList: weaponList,
+        },
+        { excludeExtraneousValues: true },
+      );
     }
 
     get connectOrCreate(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {

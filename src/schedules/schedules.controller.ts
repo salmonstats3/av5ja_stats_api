@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Version } from '@nestjs/common';
+import { Body, Controller, Get, Post, Version } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CoopHistoryQuery } from 'src/dto/history.dto';
 import { StageScheduleQuery } from 'src/dto/schedule.dto';
@@ -12,6 +12,7 @@ export class SchedulesController {
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'CREATE', summary: 'Create schedules' })
+  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
   async create(@Body() request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedule[]> {
     return this.service.create(request);
   }
