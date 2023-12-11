@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Rule, Schedule } from '@prisma/client';
+import axios from 'axios';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
 import dayjs from 'dayjs';
 import { initializeApp } from 'firebase/app';
@@ -11,6 +12,7 @@ import { CoopHistoryQuery } from 'src/dto/history.dto';
 import { Setting, StageScheduleQuery } from 'src/dto/schedule.dto';
 import { firebaseConfig } from 'src/firebase.config';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
+import { CoopSetting } from 'src/utils/enum/setting';
 import { scheduleHash } from 'src/utils/hash';
 
 @Injectable()
@@ -29,8 +31,14 @@ export class SchedulesService {
    * @param scheduleId
    * @returns
    */
-  async find(scheduleId: string): Promise<CoopHistoryQuery.Schedule[]> {
-    return
+  async find(): Promise<CoopHistoryQuery.Schedule[]> {
+    const url: string = "https://splatoon.oatmealdome.me/api/v1/three/coop/phases?count=5"
+    const data: any = (await axios.get(url)).data
+    return [
+      data["Normal"],
+      data["BigRun"],
+      data["TeamContest"]
+    ].flat().map((schedule: any) => CoopHistoryQuery.Schedule.from(schedule))
   }
 
   /**
@@ -39,8 +47,8 @@ export class SchedulesService {
    * @returns
    */
   async find_all(): Promise<CoopHistoryQuery.Schedule[]> {
-    return (await getDocs(collection(this.firestore, "Schedules"))).docs
-      .map((doc) => plainToInstance(CoopHistoryQuery.Schedule, doc.data(), { excludeExtraneousValues: true }))
+    const documents = await Promise.all(Object.values(CoopSetting).map(async (setting) => getDocs(collection(this.firestore, setting))))
+    return documents.flatMap((document) => document.docs.map((doc) => plainToInstance(CoopHistoryQuery.Schedule, doc.data(), { excludeExtraneousValues: true })))
       .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix());
   }
 

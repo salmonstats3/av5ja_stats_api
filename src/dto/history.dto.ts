@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
-import { Expose, Transform, Type } from 'class-transformer';
-import { IsDate, IsEnum, IsOptional, ValidateNested } from 'class-validator';
+import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
+import { IsDate, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
@@ -9,6 +9,7 @@ import { scheduleHash } from 'src/utils/hash';
 
 import { Common } from './common.dto';
 import { MainWeapon, StageScheduleQuery } from './schedule.dto';
+import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
 
 export namespace CoopHistoryQuery {
   class CoopHistoryDetail {
@@ -41,6 +42,12 @@ export namespace CoopHistoryQuery {
   }
 
   export class Schedule {
+    @ApiProperty({ example: '14d8dafab3d4e6adb26637a040589bed', name: 'id', required: true })
+    @Transform(({ obj }) => scheduleHash(obj.mode, obj.rule, obj.startTime, obj.endTime, obj.stageId, obj.weaponList))
+    @IsString()
+    @Expose()
+    readonly id: string;
+
     @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', required: true })
     @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
     @IsDate()
@@ -65,6 +72,17 @@ export namespace CoopHistoryQuery {
     @IsEnum(Rule)
     readonly rule: Rule;
 
+    @ApiProperty({ enum: CoopBossInfoId, required: true })
+    @Expose()
+    @IsEnum(CoopBossInfoId)
+    @IsOptional()
+    readonly bossId: CoopBossInfoId | null
+
+    @ApiProperty({ enum: WeaponInfoMain.Id, isArray: true, required: true })
+    @Expose()
+    @IsEnum(WeaponInfoMain.Id, { each: true })
+    readonly rareWeapons: WeaponInfoMain.Id[];
+
     @ApiProperty({ enum: CoopStageId, required: true })
     @Expose()
     @IsEnum(CoopStageId)
@@ -77,24 +95,37 @@ export namespace CoopHistoryQuery {
     @Transform(({ obj }) => obj.weaponList ?? obj.historyDetails.nodes[0].weapons.map((weapon: any) => weapon.image.id))
     readonly weaponList: WeaponInfoMain.Id[];
 
-    get scheduleId(): string {
-      return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.stageId, this.weaponList);
+    static from(schedule: any): Schedule {
+      const stageId: CoopStageId = schedule.stage
+      const mode: Mode = schedule.waves === undefined ? Mode.REGULAR : Mode.LIMITED
+      const rule: Rule = mode === Mode.LIMITED ? Rule.TEAM_CONTEST : (stageId >= 100 ? Rule.BIG_RUN : Rule.REGULAR)
+      const weaponList: WeaponInfoMain.Id[] = schedule.weapons
+      const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons
+
+      return plainToInstance(Schedule, {
+        endTime: schedule.endTime,
+        mode: mode,
+        rule: rule,
+        stageId: stageId,
+        startTime: schedule.startTime,
+        weaponList: weaponList,
+        rareWeapons: rareWeapons
+      }, { excludeExtraneousValues: true });
     }
 
     get connectOrCreate(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
-      console.log(this, this.scheduleId);
       return {
         create: {
           endTime: this.endTime,
           mode: this.mode,
           rule: this.rule,
-          scheduleId: this.scheduleId,
+          scheduleId: this.id,
           stageId: this.stageId,
           startTime: this.startTime,
           weaponList: this.weaponList,
         },
         where: {
-          scheduleId: this.scheduleId,
+          scheduleId: this.id,
         },
       };
     }

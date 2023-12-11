@@ -21,7 +21,7 @@ export class SchedulesController {
   @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND', summary: 'Find schedules' })
   @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
   async find(): Promise<CoopHistoryQuery.Schedule[]> {
-    return
+    return this.service.find();
   }
 
   @Get()
