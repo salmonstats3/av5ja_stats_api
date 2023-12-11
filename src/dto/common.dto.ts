@@ -18,7 +18,7 @@ export namespace Common {
 
     @ApiProperty({ required: true, type: Date })
     @Expose()
-    @Transform(({ value }) => dayjs(value).toISOString())
+    @Transform(({ value }) => dayjs(value).toDate())
     readonly playTime: Date;
 
     @ApiProperty({ required: true, type: 'string' })

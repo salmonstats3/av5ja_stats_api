@@ -1,9 +1,9 @@
 export const firebaseConfig = {
-  apiKey: 'AIzaSyBl8OR-wdFLZ3HnnTUzEq4t4eXce5Xu8gE',
-  appId: '1:245057171773:web:2397fbf88981d07569d554',
-  authDomain: 'tkgstratorwork.firebaseapp.com',
-  measurementId: 'G-3XC9LXLCNL',
-  messagingSenderId: '245057171773',
-  projectId: 'tkgstratorwork',
-  storageBucket: 'tkgstratorwork.appspot.com',
+  apiKey: 'AIzaSyDCEQ9sgu6FzmIDLKzhmMH8N60b8ACpXoI',
+  appId: '1:326463476451:web:0afb716ebc951aedc12bd6',
+  authDomain: 'salmonia3plus.firebaseapp.com',
+  measurementId: 'G-36LK1P4G4R',
+  messagingSenderId: '326463476451',
+  projectId: 'salmonia3plus',
+  storageBucket: 'salmonia3plus.appspot.com',
 };
