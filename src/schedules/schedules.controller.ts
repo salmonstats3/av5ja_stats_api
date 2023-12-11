@@ -17,23 +17,18 @@ export class SchedulesController {
   }
 
   @Get()
-  @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND_ALL_V1', summary: 'Find schedules' })
-  @ApiOkResponse({ isArray: true, type: ScheduleDto })
-  async find_allV1(): Promise<Partial<ScheduleDto>[]> {
-    return this.service.find_all_v1();
+  @Version('1')
+  @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND', summary: 'Find schedules' })
+  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
+  async find(): Promise<CoopHistoryQuery.Schedule[]> {
+    return
   }
 
   @Get()
   @Version('2')
-  @ApiOperation({ description: 'Find schedules', operationId: 'FIND_ALL_V2', summary: 'Find schedules' })
-  @ApiOkResponse({ isArray: true, type: ScheduleDto })
-  async find_allV2(): Promise<Partial<ScheduleDto>[]> {
-    return this.service.find_all_v2();
-  }
-
-  @Get(':schedule_id')
-  @ApiOperation({ description: 'Find a schedule', operationId: 'FIND', summary: 'Find a schedule' })
-  async find(@Param('schedule_id') scheduleId: string) {
-    return this.service.find(scheduleId);
+  @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND_ALL', summary: 'Find schedules' })
+  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
+  async find_all(): Promise<CoopHistoryQuery.Schedule[]> {
+    return
   }
 }
