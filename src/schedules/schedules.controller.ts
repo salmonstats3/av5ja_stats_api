@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CoopHistoryQuery } from 'src/dto/history.dto';
 import { StageScheduleQuery } from 'src/dto/schedule.dto';
 
-import { ScheduleDto, SchedulesService } from './schedules.service';
+import { SchedulesService } from './schedules.service';
 
 @ApiTags('Schedules')
 @Controller('schedules')
@@ -29,6 +29,6 @@ export class SchedulesController {
   @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND_ALL', summary: 'Find schedules' })
   @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
   async find_all(): Promise<CoopHistoryQuery.Schedule[]> {
-    return
+    return this.service.find_all();
   }
 }

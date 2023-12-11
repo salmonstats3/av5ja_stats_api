@@ -13,37 +13,6 @@ import { firebaseConfig } from 'src/firebase.config';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { scheduleHash } from 'src/utils/hash';
 
-export class ScheduleDto {
-  @ApiProperty()
-  @Expose()
-  @Transform(({ obj }) => scheduleHash(obj.mode, obj.rule, obj.startTime, obj.endTime, obj.stageId, obj.weaponList))
-  scheduleId: string;
-
-  @ApiProperty()
-  @Expose()
-  startTime: Date;
-
-  @ApiProperty()
-  @Expose()
-  endTime: Date;
-
-  @ApiProperty()
-  @Expose()
-  stageId: CoopStageId;
-
-  @ApiProperty()
-  @Expose()
-  weaponList: number[];
-
-  @ApiProperty()
-  @Expose()
-  mode: Mode;
-
-  @ApiProperty()
-  @Expose()
-  rule: Rule;
-}
-
 @Injectable()
 export class SchedulesService {
   constructor(private readonly prisma: PrismaService) {}
@@ -51,20 +20,8 @@ export class SchedulesService {
   private readonly firestore = getFirestore(initializeApp(firebaseConfig));
 
   async create(request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedule[]> {
-    // Firebaseにスケジュール追加
-    await this.update(request);
-    // データベースにスケジュール追加
     await this.prisma.schedule.createMany(request.create);
-    return request.schedules.map((schedule) => {
-      return plainToInstance(CoopHistoryQuery.Schedule, {
-        endTime: schedule.endTime,
-        mode: schedule.mode,
-        rule: schedule.rule,
-        stageId: schedule.stageId,
-        startTime: schedule.startTime,
-        weaponList: schedule.weaponList,
-      });
-    });
+    return []
   }
 
   /**
@@ -72,8 +29,8 @@ export class SchedulesService {
    * @param scheduleId
    * @returns
    */
-  async find(scheduleId: string): Promise<Partial<Schedule>> {
-    return lodash.omit(await this.prisma.schedule.findUniqueOrThrow({ where: { scheduleId: scheduleId } }), ['createdAt', 'updatedAt']);
+  async find(scheduleId: string): Promise<CoopHistoryQuery.Schedule[]> {
+    return
   }
 
   /**
@@ -81,37 +38,10 @@ export class SchedulesService {
    * @param scheduleId
    * @returns
    */
-  async find_all_v1(): Promise<Partial<Schedule>[]> {
-    return (
-      await this.prisma.schedule.findMany({
-        orderBy: [
-          {
-            endTime: 'asc',
-          },
-          {
-            startTime: 'asc',
-          },
-        ],
-        where: {
-          mode: {
-            in: [Mode.REGULAR, Mode.LIMITED],
-          },
-        },
-      })
-    ).map((schedule) => lodash.omit(schedule, ['createdAt', 'updatedAt']));
-  }
-
-  /**
-   * スケジュール一覧取得
-   * @param scheduleId
-   * @returns
-   */
-  async find_all_v2(): Promise<ScheduleDto[]> {
-    const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))));
-    const schedules: ScheduleDto[] = documents
-      .flatMap((document) => document.docs.map((doc) => plainToInstance(ScheduleDto, doc.data(), { excludeExtraneousValues: true })))
-      .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
-    return schedules;
+  async find_all(): Promise<CoopHistoryQuery.Schedule[]> {
+    return (await getDocs(collection(this.firestore, "Schedules"))).docs
+      .map((doc) => plainToInstance(CoopHistoryQuery.Schedule, doc.data(), { excludeExtraneousValues: true }))
+      .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix());
   }
 
   /**
