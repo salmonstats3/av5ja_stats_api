@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
-import { IsDate, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsDate, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
@@ -39,6 +39,15 @@ export namespace CoopHistoryQuery {
     @Type(() => CoopHistoryDetail)
     @ValidateNested({ each: true })
     nodes: CoopHistoryDetail[];
+  }
+
+  export class Schedules {
+    @ApiProperty()
+    @Expose()
+    @Type(() => Schedule)
+    @ValidateNested({ each: true })
+    @IsArray()
+    readonly schedules: Schedule[];
   }
 
   export class Schedule {
@@ -80,7 +89,7 @@ export namespace CoopHistoryQuery {
 
     @ApiProperty({ enum: WeaponInfoMain.Id, isArray: true, required: true })
     @Expose()
-    @Transform(({ value }) => value ?? [])
+    @Transform(({ value }) => (value === undefined ? [] : value))
     @IsEnum(WeaponInfoMain.Id, { each: true })
     readonly rareWeapons: WeaponInfoMain.Id[];
 
