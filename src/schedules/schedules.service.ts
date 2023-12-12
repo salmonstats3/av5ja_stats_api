@@ -35,7 +35,7 @@ export class SchedulesService {
       .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix());
     schedules.forEach(async (schedule) => {
       await setDoc(
-        doc(this.firestore, schedule.rule, dayjs(schedule.startTime).format('YYYY-MM-DDTHH:mm:ss')),
+        doc(this.firestore, schedule.rule, dayjs(schedule.startTime).toISOString()),
         JSON.parse(JSON.stringify(schedule)),
       );
     });

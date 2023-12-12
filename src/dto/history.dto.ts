@@ -102,6 +102,18 @@ export namespace CoopHistoryQuery {
       const rule: Rule = mode === Mode.LIMITED ? Rule.TEAM_CONTEST : stageId >= 100 ? Rule.BIG_RUN : Rule.REGULAR;
       const weaponList: WeaponInfoMain.Id[] = schedule.weapons;
       const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons;
+      const bossId: CoopBossInfoId | null = (() => {
+        switch (schedule.bigBoss) {
+          case "SakeJaw":
+            return CoopBossInfoId.SakeJaw;
+          case "SakeRope":
+            return CoopBossInfoId.SakeRope;
+          case "SakelienGiant":
+            return CoopBossInfoId.SakelienGiant;
+          default:
+            return null;
+        }
+      })()
 
       return plainToInstance(
         Schedule,
@@ -113,6 +125,7 @@ export namespace CoopHistoryQuery {
           stageId: stageId,
           startTime: schedule.startTime,
           weaponList: weaponList,
+          bossId: bossId
         },
         { excludeExtraneousValues: true },
       );
