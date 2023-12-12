@@ -1,6 +1,6 @@
 {
   "name": "av5ja_stats_api",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Salmon Stats for Splatoon 3 API documents.",
   "author": "@tkgling",
   "private": true,
