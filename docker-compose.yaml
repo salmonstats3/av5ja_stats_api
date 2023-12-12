@@ -2,9 +2,10 @@ version: '3.9'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    image: tkgling/salmon_stats_app:4.0.2
     container_name: salmon_stats_app
     restart: unless-stopped
     environment:

@@ -16,9 +16,10 @@ export class SchedulesService {
 
   private readonly firestore = getFirestore(initializeApp(firebaseConfig));
 
-  async create(request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedule[]> {
+  async create(request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
     await this.prisma.schedule.createMany(request.create);
-    return request.schedules.map((schedule) => plainToInstance(CoopHistoryQuery.Schedule, schedule, { excludeExtraneousValues: true }));
+    const schedules: CoopHistoryQuery.Schedule[] = request.schedules.map((schedule) => CoopHistoryQuery.Schedule.from(schedule));
+    return plainToInstance(CoopHistoryQuery.Schedules, { schedules: schedules }, { excludeExtraneousValues: true });
   }
 
   /**

@@ -13,7 +13,7 @@ export class SchedulesController {
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'CREATE', summary: 'Create schedules' })
   @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
-  async create(@Body() request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedule[]> {
+  async create(@Body() request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
     return this.service.create(request);
   }
 
