@@ -6,4 +6,4 @@ buildx:
 
 .PHONY: build
 build:
-	docker build --build-arg VIRTUAL_PORT=${VIRTUAL_PORT} --push -t tkgling/salmon_stats_app:${API_VERSION} .
+	docker build --build-arg VIRTUAL_PORT=${VIRTUAL_PORT} -t tkgling/salmon_stats_app:${API_VERSION} .

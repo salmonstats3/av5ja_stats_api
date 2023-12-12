@@ -7,8 +7,6 @@ services:
       dockerfile: Dockerfile
     container_name: salmon_stats_app
     restart: unless-stopped
-    ports:
-      - $VIRTUAL_PORT:$VIRTUAL_PORT
     environment:
       API_VERSION: $API_VERSION
       API_PORT: $API_PORT
@@ -16,11 +14,10 @@ services:
       DATABASE_URL: $DATABASE_URL
       F_SERVER_URL: $F_SERVER_URL
       SESSION_TOKEN: $SESSION_TOKEN
-      VIRTUAL_HOST: $VIRTUAL_HOST
       NODE_ENV: $NODE_ENV
 
   db:
-    image: postgres:16.0
+    image: postgres:15.4
     container_name: salmon_stats_db
     restart: unless-stopped
     ports:
@@ -33,51 +30,3 @@ services:
       test: 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'
       interval: 5s
       retries: 20
-
-  nginx_proxy:
-    image: jwilder/nginx-proxy
-    container_name: nginx_proxy
-    ports:
-      - 80:80
-      # - 443:443
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    restart: always
-    environment:
-      ENABLE_IPV6: true
-      TRUST_DOWNSTREAM_PROXY: true
-
-  cloudflare_ddns:
-    image: oznu/cloudflare-ddns:latest
-    container_name: cloudflare_ddns
-    restart: always
-    environment:
-      API_KEY: $API_KEY
-      ZONE: $API_ZONE
-      SUBDOMAIN: $API_SUBDOMAIN
-      PROXIED: $API_PROXIED
-      RRTYPE: $API_RRTYPE
-    network_mode: 'host'
-    depends_on:
-      nginx_proxy:
-        condition: service_started
-
-  pg_backup_s3:
-    image: tkgling/postgres-backup-s3:1.0.0
-    container_name: postgres_backup_s3
-    environment:
-      SCHEDULE: $SCHEDULE
-      BACKUP_KEEP_DAYS: $BACKUP_KEEP_DAYS
-      S3_REGION: $S3_REGION
-      S3_ACCESS_KEY: $S3_ACCESS_KEY
-      S3_SECRET_KEY: $S3_SECRET_KEY
-      S3_BUCKET: $S3_BUCKET
-      S3_PREFIX: $S3_PREFIX
-      S3_ENDPOINT: $S3_ENDPOINT
-      POSTGRES_HOST: $POSTGRES_HOST
-      POSTGRES_DATABASE: $POSTGRES_DB
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-    depends_on:
-      db:
-        condition: service_healthy
