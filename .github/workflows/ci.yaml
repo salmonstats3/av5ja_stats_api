@@ -14,10 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set Node v18.17.1
+      - name: Set Node v20.10.0
         uses: actions/setup-node@v3
         with:
-          node-version: 18.17.1
+          node-version: 20.10.0
 
       - name: Cache CDK Dependencies
         uses: actions/cache@v3
