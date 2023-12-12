@@ -156,7 +156,7 @@ paths:
 info:
   title: av5ja_stats_api
   description: Salmon Stats for Splatoon 3 API documents.
-  version: 4.0.1
+  version: 4.0.2
   contact: {}
 tags: []
 servers: []
