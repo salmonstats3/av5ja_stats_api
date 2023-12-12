@@ -18,7 +18,8 @@ export class SchedulesService {
 
   async create(request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
     await this.prisma.schedule.createMany(request.create);
-    return plainToInstance(CoopHistoryQuery.Schedules, { schedules: request.schedules }, { excludeExtraneousValues: true });
+    const schedules: CoopHistoryQuery.Schedule[] = request.schedules.map((schedule) => CoopHistoryQuery.Schedule.from(schedule));
+    return plainToInstance(CoopHistoryQuery.Schedules, { schedules: schedules }, { excludeExtraneousValues: true });
   }
 
   /**
