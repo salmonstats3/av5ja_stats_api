@@ -34,10 +34,7 @@ export class SchedulesService {
       .map((schedule: any) => CoopHistoryQuery.Schedule.from(schedule))
       .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix());
     schedules.forEach(async (schedule) => {
-      await setDoc(
-        doc(this.firestore, schedule.rule, dayjs(schedule.startTime).toISOString()),
-        JSON.parse(JSON.stringify(schedule)),
-      );
+      await setDoc(doc(this.firestore, schedule.rule, dayjs(schedule.startTime).toISOString()), JSON.parse(JSON.stringify(schedule)));
     });
     return schedules;
   }

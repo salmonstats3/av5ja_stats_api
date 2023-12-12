@@ -104,20 +104,21 @@ export namespace CoopHistoryQuery {
       const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons;
       const bossId: CoopBossInfoId | null = (() => {
         switch (schedule.bigBoss) {
-          case "SakeJaw":
+          case 'SakeJaw':
             return CoopBossInfoId.SakeJaw;
-          case "SakeRope":
+          case 'SakeRope':
             return CoopBossInfoId.SakeRope;
-          case "SakelienGiant":
+          case 'SakelienGiant':
             return CoopBossInfoId.SakelienGiant;
           default:
             return null;
         }
-      })()
+      })();
 
       return plainToInstance(
         Schedule,
         {
+          bossId: bossId,
           endTime: schedule.endTime,
           mode: mode,
           rareWeapons: rareWeapons,
@@ -125,7 +126,6 @@ export namespace CoopHistoryQuery {
           stageId: stageId,
           startTime: schedule.startTime,
           weaponList: weaponList,
-          bossId: bossId
         },
         { excludeExtraneousValues: true },
       );
