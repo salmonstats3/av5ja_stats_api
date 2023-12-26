@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
-import { Expose, Transform, Type } from 'class-transformer';
+import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
 import { IsBoolean, IsDate, IsEnum, IsInt, IsOptional, Max, Min, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
@@ -102,9 +102,9 @@ export namespace CoopHistoryQuery {
     @Transform(({ value }) => {
       return value === null
         ? {
-            id: null,
-            isBossDefeated: null,
-          }
+          id: null,
+          isBossDefeated: null,
+        }
         : value;
     })
     @ValidateNested()
@@ -227,6 +227,41 @@ export namespace CoopHistoryQuery {
         weaponList: this.weaponList,
       };
     }
+
+    static from(schedule: any): CoopSchedule {
+      const stageId: CoopStageId = schedule.stage;
+      const mode: Mode = schedule.waves === undefined ? Mode.REGULAR : Mode.LIMITED;
+      const rule: Rule = mode === Mode.LIMITED ? Rule.TEAM_CONTEST : stageId >= 100 ? Rule.BIG_RUN : Rule.REGULAR;
+      const weaponList: WeaponInfoMain.Id[] = schedule.weapons;
+      const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons;
+      const bossId: CoopBossInfoId | null = (() => {
+        switch (schedule.bigBoss) {
+          case 'SakeJaw':
+            return CoopBossInfoId.SakeJaw;
+          case 'SakeRope':
+            return CoopBossInfoId.SakeRope;
+          case 'SakelienGiant':
+            return CoopBossInfoId.SakelienGiant;
+          default:
+            return null;
+        }
+      })();
+
+      return plainToInstance(
+        CoopSchedule,
+        {
+          bossId: bossId,
+          endTime: schedule.endTime,
+          mode: mode,
+          rareWeapons: rareWeapons,
+          rule: rule,
+          stageId: stageId,
+          startTime: schedule.startTime,
+          weaponList: weaponList,
+        },
+        { excludeExtraneousValues: true },
+      );
+    }
   }
 
   class CoopHistoryNode {
@@ -322,5 +357,23 @@ export namespace CoopHistoryQuery {
         skipDuplicates: true,
       };
     }
+  }
+
+  export class Schedules {
+    @ApiProperty({ isArray: true, type: CoopSchedule })
+    @Type(() => CoopSchedule)
+    @ValidateNested({ each: true })
+    readonly schedules: CoopSchedule[];
+  }
+
+  export class Response {
+    @ApiProperty({ isArray: true, type: CoopSchedule })
+    @Type(() => CoopSchedule)
+    @ValidateNested({ each: true })
+    readonly schedules: CoopSchedule[];
+
+    @ApiProperty({ isArray: true, type: String })
+    @Type(() => String)
+    readonly results: string[];
   }
 }

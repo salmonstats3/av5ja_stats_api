@@ -3,6 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { StageScheduleQuery } from 'src/dto/schedule.dto';
 
 import { SchedulesService } from './schedules.service';
+import { CoopHistoryQuery } from 'src/dto/history.dto';
 
 @ApiTags('Schedules')
 @Controller('schedules')
