@@ -14,9 +14,6 @@ services:
       API_PORT: $API_PORT
       API_HOST: $API_HOST
       DATABASE_URL: $DATABASE_URL
-      F_SERVER_URL: $F_SERVER_URL
-      SESSION_TOKEN: $SESSION_TOKEN
-      VIRTUAL_HOST: $VIRTUAL_HOST
       NODE_ENV: $NODE_ENV
 
   db:
@@ -33,50 +30,6 @@ services:
       test: 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'
       interval: 5s
       retries: 20
-
-  nginx_proxy:
-    image: jwilder/nginx-proxy
-    container_name: nginx_proxy
-    ports:
-      - 80:80
-      # - 443:443
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    restart: always
-    environment:
-      ENABLE_IPV6: true
-      TRUST_DOWNSTREAM_PROXY: true
-
-  cloudflare_ddns:
-    image: oznu/cloudflare-ddns:latest
-    container_name: cloudflare_ddns
-    restart: always
-    environment:
-      API_KEY: $API_KEY
-      ZONE: $API_ZONE
-      SUBDOMAIN: $API_SUBDOMAIN
-      PROXIED: $API_PROXIED
-      RRTYPE: $API_RRTYPE
-    network_mode: 'host'
-    depends_on:
-      nginx_proxy:
-        condition: service_started
-
-  dns:
-    build:
-      context: ./docker/dns
-      dockerfile: Dockerfile
-    restart: always
-    container_name: dnsmask
-    environment:
-      TZ: "Asia/Tokyo"
-    ports:
-      - "53:53/udp"
-      - "53:53/tcp"
-    volumes:
-      - "./docker/dns/dnsmasq.conf:/etc/dnsmasq.conf"
-    cap_add:
-      - NET_ADMIN
 
   pg_backup_s3:
     image: tkgling/postgres-backup-s3:1.0.0
@@ -97,3 +50,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    profiles:
+      - production
+
+  cloudflare_tunnel:
+    restart: always
+    image: cloudflare/cloudflared
+    container_name: cloudflare_tunnel
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: $TUNNEL_TOKEN
