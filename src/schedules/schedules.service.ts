@@ -48,7 +48,11 @@ export class SchedulesService {
     const documents = await Promise.all(Object.values(CoopSetting).map(async (setting) => getDocs(collection(this.firestore, setting))));
     return plainToInstance(
       CoopHistoryQuery.Schedules,
-      { schedules: documents.flatMap((document) => document.docs.map((doc) => doc.data())).sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix()) },
+      {
+        schedules: documents
+          .flatMap((document) => document.docs.map((doc) => doc.data()))
+          .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix()),
+      },
       { excludeExtraneousValues: true },
     );
     //   schedules:

@@ -36,11 +36,11 @@ export class HistoriesService {
             endTime: node.endTime,
             id: node.scheduleId,
             mode: node.mode,
+            rareWeapons: [],
             rule: node.rule,
             stageId: node.stageId,
             startTime: node.startTime,
             weaponList: node.weaponList,
-            rareWeapons: []
           },
         };
       }),
