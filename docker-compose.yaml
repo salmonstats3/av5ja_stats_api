@@ -2,10 +2,9 @@ version: '3.9'
 
 services:
   app:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
-    image: tkgling/salmon_stats_app:4.0.2
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: salmon_stats_app
     restart: unless-stopped
     environment:
@@ -31,3 +30,12 @@ services:
       test: 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'
       interval: 5s
       retries: 20
+
+  cloudflare_tunnel:
+    restart: always
+    image: cloudflare/cloudflared
+    container_name: cloudflare_tunnel
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: $TUNNEL_TOKEN
+

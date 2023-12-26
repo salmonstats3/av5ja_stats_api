@@ -5,7 +5,7 @@
   "i18n-ally.sortKeys": true,
   "prettier.enable": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "files.associations": {
     "*.css": "postcss"
@@ -16,7 +16,11 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "cSpell.words": ["fastify", "nestjs", "redoc"],
+  "cSpell.words": [
+    "fastify",
+    "nestjs",
+    "redoc"
+  ],
   "editor.tabSize": 2,
   "editor.fontFamily": "MeiryoKe_Console, Menlo, Monaco, 'Courier New', monospace",
   "prettier.bracketSpacing": true,
