@@ -31,7 +31,7 @@ COPY  ./src ./src
 RUN npx prisma generate
 
 FROM gcr.io/distroless/nodejs20-debian12 AS dist
-ARG VIRTUAL_PORT
+ARG API_PORT
 WORKDIR /app
 
 COPY --from=build /build/dist ./dist
@@ -39,5 +39,5 @@ COPY --from=build /build/prisma ./prisma
 COPY --from=build /build/package.json ./
 COPY --from=module /module/node_modules ./node_modules
 
-EXPOSE ${VIRTUAL_PORT}
+EXPOSE ${API_PORT}
 CMD ["dist/src/main"]

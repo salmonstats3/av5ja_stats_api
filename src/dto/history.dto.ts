@@ -1,17 +1,56 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
-import { IsArray, IsDate, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
+import { CoopGradeId } from 'src/utils/enum/coop_grade_id';
 import { CoopStageId } from 'src/utils/enum/coop_stage_id';
 import { WeaponInfoMain } from 'src/utils/enum/weapon_info_main';
-import { scheduleHash } from 'src/utils/hash';
+import { resultHash, scheduleHash } from 'src/utils/hash';
 
 import { Common } from './common.dto';
 import { MainWeapon, StageScheduleQuery } from './schedule.dto';
 
 export namespace CoopHistoryQuery {
+  class CoopPlayerResult {
+    @ApiProperty()
+    @Expose({ name: 'deliverCount' })
+    @IsInt()
+    @Min(0)
+    @Max(9999)
+    readonly ikuraNum: number;
+  }
+
+  class CoopBossResult {
+    @ApiProperty()
+    @Expose({ name: 'boss' })
+    @Transform(({ value }) => {
+      const regexp = /-([0-9-]*)/;
+      const match = regexp.exec(atob(value.id));
+      return match === null ? null : parseInt(match[1], 10);
+    })
+    @IsEnum(CoopBossInfoId)
+    @IsOptional()
+    readonly id: CoopBossInfoId | null;
+
+    @ApiProperty()
+    @Expose({ name: 'hasDefeatBoss' })
+    @IsBoolean()
+    @IsOptional()
+    readonly isBossDefeated: boolean | null;
+  }
+
+  class CoopWaveResult {
+    @ApiProperty()
+    @Expose({ name: 'teamDeliverCount' })
+    @IsInt()
+    @Min(0)
+    @Max(999)
+    @IsOptional()
+    readonly goldenIkuraNum: number | null;
+  }
+
   class CoopHistoryDetail {
     @ApiProperty({ required: true, type: StageScheduleQuery.CoopStage })
     @Expose()
@@ -31,6 +70,85 @@ export namespace CoopHistoryQuery {
     @Transform(({ value }) => Common.ResultId.from(value))
     @ValidateNested()
     readonly id: Common.ResultId;
+
+    @ApiProperty()
+    @Expose({ name: 'afterGrade' })
+    @IsEnum(CoopGradeId)
+    @IsOptional()
+    @Transform(({ value }) => {
+      const regexp = /-([0-9-]*)/;
+      const match = regexp.exec(atob(value.id));
+      return match === null ? null : parseInt(match[1], 10);
+    })
+    readonly gradeId: CoopGradeId | null;
+
+    @ApiProperty()
+    @Expose({ name: 'afterGradePoint' })
+    @IsInt()
+    @IsOptional()
+    @Min(0)
+    @Max(999)
+    readonly gradePoint: number | null;
+
+    @ApiProperty()
+    @Expose()
+    @Type(() => CoopWaveResult)
+    @ValidateNested({ each: true })
+    readonly waveResults: CoopWaveResult[];
+
+    @ApiProperty()
+    @Expose()
+    @Type(() => CoopBossResult)
+    @Transform(({ value }) => {
+      return value === null
+        ? {
+            id: null,
+            isBossDefeated: null,
+          }
+        : value;
+    })
+    @ValidateNested()
+    readonly bossResult: CoopBossResult;
+
+    @ApiProperty()
+    @Expose()
+    @Min(-1)
+    @Max(5)
+    readonly resultWave: number;
+
+    @ApiProperty()
+    @Expose()
+    @Type(() => CoopPlayerResult)
+    @ValidateNested({ each: true })
+    readonly memberResults: CoopPlayerResult[];
+
+    @ApiProperty()
+    @Expose()
+    @Type(() => CoopPlayerResult)
+    readonly myResult: CoopPlayerResult;
+
+    get ikuraNum(): number {
+      return [this.myResult]
+        .concat(this.memberResults)
+        .map((member) => member.ikuraNum)
+        .reduce((a, b) => a + b, 0);
+    }
+
+    get goldenIkuraNum(): number {
+      return this.waveResults.map((wave) => wave.goldenIkuraNum ?? 0).reduce((a, b) => a + b, 0);
+    }
+
+    get isClear(): boolean {
+      return this.resultWave === 0;
+    }
+
+    get weaponList(): WeaponInfoMain.Id[] {
+      return this.weapons.map((weapon) => weapon.image.id);
+    }
+
+    get hash(): string {
+      return resultHash(this.id.uuid, this.id.playTime);
+    }
   }
 
   class HistoryNode {
@@ -38,16 +156,172 @@ export namespace CoopHistoryQuery {
     @Expose()
     @Type(() => CoopHistoryDetail)
     @ValidateNested({ each: true })
-    nodes: CoopHistoryDetail[];
+    readonly nodes: CoopHistoryDetail[];
   }
 
-  export class Schedules {
+  export class CoopSchedule {
+    @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', nullable: true, required: true })
+    @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
+    @IsDate()
+    @IsOptional()
+    @Expose()
+    readonly startTime: Date | null;
+
+    @ApiProperty({ example: '2023-08-29T08:00:00Z', name: 'endTime', nullable: true, required: true })
+    @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
+    @IsDate()
+    @IsOptional()
+    @Expose()
+    readonly endTime: Date | null;
+
+    @ApiProperty({ enum: Mode, required: true })
+    @IsEnum(Mode)
+    @Expose()
+    readonly mode: Mode;
+
+    @ApiProperty({ enum: Rule, required: true })
+    @IsEnum(Rule)
+    @Expose()
+    readonly rule: Rule;
+
+    @ApiProperty({ required: true, type: [HistoryNode] })
+    @Type(() => HistoryNode)
+    @ValidateNested()
+    @Expose()
+    readonly historyDetails: HistoryNode;
+
+    // @ApiProperty()
+    // @Expose({ name: 'highestResult' })
+    // @Type(() => HighestResult)
+    // readonly highest: HighestResult;
+
+    /**
+     * スケジュールのハッシュ
+     */
+    get scheduleId(): string {
+      return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.historyDetails.nodes[0].coopStage.id, this.weaponList);
+    }
+
+    /**
+     * ブキ一覧
+     */
+    get weaponList(): WeaponInfoMain.Id[] {
+      return this.historyDetails.nodes[0].weapons.map((weapon) => weapon.image.id);
+    }
+
+    /**
+     * ステージID
+     */
+    get stageId(): CoopStageId {
+      return this.historyDetails.nodes[0].coopStage.id;
+    }
+
+    get create(): Prisma.ScheduleCreateInput {
+      return {
+        endTime: this.endTime,
+        mode: this.mode,
+        rule: this.rule,
+        scheduleId: this.scheduleId,
+        stageId: this.historyDetails.nodes[0].coopStage.id,
+        startTime: this.startTime,
+        weaponList: this.weaponList,
+      };
+    }
+  }
+
+  class CoopHistoryNode {
+    @ApiProperty({ required: true, type: CoopSchedule })
+    @Expose()
+    @Type(() => CoopSchedule)
+    @ValidateNested({ each: true })
+    readonly nodes: CoopSchedule[];
+  }
+
+  class CoopPointCard {
     @ApiProperty()
     @Expose()
-    @Type(() => Schedule)
+    @IsInt()
+    readonly defeatBossCount: number;
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly deliverCount: number;
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly goldenDeliverCount: number;
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    @IsOptional()
+    readonly limitedPoint: number | null;
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly playCount: number;
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly regularPoint: number;
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly rescueCount: number;
+
+    @ApiProperty()
+    @Expose()
+    @IsInt()
+    readonly totalPoint: number;
+  }
+
+  class CoopHistoryGroup {
+    @ApiProperty({ required: true, type: CoopHistoryNode })
+    @Expose()
+    @Type(() => CoopHistoryNode)
     @ValidateNested({ each: true })
-    @IsArray()
-    readonly schedules: Schedule[];
+    readonly historyGroups: CoopHistoryNode;
+
+    @ApiProperty({ required: true, type: CoopPointCard })
+    @Expose()
+    @Type(() => CoopPointCard)
+    @ValidateNested({ each: true })
+    readonly pointCard: CoopPointCard;
+  }
+
+  class CoopHistoryDataClass {
+    @ApiProperty({ required: true, type: CoopHistoryGroup })
+    @Expose()
+    @Type(() => CoopHistoryGroup)
+    @ValidateNested({ each: true })
+    readonly coopResult: CoopHistoryGroup;
+  }
+
+  export class Request {
+    @ApiProperty({ required: true, type: CoopHistoryDataClass })
+    @Expose()
+    @Type(() => CoopHistoryDataClass)
+    @ValidateNested({ each: true })
+    readonly data: CoopHistoryDataClass;
+
+    /**
+     * ノード一覧
+     */
+    get nodes(): CoopSchedule[] {
+      return this.data.coopResult.historyGroups.nodes;
+    }
+
+    get create(): Prisma.ScheduleCreateManyArgs {
+      return {
+        data: this.nodes.map((schedule) => schedule.create),
+        skipDuplicates: true,
+      };
+    }
   }
 
   export class Schedule {
@@ -158,115 +432,12 @@ export namespace CoopHistoryQuery {
     }
   }
 
-  export class CoopSchedule {
-    @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', nullable: true, required: true })
-    @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
-    @IsDate()
-    @IsOptional()
-    @Expose()
-    readonly startTime: Date | null;
-
-    @ApiProperty({ example: '2023-08-29T08:00:00Z', name: 'endTime', nullable: true, required: true })
-    @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
-    @IsDate()
-    @IsOptional()
-    @Expose()
-    readonly endTime: Date | null;
-
-    @ApiProperty({ enum: Mode, required: true })
-    @IsEnum(Mode)
-    @Expose()
-    readonly mode: Mode;
-
-    @ApiProperty({ enum: Rule, required: true })
-    @IsEnum(Rule)
-    @Expose()
-    readonly rule: Rule;
-
-    @ApiProperty({ required: true, type: [HistoryNode] })
-    @Type(() => HistoryNode)
-    @ValidateNested()
-    @Expose()
-    readonly historyDetails: HistoryNode;
-
-    /**
-     * スケジュールのハッシュ
-     */
-    get scheduleId(): string {
-      return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.historyDetails.nodes[0].coopStage.id, this.weaponList);
-    }
-
-    /**
-     * ブキ一覧
-     */
-    get weaponList(): WeaponInfoMain.Id[] {
-      return this.historyDetails.nodes[0].weapons.map((weapon) => weapon.image.id);
-    }
-
-    /**
-     * ステージID
-     */
-    get stageId(): CoopStageId {
-      return this.historyDetails.nodes[0].coopStage.id;
-    }
-
-    get create(): Prisma.ScheduleCreateInput {
-      return {
-        endTime: this.endTime,
-        mode: this.mode,
-        rule: this.rule,
-        scheduleId: this.scheduleId,
-        stageId: this.historyDetails.nodes[0].coopStage.id,
-        startTime: this.startTime,
-        weaponList: this.weaponList,
-      };
-    }
-  }
-
-  class CoopHistoryNode {
-    @ApiProperty({ required: true, type: CoopSchedule })
-    @Expose()
-    @Type(() => CoopSchedule)
+  export class Schedules {
+    @ApiProperty({ isArray: true, type: Schedule })
+    @Type(() => Schedule)
     @ValidateNested({ each: true })
-    nodes: CoopSchedule[];
-  }
-
-  class CoopHistoryGroup {
-    @ApiProperty({ required: true, type: CoopHistoryNode })
     @Expose()
-    @Type(() => CoopHistoryNode)
-    @ValidateNested({ each: true })
-    historyGroups: CoopHistoryNode;
-  }
-
-  class CoopHistoryDataClass {
-    @ApiProperty({ required: true, type: CoopHistoryGroup })
-    @Expose()
-    @Type(() => CoopHistoryGroup)
-    @ValidateNested({ each: true })
-    coopResult: CoopHistoryGroup;
-  }
-
-  export class Request {
-    @ApiProperty({ required: true, type: CoopHistoryDataClass })
-    @Expose()
-    @Type(() => CoopHistoryDataClass)
-    @ValidateNested({ each: true })
-    data: CoopHistoryDataClass;
-
-    /**
-     * スケジュール一覧
-     */
-    get schedules(): CoopSchedule[] {
-      return this.data.coopResult.historyGroups.nodes;
-    }
-
-    get create(): Prisma.ScheduleCreateManyArgs {
-      return {
-        data: this.schedules.map((schedule) => schedule.create),
-        skipDuplicates: true,
-      };
-    }
+    readonly schedules: Schedule[];
   }
 
   export class Response {

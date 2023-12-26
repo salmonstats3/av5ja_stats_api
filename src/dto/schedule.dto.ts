@@ -71,6 +71,17 @@ export namespace StageScheduleQuery {
     @Expose()
     readonly coopStage: CoopStage;
 
+    @ApiProperty({ required: true })
+    @Transform(({ value }) => {
+      const regexp = /-([0-9-]*)/;
+      const match = regexp.exec(atob(value.id));
+      return match === null ? null : parseInt(match[1], 10);
+    })
+    @Expose({ name: 'boss' })
+    @IsOptional()
+    @IsEnum(CoopBossInfoId)
+    readonly bossId: CoopBossInfoId | null;
+
     @ApiProperty({ enum: Setting, name: '__isCoopSetting', required: true })
     @IsEnum(Setting)
     @Expose({ name: '__isCoopSetting' })
@@ -115,6 +126,7 @@ export namespace StageScheduleQuery {
 
     get query(): Prisma.ScheduleCreateInput {
       return {
+        bossId: this.setting.bossId,
         endTime: this.endTime,
         mode: this.mode,
         rule: this.rule,

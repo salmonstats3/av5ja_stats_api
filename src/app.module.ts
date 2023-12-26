@@ -9,6 +9,9 @@ import { AppService } from './app.service';
 import { HistoriesController } from './histories/histories.controller';
 import { HistoriesModule } from './histories/histories.module';
 import { HistoriesService } from './histories/histories.service';
+import { RecordsController } from './records/records.controller';
+import { RecordsModule } from './records/records.module';
+import { RecordsService } from './records/records.service';
 import { ResourceController } from './resource/resource.controller';
 import { ResourceModule } from './resource/resource.module';
 import { ResourceService } from './resource/resource.service';
@@ -23,7 +26,15 @@ import { VersionModule } from './version/version.module';
 import { VersionService } from './version/version.service';
 
 @Module({
-  controllers: [AppController, SchedulesController, ResultsController, HistoriesController, VersionController, ResourceController],
+  controllers: [
+    AppController,
+    SchedulesController,
+    ResultsController,
+    HistoriesController,
+    VersionController,
+    ResourceController,
+    RecordsController,
+  ],
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env', '.env.local', '.env.production'],
@@ -39,6 +50,7 @@ import { VersionService } from './version/version.service';
     HistoriesModule,
     VersionModule,
     ResourceModule,
+    RecordsModule,
   ],
   providers: [
     AppService,
@@ -51,6 +63,7 @@ import { VersionService } from './version/version.service';
     },
     VersionService,
     ResourceService,
+    RecordsService,
   ],
 })
 export class AppModule {}

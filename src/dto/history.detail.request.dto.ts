@@ -442,7 +442,7 @@ export namespace CoopHistoryDetailQuery {
     /**
      * バッジ
      */
-    get badges(): number[] {
+    get badges(): (number | null)[] {
       return this.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id));
     }
 
@@ -673,6 +673,9 @@ export namespace CoopHistoryDetailQuery {
       return this.resultWave === 0 ? null : this.resultWave;
     }
 
+    get gradeId(): CoopGradeId | null {
+      return this.afterGrade.id;
+    }
     /**
      * オカシラシャケをたおしたかどうか
      */
@@ -690,7 +693,7 @@ export namespace CoopHistoryDetailQuery {
     /**
      * プレイヤー一覧
      */
-    private get players(): MemberResult[] {
+    get players(): MemberResult[] {
       return [this.myResult].concat(this.memberResults);
     }
 

@@ -62,11 +62,43 @@ async function bootstrap() {
       transformOptions: {
         excludeExtraneousValues: true,
         exposeDefaultValues: false,
+        exposeUnsetFields: false,
         ignoreDecorators: false,
       },
       validateCustomDecorators: true,
     }),
   );
+
+  const firebaseConfig = {
+    apiKey: process.env.FIREBASE_API_KEY,
+    appId: process.env.FIREBASE_APP_ID,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  };
+  if (firebaseConfig.apiKey === undefined) {
+    throw new Error('FIREBASE_API_KEY is not defined.');
+  }
+  if (firebaseConfig.appId === undefined) {
+    throw new Error('FIREBASE_APP_ID is not defined.');
+  }
+  if (firebaseConfig.authDomain === undefined) {
+    throw new Error('FIREBASE_AUTH_DOMAIN is not defined.');
+  }
+  if (firebaseConfig.measurementId === undefined) {
+    throw new Error('FIREBASE_MEASUREMENT_ID is not defined.');
+  }
+  if (firebaseConfig.messagingSenderId === undefined) {
+    throw new Error('FIREBASE_MESSAGING_SENDER_ID is not defined.');
+  }
+  if (firebaseConfig.projectId === undefined) {
+    throw new Error('FIREBASE_PROJECT_ID is not defined.');
+  }
+  if (firebaseConfig.storageBucket === undefined) {
+    throw new Error('FIREBASE_STORAGE_BUCKET is not defined.');
+  }
 
   const config = app.get(ConfigService);
   const configuration = {

@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Post, Version } from '@nestjs/common';
+import { Controller, Get, Version } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CoopHistoryQuery } from 'src/dto/history.dto';
-import { StageScheduleQuery } from 'src/dto/schedule.dto';
 
 import { SchedulesService } from './schedules.service';
 
@@ -10,26 +9,26 @@ import { SchedulesService } from './schedules.service';
 export class SchedulesController {
   constructor(private readonly service: SchedulesService) {}
 
-  @Post()
-  @ApiOperation({ description: 'Create schedules', operationId: 'CREATE', summary: 'Create schedules' })
-  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
-  async create(@Body() request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
-    return this.service.create(request);
-  }
+  // @Post()
+  // @ApiOperation({ description: 'Create schedules', operationId: 'CREATE', summary: 'Create schedules' })
+  // @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedules })
+  // async create(@Body() request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
+  //   return this.service.create(request);
+  // }
 
   @Get()
   @Version('1')
   @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND', summary: 'Find schedules' })
-  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
-  async find(): Promise<CoopHistoryQuery.Schedule[]> {
+  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedules })
+  async find(): Promise<CoopHistoryQuery.Schedules> {
     return this.service.find();
   }
 
   @Get()
   @Version('2')
   @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND_ALL', summary: 'Find schedules' })
-  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
-  async find_all(): Promise<CoopHistoryQuery.Schedule[]> {
+  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedules })
+  async find_all(): Promise<CoopHistoryQuery.Schedules> {
     return this.service.find_all();
   }
 }

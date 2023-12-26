@@ -27,3 +27,15 @@ export function resultHash(uuid: string, playTime: Date): string {
     .update(`${dayjs(playTime).unix()}-${uuid.toLowerCase()}`)
     .digest('hex');
 }
+
+export function playerHash(uuid: string, playTime: Date, nplnUserId: string): string {
+  return createHash('md5')
+    .update(`${dayjs(playTime).unix()}-${uuid.toLowerCase()}-${nplnUserId}`)
+    .digest('hex');
+}
+
+export function waveHash(uuid: string, playTime: Date, id: number): string {
+  return createHash('md5')
+    .update(`${dayjs(playTime).unix()}-${uuid.toLowerCase()}-${id}`)
+    .digest('hex');
+}

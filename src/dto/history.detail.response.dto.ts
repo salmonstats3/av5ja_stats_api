@@ -31,7 +31,7 @@ import { resultHash, scheduleHash } from 'src/utils/hash';
 
 import { Common } from './common.dto';
 import { CoopHistoryDetailQuery } from './history.detail.request.dto';
-import { CoopHistoryQuery } from './history.dto';
+import { Response } from './response.dto';
 
 /**
  * CoopHistoryDetailQuery -> CoopResultQuery
@@ -616,11 +616,11 @@ export namespace CoopResultQuery {
     @Expose()
     readonly jobBonus: number;
 
-    @ApiProperty({ required: true, type: CoopHistoryQuery.Schedule })
-    @Type(() => CoopHistoryQuery.Schedule)
+    @ApiProperty({ required: true, type: Response.Schedule })
+    @Type(() => Response.Schedule)
     @ValidateNested()
     @Expose()
-    readonly schedule: CoopHistoryQuery.Schedule;
+    readonly schedule: Response.Schedule;
 
     @ApiProperty({ required: true, type: 'integer' })
     @IsInt()
