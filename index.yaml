@@ -20,7 +20,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Schedule'
+                  $ref: '#/components/schemas/Schedules'
       tags: &ref_0
         - Schedules
     get:
@@ -37,13 +37,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Schedule'
+                  $ref: '#/components/schemas/Schedules'
       tags: *ref_0
   /results:
     post:
-      operationId: CREATE_V2
+      operationId: CREATE_V1
       summary: Create a result
-      deprecated: true
       description: Create a result
       parameters: []
       requestBody:
@@ -51,14 +50,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Paginated'
+              $ref: '#/components/schemas/Request'
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Paginated'
+                $ref: '#/components/schemas/CoopHistoryDetail'
       tags: &ref_1
         - Results
     get:
@@ -107,7 +106,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Response'
+                $ref: '#/components/schemas/CoopHistoryQuery'
       tags:
         - Histories
   /authorize/version:
@@ -153,6 +152,25 @@ paths:
                 $ref: '#/components/schemas/Resource'
       tags:
         - Resource
+  /records:
+    post:
+      operationId: POST_RECORD
+      summary: Post records
+      description: Post records
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Request'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
 info:
   title: av5ja_stats_api
   description: Salmon Stats for Splatoon 3 API documents.
@@ -204,6 +222,8 @@ components:
       properties:
         coopStage:
           $ref: '#/components/schemas/CoopStage'
+        bossId:
+          type: number
         __isCoopSetting:
           type: string
           enum:
@@ -218,6 +238,7 @@ components:
           $ref: '#/components/schemas/CoopBoss'
       required:
         - coopStage
+        - bossId
         - __isCoopSetting
         - weapons
         - boss
@@ -271,7 +292,7 @@ components:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/CoopHistoryDataClass'
+          $ref: '#/components/schemas/DataClass'
       required:
         - data
     Schedule:
@@ -482,16 +503,316 @@ components:
         - rareWeapons
         - stageId
         - weaponList
-    Paginated:
+    Schedules:
       type: object
       properties:
-        results:
-          deprecated: true
+        schedules:
           type: array
           items:
-            $ref: '#/components/schemas/Request'
+            $ref: '#/components/schemas/Schedule'
       required:
-        - results
+        - schedules
+    AfterGrade:
+      type: object
+      properties:
+        id:
+          type: string
+          description: >-
+            Base64 Encoded string. For example `Q29vcEdyYWRlLTg=` means
+            `CoopGrade-8`.
+          example: Q29vcEdyYWRlLTg=
+          nullable: true
+      required:
+        - id
+    Badge:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+    TextColor:
+      type: object
+      properties:
+        a:
+          type: number
+          maximum: 1
+          minimum: 0
+        b:
+          type: number
+          maximum: 1
+          minimum: 0
+        g:
+          type: number
+          maximum: 1
+          minimum: 0
+        r:
+          type: number
+          maximum: 1
+          minimum: 0
+      required:
+        - a
+        - b
+        - g
+        - r
+    Background:
+      type: object
+      properties:
+        textColor:
+          $ref: '#/components/schemas/TextColor'
+        id:
+          type: string
+          example: TmFtZXBsYXRlQmFja2dyb3VuZC0x
+      required:
+        - textColor
+        - id
+    NamePlate:
+      type: object
+      properties:
+        badges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Badge'
+        background:
+          $ref: '#/components/schemas/Background'
+      required:
+        - badges
+        - background
+    Uniform:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Q29vcFVuaWZvcm0tMQ==
+      required:
+        - id
+    PlayerResult:
+      type: object
+      properties:
+        byname:
+          type: string
+        name:
+          type: string
+        nameId:
+          type: string
+        nameplate:
+          $ref: '#/components/schemas/NamePlate'
+        uniform:
+          $ref: '#/components/schemas/Uniform'
+        id:
+          type: string
+        species:
+          type: string
+          enum:
+            - INKLING
+            - OCTOLING
+      required:
+        - byname
+        - name
+        - nameId
+        - nameplate
+        - uniform
+        - id
+        - species
+    SpecialWeapon:
+      type: object
+      properties:
+        weaponId:
+          type: number
+          enum:
+            - -1
+            - 1
+            - 20006
+            - 20007
+            - 20009
+            - 20010
+            - 20012
+            - 20013
+            - 20014
+            - 20017
+            - 20018
+            - 20101
+      required:
+        - weaponId
+    MemberResult:
+      type: object
+      properties:
+        player:
+          $ref: '#/components/schemas/PlayerResult'
+        weapons:
+          type: array
+          items:
+            $ref: '#/components/schemas/MainWeapon'
+        specialWeapon:
+          $ref: '#/components/schemas/SpecialWeapon'
+        bossKillCountsTotal:
+          type: integer
+          minimum: 0
+        ikuraNum:
+          type: integer
+          minimum: 0
+        goldenIkuraAssistNum:
+          type: integer
+          minimum: 0
+        goldenIkuraNum:
+          type: integer
+          minimum: 0
+        helpCount:
+          type: integer
+          minimum: 0
+        deadCount:
+          type: integer
+          minimum: 0
+      required:
+        - player
+        - weapons
+        - specialWeapon
+        - bossKillCountsTotal
+        - ikuraNum
+        - goldenIkuraAssistNum
+        - goldenIkuraNum
+        - helpCount
+        - deadCount
+    KingSalmonId:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Q29vcEVuZW15LTIz
+      required:
+        - id
+    BossResult:
+      type: object
+      properties:
+        hasDefeatBoss:
+          type: boolean
+        boss:
+          $ref: '#/components/schemas/KingSalmonId'
+      required:
+        - hasDefeatBoss
+        - boss
+    CoopEnemy:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Q29vcEVuZW15LTQ=
+      required:
+        - id
+    EnemyResult:
+      type: object
+      properties:
+        defeatCount:
+          type: integer
+          minimum: 0
+        teamDefeatCount:
+          type: integer
+          minimum: 0
+        popCount:
+          type: integer
+          minimum: 1
+        enemy:
+          $ref: '#/components/schemas/CoopEnemy'
+      required:
+        - defeatCount
+        - teamDefeatCount
+        - popCount
+        - enemy
+    EventWave:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+    SpecialWeaponUsage:
+      type: object
+      properties:
+        id:
+          type: number
+          enum:
+            - -1
+            - 1
+            - 20006
+            - 20007
+            - 20009
+            - 20010
+            - 20012
+            - 20013
+            - 20014
+            - 20017
+            - 20018
+            - 20101
+      required:
+        - id
+    WaveResult:
+      type: object
+      properties:
+        waterLevel:
+          type: number
+          enum:
+            - 0
+            - 1
+            - 2
+        eventWave:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/EventWave'
+        quotaNum:
+          type: integer
+          minimum: 0
+          nullable: true
+        goldenIkuraPopNum:
+          type: integer
+          minimum: 0
+        goldenIkuraNum:
+          type: integer
+          minimum: 0
+          nullable: true
+        specialWeapons:
+          nullable: false
+          type: array
+          items:
+            $ref: '#/components/schemas/SpecialWeaponUsage'
+            maximum: 8
+            minimum: 0
+        id:
+          type: integer
+          minimum: 0
+      required:
+        - waterLevel
+        - eventWave
+        - quotaNum
+        - goldenIkuraPopNum
+        - goldenIkuraNum
+        - specialWeapons
+        - id
+    Scale:
+      type: object
+      properties:
+        gold:
+          type: integer
+          nullable: true
+        bronze:
+          type: integer
+          nullable: true
+        silver:
+          type: integer
+          nullable: true
+      required:
+        - gold
+        - bronze
+        - silver
+    CoopHistoryDetail:
+      type: object
+      properties: {}
+    CoopResultDataClass:
+      type: object
+      properties:
+        coopHistoryDetail:
+          $ref: '#/components/schemas/CoopHistoryDetail'
+      required:
+        - coopHistoryDetail
     CoopHistoryNode:
       type: object
       properties:
@@ -499,13 +820,44 @@ components:
           $ref: '#/components/schemas/CoopSchedule'
       required:
         - nodes
+    CoopPointCard:
+      type: object
+      properties:
+        defeatBossCount:
+          type: number
+        deliverCount:
+          type: number
+        goldenDeliverCount:
+          type: number
+        limitedPoint:
+          type: number
+        playCount:
+          type: number
+        regularPoint:
+          type: number
+        rescueCount:
+          type: number
+        totalPoint:
+          type: number
+      required:
+        - defeatBossCount
+        - deliverCount
+        - goldenDeliverCount
+        - limitedPoint
+        - playCount
+        - regularPoint
+        - rescueCount
+        - totalPoint
     CoopHistoryGroup:
       type: object
       properties:
         historyGroups:
           $ref: '#/components/schemas/CoopHistoryNode'
+        pointCard:
+          $ref: '#/components/schemas/CoopPointCard'
       required:
         - historyGroups
+        - pointCard
     CoopHistoryDataClass:
       type: object
       properties:
@@ -513,20 +865,9 @@ components:
           $ref: '#/components/schemas/CoopHistoryGroup'
       required:
         - coopResult
-    Response:
+    CoopHistoryQuery:
       type: object
-      properties:
-        schedules:
-          type: array
-          items:
-            $ref: '#/components/schemas/Schedule'
-        results:
-          type: array
-          items:
-            type: string
-      required:
-        - schedules
-        - results
+      properties: {}
     Version:
       type: object
       properties:
@@ -585,3 +926,6 @@ components:
         - weapon_illust
         - ui_img
         - special_img
+    Response:
+      type: object
+      properties: {}
