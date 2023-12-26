@@ -33,7 +33,7 @@ export class ResultsService {
   async create(request: CoopHistoryDetailQuery.Request): Promise<Response.CoopHistoryDetail> {
     /// 対応するスケジュール
     const schedule: Response.Schedule = await this.connectOrCreate(request);
-    console.log(schedule)
+    console.log(schedule);
     return new Response.CoopHistoryDetail(request.data.coopHistoryDetail, schedule);
     // return plainToInstance(Response.CoopHistoryDetail, CoopResultQuery.Request.from(request.data.coopHistoryDetail, schedule), { excludeExtraneousValues: false })
     // const results: CoopResultQuery.Request[] = await (async () => {
