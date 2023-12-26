@@ -102,9 +102,9 @@ export namespace CoopHistoryQuery {
     @Transform(({ value }) => {
       return value === null
         ? {
-            id: null,
-            isBossDefeated: null,
-          }
+          id: null,
+          isBossDefeated: null,
+        }
         : value;
     })
     @ValidateNested()

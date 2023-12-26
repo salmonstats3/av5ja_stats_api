@@ -40,6 +40,7 @@ export class HistoriesService {
             stageId: node.stageId,
             startTime: node.startTime,
             weaponList: node.weaponList,
+            rareWeapons: []
           },
         };
       }),
