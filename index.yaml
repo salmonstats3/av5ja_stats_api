@@ -1,28 +1,6 @@
 openapi: 3.0.0
 paths:
   /schedules:
-    post:
-      operationId: CREATE
-      summary: Create schedules
-      description: Create schedules
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Request'
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Schedules'
-      tags: &ref_0
-        - Schedules
     get:
       operationId: FIND_ALL
       summary: Find schedules
@@ -38,7 +16,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Schedules'
-      tags: *ref_0
+      tags:
+        - Schedules
   /results:
     post:
       operationId: CREATE_V1
@@ -58,7 +37,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CoopHistoryDetail'
-      tags: &ref_1
+      tags: &ref_0
         - Results
     get:
       operationId: FIND_ALL
@@ -68,7 +47,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_1
+      tags: *ref_0
       security:
         - bearer: []
   /results/{result_id}:
@@ -85,7 +64,7 @@ paths:
       responses:
         '200':
           description: ''
-      tags: *ref_1
+      tags: *ref_0
       security:
         - bearer: []
   /histories:
@@ -122,7 +101,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Version'
-      tags: &ref_2
+      tags: &ref_1
         - Version
   /version:
     get:
@@ -136,7 +115,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Version'
-      tags: *ref_2
+      tags: *ref_1
   /resource:
     get:
       operationId: GET_RESOURCE
@@ -185,116 +164,6 @@ components:
       bearerFormat: JWT
       type: http
   schemas:
-    CoopStage:
-      type: object
-      properties:
-        id:
-          type: string
-          example: Q29vcFN0YWdlLTE=
-      required:
-        - id
-    ImageURL:
-      type: object
-      properties:
-        url:
-          type: string
-          example: >-
-            https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/8e134a80cd54f4235329493afd43ff754b367a65e460facfcca862b174754b0e_0.png
-      required:
-        - url
-    MainWeapon:
-      type: object
-      properties:
-        image:
-          $ref: '#/components/schemas/ImageURL'
-      required:
-        - image
-    CoopBoss:
-      type: object
-      properties:
-        id:
-          type: string
-          example: Q29vcEVuZW15LTI0
-      required:
-        - id
-    CoopSetting:
-      type: object
-      properties:
-        coopStage:
-          $ref: '#/components/schemas/CoopStage'
-        bossId:
-          type: number
-        __isCoopSetting:
-          type: string
-          enum:
-            - CoopNormalSetting
-            - CoopBigRunSetting
-            - CoopTeamContestSetting
-        weapons:
-          type: array
-          items:
-            $ref: '#/components/schemas/MainWeapon'
-        boss:
-          $ref: '#/components/schemas/CoopBoss'
-      required:
-        - coopStage
-        - bossId
-        - __isCoopSetting
-        - weapons
-        - boss
-    CoopSchedule:
-      type: object
-      properties:
-        startTime:
-          format: date-time
-          type: string
-          example: '2023-08-27T16:00:00Z'
-        endTime:
-          format: date-time
-          type: string
-          example: '2023-08-29T08:00:00Z'
-        setting:
-          $ref: '#/components/schemas/CoopSetting'
-      required:
-        - startTime
-        - endTime
-        - setting
-    Node:
-      type: object
-      properties:
-        nodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CoopSchedule'
-      required:
-        - nodes
-    ScheduleGroup:
-      type: object
-      properties:
-        regularSchedules:
-          $ref: '#/components/schemas/Node'
-        bigRunSchedules:
-          $ref: '#/components/schemas/Node'
-        teamContestSchedules:
-          $ref: '#/components/schemas/Node'
-      required:
-        - regularSchedules
-        - bigRunSchedules
-        - teamContestSchedules
-    DataClass:
-      type: object
-      properties:
-        coopGroupingSchedule:
-          $ref: '#/components/schemas/ScheduleGroup'
-      required:
-        - coopGroupingSchedule
-    Request:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/DataClass'
-      required:
-        - data
     Schedule:
       type: object
       properties:
@@ -614,6 +483,22 @@ components:
         - uniform
         - id
         - species
+    ImageURL:
+      type: object
+      properties:
+        url:
+          type: string
+          example: >-
+            https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/8e134a80cd54f4235329493afd43ff754b367a65e460facfcca862b174754b0e_0.png
+      required:
+        - url
+    MainWeapon:
+      type: object
+      properties:
+        image:
+          $ref: '#/components/schemas/ImageURL'
+      required:
+        - image
     SpecialWeapon:
       type: object
       properties:
@@ -787,6 +672,14 @@ components:
         - goldenIkuraNum
         - specialWeapons
         - id
+    CoopStage:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Q29vcFN0YWdlLTE=
+      required:
+        - id
     Scale:
       type: object
       properties:
@@ -813,6 +706,58 @@ components:
           $ref: '#/components/schemas/CoopHistoryDetail'
       required:
         - coopHistoryDetail
+    Request:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DataClass'
+      required:
+        - data
+    HistoryNode:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoopHistoryDetail'
+      required:
+        - nodes
+    CoopSchedule:
+      type: object
+      properties:
+        startTime:
+          format: date-time
+          type: string
+          example: '2023-08-27T16:00:00Z'
+          nullable: true
+        endTime:
+          format: date-time
+          type: string
+          example: '2023-08-29T08:00:00Z'
+          nullable: true
+        mode:
+          type: string
+          enum:
+            - REGULAR
+            - LIMITED
+            - PRIVATE_CUSTOM
+            - PRIVATE_SCENARIO
+        rule:
+          type: string
+          enum:
+            - REGULAR
+            - BIG_RUN
+            - TEAM_CONTEST
+        historyDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryNode'
+      required:
+        - startTime
+        - endTime
+        - mode
+        - rule
+        - historyDetails
     CoopHistoryNode:
       type: object
       properties:
@@ -926,6 +871,51 @@ components:
         - weapon_illust
         - ui_img
         - special_img
+    Record:
+      type: object
+      properties:
+        edges:
+          type: array
+          items:
+            type: string
+      required:
+        - edges
+    BigRunRecord:
+      type: object
+      properties:
+        records:
+          $ref: '#/components/schemas/Record'
+      required:
+        - records
+    CoopRecord:
+      type: object
+      properties:
+        stageHighestRecords:
+          type: array
+          items:
+            type: string
+        bigRunRecord:
+          $ref: '#/components/schemas/BigRunRecord'
+        defeatEnemyRecords:
+          type: array
+          items:
+            type: string
+        defeatBossRecords:
+          type: array
+          items:
+            type: string
+      required:
+        - stageHighestRecords
+        - bigRunRecord
+        - defeatEnemyRecords
+        - defeatBossRecords
+    DataClass:
+      type: object
+      properties:
+        coopRecord:
+          $ref: '#/components/schemas/CoopRecord'
+      required:
+        - coopRecord
     Response:
       type: object
       properties: {}
