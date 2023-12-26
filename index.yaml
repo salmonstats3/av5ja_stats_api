@@ -13,20 +13,13 @@ paths:
             schema:
               $ref: '#/components/schemas/Request'
       responses:
-        '200':
+        '201':
           description: ''
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Schedule'
       tags: &ref_0
         - Schedules
     get:
-      operationId: FIND_ALL
+      operationId: FIND_ALL_V2
       summary: Find schedules
-      deprecated: true
       description: Find schedules
       parameters: []
       responses:
@@ -37,7 +30,22 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Schedule'
+                  $ref: '#/components/schemas/ScheduleDto'
+      tags: *ref_0
+  /schedules/{schedule_id}:
+    get:
+      operationId: FIND
+      summary: Find a schedule
+      description: Find a schedule
+      parameters:
+        - name: schedule_id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
       tags: *ref_0
   /results:
     post:
@@ -156,7 +164,7 @@ paths:
 info:
   title: av5ja_stats_api
   description: Salmon Stats for Splatoon 3 API documents.
-  version: 4.0.3
+  version: 4.0.0
   contact: {}
 tags: []
 servers: []
@@ -191,14 +199,6 @@ components:
           $ref: '#/components/schemas/ImageURL'
       required:
         - image
-    CoopBoss:
-      type: object
-      properties:
-        id:
-          type: string
-          example: Q29vcEVuZW15LTI0
-      required:
-        - id
     CoopSetting:
       type: object
       properties:
@@ -214,13 +214,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MainWeapon'
-        boss:
-          $ref: '#/components/schemas/CoopBoss'
       required:
         - coopStage
         - __isCoopSetting
         - weapons
-        - boss
     CoopSchedule:
       type: object
       properties:
@@ -274,12 +271,69 @@ components:
           $ref: '#/components/schemas/CoopHistoryDataClass'
       required:
         - data
+    ScheduleDto:
+      type: object
+      properties:
+        scheduleId:
+          type: string
+        startTime:
+          format: date-time
+          type: string
+        endTime:
+          format: date-time
+          type: string
+        stageId:
+          type: number
+        weaponList:
+          type: array
+          items:
+            type: string
+        mode:
+          type: string
+        rule:
+          type: string
+      required:
+        - scheduleId
+        - startTime
+        - endTime
+        - stageId
+        - weaponList
+        - mode
+        - rule
+    Paginated:
+      type: object
+      properties:
+        results:
+          deprecated: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Request'
+      required:
+        - results
+    CoopHistoryNode:
+      type: object
+      properties:
+        nodes:
+          $ref: '#/components/schemas/CoopSchedule'
+      required:
+        - nodes
+    CoopHistoryGroup:
+      type: object
+      properties:
+        historyGroups:
+          $ref: '#/components/schemas/CoopHistoryNode'
+      required:
+        - historyGroups
+    CoopHistoryDataClass:
+      type: object
+      properties:
+        coopResult:
+          $ref: '#/components/schemas/CoopHistoryGroup'
+      required:
+        - coopResult
     Schedule:
       type: object
       properties:
-        id:
-          type: string
-          example: 14d8dafab3d4e6adb26637a040589bed
         startTime:
           format: date-time
           type: string
@@ -301,87 +355,6 @@ components:
             - REGULAR
             - BIG_RUN
             - TEAM_CONTEST
-        bossId:
-          type: number
-          enum:
-            - -1
-            - 23
-            - 24
-            - 25
-        rareWeapons:
-          type: array
-          items:
-            type: number
-            enum:
-              - -999
-              - -2
-              - -1
-              - 0
-              - 10
-              - 20
-              - 30
-              - 40
-              - 50
-              - 60
-              - 70
-              - 80
-              - 90
-              - 100
-              - 200
-              - 210
-              - 220
-              - 230
-              - 240
-              - 250
-              - 260
-              - 300
-              - 310
-              - 400
-              - 1000
-              - 1010
-              - 1020
-              - 1030
-              - 1040
-              - 1100
-              - 1110
-              - 1120
-              - 2000
-              - 2010
-              - 2030
-              - 2050
-              - 2060
-              - 2070
-              - 3000
-              - 3010
-              - 3020
-              - 3030
-              - 3040
-              - 3050
-              - 4000
-              - 4010
-              - 4020
-              - 4030
-              - 4040
-              - 4050
-              - 5000
-              - 5010
-              - 5020
-              - 5030
-              - 5040
-              - 6000
-              - 6010
-              - 6020
-              - 7010
-              - 7020
-              - 8000
-              - 8010
-              - 20900
-              - 22900
-              - 23900
-              - 25900
-              - 26900
-              - 27900
-              - 28900
         stageId:
           type: number
           enum:
@@ -473,46 +446,12 @@ components:
               - 27900
               - 28900
       required:
-        - id
         - startTime
         - endTime
         - mode
         - rule
-        - bossId
-        - rareWeapons
         - stageId
         - weaponList
-    Paginated:
-      type: object
-      properties:
-        results:
-          deprecated: true
-          type: array
-          items:
-            $ref: '#/components/schemas/Request'
-      required:
-        - results
-    CoopHistoryNode:
-      type: object
-      properties:
-        nodes:
-          $ref: '#/components/schemas/CoopSchedule'
-      required:
-        - nodes
-    CoopHistoryGroup:
-      type: object
-      properties:
-        historyGroups:
-          $ref: '#/components/schemas/CoopHistoryNode'
-      required:
-        - historyGroups
-    CoopHistoryDataClass:
-      type: object
-      properties:
-        coopResult:
-          $ref: '#/components/schemas/CoopHistoryGroup'
-      required:
-        - coopResult
     Response:
       type: object
       properties:
