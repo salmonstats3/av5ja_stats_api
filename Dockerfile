@@ -11,7 +11,6 @@ COPY  ./nest-cli.json ./
 RUN yarn set version 1.22.19
 RUN yarn -v
 RUN yarn install
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 COPY  ./src ./src
 RUN yarn prisma generate
 RUN yarn build
@@ -28,7 +27,6 @@ COPY  ./nest-cli.json ./
 
 RUN yarn set version 1.22.19
 RUN yarn install --prod
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" /dev/null
 COPY  ./src ./src
 RUN npx prisma generate
 
