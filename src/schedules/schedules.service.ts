@@ -1,48 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
-import { Mode, Rule, Schedule } from '@prisma/client';
-import { Expose, Transform, plainToInstance } from 'class-transformer';
+import axios from 'axios';
+import { plainToInstance } from 'class-transformer';
 import dayjs from 'dayjs';
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getDocs, getFirestore, setDoc } from 'firebase/firestore/lite';
-import lodash from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 import { CoopHistoryQuery } from 'src/dto/history.dto';
-import { Setting, StageScheduleQuery } from 'src/dto/schedule.dto';
+import { StageScheduleQuery } from 'src/dto/schedule.dto';
 import { firebaseConfig } from 'src/firebase.config';
-import { CoopStageId } from 'src/utils/enum/coop_stage_id';
-import { scheduleHash } from 'src/utils/hash';
-
-export class ScheduleDto {
-  @ApiProperty()
-  @Expose()
-  @Transform(({ obj }) => scheduleHash(obj.mode, obj.rule, obj.startTime, obj.endTime, obj.stageId, obj.weaponList))
-  scheduleId: string;
-
-  @ApiProperty()
-  @Expose()
-  startTime: Date;
-
-  @ApiProperty()
-  @Expose()
-  endTime: Date;
-
-  @ApiProperty()
-  @Expose()
-  stageId: CoopStageId;
-
-  @ApiProperty()
-  @Expose()
-  weaponList: number[];
-
-  @ApiProperty()
-  @Expose()
-  mode: Mode;
-
-  @ApiProperty()
-  @Expose()
-  rule: Rule;
-}
+import { CoopSetting } from 'src/utils/enum/setting';
 
 @Injectable()
 export class SchedulesService {
@@ -50,21 +16,9 @@ export class SchedulesService {
 
   private readonly firestore = getFirestore(initializeApp(firebaseConfig));
 
-  async create(request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedule[]> {
-    // Firebaseにスケジュール追加
-    await this.update(request);
-    // データベースにスケジュール追加
+  async create(request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
     await this.prisma.schedule.createMany(request.create);
-    return request.schedules.map((schedule) => {
-      return plainToInstance(CoopHistoryQuery.Schedule, {
-        endTime: schedule.endTime,
-        mode: schedule.mode,
-        rule: schedule.rule,
-        stageId: schedule.stageId,
-        startTime: schedule.startTime,
-        weaponList: schedule.weaponList,
-      });
-    });
+    return plainToInstance(CoopHistoryQuery.Schedules, { schedules: request.schedules }, { excludeExtraneousValues: true });
   }
 
   /**
@@ -72,63 +26,30 @@ export class SchedulesService {
    * @param scheduleId
    * @returns
    */
-  async find(scheduleId: string): Promise<Partial<Schedule>> {
-    return lodash.omit(await this.prisma.schedule.findUniqueOrThrow({ where: { scheduleId: scheduleId } }), ['createdAt', 'updatedAt']);
-  }
-
-  /**
-   * スケジュール一覧取得
-   * @param scheduleId
-   * @returns
-   */
-  async find_all_v1(): Promise<Partial<Schedule>[]> {
-    return (
-      await this.prisma.schedule.findMany({
-        orderBy: [
-          {
-            endTime: 'asc',
-          },
-          {
-            startTime: 'asc',
-          },
-        ],
-        where: {
-          mode: {
-            in: [Mode.REGULAR, Mode.LIMITED],
-          },
-        },
-      })
-    ).map((schedule) => lodash.omit(schedule, ['createdAt', 'updatedAt']));
-  }
-
-  /**
-   * スケジュール一覧取得
-   * @param scheduleId
-   * @returns
-   */
-  async find_all_v2(): Promise<ScheduleDto[]> {
-    const documents = await Promise.all(Object.values(Setting).map((setting) => getDocs(collection(this.firestore, setting))));
-    const schedules: ScheduleDto[] = documents
-      .flatMap((document) => document.docs.map((doc) => plainToInstance(ScheduleDto, doc.data(), { excludeExtraneousValues: true })))
-      .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix());
+  async find(): Promise<CoopHistoryQuery.Schedule[]> {
+    const url: string = 'https://splatoon.oatmealdome.me/api/v1/three/coop/phases?count=5';
+    const data: any = (await axios.get(url)).data;
+    const schedules: CoopHistoryQuery.Schedule[] = [data['Normal'], data['BigRun'], data['TeamContest']]
+      .flat()
+      .map((schedule: any) => CoopHistoryQuery.Schedule.from(schedule))
+      .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix());
+    schedules.forEach(async (schedule) => {
+      await setDoc(doc(this.firestore, schedule.rule, dayjs(schedule.startTime).toISOString()), JSON.parse(JSON.stringify(schedule)));
+    });
     return schedules;
   }
 
   /**
-   * Firabaseにスケジュールのデータを書き込む
-   * @param request スケジュール
+   * スケジュール一覧取得
+   * @param scheduleId
+   * @returns
    */
-  private async update(request: StageScheduleQuery.Request) {
-    request.schedules.forEach(async (schedule) => {
-      await setDoc(doc(this.firestore, schedule.setting.isCoopSetting, dayjs(schedule.startTime).toISOString()), {
-        endTime: dayjs(schedule.endTime).toISOString(),
-        mode: schedule.mode,
-        rule: schedule.rule,
-        setting: schedule.setting.isCoopSetting,
-        stageId: schedule.stageId,
-        startTime: dayjs(schedule.startTime).toISOString(),
-        weaponList: schedule.weaponList,
-      });
-    });
+  async find_all(): Promise<CoopHistoryQuery.Schedule[]> {
+    const documents = await Promise.all(Object.values(CoopSetting).map(async (setting) => getDocs(collection(this.firestore, setting))));
+    return documents
+      .flatMap((document) =>
+        document.docs.map((doc) => plainToInstance(CoopHistoryQuery.Schedule, doc.data(), { excludeExtraneousValues: true })),
+      )
+      .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix());
   }
 }

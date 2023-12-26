@@ -7,8 +7,6 @@ services:
       dockerfile: Dockerfile
     container_name: salmon_stats_app
     restart: unless-stopped
-    ports:
-      - $VIRTUAL_PORT:$VIRTUAL_PORT
     environment:
       API_VERSION: $API_VERSION
       API_PORT: $API_PORT
