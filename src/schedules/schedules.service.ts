@@ -29,9 +29,9 @@ export class SchedulesService {
   async find(): Promise<CoopHistoryQuery.Schedules> {
     const url: string = 'https://splatoon.oatmealdome.me/api/v1/three/coop/phases?count=5';
     const data: any = (await axios.get(url)).data;
-    const schedules: CoopHistoryQuery.CoopSchedule[] = [data['Normal'], data['BigRun'], data['TeamContest']]
+    const schedules: CoopHistoryQuery.Schedule[] = [data['Normal'], data['BigRun'], data['TeamContest']]
       .flat()
-      .map((schedule: any) => CoopHistoryQuery.CoopSchedule.from(schedule))
+      .map((schedule: any) => CoopHistoryQuery.Schedule.from(schedule))
       .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix());
     schedules.forEach(async (schedule) => {
       await setDoc(doc(this.firestore, schedule.rule, dayjs(schedule.startTime).toISOString()), JSON.parse(JSON.stringify(schedule)));
@@ -44,11 +44,11 @@ export class SchedulesService {
    * @param scheduleId
    * @returns
    */
-  async find_all(): Promise<CoopHistoryQuery.Response> {
+  async find_all(): Promise<CoopHistoryQuery.Schedules> {
     const documents = await Promise.all(Object.values(CoopSetting).map(async (setting) => getDocs(collection(this.firestore, setting))));
     return plainToInstance(
-      CoopHistoryQuery.Response,
-      { schedules: documents.flatMap((document) => document.docs.map((doc) => doc.data())) },
+      CoopHistoryQuery.Schedules,
+      { schedules: documents.flatMap((document) => document.docs.map((doc) => doc.data())).sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix()) },
       { excludeExtraneousValues: true },
     );
     //   schedules:

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Mode, Prisma, Rule } from '@prisma/client';
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer';
-import { IsBoolean, IsDate, IsEnum, IsInt, IsOptional, Max, Min, ValidateNested } from 'class-validator';
+import { IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 import dayjs from 'dayjs';
 import { CoopBossInfoId } from 'src/utils/enum/coop_enemy_id';
 import { CoopGradeId } from 'src/utils/enum/coop_grade_id';
@@ -227,41 +227,6 @@ export namespace CoopHistoryQuery {
         weaponList: this.weaponList,
       };
     }
-
-    static from(schedule: any): CoopSchedule {
-      const stageId: CoopStageId = schedule.stage;
-      const mode: Mode = schedule.waves === undefined ? Mode.REGULAR : Mode.LIMITED;
-      const rule: Rule = mode === Mode.LIMITED ? Rule.TEAM_CONTEST : stageId >= 100 ? Rule.BIG_RUN : Rule.REGULAR;
-      const weaponList: WeaponInfoMain.Id[] = schedule.weapons;
-      const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons;
-      const bossId: CoopBossInfoId | null = (() => {
-        switch (schedule.bigBoss) {
-          case 'SakeJaw':
-            return CoopBossInfoId.SakeJaw;
-          case 'SakeRope':
-            return CoopBossInfoId.SakeRope;
-          case 'SakelienGiant':
-            return CoopBossInfoId.SakelienGiant;
-          default:
-            return null;
-        }
-      })();
-
-      return plainToInstance(
-        CoopSchedule,
-        {
-          bossId: bossId,
-          endTime: schedule.endTime,
-          mode: mode,
-          rareWeapons: rareWeapons,
-          rule: rule,
-          stageId: stageId,
-          startTime: schedule.startTime,
-          weaponList: weaponList,
-        },
-        { excludeExtraneousValues: true },
-      );
-    }
   }
 
   class CoopHistoryNode {
@@ -359,18 +324,127 @@ export namespace CoopHistoryQuery {
     }
   }
 
+  export class Schedule {
+    @ApiProperty({ example: '14d8dafab3d4e6adb26637a040589bed', name: 'id', required: true })
+    @Transform(({ obj }) => scheduleHash(obj.mode, obj.rule, obj.startTime, obj.endTime, obj.stageId, obj.weaponList))
+    @IsString()
+    @Expose()
+    readonly id: string;
+
+    @ApiProperty({ example: '2023-08-27T16:00:00Z', name: 'startTime', required: true })
+    @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
+    @IsDate()
+    @IsOptional()
+    @Expose()
+    readonly startTime: Date | null;
+
+    @ApiProperty({ example: '2023-08-29T08:00:00Z', name: 'endTime', required: true })
+    @Transform(({ value }) => (value === null ? null : dayjs(value).toDate()))
+    @IsDate()
+    @IsOptional()
+    @Expose()
+    readonly endTime: Date | null;
+
+    @ApiProperty({ enum: Mode, required: true })
+    @Expose()
+    @IsEnum(Mode)
+    readonly mode: Mode;
+
+    @ApiProperty({ enum: Rule, required: true })
+    @Expose()
+    @IsEnum(Rule)
+    readonly rule: Rule;
+
+    @ApiProperty({ enum: CoopBossInfoId, required: true })
+    @Expose()
+    @IsEnum(CoopBossInfoId)
+    @IsOptional()
+    readonly bossId: CoopBossInfoId | null;
+
+    @ApiProperty({ enum: WeaponInfoMain.Id, isArray: true, required: true })
+    @Expose()
+    @Transform(({ value }) => (value === undefined ? [] : value))
+    @IsEnum(WeaponInfoMain.Id, { each: true })
+    readonly rareWeapons: WeaponInfoMain.Id[];
+
+    @ApiProperty({ enum: CoopStageId, required: true })
+    @Expose()
+    @IsEnum(CoopStageId)
+    @Transform(({ obj }) => obj.stageId ?? obj.historyDetails.nodes[0].coopStage.id)
+    readonly stageId: CoopStageId;
+
+    @ApiProperty({ enum: WeaponInfoMain.Id, isArray: true, required: true })
+    @Expose()
+    @IsEnum(WeaponInfoMain.Id, { each: true })
+    @Transform(({ obj }) => obj.weaponList ?? obj.historyDetails.nodes[0].weapons.map((weapon: any) => weapon.image.id))
+    readonly weaponList: WeaponInfoMain.Id[];
+
+    static from(schedule: any): Schedule {
+      const stageId: CoopStageId = schedule.stage;
+      const mode: Mode = schedule.waves === undefined ? Mode.REGULAR : Mode.LIMITED;
+      const rule: Rule = mode === Mode.LIMITED ? Rule.TEAM_CONTEST : stageId >= 100 ? Rule.BIG_RUN : Rule.REGULAR;
+      const weaponList: WeaponInfoMain.Id[] = schedule.weapons;
+      const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons;
+      const bossId: CoopBossInfoId | null = (() => {
+        switch (schedule.bigBoss) {
+          case 'SakeJaw':
+            return CoopBossInfoId.SakeJaw;
+          case 'SakeRope':
+            return CoopBossInfoId.SakeRope;
+          case 'SakelienGiant':
+            return CoopBossInfoId.SakelienGiant;
+          default:
+            return null;
+        }
+      })();
+
+      return plainToInstance(
+        Schedule,
+        {
+          bossId: bossId,
+          endTime: schedule.endTime,
+          mode: mode,
+          rareWeapons: rareWeapons,
+          rule: rule,
+          stageId: stageId,
+          startTime: schedule.startTime,
+          weaponList: weaponList,
+        },
+        { excludeExtraneousValues: true },
+      );
+    }
+
+    get connectOrCreate(): Prisma.ScheduleCreateOrConnectWithoutResultsInput {
+      return {
+        create: {
+          endTime: this.endTime,
+          mode: this.mode,
+          rule: this.rule,
+          scheduleId: this.id,
+          stageId: this.stageId,
+          startTime: this.startTime,
+          weaponList: this.weaponList,
+        },
+        where: {
+          scheduleId: this.id,
+        },
+      };
+    }
+  }
+
   export class Schedules {
-    @ApiProperty({ isArray: true, type: CoopSchedule })
-    @Type(() => CoopSchedule)
+    @ApiProperty({ isArray: true, type: Schedule })
+    @Type(() => Schedule)
     @ValidateNested({ each: true })
-    readonly schedules: CoopSchedule[];
+    @Expose()
+    readonly schedules: Schedule[];
   }
 
   export class Response {
-    @ApiProperty({ isArray: true, type: CoopSchedule })
-    @Type(() => CoopSchedule)
+    @ApiProperty({ isArray: true, type: Schedule })
+    @Type(() => Schedule)
     @ValidateNested({ each: true })
-    readonly schedules: CoopSchedule[];
+    readonly schedules: Schedule[];
 
     @ApiProperty({ isArray: true, type: String })
     @Type(() => String)

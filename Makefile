@@ -7,3 +7,11 @@ buildx:
 .PHONY: build
 build:
 	docker build --build-arg VIRTUAL_PORT=${VIRTUAL_PORT} -t tkgling/salmon_stats_app:${API_VERSION} .
+
+.PHONY: update
+update:
+	docker compose build 
+
+.PHONY: up 
+up:
+	docker compose up --remove-orphans 
