@@ -12,7 +12,7 @@ export class SchedulesController {
 
   @Post()
   @ApiOperation({ description: 'Create schedules', operationId: 'CREATE', summary: 'Create schedules' })
-  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
+  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedules })
   async create(@Body() request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
     return this.service.create(request);
   }
@@ -20,16 +20,16 @@ export class SchedulesController {
   @Get()
   @Version('1')
   @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND', summary: 'Find schedules' })
-  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
-  async find(): Promise<CoopHistoryQuery.Schedule[]> {
+  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedules })
+  async find(): Promise<CoopHistoryQuery.Schedules> {
     return this.service.find();
   }
 
   @Get()
   @Version('2')
   @ApiOperation({ deprecated: true, description: 'Find schedules', operationId: 'FIND_ALL', summary: 'Find schedules' })
-  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedule })
-  async find_all(): Promise<CoopHistoryQuery.Schedule[]> {
+  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedules })
+  async find_all(): Promise<CoopHistoryQuery.Schedules> {
     return this.service.find_all();
   }
 }
