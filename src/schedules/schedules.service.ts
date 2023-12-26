@@ -46,7 +46,11 @@ export class SchedulesService {
    */
   async find_all(): Promise<CoopHistoryQuery.Response> {
     const documents = await Promise.all(Object.values(CoopSetting).map(async (setting) => getDocs(collection(this.firestore, setting))));
-    return plainToInstance(CoopHistoryQuery.Response, { schedules: documents.flatMap((document) => document.docs.map((doc) => doc.data())) }, { excludeExtraneousValues: true });
+    return plainToInstance(
+      CoopHistoryQuery.Response,
+      { schedules: documents.flatMap((document) => document.docs.map((doc) => doc.data())) },
+      { excludeExtraneousValues: true },
+    );
     //   schedules:
     //     documents
     //       .flatMap((document) =>

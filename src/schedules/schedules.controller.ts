@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Version } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CoopHistoryQuery } from 'src/dto/history.dto';
 import { StageScheduleQuery } from 'src/dto/schedule.dto';
 
 import { SchedulesService } from './schedules.service';
-import { CoopHistoryQuery } from 'src/dto/history.dto';
 
 @ApiTags('Schedules')
 @Controller('schedules')
