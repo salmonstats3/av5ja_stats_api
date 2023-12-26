@@ -10,12 +10,12 @@ import { SchedulesService } from './schedules.service';
 export class SchedulesController {
   constructor(private readonly service: SchedulesService) {}
 
-  @Post()
-  @ApiOperation({ description: 'Create schedules', operationId: 'CREATE', summary: 'Create schedules' })
-  @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedules })
-  async create(@Body() request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
-    return this.service.create(request);
-  }
+  // @Post()
+  // @ApiOperation({ description: 'Create schedules', operationId: 'CREATE', summary: 'Create schedules' })
+  // @ApiOkResponse({ isArray: true, type: CoopHistoryQuery.Schedules })
+  // async create(@Body() request: StageScheduleQuery.Request): Promise<CoopHistoryQuery.Schedules> {
+  //   return this.service.create(request);
+  // }
 
   @Get()
   @Version('1')
