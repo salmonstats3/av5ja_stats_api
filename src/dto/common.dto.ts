@@ -33,9 +33,7 @@ export namespace Common {
     get rawValue(): string {
       // 逆変換時にはJSTからUTCに変換する
       return btoa(
-        `${this.type}-${this.prefix}-${this.nplnUserId}:${dayjs(this.playTime)
-          .subtract(9, 'hour')
-          .format('YYYYMMDDTHHmmss')}_${this.uuid.toLowerCase()}`,
+        `${this.type}-${this.prefix}-${this.nplnUserId}:${dayjs(this.playTime).format('YYYYMMDDTHHmmss')}_${this.uuid.toLowerCase()}`,
       );
     }
 
@@ -50,7 +48,7 @@ export namespace Common {
         const [, type, prefix, nplnUserId, playTime, uuid] = match;
         return plainToInstance(ResultId, {
           nplnUserId: nplnUserId,
-          playTime: dayjs(playTime).add(9, 'hour').toDate(),
+          playTime: dayjs(playTime).toDate(),
           prefix: prefix,
           type: type,
           uuid: uuid,
@@ -90,9 +88,9 @@ export namespace Common {
     get rawValue(): string {
       // 逆変換時にはJSTからUTCに変換する
       return btoa(
-        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss')}_${
-          this.uuid
-        }:${this.suffix}-${this.nplnUserId}`,
+        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).format('YYYYMMDDTHHmmss')}_${this.uuid}:${this.suffix}-${
+          this.nplnUserId
+        }`,
       );
     }
 
@@ -101,7 +99,7 @@ export namespace Common {
     }
 
     get rawId(): string {
-      const playTime: string = dayjs(this.playTime).subtract(9, 'hour').format('YYYYMMDDTHHmmss');
+      const playTime: string = dayjs(this.playTime).format('YYYYMMDDTHHmmss');
       return `${playTime}:${this.nplnUserId}`;
     }
 
@@ -117,8 +115,7 @@ export namespace Common {
         this.id = id;
         this.prefix = prefix;
         this.nplnUserId = nplnUserId;
-        // JSTのサーバーの時間なので+09:00する
-        this.playTime = dayjs(playTime).add(9, 'hour').toDate();
+        this.playTime = dayjs(playTime).toDate();
         this.uuid = uuid;
         this.suffix = suffix;
         this.hostNplnUserId = hostNplnUserId;
