@@ -129,6 +129,7 @@ export namespace StageScheduleQuery {
         bossId: this.setting.bossId,
         endTime: this.endTime,
         mode: this.mode,
+        rareWeapons: [],
         rule: this.rule,
         scheduleId: this.scheduleId,
         stageId: this.stageId,

@@ -42,6 +42,9 @@ export namespace Response {
     @Expose()
     readonly weaponList: WeaponInfoMain.Id[];
 
+    @Expose()
+    readonly rareWeapons: WeaponInfoMain.Id[];
+
     // private get scheduleId(): string {
     //   return scheduleHash(this.mode, this.rule, this.startTime, this.endTime, this.stageId, this.weaponList);
     // }
@@ -51,6 +54,7 @@ export namespace Response {
         create: {
           endTime: this.endTime,
           mode: this.mode,
+          rareWeapons: this.rareWeapons,
           rule: this.rule,
           scheduleId: this.id,
           stageId: this.stageId,

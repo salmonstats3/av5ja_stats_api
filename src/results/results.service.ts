@@ -88,6 +88,7 @@ export class ResultsService {
             data: {
               endTime: null,
               mode: request.mode,
+              rareWeapons: [],
               rule: request.rule,
               scheduleId: scheduleId,
               stageId: request.stageId,

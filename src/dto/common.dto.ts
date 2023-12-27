@@ -50,7 +50,7 @@ export namespace Common {
         const [, type, prefix, nplnUserId, playTime, uuid] = match;
         return plainToInstance(ResultId, {
           nplnUserId: nplnUserId,
-          playTime: dayjs(playTime).add(9, 'hour').toDate(),
+          playTime: dayjs(playTime).toDate(),
           prefix: prefix,
           type: type,
           uuid: uuid,
