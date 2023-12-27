@@ -33,27 +33,29 @@ enum Species {
 
 model Schedule {
   /// スケジュールID
-  scheduleId String    @id @map("schedule_id") @db.VarChar(32)
+  scheduleId  String    @id @map("schedule_id") @db.VarChar(32)
   /// 開始時刻
-  startTime  DateTime? @map("start_time") @db.Timestamp(3)
+  startTime   DateTime? @map("start_time") @db.Timestamp(3)
   /// 終了時刻
-  endTime    DateTime? @map("end_time") @db.Timestamp(3)
+  endTime     DateTime? @map("end_time") @db.Timestamp(3)
   /// ステージID
-  stageId    Int       @map("stage_id") @db.SmallInt
+  stageId     Int       @map("stage_id") @db.SmallInt
   /// オカシラID 
-  bossId     Int?      @map("boss_id") @db.SmallInt
+  bossId      Int?      @map("boss_id") @db.SmallInt
   /// 支給ブキID
-  weaponList Int[]     @map("weapon_list")
+  weaponList  Int[]     @map("weapon_list")
   /// モード
-  mode       Mode      @default(REGULAR)
+  mode        Mode      @default(REGULAR)
   /// ルール
-  rule       Rule      @default(REGULAR)
+  rule        Rule      @default(REGULAR)
+  /// レアブキ
+  rareWeapons Int[]     @map("rare_weapons") @db.SmallInt
   /// 作成日
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   /// 更新日
-  updatedAt  DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
+  updatedAt   DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
   /// Results
-  results    Result[]
+  results     Result[]
 
   @@unique([startTime, endTime, stageId, mode, rule, weaponList])
   @@index([stageId])

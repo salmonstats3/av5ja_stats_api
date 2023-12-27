@@ -220,6 +220,7 @@ export namespace CoopHistoryQuery {
       return {
         endTime: this.endTime,
         mode: this.mode,
+        rareWeapons: [],
         rule: this.rule,
         scheduleId: this.scheduleId,
         stageId: this.historyDetails.nodes[0].coopStage.id,
