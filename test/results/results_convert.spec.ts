@@ -13,11 +13,11 @@ import { CoopSchedule } from '@/dto/coop_schedule'
 import { CoopHistoryDetailQuery as R2 } from '@/dto/request/result.v2.dto'
 
 describe('Results', () => {
-  beforeAll(() => {
-    timezoneMock.register('UTC')
-    dayjs.extend(utc)
-    dayjs.extend(timezone)
-  })
+  timezoneMock.register('UTC')
+  dayjs.extend(utc)
+  dayjs.extend(timezone)
+
+  beforeAll(() => {})
 
   const v0: R2.V2.CoopResult = plainToInstance(R2.V2.Paginated, verify_json).results[0]
   const s0: CoopSchedule = plainToInstance(CoopSchedule, schedule_json)
