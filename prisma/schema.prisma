@@ -1,0 +1,236 @@
+/// This is your Prisma schema file,
+/// learn more about it in the docs: https:///pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl-arm64-openssl-3.0.x", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x", "linux-musl"]
+  engineType      = "binary"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+enum Rule {
+  REGULAR
+  BIG_RUN
+  TEAM_CONTEST
+}
+
+enum Mode {
+  REGULAR
+  LIMITED
+  PRIVATE_CUSTOM
+  PRIVATE_SCENARIO
+}
+
+enum Species {
+  INKLING
+  OCTOLING
+}
+
+model Schedule {
+  /// スケジュールID
+  scheduleId  String    @id @map("schedule_id") @db.VarChar(32)
+  /// 開始時刻
+  startTime   DateTime? @map("start_time") @db.Timestamp(3)
+  /// 終了時刻
+  endTime     DateTime? @map("end_time") @db.Timestamp(3)
+  /// ステージID
+  stageId     Int       @map("stage_id") @db.SmallInt
+  /// オカシラID 
+  bossId      Int?      @map("boss_id") @db.SmallInt
+  /// 支給ブキID
+  weaponList  Int[]     @map("weapon_list")
+  /// モード
+  mode        Mode      @default(REGULAR)
+  /// ルール
+  rule        Rule      @default(REGULAR)
+  /// レアブキ
+  rareWeapons Int[]     @map("rare_weapons") @db.SmallInt
+  /// 作成日
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  /// 更新日
+  updatedAt   DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
+  /// Results
+  results     Result[]
+
+  @@unique([startTime, endTime, stageId, mode, rule, weaponList])
+  @@index([stageId])
+  @@index([rule])
+  @@index([mode])
+  @@index([rule, mode])
+  @@map("schedules")
+}
+
+model Result {
+  /// UUID
+  uuid                 String    @map("uuid") @db.Uuid
+  /// スケジュールID
+  scheduleId           String    @map("schedule_id") @db.VarChar(32)
+  /// 遊んだ時間
+  playTime             DateTime  @map("play_time") @db.Timestamp(3)
+  /// リザルトID
+  resultId             String    @unique @map("result_id") @db.VarChar(32)
+  /// オオモノ出現数
+  bossCounts           Int[]     @map("boss_counts") @db.SmallInt
+  /// オオモノ討伐数
+  bossKillCounts       Int[]     @map("boss_kill_counts") @db.SmallInt
+  /// イクラ数
+  ikuraNum             Int       @map("ikura_num") @db.SmallInt
+  /// 金イクラ数
+  goldenIkuraNum       Int       @map("golden_ikura_num") @db.SmallInt
+  /// 金イクラ数
+  goldenIkuraAssistNum Int       @map("golden_ikura_assist_num") @db.SmallInt
+  /// 夜イベントを含むかどうか
+  nightLess            Boolean   @map("night_less") @db.Boolean
+  /// キケン度
+  dangerRate           Decimal   @map("danger_rate") @db.Decimal(4, 3)
+  /// プレイヤーのID配列(ソート済み)
+  members              String[]  @db.VarChar(20)
+  /// ドウウロコの枚数
+  bronze               Int?      @db.SmallInt
+  /// ギンウロコの枚数
+  silver               Int?      @db.SmallInt
+  /// キンウロコの枚数
+  gold                 Int?      @db.SmallInt
+  /// クリアしたかどうか
+  isClear              Boolean   @map("is_clear") @db.Boolean
+  /// 失敗したWAVE
+  failureWave          Int?      @map("failure_wave") @db.SmallInt
+  /// オカシラシャケを討伐したかどうか
+  isBossDefeated       Boolean?  @map("is_boss_defeated") @db.Boolean
+  /// たおしたオカシラシャケのID
+  bossId               Int?      @map("boss_id") @db.SmallInt
+  /// シナリオコード
+  scenarioCode         String?   @map("scenario_code") @db.VarChar(16)
+  /// 作成日
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
+  /// 更新日
+  updatedAt            DateTime  @updatedAt() @map("updated_at") @db.Timestamp(0)
+  /// Waves
+  waves                Wave[]
+  /// Players
+  players              Player[]
+  /// Schedule
+  schedule             Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([playTime, uuid, scheduleId])
+  @@index([members])
+  @@index([goldenIkuraNum, nightLess])
+  @@index([scheduleId])
+  @@index([scenarioCode])
+  @@index([dangerRate])
+  @@map("results")
+}
+
+model Player {
+  /// UUID
+  uuid                 String   @map("uuid") @db.Uuid
+  /// スケジュールID
+  scheduleId           String   @map("schedule_id") @db.VarChar(32)
+  /// 遊んだ時間
+  playTime             DateTime @map("play_time") @db.Timestamp(3)
+  /// プレイヤーID
+  nplnUserId           String   @map("npln_user_id") @db.VarChar(20)
+  /// 名前
+  name                 String   @db.VarChar(32)
+  /// 称号
+  byname               String   @db.VarChar(64)
+  /// 名前ID
+  nameId               String   @map("name_id") @db.VarChar(8)
+  /// バッジ 
+  badges               Int[]    @db.Integer
+  /// ネームプレート
+  nameplate            Int      @db.SmallInt
+  /// ネームプレート
+  textColor            Float[]  @map("text_color") @db.DoublePrecision
+  /// ユニフォーム
+  uniform              Int      @db.SmallInt
+  /// オオモノ討伐数合計
+  bossKillCountsTotal  Int      @map("boss_kill_counts_total") @db.SmallInt
+  /// オオモノ討伐数
+  bossKillCounts       Int[]    @map("boss_kill_counts") @db.SmallInt
+  /// 被救助数
+  deadCount            Int      @map("dead_count") @db.SmallInt
+  /// 救助数
+  helpCount            Int      @map("help_count") @db.SmallInt
+  /// イクラ数
+  ikuraNum             Int      @map("ikura_num") @db.SmallInt
+  /// 金イクラ数
+  goldenIkuraNum       Int      @map("golden_ikura_num") @db.SmallInt
+  /// 金イクラアシスト数
+  goldenIkuraAssistNum Int      @map("golden_ikura_assist_num") @db.SmallInt
+  /// バイトボーナス
+  jobBonus             Int?     @map("job_bonus") @db.SmallInt
+  /// バイトレート
+  jobRate              Float?   @map("job_rate") @db.Real
+  /// バイトスコア
+  jobScore             Int?     @map("job_score") @db.SmallInt
+  /// クマサンポイント
+  kumaPoint            Int?     @map("kuma_point") @db.SmallInt
+  /// 称号
+  gradeId              Int?     @map("grade_id") @db.SmallInt
+  /// 評価レート
+  gradePoint           Int?     @map("grade_point") @db.SmallInt
+  /// オカシラメーター
+  smellMeter           Int?     @map("smell_meter") @db.SmallInt
+  /// 種族
+  species              Species  @default(INKLING)
+  /// スペシャルID
+  specialId            Int?     @map("special_id") @db.SmallInt
+  /// スペシャル使用数
+  specialCounts        Int[]    @map("special_count") @db.SmallInt
+  /// 支給されたブキのリスト
+  weaponList           Int[]    @map("weapon_list") @db.SmallInt
+  /// 作成日
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  /// 更新日
+  updatedAt            DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
+  /// Result
+  result               Result?  @relation(fields: [playTime, uuid, scheduleId], references: [playTime, uuid, scheduleId], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([playTime, uuid, nplnUserId])
+  @@index([nplnUserId])
+  @@index([name])
+  @@index([gradePoint])
+  @@map("players")
+}
+
+model Wave {
+  /// UUID
+  uuid              String   @map("uuid") @db.Uuid
+  /// スケジュールID
+  scheduleId        String   @map("schedule_id") @db.VarChar(32)
+  /// 遊んだ時間
+  playTime          DateTime @map("play_time") @db.Timestamp(3)
+  /// WAVE数
+  waveId            Int      @map("wave_id") @db.SmallInt
+  /// 潮位
+  waterLevel        Int      @map("water_level") @db.SmallInt
+  /// イベント
+  eventType         Int      @map("event_type") @db.SmallInt
+  /// 金イクラ数
+  goldenIkuraNum    Int?     @map("golden_ikura_num") @db.SmallInt
+  /// 金イクラドロップ数
+  goldenIkuraPopNum Int      @map("golden_ikura_pop_num") @db.SmallInt
+  /// 金イクラドロップ数
+  quotaNum          Int?     @map("quota_num") @db.SmallInt
+  /// クリアしたか
+  isClear           Boolean  @map("is_clear") @db.Boolean
+  /// 作成日
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  /// 更新日
+  updatedAt         DateTime @updatedAt() @map("updated_at") @db.Timestamp(0)
+  /// Result
+  result            Result?  @relation(fields: [playTime, uuid, scheduleId], references: [playTime, uuid, scheduleId], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([playTime, uuid, waveId])
+  @@index([waterLevel])
+  @@index([eventType])
+  @@index([waterLevel, eventType])
+  @@index([goldenIkuraNum])
+  @@map("waves")
+}

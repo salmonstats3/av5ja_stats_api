@@ -1,0 +1,19 @@
+ALTER SYSTEM SET checkpoint_completion_target TO '0.9';
+ALTER SYSTEM SET work_mem TO '96MB';
+ALTER SYSTEM SET wal_writer_delay TO '20ms';
+ALTER SYSTEM SET synchronous_commit TO 'OFF';
+ALTER SYSTEM SET wal_buffers TO '32MB';
+ALTER SYSTEM SET min_wal_size TO '2048MB';
+ALTER SYSTEM SET max_wal_size TO '4096MB';
+ALTER SYSTEM SET effective_io_concurrency TO '200';
+ALTER SYSTEM SET random_page_cost TO '1.1';
+ALTER SYSTEM SET max_worker_processes TO '4';
+ALTER SYSTEM SET max_parallel_workers_per_gather TO '2';
+ALTER SYSTEM SET max_parallel_workers TO '4';
+ALTER SYSTEM SET shared_buffers TO '4096MB';
+ALTER SYSTEM SET effective_cache_size TO '12GB';
+ALTER SYSTEM SET maintenance_work_mem TO '1GB';
+
+ALTER SYSTEM SET shared_preload_libraries TO 'pg_stat_statements';
+ALTER SYSTEM SET pg_stat_statements.max TO '10000';
+ALTER SYSTEM SET pg_stat_statements.track TO 'all';

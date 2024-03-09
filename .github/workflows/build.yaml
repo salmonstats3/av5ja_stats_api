@@ -1,0 +1,63 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!main'
+      - '!master'
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: |
+          bun install --frozen-lockfile --production --ignore-scripts
+          bun install @nestjs/cli
+
+      - name: Build
+        run: |
+          bun prisma generate
+          bun run build
+
+  test:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: |
+          bun install --frozen-lockfile --ignore-scripts
+          bun prisma generate
+
+      - name: Lint and Format
+        run: |
+          bun lint
+          bun format
+
+      - name: Test
+        run: |
+          bun test
+        env:
+          TZ: Asia/Tokyo
+          APP_HOST: 0.0.0.0
+          APP_PORT: 3030
+          APP_VERSION: 2.9.0
+          NODE_ENV: test
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}

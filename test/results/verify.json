@@ -1,0 +1,365 @@
+{
+  "results": [
+    {
+      "jobScore": 184,
+      "bossKillCounts": [
+        4,
+        9,
+        10,
+        11,
+        5,
+        11,
+        3,
+        6,
+        9,
+        1,
+        8,
+        0,
+        15,
+        0
+      ],
+      "scale": [
+        7,
+        3,
+        0
+      ],
+      "schedule": {
+        "weaponList": [
+          -2,
+          -2,
+          -2,
+          -2
+        ],
+        "rule": "REGULAR",
+        "endTime": "2024-02-25T08:00:00Z",
+        "startTime": "2024-02-23T16:00:00Z",
+        "mode": "REGULAR",
+        "stageId": 4
+      },
+      "scenarioCode": null,
+      "goldenIkuraNum": 153,
+      "ikuraNum": 6227,
+      "jobResult": {
+        "bossId": 25,
+        "isBossDefeated": true,
+        "failureWave": null,
+        "isClear": true
+      },
+      "goldenIkuraAssistNum": 0,
+      "bossCounts": [
+        4,
+        9,
+        10,
+        11,
+        5,
+        12,
+        5,
+        6,
+        9,
+        1,
+        11,
+        0,
+        17,
+        0
+      ],
+      "kumaPoint": 688,
+      "gradePoint": 910,
+      "smellMeter": 4,
+      "waveDetails": [
+        {
+          "id": 1,
+          "eventType": 0,
+          "quotaNum": 30,
+          "goldenIkuraNum": 36,
+          "waterLevel": 1,
+          "isClear": true,
+          "goldenIkuraPopNum": 81
+        },
+        {
+          "id": 2,
+          "eventType": 3,
+          "quotaNum": 32,
+          "goldenIkuraNum": 65,
+          "waterLevel": 1,
+          "isClear": true,
+          "goldenIkuraPopNum": 75
+        },
+        {
+          "id": 3,
+          "eventType": 0,
+          "quotaNum": 35,
+          "goldenIkuraNum": 52,
+          "waterLevel": 1,
+          "goldenIkuraPopNum": 84,
+          "isClear": true
+        },
+        {
+          "id": 4,
+          "eventType": 0,
+          "quotaNum": null,
+          "goldenIkuraNum": null,
+          "waterLevel": 1,
+          "isClear": true,
+          "goldenIkuraPopNum": 63
+        }
+      ],
+      "myResult": {
+        "bossKillCounts": [
+          0,
+          2,
+          2,
+          2,
+          1,
+          3,
+          2,
+          0,
+          1,
+          1,
+          3,
+          0,
+          4,
+          0
+        ],
+        "goldenIkuraNum": 51,
+        "id": "20240225T061713:a7grz65rxkvhfsbwmxmm",
+        "byname": "Splatlandian Youth",
+        "bossKillCountsTotal": 21,
+        "specialCounts": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "ikuraNum": 1678,
+        "isMyself": true,
+        "nameplate": {
+          "background": {
+            "id": 1,
+            "textColor": {
+              "r": 1,
+              "b": 1,
+              "g": 1,
+              "a": 1
+            }
+          },
+          "badges": [
+            null,
+            null,
+            null
+          ]
+        },
+        "nplnUserId": "a7grz65rxkvhfsbwmxmm",
+        "helpCount": 3,
+        "deadCount": 1,
+        "weaponList": [
+          25900,
+          22900,
+          20900,
+          20900
+        ],
+        "goldenIkuraAssistNum": 0,
+        "nameId": "1012",
+        "species": "INKLING",
+        "specialId": 20012,
+        "uniform": 1,
+        "name": "アウラ のうひんしろ"
+      },
+      "jobRate": 3.2000000000000002,
+      "dangerRate": 3.3300000000000001,
+      "playTime": "2024-02-25T06:17:13Z",
+      "gradeId": 8,
+      "id": {
+        "nplnUserId": "a7grz65rxkvhfsbwmxmm",
+        "uuid": "EBEE1163-627B-4481-AEB4-D488D3C7F2EF",
+        "type": "CoopHistoryDetail",
+        "playTime": "2024-02-25T06:17:13Z"
+      },
+      "otherResults": [
+        {
+          "id": "20240225T061713:qvxvoyr73kj3b2iqsnmm",
+          "name": "Ado(ほんもの)",
+          "bossKillCounts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "byname": "Awe-Inspiring Jokester",
+          "bossKillCountsTotal": 25,
+          "specialCounts": [
+            2,
+            0,
+            0,
+            1
+          ],
+          "ikuraNum": 1290,
+          "isMyself": false,
+          "nameplate": {
+            "background": {
+              "id": 911,
+              "textColor": {
+                "r": 1,
+                "b": 1,
+                "g": 1,
+                "a": 1
+              }
+            },
+            "badges": [
+              null,
+              5110000,
+              null
+            ]
+          },
+          "species": "OCTOLING",
+          "helpCount": 1,
+          "nplnUserId": "qvxvoyr73kj3b2iqsnmm",
+          "deadCount": 3,
+          "nameId": "2001",
+          "goldenIkuraAssistNum": 0,
+          "weaponList": [
+            20900,
+            27900,
+            20900,
+            26900
+          ],
+          "specialId": 20014,
+          "uniform": 4,
+          "goldenIkuraNum": 24
+        },
+        {
+          "name": "こあし",
+          "goldenIkuraNum": 52,
+          "bossKillCounts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "id": "20240225T061713:qr2utnetciafapfianmm",
+          "bossKillCountsTotal": 19,
+          "specialCounts": [
+            0,
+            0,
+            2,
+            1
+          ],
+          "ikuraNum": 1645,
+          "isMyself": false,
+          "nameplate": {
+            "background": {
+              "id": 862,
+              "textColor": {
+                "r": 1,
+                "b": 0.96078431600000003,
+                "g": 0.96078002500000004,
+                "a": 1
+              }
+            },
+            "badges": [
+              6100250,
+              6100242,
+              6100211
+            ]
+          },
+          "nplnUserId": "qr2utnetciafapfianmm",
+          "helpCount": 3,
+          "deadCount": 2,
+          "species": "INKLING",
+          "nameId": "8204",
+          "goldenIkuraAssistNum": 0,
+          "weaponList": [
+            25900,
+            20900,
+            20900,
+            26900
+          ],
+          "specialId": 20018,
+          "uniform": 8,
+          "byname": "On-the-Job Remote Worker"
+        },
+        {
+          "byname": "Nosy Rookie",
+          "goldenIkuraNum": 26,
+          "bossKillCounts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "id": "20240225T061713:q6duwibpoxyqsubjptpm",
+          "bossKillCountsTotal": 25,
+          "specialCounts": [
+            0,
+            0,
+            2,
+            1
+          ],
+          "nameplate": {
+            "background": {
+              "id": 861,
+              "textColor": {
+                "r": 0.035294119300000003,
+                "b": 0.023529410399999999,
+                "g": 0.023529410399999999,
+                "a": 1
+              }
+            },
+            "badges": [
+              4100020,
+              6000103,
+              6000105
+            ]
+          },
+          "isMyself": false,
+          "ikuraNum": 1614,
+          "species": "INKLING",
+          "helpCount": 1,
+          "deadCount": 2,
+          "weaponList": [
+            28900,
+            23900,
+            22900,
+            25900
+          ],
+          "goldenIkuraAssistNum": 0,
+          "nplnUserId": "q6duwibpoxyqsubjptpm",
+          "nameId": "1677",
+          "specialId": 20009,
+          "name": ".ι. τ",
+          "uniform": 11
+        }
+      ],
+      "jobBonus": 100
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+#!/bin/zsh
+. "$(dirname "$0")/_/husky.sh"
+
+bun commitlint --edit "$1"

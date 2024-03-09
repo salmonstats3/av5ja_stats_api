@@ -1,0 +1,2173 @@
+{
+  "data": {
+    "regularSchedules": {
+      "nodes": [
+        {
+          "startTime": "2023-09-06T20:00:00Z",
+          "endTime": "2023-09-06T22:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 4,
+                "name": "Undertow Spillway",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/9b1c17b2075479d0397d2fb96efbc6fa3a28900712920e5fe1e9dfc59c6abc5c_1.png?Expires=1704844800\u0026Signature=aCVPQpc6fkx8elrWptfRNQXJ-anEOBqk8CnmPL~J5EU7~ECXalsFmdIb-ahU-OEtwgx31vfYXy1~68A945O6m54HLcbgWkSqnK0oG16i5iuMAlrIZyYCelxwAXYaeKns~T4XICDdOaF7s~CX0haaj9ZFQl19UpP7KwRB5VVVRaRExUdTlmsmR-06ZQ00pn8ua8LZ~wa4cSaMpoGy3YmFHFweeqsdmHmLm0FHQ5ZpEMj0Si0nWA5kGgWcn1bljvhqErl9CW4YRznttkCoh-AVewsD2knDtqu~SU9P-RW9KsXIYCBFoAP25pWDzPUlKh5g7SvvMCdpdPU3tAsOHzyZDA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS00"
+              },
+              {
+                "vsStageId": 7,
+                "name": "Brinewater Springs",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/cd84d711b47a424334569ac20f33f8e0ab6a652dc07854dcd36508a0081e9034_1.png?Expires=1704844800\u0026Signature=Hv-5-Vxpeu2YqGjYwp1YlxE0vUHklhmR6C0s0Yjy5ezdyqAll4S3Uvk-6YCWAYpVppVP4dCEZ-9YclgcrQLt2mg9s42Ev3xMYgJ0rr5wWOKmOkcoCpJVjUshrWeT2SxKYbULAz5xei1ddX7Mr2Zghhwi-aK6MuEVLIYly5-EWnWvj4DdNrgxoFIsgdlWXOviEQFAfEbko09GZbnYk7V3ynZjxlAHS6dpDmqXkZWpwkQQ6qMePrT-YCOwce0eTmui6TIDhiHSpGxBJS1rROWs-E8SHOvNj7l61Qgrj0F36DZB1ffOnp~iKR2bSptIYyiKNZiNHXobAYGCDdWh2L1e-A__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS03"
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-06T22:00:00Z",
+          "endTime": "2023-09-07T00:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 6,
+                "name": "Mincemeat Metalworks",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/de1f212e9ff0648f36cd3b8e0917ef36b3bd51445159297dcb948f34a09f2f05_1.png?Expires=1704844800\u0026Signature=DCx7ZtdZaAIINKvfQqr~PmCIMNoWodhT5Fgb0kg5LoQpsMfU~XyQvIcsrISJFbMUeKXGc4Mm1I3QKHHOn4Ydgdk99IYAp3xFfBuDZFVmErMcr7c6GBMG06axIcVtv6M90VtB8GJ8ZbmF5xIi1t4UHOQdjuIiASYy7NR7q8OPlNzCVls9F8Pn5tI16qmIEsbDppzqluP2ZIDHINXy5sBbeUtgnxZTZLgqUZvZdwztLYIBF3uFqcKY5bcwkr7paZLeYpwYSZklJt8NoHN~K1WTzL1XIRGHjo6HmshRSAodFYc~T6U~xtxdmZ9vCMKuPc8mhDGyOP357STnQZVFKhqx8Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS02"
+              },
+              {
+                "vsStageId": 9,
+                "name": "Flounder Heights",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/488017f3ce712fca9fb37d61fe306343054449bb2d2bb1751d95f54a98564cae_1.png?Expires=1704844800\u0026Signature=YdFSE7YYhY7WHK9V9WVKaxmYDA6EyABrvQgZNjFs1aDWyw1HDNdSZ6GfHaz~ldF584zy7nIC6MS~-20grcI1qJHbb77iXDjHMUrONeG-Cu2BMKfRyBZrinhSK2bWpBALQpdWeGRrjb0sMjNuUjJOcBZTm4JzD7aITbrWnOEaUnOpqxHhQxOXkZBPmGwxnPNjCgUHbG9sjq1wngwQ2e32fJY2huJNnciisoak~jLLMu-qP-dqXMcRzZDTjHKAYAAYwbQa8p4yLrZ26uTQSWE~NBtBLVpeV9M2UvuvYUkjXngrMSvCgwcTetNe~qBqlp69qjoc9Wa8lqa7ww~QBee76g__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS05"
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T00:00:00Z",
+          "endTime": "2023-09-07T02:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 14,
+                "name": "Sturgeon Shipyard",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/48684c69d5c5a4ffaf16b712a4895545a8d01196115d514fc878ce99863bb3e9_1.png?Expires=1704844800\u0026Signature=ogPimSKqTN5b94G54kw4TFLM4eIiBGIuPSwwOJ7slYUxbVHWWQfFJoRBOz1uLdsGSRpk1EYiIcG4EXuY4tPMJ9j9oGhzIEjAWUwE6y7ZEgU9v6TaMRiTnp0iN1ILj9d4PWlc3JTAPe~H6KIGEzmKHoRKbfNwESusrntGc-0mJ-fGQrRA2KHLXOJSXN8dzxZlTVPBsPjgL5EjYa1cRRfIP2tlcOLyCh9RVGuiHjwARmPC-Lus5ZBePQklnxbk~xfrpOoaViV0sn9Fam5uJDpfkYdYA-7kMPQy90oqh9JDNCFxcFjanLCS7TIkM8pcp9OCkxWY~xgHFBxqzHuaSueQuw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xNA=="
+              },
+              {
+                "vsStageId": 20,
+                "name": "Shipshape Cargo Co.",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0yMA=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T02:00:00Z",
+          "endTime": "2023-09-07T04:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 17,
+                "name": "Humpback Pump Track",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/7b3cf118bd9f45d141cd6db0ee75b06e697fa83945c7fe1e6f8483de6a591f5f_1.png?Expires=1704844800\u0026Signature=pB86z49uqrBZu9bVI3W-H25IRYIJI4rFJv90zajgmUeRiYgmVzWkD64ishajszBRwc~pHdejCFOxXfF4MO~CwuduqE63og6IIXUWk9JH3XBQo7E2O6y0WoUctBKc60sDbilfS8IVBTPUrgveVPHr4CuUQaIrzejVCCxnnn6M6F3Iowp6aZLVlPwVWxJHljogliNACLjFSBsp6iGPCZZyghRi75mIAhE~N4rnbLwcMft1f7Vqjn0z5PTfOIqd9-IXNuHM9~QcZFN-kZzykIrE7l0r~aLM1znDu4CfNbjYaQqbj5j2aEGltBMi4Dt1eCqcBRW743uFO~yXoLX9lh1ThA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xNw=="
+              },
+              {
+                "vsStageId": 19,
+                "name": "Crableg Capital",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xOQ=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T04:00:00Z",
+          "endTime": "2023-09-07T06:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 6,
+                "name": "Mincemeat Metalworks",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/de1f212e9ff0648f36cd3b8e0917ef36b3bd51445159297dcb948f34a09f2f05_1.png?Expires=1704844800\u0026Signature=DCx7ZtdZaAIINKvfQqr~PmCIMNoWodhT5Fgb0kg5LoQpsMfU~XyQvIcsrISJFbMUeKXGc4Mm1I3QKHHOn4Ydgdk99IYAp3xFfBuDZFVmErMcr7c6GBMG06axIcVtv6M90VtB8GJ8ZbmF5xIi1t4UHOQdjuIiASYy7NR7q8OPlNzCVls9F8Pn5tI16qmIEsbDppzqluP2ZIDHINXy5sBbeUtgnxZTZLgqUZvZdwztLYIBF3uFqcKY5bcwkr7paZLeYpwYSZklJt8NoHN~K1WTzL1XIRGHjo6HmshRSAodFYc~T6U~xtxdmZ9vCMKuPc8mhDGyOP357STnQZVFKhqx8Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS02"
+              },
+              {
+                "vsStageId": 16,
+                "name": "Wahoo World",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/61ea801fa4ed32360dcaf83986222ded46a72dbf56194acc6d0cf4659a92ba85_1.png?Expires=1704844800\u0026Signature=UJ77DJ-6VmgcmPeLWHFKe7rKEo9ojf9uxvNegOM8IJKIn5-UyZih2mYfP8NpVVOJiVBlvr3eNpel3Z9Ifgm3V1kmkjdWE3SeJik64zinlruBtzu3pUJzPtKpxQKdyDhvLn2wjxXw84w4pSd1kCJ8Vhyj-uCCvVU2oHtwchVJlG~opd~KsiMBf6xdKsGgZuUzvGWoDyzaTA6Fb9ZNAr0KWJKoHE6XaRyavzIJLlh6a8YQh1DHhkQZqwlHCqw2iI3mKHuWyRdUXc5EUJQ3Oku8ASl3j-Tv3IaSe4nwO36JqJUwqVqc1CYBXD3K2ACwhvCUgQFZX85a3C9Kt0t3bf6eug__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xNg=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T06:00:00Z",
+          "endTime": "2023-09-07T08:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 11,
+                "name": "Museum d'Alfonsino",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b9d8cfa186d197a27e075600a107c99d9e21646d116730f0843e0fff0aaba7dd_1.png?Expires=1704844800\u0026Signature=eWr6sd-YmpgIbOdx96tTH4uFjPiuLFuF9YNiXa9yvJj5VJIBhJSCaPjn3VsGxSVTmRgkzFSnmcGPQ8dVjona8rQhTOycvVSQuJ4V9yfc4bYomdqw9U4ex1pYYTt1XIlxrQ7e1J3nEe9E0P6tOdqpzNb1Yhz2oPwnVnApUNBNoKSwc09W-Wxc~KVnmCx3yHP-~~sCK2HP7~r-D1uUITgBg6m-aU7zvUEJMFE2Aodokd8sI2vJXfUlQGyqXrm~LhdU28qrbjwnYbnliMcTNZhdSLtCZPNV-ZZpoQKRuF-dzl-zmHsabLCHcLkKYCnEbYbvm95pTAOsG7fCirxTKUmOYw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xMQ=="
+              },
+              {
+                "vsStageId": 15,
+                "name": "MakoMart",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/a8ba96c3dbd015b7bc6ea4fa067245c4e9aee62b6696cb41e02d35139dd21fe7_1.png?Expires=1704844800\u0026Signature=GFpgXrGEf5Zekq94fvBtYMgeiM-E9gzplFZoRn2CD7Pi8JdPDT4xjVaKjYudwKOxXOiamyuFDzgF9RFHN0-S~IqdJWnJYDLGRL5TOhmpIDtMvnzl2DkqH5bS5ldLu0Xf9j1~hpX7tYmX~KK2JUWaNf20s6z95Jke8zJ3PwIvwEIPpEFMKDQBic9fQlIfGbsn0gVMm3TLsyOJvGUMqjX~jMd6FcyhPksbKK~SC~CK5yqjORvku-KvpNuPBpErmOQPEbtfcdTlH2jnJyU9lqbmYaLQDalAssbRTTquuicVpSq1qQccjOWQc~XSXp0ZlY~2smu1QhiNdpq0l0ED00a9JQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xNQ=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T08:00:00Z",
+          "endTime": "2023-09-07T10:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 8,
+                "name": "Barnacle \u0026 Dime",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f70e9f5af477a39ccfab631bfb81c9e2cedb4cd0947fe260847c214a6d23695f_1.png?Expires=1704844800\u0026Signature=UshJ6zCIS6sJSTBYPrbmcdtkdsvE2FJqsG8~cdEzAUkxyQbhLNA5nXEVauwM9Z9LIHJI5g5-syCOJaS5oWfeSRKeg~e9KXnXeaW0bNfjAyoHxXHi5moapp1xwdbnj8XVKpmtN9wRnl86yfKol~aU4kx3okH4cReCR3Tlw3QyvUqXbEX70q9RXSzaTDilLmweJGT8LorrZMGsxBTkON0v-nr8XADsw6XeN5uqxhFryHcRE21tlxcdg5scUZHf8sj4VSnex1avJoSbXOPVPOZqx5iQ8EmG6SeTkBr4jUNv3OgfQ09e9tsKoBueHPdZ2akmRMKy4f3iKtNXhvVmEl6jPw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS04"
+              },
+              {
+                "vsStageId": 20,
+                "name": "Shipshape Cargo Co.",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0yMA=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T10:00:00Z",
+          "endTime": "2023-09-07T12:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 9,
+                "name": "Flounder Heights",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/488017f3ce712fca9fb37d61fe306343054449bb2d2bb1751d95f54a98564cae_1.png?Expires=1704844800\u0026Signature=YdFSE7YYhY7WHK9V9WVKaxmYDA6EyABrvQgZNjFs1aDWyw1HDNdSZ6GfHaz~ldF584zy7nIC6MS~-20grcI1qJHbb77iXDjHMUrONeG-Cu2BMKfRyBZrinhSK2bWpBALQpdWeGRrjb0sMjNuUjJOcBZTm4JzD7aITbrWnOEaUnOpqxHhQxOXkZBPmGwxnPNjCgUHbG9sjq1wngwQ2e32fJY2huJNnciisoak~jLLMu-qP-dqXMcRzZDTjHKAYAAYwbQa8p4yLrZ26uTQSWE~NBtBLVpeV9M2UvuvYUkjXngrMSvCgwcTetNe~qBqlp69qjoc9Wa8lqa7ww~QBee76g__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS05"
+              },
+              {
+                "vsStageId": 14,
+                "name": "Sturgeon Shipyard",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/48684c69d5c5a4ffaf16b712a4895545a8d01196115d514fc878ce99863bb3e9_1.png?Expires=1704844800\u0026Signature=ogPimSKqTN5b94G54kw4TFLM4eIiBGIuPSwwOJ7slYUxbVHWWQfFJoRBOz1uLdsGSRpk1EYiIcG4EXuY4tPMJ9j9oGhzIEjAWUwE6y7ZEgU9v6TaMRiTnp0iN1ILj9d4PWlc3JTAPe~H6KIGEzmKHoRKbfNwESusrntGc-0mJ-fGQrRA2KHLXOJSXN8dzxZlTVPBsPjgL5EjYa1cRRfIP2tlcOLyCh9RVGuiHjwARmPC-Lus5ZBePQklnxbk~xfrpOoaViV0sn9Fam5uJDpfkYdYA-7kMPQy90oqh9JDNCFxcFjanLCS7TIkM8pcp9OCkxWY~xgHFBxqzHuaSueQuw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xNA=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T12:00:00Z",
+          "endTime": "2023-09-07T14:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 10,
+                "name": "Hammerhead Bridge",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/1db8ab338b64b464df50e7f9e270e59423ff8caac6f09679a24f1b7acf3a82f3_1.png?Expires=1704844800\u0026Signature=mJHU2mQjVMKqhH3cNkXgSHH-zvvAX-NWjoCMxbl9huZGMODP-UM74WDWOJetNGpvvIt-eRUteMbcql3u3ow4hjLPik~VQeoH1QPeEwxo~-OyrWNnJU1e7knlXxYrjSB~2aJUp6x82c8~NoW9xRD8CLpueA4~gv~ayPYJh1xxFSQ437zWvZrQk4MuQXcltn4c4tOevUX0ea-7XS-hpfmRUdzAr19zc7C9iPy1h0ABOSBBIyKblVZCmkpYvOooFAb-bVyJiLYOs0fTN8auCrT1SLjpCvT2K1I1~VkPuB4kgB~ueCTQW2tlyMUNlD9Uun~Vb7fObmS1pY-Mi0iTMVrLLA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xMA=="
+              },
+              {
+                "vsStageId": 19,
+                "name": "Crableg Capital",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xOQ=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T14:00:00Z",
+          "endTime": "2023-09-07T16:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 2,
+                "name": "Eeltail Alley",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png?Expires=1704844800\u0026Signature=CylRvhSFefkTHRGg0s0x341rDpK0dW1wPlRKW9EM4PVg72qKkE15JbX9DT4Xo18SyeYNM3rHdYMPM01dY5YLCFYBMkiXGBvC34dlUlZ253B6OES5Gua0Hwyt6-WTMPy0u2tinrVw6oSaYIH7gyQ1nf6T~AUEDd7yI5cIR~ZF4a2NRQMMQH36iDFNXCFxLNiM8S8JiT1GryeJGaKDFDqDMuPq00zGndRE5JGqiQ-VS5zLFTibwc5LkwJQUHOD4FpKo4JW4Ujb44-tYKQxT6iuKM8lpvQOwHehfLWRxL-yO77IZy-~IULB-iAH5Ru~fvQuctSbnGKgkpHS2bEvDoaVaw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0y"
+              },
+              {
+                "vsStageId": 20,
+                "name": "Shipshape Cargo Co.",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0yMA=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T16:00:00Z",
+          "endTime": "2023-09-07T18:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 4,
+                "name": "Undertow Spillway",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/9b1c17b2075479d0397d2fb96efbc6fa3a28900712920e5fe1e9dfc59c6abc5c_1.png?Expires=1704844800\u0026Signature=aCVPQpc6fkx8elrWptfRNQXJ-anEOBqk8CnmPL~J5EU7~ECXalsFmdIb-ahU-OEtwgx31vfYXy1~68A945O6m54HLcbgWkSqnK0oG16i5iuMAlrIZyYCelxwAXYaeKns~T4XICDdOaF7s~CX0haaj9ZFQl19UpP7KwRB5VVVRaRExUdTlmsmR-06ZQ00pn8ua8LZ~wa4cSaMpoGy3YmFHFweeqsdmHmLm0FHQ5ZpEMj0Si0nWA5kGgWcn1bljvhqErl9CW4YRznttkCoh-AVewsD2knDtqu~SU9P-RW9KsXIYCBFoAP25pWDzPUlKh5g7SvvMCdpdPU3tAsOHzyZDA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS00"
+              },
+              {
+                "vsStageId": 5,
+                "name": "Um'ami Ruins",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f14c2a64e49d243679fc0884af91e1a07dc65600f9b90aefe92d7790dcffb191_1.png?Expires=1704844800\u0026Signature=ELc9vhZ9IYAuhsNuTlbWLSJsvqFc-4JNMXzFME6U1jBgt1sJxPCX5ek2qeqTcKe8IJZ00jduaQcUzUXWqTAzXVHZdc0E7PlFWfcawNXeHHq9ClwvE3r8OM94fYBds8GSdnQpT3vsrGZYYLNs3U~3J8XUfPWoSkwznbkpax0mXtOWMwAi1yHWnokTK9bVmwIXyFQqTL~7UhdrJXsawGmZ9X-nqqZCsXuEGQX6a-TzTfzvLN3l-ypYanUC~jKTuzHpAxfUYp3S7zWalxshhX7ofJJaeuKNv8IXcq22hItbTG06gUaudqkPHmciC5JsSjvOrkGCKuhSqgixHqcCR6xyug__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS01"
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T18:00:00Z",
+          "endTime": "2023-09-07T20:00:00Z",
+          "regularMatchSetting": {
+            "__isVsSetting": "RegularMatchSetting",
+            "__typename": "RegularMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 3,
+                "name": "Hagglefish Market",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/8dc2f16d39c630bab40cead5b2485ca3559e829d0d3de0c2232c7a62fefb5fa9_1.png?Expires=1704844800\u0026Signature=PvdMv~ZvhiqBXY7GAW~wHyzNtGJu4w5fjQ0UOi4qEU7vxo~PTnVfccUX45cZuwlIE6dW4JiRWBOQ0IEkoHWoy2KWn0USb1ozDuWfmX0jhsF3lDshpKeQ1tulfMlKQLlN-ouNE-4Y28XNs2kp2ztHRCrdysOHHqC2Q98keeMCwoV5LvEN7rWayrhx3naFsL5~~maByVVhb4Dmnpk0FfIZgC-CnQQnmnKVC8gyT~gBapYufTpujXPh5CWkhnQCI7XPYneYwO8kdSV5YPuw96MV9JjZawetfJ~qgafTAMZG3CdEFF0jYyiIv6~X7ZsRIoMY2LrU7Y9V9bHju8YqC8kLKg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0z"
+              },
+              {
+                "vsStageId": 19,
+                "name": "Crableg Capital",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xOQ=="
+              }
+            ],
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "festMatchSettings": null
+        }
+      ]
+    },
+    "bankaraSchedules": {
+      "nodes": [
+        {
+          "startTime": "2023-09-06T20:00:00Z",
+          "endTime": "2023-09-06T22:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 8,
+                  "name": "Barnacle \u0026 Dime",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f70e9f5af477a39ccfab631bfb81c9e2cedb4cd0947fe260847c214a6d23695f_1.png?Expires=1704844800\u0026Signature=UshJ6zCIS6sJSTBYPrbmcdtkdsvE2FJqsG8~cdEzAUkxyQbhLNA5nXEVauwM9Z9LIHJI5g5-syCOJaS5oWfeSRKeg~e9KXnXeaW0bNfjAyoHxXHi5moapp1xwdbnj8XVKpmtN9wRnl86yfKol~aU4kx3okH4cReCR3Tlw3QyvUqXbEX70q9RXSzaTDilLmweJGT8LorrZMGsxBTkON0v-nr8XADsw6XeN5uqxhFryHcRE21tlxcdg5scUZHf8sj4VSnex1avJoSbXOPVPOZqx5iQ8EmG6SeTkBr4jUNv3OgfQ09e9tsKoBueHPdZ2akmRMKy4f3iKtNXhvVmEl6jPw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS04"
+                },
+                {
+                  "vsStageId": 19,
+                  "name": "Crableg Capital",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xOQ=="
+                }
+              ],
+              "vsRule": {
+                "name": "Rainmaker",
+                "rule": "GOAL",
+                "id": "VnNSdWxlLTM="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 2,
+                  "name": "Eeltail Alley",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png?Expires=1704844800\u0026Signature=CylRvhSFefkTHRGg0s0x341rDpK0dW1wPlRKW9EM4PVg72qKkE15JbX9DT4Xo18SyeYNM3rHdYMPM01dY5YLCFYBMkiXGBvC34dlUlZ253B6OES5Gua0Hwyt6-WTMPy0u2tinrVw6oSaYIH7gyQ1nf6T~AUEDd7yI5cIR~ZF4a2NRQMMQH36iDFNXCFxLNiM8S8JiT1GryeJGaKDFDqDMuPq00zGndRE5JGqiQ-VS5zLFTibwc5LkwJQUHOD4FpKo4JW4Ujb44-tYKQxT6iuKM8lpvQOwHehfLWRxL-yO77IZy-~IULB-iAH5Ru~fvQuctSbnGKgkpHS2bEvDoaVaw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0y"
+                },
+                {
+                  "vsStageId": 20,
+                  "name": "Shipshape Cargo Co.",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0yMA=="
+                }
+              ],
+              "vsRule": {
+                "name": "Splat Zones",
+                "rule": "AREA",
+                "id": "VnNSdWxlLTE="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-06T22:00:00Z",
+          "endTime": "2023-09-07T00:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 5,
+                  "name": "Um'ami Ruins",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f14c2a64e49d243679fc0884af91e1a07dc65600f9b90aefe92d7790dcffb191_1.png?Expires=1704844800\u0026Signature=ELc9vhZ9IYAuhsNuTlbWLSJsvqFc-4JNMXzFME6U1jBgt1sJxPCX5ek2qeqTcKe8IJZ00jduaQcUzUXWqTAzXVHZdc0E7PlFWfcawNXeHHq9ClwvE3r8OM94fYBds8GSdnQpT3vsrGZYYLNs3U~3J8XUfPWoSkwznbkpax0mXtOWMwAi1yHWnokTK9bVmwIXyFQqTL~7UhdrJXsawGmZ9X-nqqZCsXuEGQX6a-TzTfzvLN3l-ypYanUC~jKTuzHpAxfUYp3S7zWalxshhX7ofJJaeuKNv8IXcq22hItbTG06gUaudqkPHmciC5JsSjvOrkGCKuhSqgixHqcCR6xyug__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS01"
+                },
+                {
+                  "vsStageId": 20,
+                  "name": "Shipshape Cargo Co.",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0yMA=="
+                }
+              ],
+              "vsRule": {
+                "name": "Tower Control",
+                "rule": "LOFT",
+                "id": "VnNSdWxlLTI="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 4,
+                  "name": "Undertow Spillway",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/9b1c17b2075479d0397d2fb96efbc6fa3a28900712920e5fe1e9dfc59c6abc5c_1.png?Expires=1704844800\u0026Signature=aCVPQpc6fkx8elrWptfRNQXJ-anEOBqk8CnmPL~J5EU7~ECXalsFmdIb-ahU-OEtwgx31vfYXy1~68A945O6m54HLcbgWkSqnK0oG16i5iuMAlrIZyYCelxwAXYaeKns~T4XICDdOaF7s~CX0haaj9ZFQl19UpP7KwRB5VVVRaRExUdTlmsmR-06ZQ00pn8ua8LZ~wa4cSaMpoGy3YmFHFweeqsdmHmLm0FHQ5ZpEMj0Si0nWA5kGgWcn1bljvhqErl9CW4YRznttkCoh-AVewsD2knDtqu~SU9P-RW9KsXIYCBFoAP25pWDzPUlKh5g7SvvMCdpdPU3tAsOHzyZDA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS00"
+                },
+                {
+                  "vsStageId": 19,
+                  "name": "Crableg Capital",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xOQ=="
+                }
+              ],
+              "vsRule": {
+                "name": "Clam Blitz",
+                "rule": "CLAM",
+                "id": "VnNSdWxlLTQ="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T00:00:00Z",
+          "endTime": "2023-09-07T02:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 4,
+                  "name": "Undertow Spillway",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/9b1c17b2075479d0397d2fb96efbc6fa3a28900712920e5fe1e9dfc59c6abc5c_1.png?Expires=1704844800\u0026Signature=aCVPQpc6fkx8elrWptfRNQXJ-anEOBqk8CnmPL~J5EU7~ECXalsFmdIb-ahU-OEtwgx31vfYXy1~68A945O6m54HLcbgWkSqnK0oG16i5iuMAlrIZyYCelxwAXYaeKns~T4XICDdOaF7s~CX0haaj9ZFQl19UpP7KwRB5VVVRaRExUdTlmsmR-06ZQ00pn8ua8LZ~wa4cSaMpoGy3YmFHFweeqsdmHmLm0FHQ5ZpEMj0Si0nWA5kGgWcn1bljvhqErl9CW4YRznttkCoh-AVewsD2knDtqu~SU9P-RW9KsXIYCBFoAP25pWDzPUlKh5g7SvvMCdpdPU3tAsOHzyZDA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS00"
+                },
+                {
+                  "vsStageId": 16,
+                  "name": "Wahoo World",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/61ea801fa4ed32360dcaf83986222ded46a72dbf56194acc6d0cf4659a92ba85_1.png?Expires=1704844800\u0026Signature=UJ77DJ-6VmgcmPeLWHFKe7rKEo9ojf9uxvNegOM8IJKIn5-UyZih2mYfP8NpVVOJiVBlvr3eNpel3Z9Ifgm3V1kmkjdWE3SeJik64zinlruBtzu3pUJzPtKpxQKdyDhvLn2wjxXw84w4pSd1kCJ8Vhyj-uCCvVU2oHtwchVJlG~opd~KsiMBf6xdKsGgZuUzvGWoDyzaTA6Fb9ZNAr0KWJKoHE6XaRyavzIJLlh6a8YQh1DHhkQZqwlHCqw2iI3mKHuWyRdUXc5EUJQ3Oku8ASl3j-Tv3IaSe4nwO36JqJUwqVqc1CYBXD3K2ACwhvCUgQFZX85a3C9Kt0t3bf6eug__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xNg=="
+                }
+              ],
+              "vsRule": {
+                "name": "Rainmaker",
+                "rule": "GOAL",
+                "id": "VnNSdWxlLTM="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 7,
+                  "name": "Brinewater Springs",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/cd84d711b47a424334569ac20f33f8e0ab6a652dc07854dcd36508a0081e9034_1.png?Expires=1704844800\u0026Signature=Hv-5-Vxpeu2YqGjYwp1YlxE0vUHklhmR6C0s0Yjy5ezdyqAll4S3Uvk-6YCWAYpVppVP4dCEZ-9YclgcrQLt2mg9s42Ev3xMYgJ0rr5wWOKmOkcoCpJVjUshrWeT2SxKYbULAz5xei1ddX7Mr2Zghhwi-aK6MuEVLIYly5-EWnWvj4DdNrgxoFIsgdlWXOviEQFAfEbko09GZbnYk7V3ynZjxlAHS6dpDmqXkZWpwkQQ6qMePrT-YCOwce0eTmui6TIDhiHSpGxBJS1rROWs-E8SHOvNj7l61Qgrj0F36DZB1ffOnp~iKR2bSptIYyiKNZiNHXobAYGCDdWh2L1e-A__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS03"
+                },
+                {
+                  "vsStageId": 17,
+                  "name": "Humpback Pump Track",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/7b3cf118bd9f45d141cd6db0ee75b06e697fa83945c7fe1e6f8483de6a591f5f_1.png?Expires=1704844800\u0026Signature=pB86z49uqrBZu9bVI3W-H25IRYIJI4rFJv90zajgmUeRiYgmVzWkD64ishajszBRwc~pHdejCFOxXfF4MO~CwuduqE63og6IIXUWk9JH3XBQo7E2O6y0WoUctBKc60sDbilfS8IVBTPUrgveVPHr4CuUQaIrzejVCCxnnn6M6F3Iowp6aZLVlPwVWxJHljogliNACLjFSBsp6iGPCZZyghRi75mIAhE~N4rnbLwcMft1f7Vqjn0z5PTfOIqd9-IXNuHM9~QcZFN-kZzykIrE7l0r~aLM1znDu4CfNbjYaQqbj5j2aEGltBMi4Dt1eCqcBRW743uFO~yXoLX9lh1ThA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xNw=="
+                }
+              ],
+              "vsRule": {
+                "name": "Tower Control",
+                "rule": "LOFT",
+                "id": "VnNSdWxlLTI="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T02:00:00Z",
+          "endTime": "2023-09-07T04:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 2,
+                  "name": "Eeltail Alley",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png?Expires=1704844800\u0026Signature=CylRvhSFefkTHRGg0s0x341rDpK0dW1wPlRKW9EM4PVg72qKkE15JbX9DT4Xo18SyeYNM3rHdYMPM01dY5YLCFYBMkiXGBvC34dlUlZ253B6OES5Gua0Hwyt6-WTMPy0u2tinrVw6oSaYIH7gyQ1nf6T~AUEDd7yI5cIR~ZF4a2NRQMMQH36iDFNXCFxLNiM8S8JiT1GryeJGaKDFDqDMuPq00zGndRE5JGqiQ-VS5zLFTibwc5LkwJQUHOD4FpKo4JW4Ujb44-tYKQxT6iuKM8lpvQOwHehfLWRxL-yO77IZy-~IULB-iAH5Ru~fvQuctSbnGKgkpHS2bEvDoaVaw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0y"
+                },
+                {
+                  "vsStageId": 13,
+                  "name": "Inkblot Art Academy",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/40aba8b36a9439e2d670fde5b3478819ea8a94f9e503b9d783248a5716786f35_1.png?Expires=1704844800\u0026Signature=HFLQYG-CTDq97PpR9NKfPyvBRTI2yx2YrbENyqDsxn0wUqKu8joKmKpHWEd1yNTQX2ThYwkkgNYMBoxBR5xgixqC25jpqOk1m7Q4i2qAxhP0ICUK54JAqapK3IJsmfZYB4vaA5ouNBHzgvi4hsmF2~pnXNW2hw8evL45-d8q4xHpM85kAk4eAj1QpyFMNHxGFJgE1bt8IoPIoF3YLDNiQ1JFTUhPRATuFoNhdYIZD10~11ZNUvVlIZx8hqn4PMtosVr-ZHhcm7ny06M9ZvZ44H83VAbZJAG0nALjrVbcMsSID35lMVW~GdE2Q7iEUhokW3F8hZJRXl0uHX46uhG0cQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xMw=="
+                }
+              ],
+              "vsRule": {
+                "name": "Splat Zones",
+                "rule": "AREA",
+                "id": "VnNSdWxlLTE="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 14,
+                  "name": "Sturgeon Shipyard",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/48684c69d5c5a4ffaf16b712a4895545a8d01196115d514fc878ce99863bb3e9_1.png?Expires=1704844800\u0026Signature=ogPimSKqTN5b94G54kw4TFLM4eIiBGIuPSwwOJ7slYUxbVHWWQfFJoRBOz1uLdsGSRpk1EYiIcG4EXuY4tPMJ9j9oGhzIEjAWUwE6y7ZEgU9v6TaMRiTnp0iN1ILj9d4PWlc3JTAPe~H6KIGEzmKHoRKbfNwESusrntGc-0mJ-fGQrRA2KHLXOJSXN8dzxZlTVPBsPjgL5EjYa1cRRfIP2tlcOLyCh9RVGuiHjwARmPC-Lus5ZBePQklnxbk~xfrpOoaViV0sn9Fam5uJDpfkYdYA-7kMPQy90oqh9JDNCFxcFjanLCS7TIkM8pcp9OCkxWY~xgHFBxqzHuaSueQuw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xNA=="
+                },
+                {
+                  "vsStageId": 16,
+                  "name": "Wahoo World",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/61ea801fa4ed32360dcaf83986222ded46a72dbf56194acc6d0cf4659a92ba85_1.png?Expires=1704844800\u0026Signature=UJ77DJ-6VmgcmPeLWHFKe7rKEo9ojf9uxvNegOM8IJKIn5-UyZih2mYfP8NpVVOJiVBlvr3eNpel3Z9Ifgm3V1kmkjdWE3SeJik64zinlruBtzu3pUJzPtKpxQKdyDhvLn2wjxXw84w4pSd1kCJ8Vhyj-uCCvVU2oHtwchVJlG~opd~KsiMBf6xdKsGgZuUzvGWoDyzaTA6Fb9ZNAr0KWJKoHE6XaRyavzIJLlh6a8YQh1DHhkQZqwlHCqw2iI3mKHuWyRdUXc5EUJQ3Oku8ASl3j-Tv3IaSe4nwO36JqJUwqVqc1CYBXD3K2ACwhvCUgQFZX85a3C9Kt0t3bf6eug__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xNg=="
+                }
+              ],
+              "vsRule": {
+                "name": "Clam Blitz",
+                "rule": "CLAM",
+                "id": "VnNSdWxlLTQ="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T04:00:00Z",
+          "endTime": "2023-09-07T06:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 15,
+                  "name": "MakoMart",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/a8ba96c3dbd015b7bc6ea4fa067245c4e9aee62b6696cb41e02d35139dd21fe7_1.png?Expires=1704844800\u0026Signature=GFpgXrGEf5Zekq94fvBtYMgeiM-E9gzplFZoRn2CD7Pi8JdPDT4xjVaKjYudwKOxXOiamyuFDzgF9RFHN0-S~IqdJWnJYDLGRL5TOhmpIDtMvnzl2DkqH5bS5ldLu0Xf9j1~hpX7tYmX~KK2JUWaNf20s6z95Jke8zJ3PwIvwEIPpEFMKDQBic9fQlIfGbsn0gVMm3TLsyOJvGUMqjX~jMd6FcyhPksbKK~SC~CK5yqjORvku-KvpNuPBpErmOQPEbtfcdTlH2jnJyU9lqbmYaLQDalAssbRTTquuicVpSq1qQccjOWQc~XSXp0ZlY~2smu1QhiNdpq0l0ED00a9JQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xNQ=="
+                },
+                {
+                  "vsStageId": 17,
+                  "name": "Humpback Pump Track",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/7b3cf118bd9f45d141cd6db0ee75b06e697fa83945c7fe1e6f8483de6a591f5f_1.png?Expires=1704844800\u0026Signature=pB86z49uqrBZu9bVI3W-H25IRYIJI4rFJv90zajgmUeRiYgmVzWkD64ishajszBRwc~pHdejCFOxXfF4MO~CwuduqE63og6IIXUWk9JH3XBQo7E2O6y0WoUctBKc60sDbilfS8IVBTPUrgveVPHr4CuUQaIrzejVCCxnnn6M6F3Iowp6aZLVlPwVWxJHljogliNACLjFSBsp6iGPCZZyghRi75mIAhE~N4rnbLwcMft1f7Vqjn0z5PTfOIqd9-IXNuHM9~QcZFN-kZzykIrE7l0r~aLM1znDu4CfNbjYaQqbj5j2aEGltBMi4Dt1eCqcBRW743uFO~yXoLX9lh1ThA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xNw=="
+                }
+              ],
+              "vsRule": {
+                "name": "Tower Control",
+                "rule": "LOFT",
+                "id": "VnNSdWxlLTI="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 8,
+                  "name": "Barnacle \u0026 Dime",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f70e9f5af477a39ccfab631bfb81c9e2cedb4cd0947fe260847c214a6d23695f_1.png?Expires=1704844800\u0026Signature=UshJ6zCIS6sJSTBYPrbmcdtkdsvE2FJqsG8~cdEzAUkxyQbhLNA5nXEVauwM9Z9LIHJI5g5-syCOJaS5oWfeSRKeg~e9KXnXeaW0bNfjAyoHxXHi5moapp1xwdbnj8XVKpmtN9wRnl86yfKol~aU4kx3okH4cReCR3Tlw3QyvUqXbEX70q9RXSzaTDilLmweJGT8LorrZMGsxBTkON0v-nr8XADsw6XeN5uqxhFryHcRE21tlxcdg5scUZHf8sj4VSnex1avJoSbXOPVPOZqx5iQ8EmG6SeTkBr4jUNv3OgfQ09e9tsKoBueHPdZ2akmRMKy4f3iKtNXhvVmEl6jPw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS04"
+                },
+                {
+                  "vsStageId": 20,
+                  "name": "Shipshape Cargo Co.",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0yMA=="
+                }
+              ],
+              "vsRule": {
+                "name": "Rainmaker",
+                "rule": "GOAL",
+                "id": "VnNSdWxlLTM="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T06:00:00Z",
+          "endTime": "2023-09-07T08:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 10,
+                  "name": "Hammerhead Bridge",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/1db8ab338b64b464df50e7f9e270e59423ff8caac6f09679a24f1b7acf3a82f3_1.png?Expires=1704844800\u0026Signature=mJHU2mQjVMKqhH3cNkXgSHH-zvvAX-NWjoCMxbl9huZGMODP-UM74WDWOJetNGpvvIt-eRUteMbcql3u3ow4hjLPik~VQeoH1QPeEwxo~-OyrWNnJU1e7knlXxYrjSB~2aJUp6x82c8~NoW9xRD8CLpueA4~gv~ayPYJh1xxFSQ437zWvZrQk4MuQXcltn4c4tOevUX0ea-7XS-hpfmRUdzAr19zc7C9iPy1h0ABOSBBIyKblVZCmkpYvOooFAb-bVyJiLYOs0fTN8auCrT1SLjpCvT2K1I1~VkPuB4kgB~ueCTQW2tlyMUNlD9Uun~Vb7fObmS1pY-Mi0iTMVrLLA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xMA=="
+                },
+                {
+                  "vsStageId": 20,
+                  "name": "Shipshape Cargo Co.",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0yMA=="
+                }
+              ],
+              "vsRule": {
+                "name": "Clam Blitz",
+                "rule": "CLAM",
+                "id": "VnNSdWxlLTQ="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 12,
+                  "name": "Mahi-Mahi Resort",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/8273118c1ffe1bf6fe031c7d8c9795dab52632c9b76e8e9f01f644ac5ae0ccc0_1.png?Expires=1704844800\u0026Signature=kmBrEJtSYIEL-oGBC3M7UxCf2dvIQbRFFYVNovjzZEsVtskf4taTkCLSxcwnp-57d8Q5H3d9Q4rFV3yVnfhJaCshuWPF0uXaRzOLoM2nDMyHzmC2l8uFQpou7QG4OJRo1NynOlYEqHjCodkzqWMgc8E8cWSaRvofxprV01Xd0P66bIj0oVtnZ4N9YdWEZ2tDqG8bAgUJS~rHcFtM7YwXQkdEimOWx~q7kPb-VSRKJj9sljw2zM56yK144JIpdJhsOKpCi6-qhBnXawG187X6~eI4Gxcb9BlOy2MG8tzZ2WNP4MCI3YT6rd5PN00bzWeFZod4W80g54pflAVv90g-Mw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xMg=="
+                },
+                {
+                  "vsStageId": 19,
+                  "name": "Crableg Capital",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xOQ=="
+                }
+              ],
+              "vsRule": {
+                "name": "Splat Zones",
+                "rule": "AREA",
+                "id": "VnNSdWxlLTE="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T08:00:00Z",
+          "endTime": "2023-09-07T10:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 11,
+                  "name": "Museum d'Alfonsino",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b9d8cfa186d197a27e075600a107c99d9e21646d116730f0843e0fff0aaba7dd_1.png?Expires=1704844800\u0026Signature=eWr6sd-YmpgIbOdx96tTH4uFjPiuLFuF9YNiXa9yvJj5VJIBhJSCaPjn3VsGxSVTmRgkzFSnmcGPQ8dVjona8rQhTOycvVSQuJ4V9yfc4bYomdqw9U4ex1pYYTt1XIlxrQ7e1J3nEe9E0P6tOdqpzNb1Yhz2oPwnVnApUNBNoKSwc09W-Wxc~KVnmCx3yHP-~~sCK2HP7~r-D1uUITgBg6m-aU7zvUEJMFE2Aodokd8sI2vJXfUlQGyqXrm~LhdU28qrbjwnYbnliMcTNZhdSLtCZPNV-ZZpoQKRuF-dzl-zmHsabLCHcLkKYCnEbYbvm95pTAOsG7fCirxTKUmOYw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xMQ=="
+                },
+                {
+                  "vsStageId": 19,
+                  "name": "Crableg Capital",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xOQ=="
+                }
+              ],
+              "vsRule": {
+                "name": "Rainmaker",
+                "rule": "GOAL",
+                "id": "VnNSdWxlLTM="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 6,
+                  "name": "Mincemeat Metalworks",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/de1f212e9ff0648f36cd3b8e0917ef36b3bd51445159297dcb948f34a09f2f05_1.png?Expires=1704844800\u0026Signature=DCx7ZtdZaAIINKvfQqr~PmCIMNoWodhT5Fgb0kg5LoQpsMfU~XyQvIcsrISJFbMUeKXGc4Mm1I3QKHHOn4Ydgdk99IYAp3xFfBuDZFVmErMcr7c6GBMG06axIcVtv6M90VtB8GJ8ZbmF5xIi1t4UHOQdjuIiASYy7NR7q8OPlNzCVls9F8Pn5tI16qmIEsbDppzqluP2ZIDHINXy5sBbeUtgnxZTZLgqUZvZdwztLYIBF3uFqcKY5bcwkr7paZLeYpwYSZklJt8NoHN~K1WTzL1XIRGHjo6HmshRSAodFYc~T6U~xtxdmZ9vCMKuPc8mhDGyOP357STnQZVFKhqx8Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS02"
+                },
+                {
+                  "vsStageId": 15,
+                  "name": "MakoMart",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/a8ba96c3dbd015b7bc6ea4fa067245c4e9aee62b6696cb41e02d35139dd21fe7_1.png?Expires=1704844800\u0026Signature=GFpgXrGEf5Zekq94fvBtYMgeiM-E9gzplFZoRn2CD7Pi8JdPDT4xjVaKjYudwKOxXOiamyuFDzgF9RFHN0-S~IqdJWnJYDLGRL5TOhmpIDtMvnzl2DkqH5bS5ldLu0Xf9j1~hpX7tYmX~KK2JUWaNf20s6z95Jke8zJ3PwIvwEIPpEFMKDQBic9fQlIfGbsn0gVMm3TLsyOJvGUMqjX~jMd6FcyhPksbKK~SC~CK5yqjORvku-KvpNuPBpErmOQPEbtfcdTlH2jnJyU9lqbmYaLQDalAssbRTTquuicVpSq1qQccjOWQc~XSXp0ZlY~2smu1QhiNdpq0l0ED00a9JQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xNQ=="
+                }
+              ],
+              "vsRule": {
+                "name": "Tower Control",
+                "rule": "LOFT",
+                "id": "VnNSdWxlLTI="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T10:00:00Z",
+          "endTime": "2023-09-07T12:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 8,
+                  "name": "Barnacle \u0026 Dime",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f70e9f5af477a39ccfab631bfb81c9e2cedb4cd0947fe260847c214a6d23695f_1.png?Expires=1704844800\u0026Signature=UshJ6zCIS6sJSTBYPrbmcdtkdsvE2FJqsG8~cdEzAUkxyQbhLNA5nXEVauwM9Z9LIHJI5g5-syCOJaS5oWfeSRKeg~e9KXnXeaW0bNfjAyoHxXHi5moapp1xwdbnj8XVKpmtN9wRnl86yfKol~aU4kx3okH4cReCR3Tlw3QyvUqXbEX70q9RXSzaTDilLmweJGT8LorrZMGsxBTkON0v-nr8XADsw6XeN5uqxhFryHcRE21tlxcdg5scUZHf8sj4VSnex1avJoSbXOPVPOZqx5iQ8EmG6SeTkBr4jUNv3OgfQ09e9tsKoBueHPdZ2akmRMKy4f3iKtNXhvVmEl6jPw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS04"
+                },
+                {
+                  "vsStageId": 20,
+                  "name": "Shipshape Cargo Co.",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0yMA=="
+                }
+              ],
+              "vsRule": {
+                "name": "Splat Zones",
+                "rule": "AREA",
+                "id": "VnNSdWxlLTE="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 7,
+                  "name": "Brinewater Springs",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/cd84d711b47a424334569ac20f33f8e0ab6a652dc07854dcd36508a0081e9034_1.png?Expires=1704844800\u0026Signature=Hv-5-Vxpeu2YqGjYwp1YlxE0vUHklhmR6C0s0Yjy5ezdyqAll4S3Uvk-6YCWAYpVppVP4dCEZ-9YclgcrQLt2mg9s42Ev3xMYgJ0rr5wWOKmOkcoCpJVjUshrWeT2SxKYbULAz5xei1ddX7Mr2Zghhwi-aK6MuEVLIYly5-EWnWvj4DdNrgxoFIsgdlWXOviEQFAfEbko09GZbnYk7V3ynZjxlAHS6dpDmqXkZWpwkQQ6qMePrT-YCOwce0eTmui6TIDhiHSpGxBJS1rROWs-E8SHOvNj7l61Qgrj0F36DZB1ffOnp~iKR2bSptIYyiKNZiNHXobAYGCDdWh2L1e-A__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS03"
+                },
+                {
+                  "vsStageId": 13,
+                  "name": "Inkblot Art Academy",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/40aba8b36a9439e2d670fde5b3478819ea8a94f9e503b9d783248a5716786f35_1.png?Expires=1704844800\u0026Signature=HFLQYG-CTDq97PpR9NKfPyvBRTI2yx2YrbENyqDsxn0wUqKu8joKmKpHWEd1yNTQX2ThYwkkgNYMBoxBR5xgixqC25jpqOk1m7Q4i2qAxhP0ICUK54JAqapK3IJsmfZYB4vaA5ouNBHzgvi4hsmF2~pnXNW2hw8evL45-d8q4xHpM85kAk4eAj1QpyFMNHxGFJgE1bt8IoPIoF3YLDNiQ1JFTUhPRATuFoNhdYIZD10~11ZNUvVlIZx8hqn4PMtosVr-ZHhcm7ny06M9ZvZ44H83VAbZJAG0nALjrVbcMsSID35lMVW~GdE2Q7iEUhokW3F8hZJRXl0uHX46uhG0cQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xMw=="
+                }
+              ],
+              "vsRule": {
+                "name": "Clam Blitz",
+                "rule": "CLAM",
+                "id": "VnNSdWxlLTQ="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T12:00:00Z",
+          "endTime": "2023-09-07T14:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 6,
+                  "name": "Mincemeat Metalworks",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/de1f212e9ff0648f36cd3b8e0917ef36b3bd51445159297dcb948f34a09f2f05_1.png?Expires=1704844800\u0026Signature=DCx7ZtdZaAIINKvfQqr~PmCIMNoWodhT5Fgb0kg5LoQpsMfU~XyQvIcsrISJFbMUeKXGc4Mm1I3QKHHOn4Ydgdk99IYAp3xFfBuDZFVmErMcr7c6GBMG06axIcVtv6M90VtB8GJ8ZbmF5xIi1t4UHOQdjuIiASYy7NR7q8OPlNzCVls9F8Pn5tI16qmIEsbDppzqluP2ZIDHINXy5sBbeUtgnxZTZLgqUZvZdwztLYIBF3uFqcKY5bcwkr7paZLeYpwYSZklJt8NoHN~K1WTzL1XIRGHjo6HmshRSAodFYc~T6U~xtxdmZ9vCMKuPc8mhDGyOP357STnQZVFKhqx8Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS02"
+                },
+                {
+                  "vsStageId": 7,
+                  "name": "Brinewater Springs",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/cd84d711b47a424334569ac20f33f8e0ab6a652dc07854dcd36508a0081e9034_1.png?Expires=1704844800\u0026Signature=Hv-5-Vxpeu2YqGjYwp1YlxE0vUHklhmR6C0s0Yjy5ezdyqAll4S3Uvk-6YCWAYpVppVP4dCEZ-9YclgcrQLt2mg9s42Ev3xMYgJ0rr5wWOKmOkcoCpJVjUshrWeT2SxKYbULAz5xei1ddX7Mr2Zghhwi-aK6MuEVLIYly5-EWnWvj4DdNrgxoFIsgdlWXOviEQFAfEbko09GZbnYk7V3ynZjxlAHS6dpDmqXkZWpwkQQ6qMePrT-YCOwce0eTmui6TIDhiHSpGxBJS1rROWs-E8SHOvNj7l61Qgrj0F36DZB1ffOnp~iKR2bSptIYyiKNZiNHXobAYGCDdWh2L1e-A__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS03"
+                }
+              ],
+              "vsRule": {
+                "name": "Tower Control",
+                "rule": "LOFT",
+                "id": "VnNSdWxlLTI="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 2,
+                  "name": "Eeltail Alley",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png?Expires=1704844800\u0026Signature=CylRvhSFefkTHRGg0s0x341rDpK0dW1wPlRKW9EM4PVg72qKkE15JbX9DT4Xo18SyeYNM3rHdYMPM01dY5YLCFYBMkiXGBvC34dlUlZ253B6OES5Gua0Hwyt6-WTMPy0u2tinrVw6oSaYIH7gyQ1nf6T~AUEDd7yI5cIR~ZF4a2NRQMMQH36iDFNXCFxLNiM8S8JiT1GryeJGaKDFDqDMuPq00zGndRE5JGqiQ-VS5zLFTibwc5LkwJQUHOD4FpKo4JW4Ujb44-tYKQxT6iuKM8lpvQOwHehfLWRxL-yO77IZy-~IULB-iAH5Ru~fvQuctSbnGKgkpHS2bEvDoaVaw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0y"
+                },
+                {
+                  "vsStageId": 11,
+                  "name": "Museum d'Alfonsino",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b9d8cfa186d197a27e075600a107c99d9e21646d116730f0843e0fff0aaba7dd_1.png?Expires=1704844800\u0026Signature=eWr6sd-YmpgIbOdx96tTH4uFjPiuLFuF9YNiXa9yvJj5VJIBhJSCaPjn3VsGxSVTmRgkzFSnmcGPQ8dVjona8rQhTOycvVSQuJ4V9yfc4bYomdqw9U4ex1pYYTt1XIlxrQ7e1J3nEe9E0P6tOdqpzNb1Yhz2oPwnVnApUNBNoKSwc09W-Wxc~KVnmCx3yHP-~~sCK2HP7~r-D1uUITgBg6m-aU7zvUEJMFE2Aodokd8sI2vJXfUlQGyqXrm~LhdU28qrbjwnYbnliMcTNZhdSLtCZPNV-ZZpoQKRuF-dzl-zmHsabLCHcLkKYCnEbYbvm95pTAOsG7fCirxTKUmOYw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xMQ=="
+                }
+              ],
+              "vsRule": {
+                "name": "Rainmaker",
+                "rule": "GOAL",
+                "id": "VnNSdWxlLTM="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T14:00:00Z",
+          "endTime": "2023-09-07T16:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 3,
+                  "name": "Hagglefish Market",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/8dc2f16d39c630bab40cead5b2485ca3559e829d0d3de0c2232c7a62fefb5fa9_1.png?Expires=1704844800\u0026Signature=PvdMv~ZvhiqBXY7GAW~wHyzNtGJu4w5fjQ0UOi4qEU7vxo~PTnVfccUX45cZuwlIE6dW4JiRWBOQ0IEkoHWoy2KWn0USb1ozDuWfmX0jhsF3lDshpKeQ1tulfMlKQLlN-ouNE-4Y28XNs2kp2ztHRCrdysOHHqC2Q98keeMCwoV5LvEN7rWayrhx3naFsL5~~maByVVhb4Dmnpk0FfIZgC-CnQQnmnKVC8gyT~gBapYufTpujXPh5CWkhnQCI7XPYneYwO8kdSV5YPuw96MV9JjZawetfJ~qgafTAMZG3CdEFF0jYyiIv6~X7ZsRIoMY2LrU7Y9V9bHju8YqC8kLKg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0z"
+                },
+                {
+                  "vsStageId": 19,
+                  "name": "Crableg Capital",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xOQ=="
+                }
+              ],
+              "vsRule": {
+                "name": "Clam Blitz",
+                "rule": "CLAM",
+                "id": "VnNSdWxlLTQ="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 4,
+                  "name": "Undertow Spillway",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/9b1c17b2075479d0397d2fb96efbc6fa3a28900712920e5fe1e9dfc59c6abc5c_1.png?Expires=1704844800\u0026Signature=aCVPQpc6fkx8elrWptfRNQXJ-anEOBqk8CnmPL~J5EU7~ECXalsFmdIb-ahU-OEtwgx31vfYXy1~68A945O6m54HLcbgWkSqnK0oG16i5iuMAlrIZyYCelxwAXYaeKns~T4XICDdOaF7s~CX0haaj9ZFQl19UpP7KwRB5VVVRaRExUdTlmsmR-06ZQ00pn8ua8LZ~wa4cSaMpoGy3YmFHFweeqsdmHmLm0FHQ5ZpEMj0Si0nWA5kGgWcn1bljvhqErl9CW4YRznttkCoh-AVewsD2knDtqu~SU9P-RW9KsXIYCBFoAP25pWDzPUlKh5g7SvvMCdpdPU3tAsOHzyZDA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS00"
+                },
+                {
+                  "vsStageId": 10,
+                  "name": "Hammerhead Bridge",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/1db8ab338b64b464df50e7f9e270e59423ff8caac6f09679a24f1b7acf3a82f3_1.png?Expires=1704844800\u0026Signature=mJHU2mQjVMKqhH3cNkXgSHH-zvvAX-NWjoCMxbl9huZGMODP-UM74WDWOJetNGpvvIt-eRUteMbcql3u3ow4hjLPik~VQeoH1QPeEwxo~-OyrWNnJU1e7knlXxYrjSB~2aJUp6x82c8~NoW9xRD8CLpueA4~gv~ayPYJh1xxFSQ437zWvZrQk4MuQXcltn4c4tOevUX0ea-7XS-hpfmRUdzAr19zc7C9iPy1h0ABOSBBIyKblVZCmkpYvOooFAb-bVyJiLYOs0fTN8auCrT1SLjpCvT2K1I1~VkPuB4kgB~ueCTQW2tlyMUNlD9Uun~Vb7fObmS1pY-Mi0iTMVrLLA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xMA=="
+                }
+              ],
+              "vsRule": {
+                "name": "Splat Zones",
+                "rule": "AREA",
+                "id": "VnNSdWxlLTE="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T16:00:00Z",
+          "endTime": "2023-09-07T18:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 9,
+                  "name": "Flounder Heights",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/488017f3ce712fca9fb37d61fe306343054449bb2d2bb1751d95f54a98564cae_1.png?Expires=1704844800\u0026Signature=YdFSE7YYhY7WHK9V9WVKaxmYDA6EyABrvQgZNjFs1aDWyw1HDNdSZ6GfHaz~ldF584zy7nIC6MS~-20grcI1qJHbb77iXDjHMUrONeG-Cu2BMKfRyBZrinhSK2bWpBALQpdWeGRrjb0sMjNuUjJOcBZTm4JzD7aITbrWnOEaUnOpqxHhQxOXkZBPmGwxnPNjCgUHbG9sjq1wngwQ2e32fJY2huJNnciisoak~jLLMu-qP-dqXMcRzZDTjHKAYAAYwbQa8p4yLrZ26uTQSWE~NBtBLVpeV9M2UvuvYUkjXngrMSvCgwcTetNe~qBqlp69qjoc9Wa8lqa7ww~QBee76g__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS05"
+                },
+                {
+                  "vsStageId": 20,
+                  "name": "Shipshape Cargo Co.",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0yMA=="
+                }
+              ],
+              "vsRule": {
+                "name": "Rainmaker",
+                "rule": "GOAL",
+                "id": "VnNSdWxlLTM="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 1,
+                  "name": "Scorch Gorge",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/35f9ca08ccc2bf759774ab2cb886567c117b9287875ca92fb590c1294ddcdc1e_1.png?Expires=1704844800\u0026Signature=QPMKMTDhgndGoKsNAzY-CI0AmFsreK~IKQY4wtdQWiFE2kEISBOPV6YviW8s6OuwfYn8ipvIlZuwHL6kYE5BgdaqFExBb88ebxGcRwpjpclbSrIY5xdvkcQ5KPEJKx79UKReEhYMfcJyUoMa1t4fOrygSk~omqhAQdQEISkWFwfz-Ksna7HeLIIJ7iytPiRqX2GBcSlnJlp-jw8teYYD8NMwCzjWDOzxAOgQA2j6sjA5fYDRMoTVNPIFmhzy8WtpO-kL0mayDyEHM~I2S3JtGwU55BZgYas-xjUUHiZ0YHwNVe1xoJnf-YjTQEDPOh7Ro-T~GI4vCY6R6EaeEoRuaA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0x"
+                },
+                {
+                  "vsStageId": 19,
+                  "name": "Crableg Capital",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xOQ=="
+                }
+              ],
+              "vsRule": {
+                "name": "Tower Control",
+                "rule": "LOFT",
+                "id": "VnNSdWxlLTI="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T18:00:00Z",
+          "endTime": "2023-09-07T20:00:00Z",
+          "bankaraMatchSettings": [
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 1,
+                  "name": "Scorch Gorge",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/35f9ca08ccc2bf759774ab2cb886567c117b9287875ca92fb590c1294ddcdc1e_1.png?Expires=1704844800\u0026Signature=QPMKMTDhgndGoKsNAzY-CI0AmFsreK~IKQY4wtdQWiFE2kEISBOPV6YviW8s6OuwfYn8ipvIlZuwHL6kYE5BgdaqFExBb88ebxGcRwpjpclbSrIY5xdvkcQ5KPEJKx79UKReEhYMfcJyUoMa1t4fOrygSk~omqhAQdQEISkWFwfz-Ksna7HeLIIJ7iytPiRqX2GBcSlnJlp-jw8teYYD8NMwCzjWDOzxAOgQA2j6sjA5fYDRMoTVNPIFmhzy8WtpO-kL0mayDyEHM~I2S3JtGwU55BZgYas-xjUUHiZ0YHwNVe1xoJnf-YjTQEDPOh7Ro-T~GI4vCY6R6EaeEoRuaA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0x"
+                },
+                {
+                  "vsStageId": 2,
+                  "name": "Eeltail Alley",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png?Expires=1704844800\u0026Signature=CylRvhSFefkTHRGg0s0x341rDpK0dW1wPlRKW9EM4PVg72qKkE15JbX9DT4Xo18SyeYNM3rHdYMPM01dY5YLCFYBMkiXGBvC34dlUlZ253B6OES5Gua0Hwyt6-WTMPy0u2tinrVw6oSaYIH7gyQ1nf6T~AUEDd7yI5cIR~ZF4a2NRQMMQH36iDFNXCFxLNiM8S8JiT1GryeJGaKDFDqDMuPq00zGndRE5JGqiQ-VS5zLFTibwc5LkwJQUHOD4FpKo4JW4Ujb44-tYKQxT6iuKM8lpvQOwHehfLWRxL-yO77IZy-~IULB-iAH5Ru~fvQuctSbnGKgkpHS2bEvDoaVaw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0y"
+                }
+              ],
+              "vsRule": {
+                "name": "Splat Zones",
+                "rule": "AREA",
+                "id": "VnNSdWxlLTE="
+              },
+              "bankaraMode": "CHALLENGE"
+            },
+            {
+              "__isVsSetting": "BankaraMatchSetting",
+              "__typename": "BankaraMatchSetting",
+              "vsStages": [
+                {
+                  "vsStageId": 9,
+                  "name": "Flounder Heights",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/488017f3ce712fca9fb37d61fe306343054449bb2d2bb1751d95f54a98564cae_1.png?Expires=1704844800\u0026Signature=YdFSE7YYhY7WHK9V9WVKaxmYDA6EyABrvQgZNjFs1aDWyw1HDNdSZ6GfHaz~ldF584zy7nIC6MS~-20grcI1qJHbb77iXDjHMUrONeG-Cu2BMKfRyBZrinhSK2bWpBALQpdWeGRrjb0sMjNuUjJOcBZTm4JzD7aITbrWnOEaUnOpqxHhQxOXkZBPmGwxnPNjCgUHbG9sjq1wngwQ2e32fJY2huJNnciisoak~jLLMu-qP-dqXMcRzZDTjHKAYAAYwbQa8p4yLrZ26uTQSWE~NBtBLVpeV9M2UvuvYUkjXngrMSvCgwcTetNe~qBqlp69qjoc9Wa8lqa7ww~QBee76g__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS05"
+                },
+                {
+                  "vsStageId": 14,
+                  "name": "Sturgeon Shipyard",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/48684c69d5c5a4ffaf16b712a4895545a8d01196115d514fc878ce99863bb3e9_1.png?Expires=1704844800\u0026Signature=ogPimSKqTN5b94G54kw4TFLM4eIiBGIuPSwwOJ7slYUxbVHWWQfFJoRBOz1uLdsGSRpk1EYiIcG4EXuY4tPMJ9j9oGhzIEjAWUwE6y7ZEgU9v6TaMRiTnp0iN1ILj9d4PWlc3JTAPe~H6KIGEzmKHoRKbfNwESusrntGc-0mJ-fGQrRA2KHLXOJSXN8dzxZlTVPBsPjgL5EjYa1cRRfIP2tlcOLyCh9RVGuiHjwARmPC-Lus5ZBePQklnxbk~xfrpOoaViV0sn9Fam5uJDpfkYdYA-7kMPQy90oqh9JDNCFxcFjanLCS7TIkM8pcp9OCkxWY~xgHFBxqzHuaSueQuw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  },
+                  "id": "VnNTdGFnZS0xNA=="
+                }
+              ],
+              "vsRule": {
+                "name": "Clam Blitz",
+                "rule": "CLAM",
+                "id": "VnNSdWxlLTQ="
+              },
+              "bankaraMode": "OPEN"
+            }
+          ],
+          "festMatchSettings": null
+        }
+      ]
+    },
+    "xSchedules": {
+      "nodes": [
+        {
+          "startTime": "2023-09-06T20:00:00Z",
+          "endTime": "2023-09-06T22:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 3,
+                "name": "Hagglefish Market",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/8dc2f16d39c630bab40cead5b2485ca3559e829d0d3de0c2232c7a62fefb5fa9_1.png?Expires=1704844800\u0026Signature=PvdMv~ZvhiqBXY7GAW~wHyzNtGJu4w5fjQ0UOi4qEU7vxo~PTnVfccUX45cZuwlIE6dW4JiRWBOQ0IEkoHWoy2KWn0USb1ozDuWfmX0jhsF3lDshpKeQ1tulfMlKQLlN-ouNE-4Y28XNs2kp2ztHRCrdysOHHqC2Q98keeMCwoV5LvEN7rWayrhx3naFsL5~~maByVVhb4Dmnpk0FfIZgC-CnQQnmnKVC8gyT~gBapYufTpujXPh5CWkhnQCI7XPYneYwO8kdSV5YPuw96MV9JjZawetfJ~qgafTAMZG3CdEFF0jYyiIv6~X7ZsRIoMY2LrU7Y9V9bHju8YqC8kLKg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0z"
+              },
+              {
+                "vsStageId": 5,
+                "name": "Um'ami Ruins",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f14c2a64e49d243679fc0884af91e1a07dc65600f9b90aefe92d7790dcffb191_1.png?Expires=1704844800\u0026Signature=ELc9vhZ9IYAuhsNuTlbWLSJsvqFc-4JNMXzFME6U1jBgt1sJxPCX5ek2qeqTcKe8IJZ00jduaQcUzUXWqTAzXVHZdc0E7PlFWfcawNXeHHq9ClwvE3r8OM94fYBds8GSdnQpT3vsrGZYYLNs3U~3J8XUfPWoSkwznbkpax0mXtOWMwAi1yHWnokTK9bVmwIXyFQqTL~7UhdrJXsawGmZ9X-nqqZCsXuEGQX6a-TzTfzvLN3l-ypYanUC~jKTuzHpAxfUYp3S7zWalxshhX7ofJJaeuKNv8IXcq22hItbTG06gUaudqkPHmciC5JsSjvOrkGCKuhSqgixHqcCR6xyug__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS01"
+              }
+            ],
+            "vsRule": {
+              "name": "Tower Control",
+              "rule": "LOFT",
+              "id": "VnNSdWxlLTI="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-06T22:00:00Z",
+          "endTime": "2023-09-07T00:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 1,
+                "name": "Scorch Gorge",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/35f9ca08ccc2bf759774ab2cb886567c117b9287875ca92fb590c1294ddcdc1e_1.png?Expires=1704844800\u0026Signature=QPMKMTDhgndGoKsNAzY-CI0AmFsreK~IKQY4wtdQWiFE2kEISBOPV6YviW8s6OuwfYn8ipvIlZuwHL6kYE5BgdaqFExBb88ebxGcRwpjpclbSrIY5xdvkcQ5KPEJKx79UKReEhYMfcJyUoMa1t4fOrygSk~omqhAQdQEISkWFwfz-Ksna7HeLIIJ7iytPiRqX2GBcSlnJlp-jw8teYYD8NMwCzjWDOzxAOgQA2j6sjA5fYDRMoTVNPIFmhzy8WtpO-kL0mayDyEHM~I2S3JtGwU55BZgYas-xjUUHiZ0YHwNVe1xoJnf-YjTQEDPOh7Ro-T~GI4vCY6R6EaeEoRuaA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0x"
+              },
+              {
+                "vsStageId": 17,
+                "name": "Humpback Pump Track",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/7b3cf118bd9f45d141cd6db0ee75b06e697fa83945c7fe1e6f8483de6a591f5f_1.png?Expires=1704844800\u0026Signature=pB86z49uqrBZu9bVI3W-H25IRYIJI4rFJv90zajgmUeRiYgmVzWkD64ishajszBRwc~pHdejCFOxXfF4MO~CwuduqE63og6IIXUWk9JH3XBQo7E2O6y0WoUctBKc60sDbilfS8IVBTPUrgveVPHr4CuUQaIrzejVCCxnnn6M6F3Iowp6aZLVlPwVWxJHljogliNACLjFSBsp6iGPCZZyghRi75mIAhE~N4rnbLwcMft1f7Vqjn0z5PTfOIqd9-IXNuHM9~QcZFN-kZzykIrE7l0r~aLM1znDu4CfNbjYaQqbj5j2aEGltBMi4Dt1eCqcBRW743uFO~yXoLX9lh1ThA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xNw=="
+              }
+            ],
+            "vsRule": {
+              "name": "Splat Zones",
+              "rule": "AREA",
+              "id": "VnNSdWxlLTE="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T00:00:00Z",
+          "endTime": "2023-09-07T02:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 2,
+                "name": "Eeltail Alley",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png?Expires=1704844800\u0026Signature=CylRvhSFefkTHRGg0s0x341rDpK0dW1wPlRKW9EM4PVg72qKkE15JbX9DT4Xo18SyeYNM3rHdYMPM01dY5YLCFYBMkiXGBvC34dlUlZ253B6OES5Gua0Hwyt6-WTMPy0u2tinrVw6oSaYIH7gyQ1nf6T~AUEDd7yI5cIR~ZF4a2NRQMMQH36iDFNXCFxLNiM8S8JiT1GryeJGaKDFDqDMuPq00zGndRE5JGqiQ-VS5zLFTibwc5LkwJQUHOD4FpKo4JW4Ujb44-tYKQxT6iuKM8lpvQOwHehfLWRxL-yO77IZy-~IULB-iAH5Ru~fvQuctSbnGKgkpHS2bEvDoaVaw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0y"
+              },
+              {
+                "vsStageId": 19,
+                "name": "Crableg Capital",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xOQ=="
+              }
+            ],
+            "vsRule": {
+              "name": "Clam Blitz",
+              "rule": "CLAM",
+              "id": "VnNSdWxlLTQ="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T02:00:00Z",
+          "endTime": "2023-09-07T04:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 15,
+                "name": "MakoMart",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/a8ba96c3dbd015b7bc6ea4fa067245c4e9aee62b6696cb41e02d35139dd21fe7_1.png?Expires=1704844800\u0026Signature=GFpgXrGEf5Zekq94fvBtYMgeiM-E9gzplFZoRn2CD7Pi8JdPDT4xjVaKjYudwKOxXOiamyuFDzgF9RFHN0-S~IqdJWnJYDLGRL5TOhmpIDtMvnzl2DkqH5bS5ldLu0Xf9j1~hpX7tYmX~KK2JUWaNf20s6z95Jke8zJ3PwIvwEIPpEFMKDQBic9fQlIfGbsn0gVMm3TLsyOJvGUMqjX~jMd6FcyhPksbKK~SC~CK5yqjORvku-KvpNuPBpErmOQPEbtfcdTlH2jnJyU9lqbmYaLQDalAssbRTTquuicVpSq1qQccjOWQc~XSXp0ZlY~2smu1QhiNdpq0l0ED00a9JQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xNQ=="
+              },
+              {
+                "vsStageId": 20,
+                "name": "Shipshape Cargo Co.",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0yMA=="
+              }
+            ],
+            "vsRule": {
+              "name": "Tower Control",
+              "rule": "LOFT",
+              "id": "VnNSdWxlLTI="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T04:00:00Z",
+          "endTime": "2023-09-07T06:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 11,
+                "name": "Museum d'Alfonsino",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b9d8cfa186d197a27e075600a107c99d9e21646d116730f0843e0fff0aaba7dd_1.png?Expires=1704844800\u0026Signature=eWr6sd-YmpgIbOdx96tTH4uFjPiuLFuF9YNiXa9yvJj5VJIBhJSCaPjn3VsGxSVTmRgkzFSnmcGPQ8dVjona8rQhTOycvVSQuJ4V9yfc4bYomdqw9U4ex1pYYTt1XIlxrQ7e1J3nEe9E0P6tOdqpzNb1Yhz2oPwnVnApUNBNoKSwc09W-Wxc~KVnmCx3yHP-~~sCK2HP7~r-D1uUITgBg6m-aU7zvUEJMFE2Aodokd8sI2vJXfUlQGyqXrm~LhdU28qrbjwnYbnliMcTNZhdSLtCZPNV-ZZpoQKRuF-dzl-zmHsabLCHcLkKYCnEbYbvm95pTAOsG7fCirxTKUmOYw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xMQ=="
+              },
+              {
+                "vsStageId": 19,
+                "name": "Crableg Capital",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xOQ=="
+              }
+            ],
+            "vsRule": {
+              "name": "Splat Zones",
+              "rule": "AREA",
+              "id": "VnNSdWxlLTE="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T06:00:00Z",
+          "endTime": "2023-09-07T08:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 7,
+                "name": "Brinewater Springs",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/cd84d711b47a424334569ac20f33f8e0ab6a652dc07854dcd36508a0081e9034_1.png?Expires=1704844800\u0026Signature=Hv-5-Vxpeu2YqGjYwp1YlxE0vUHklhmR6C0s0Yjy5ezdyqAll4S3Uvk-6YCWAYpVppVP4dCEZ-9YclgcrQLt2mg9s42Ev3xMYgJ0rr5wWOKmOkcoCpJVjUshrWeT2SxKYbULAz5xei1ddX7Mr2Zghhwi-aK6MuEVLIYly5-EWnWvj4DdNrgxoFIsgdlWXOviEQFAfEbko09GZbnYk7V3ynZjxlAHS6dpDmqXkZWpwkQQ6qMePrT-YCOwce0eTmui6TIDhiHSpGxBJS1rROWs-E8SHOvNj7l61Qgrj0F36DZB1ffOnp~iKR2bSptIYyiKNZiNHXobAYGCDdWh2L1e-A__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS03"
+              },
+              {
+                "vsStageId": 13,
+                "name": "Inkblot Art Academy",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/40aba8b36a9439e2d670fde5b3478819ea8a94f9e503b9d783248a5716786f35_1.png?Expires=1704844800\u0026Signature=HFLQYG-CTDq97PpR9NKfPyvBRTI2yx2YrbENyqDsxn0wUqKu8joKmKpHWEd1yNTQX2ThYwkkgNYMBoxBR5xgixqC25jpqOk1m7Q4i2qAxhP0ICUK54JAqapK3IJsmfZYB4vaA5ouNBHzgvi4hsmF2~pnXNW2hw8evL45-d8q4xHpM85kAk4eAj1QpyFMNHxGFJgE1bt8IoPIoF3YLDNiQ1JFTUhPRATuFoNhdYIZD10~11ZNUvVlIZx8hqn4PMtosVr-ZHhcm7ny06M9ZvZ44H83VAbZJAG0nALjrVbcMsSID35lMVW~GdE2Q7iEUhokW3F8hZJRXl0uHX46uhG0cQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xMw=="
+              }
+            ],
+            "vsRule": {
+              "name": "Rainmaker",
+              "rule": "GOAL",
+              "id": "VnNSdWxlLTM="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T08:00:00Z",
+          "endTime": "2023-09-07T10:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 16,
+                "name": "Wahoo World",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/61ea801fa4ed32360dcaf83986222ded46a72dbf56194acc6d0cf4659a92ba85_1.png?Expires=1704844800\u0026Signature=UJ77DJ-6VmgcmPeLWHFKe7rKEo9ojf9uxvNegOM8IJKIn5-UyZih2mYfP8NpVVOJiVBlvr3eNpel3Z9Ifgm3V1kmkjdWE3SeJik64zinlruBtzu3pUJzPtKpxQKdyDhvLn2wjxXw84w4pSd1kCJ8Vhyj-uCCvVU2oHtwchVJlG~opd~KsiMBf6xdKsGgZuUzvGWoDyzaTA6Fb9ZNAr0KWJKoHE6XaRyavzIJLlh6a8YQh1DHhkQZqwlHCqw2iI3mKHuWyRdUXc5EUJQ3Oku8ASl3j-Tv3IaSe4nwO36JqJUwqVqc1CYBXD3K2ACwhvCUgQFZX85a3C9Kt0t3bf6eug__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xNg=="
+              },
+              {
+                "vsStageId": 18,
+                "name": "Manta Maria",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/0b7fd997781e03eb9d5bf1875ed070f698afc654f4fe929452c65aa26c0a35fd_1.png?Expires=1704844800\u0026Signature=hD1dBcpfXEtVu9jgVIGB4bdUJlnvBcVtBwmgPOjxhZkAhJGuO669Ycsvlc67mr6MebYlv9S10Z1j5IdZ87nV6AAKCkXLP-4iO3HYXcUVw4VAYqgU~j8PGwSNisNr5Y8GGJdERDoAjffS8YlzyoWoJKTjv6xLWC~u5aMLYX4AB3QpnUolKq-feFcuMvBQwC1DQ9kTM7e-bbQVNrgAM-I4EJ~k1GGFwT646UHd2LjrHQRBnKHk~qklKg4MI5IliQcfQE7gKM9vifbLyC~5oYeWjogP4pnbdjXDEJEGyaDtYqvJqwekv1MYS0rV2JQQ83~hUw6d2NErccJXJsF2oK8lOQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xOA=="
+              }
+            ],
+            "vsRule": {
+              "name": "Clam Blitz",
+              "rule": "CLAM",
+              "id": "VnNSdWxlLTQ="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T10:00:00Z",
+          "endTime": "2023-09-07T12:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 6,
+                "name": "Mincemeat Metalworks",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/de1f212e9ff0648f36cd3b8e0917ef36b3bd51445159297dcb948f34a09f2f05_1.png?Expires=1704844800\u0026Signature=DCx7ZtdZaAIINKvfQqr~PmCIMNoWodhT5Fgb0kg5LoQpsMfU~XyQvIcsrISJFbMUeKXGc4Mm1I3QKHHOn4Ydgdk99IYAp3xFfBuDZFVmErMcr7c6GBMG06axIcVtv6M90VtB8GJ8ZbmF5xIi1t4UHOQdjuIiASYy7NR7q8OPlNzCVls9F8Pn5tI16qmIEsbDppzqluP2ZIDHINXy5sBbeUtgnxZTZLgqUZvZdwztLYIBF3uFqcKY5bcwkr7paZLeYpwYSZklJt8NoHN~K1WTzL1XIRGHjo6HmshRSAodFYc~T6U~xtxdmZ9vCMKuPc8mhDGyOP357STnQZVFKhqx8Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS02"
+              },
+              {
+                "vsStageId": 19,
+                "name": "Crableg Capital",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_1.png?Expires=1704844800\u0026Signature=P4~IInt32mWwNwr3gKhy1r-2MFLsCOFxWotmHNEtLSqM3x~4paTwqcFit3mlsZDXiYu9m5qMpDyTK-4hI-Pzb4TazTYLEmUt3mtAct6tU9esR1oQX1ydmtfOvy5rsIaUVuLb1z1nozLdk0w7ApD9pKKOSorlt-0cVwbCCG1p48SioWDa8cEEEPbY5tPKAupYWo3twA7pF7GRe7lyWb8o2hC6QIkJH0g1DZrlXe7cG6AUkgawK1jj9XgqDKdqGROo2eTGzq3NqvAVVx-jiK9cgRKZhhjB-gX75c77ldFrBa8Yiy4G6am3Iied9NVXro74csI-WeG1pWWQLRQfiGHWdA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xOQ=="
+              }
+            ],
+            "vsRule": {
+              "name": "Tower Control",
+              "rule": "LOFT",
+              "id": "VnNSdWxlLTI="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T12:00:00Z",
+          "endTime": "2023-09-07T14:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 4,
+                "name": "Undertow Spillway",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/9b1c17b2075479d0397d2fb96efbc6fa3a28900712920e5fe1e9dfc59c6abc5c_1.png?Expires=1704844800\u0026Signature=aCVPQpc6fkx8elrWptfRNQXJ-anEOBqk8CnmPL~J5EU7~ECXalsFmdIb-ahU-OEtwgx31vfYXy1~68A945O6m54HLcbgWkSqnK0oG16i5iuMAlrIZyYCelxwAXYaeKns~T4XICDdOaF7s~CX0haaj9ZFQl19UpP7KwRB5VVVRaRExUdTlmsmR-06ZQ00pn8ua8LZ~wa4cSaMpoGy3YmFHFweeqsdmHmLm0FHQ5ZpEMj0Si0nWA5kGgWcn1bljvhqErl9CW4YRznttkCoh-AVewsD2knDtqu~SU9P-RW9KsXIYCBFoAP25pWDzPUlKh5g7SvvMCdpdPU3tAsOHzyZDA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS00"
+              },
+              {
+                "vsStageId": 20,
+                "name": "Shipshape Cargo Co.",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0yMA=="
+              }
+            ],
+            "vsRule": {
+              "name": "Splat Zones",
+              "rule": "AREA",
+              "id": "VnNSdWxlLTE="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T14:00:00Z",
+          "endTime": "2023-09-07T16:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 8,
+                "name": "Barnacle \u0026 Dime",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f70e9f5af477a39ccfab631bfb81c9e2cedb4cd0947fe260847c214a6d23695f_1.png?Expires=1704844800\u0026Signature=UshJ6zCIS6sJSTBYPrbmcdtkdsvE2FJqsG8~cdEzAUkxyQbhLNA5nXEVauwM9Z9LIHJI5g5-syCOJaS5oWfeSRKeg~e9KXnXeaW0bNfjAyoHxXHi5moapp1xwdbnj8XVKpmtN9wRnl86yfKol~aU4kx3okH4cReCR3Tlw3QyvUqXbEX70q9RXSzaTDilLmweJGT8LorrZMGsxBTkON0v-nr8XADsw6XeN5uqxhFryHcRE21tlxcdg5scUZHf8sj4VSnex1avJoSbXOPVPOZqx5iQ8EmG6SeTkBr4jUNv3OgfQ09e9tsKoBueHPdZ2akmRMKy4f3iKtNXhvVmEl6jPw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS04"
+              },
+              {
+                "vsStageId": 12,
+                "name": "Mahi-Mahi Resort",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/8273118c1ffe1bf6fe031c7d8c9795dab52632c9b76e8e9f01f644ac5ae0ccc0_1.png?Expires=1704844800\u0026Signature=kmBrEJtSYIEL-oGBC3M7UxCf2dvIQbRFFYVNovjzZEsVtskf4taTkCLSxcwnp-57d8Q5H3d9Q4rFV3yVnfhJaCshuWPF0uXaRzOLoM2nDMyHzmC2l8uFQpou7QG4OJRo1NynOlYEqHjCodkzqWMgc8E8cWSaRvofxprV01Xd0P66bIj0oVtnZ4N9YdWEZ2tDqG8bAgUJS~rHcFtM7YwXQkdEimOWx~q7kPb-VSRKJj9sljw2zM56yK144JIpdJhsOKpCi6-qhBnXawG187X6~eI4Gxcb9BlOy2MG8tzZ2WNP4MCI3YT6rd5PN00bzWeFZod4W80g54pflAVv90g-Mw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xMg=="
+              }
+            ],
+            "vsRule": {
+              "name": "Rainmaker",
+              "rule": "GOAL",
+              "id": "VnNSdWxlLTM="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T16:00:00Z",
+          "endTime": "2023-09-07T18:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 2,
+                "name": "Eeltail Alley",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png?Expires=1704844800\u0026Signature=CylRvhSFefkTHRGg0s0x341rDpK0dW1wPlRKW9EM4PVg72qKkE15JbX9DT4Xo18SyeYNM3rHdYMPM01dY5YLCFYBMkiXGBvC34dlUlZ253B6OES5Gua0Hwyt6-WTMPy0u2tinrVw6oSaYIH7gyQ1nf6T~AUEDd7yI5cIR~ZF4a2NRQMMQH36iDFNXCFxLNiM8S8JiT1GryeJGaKDFDqDMuPq00zGndRE5JGqiQ-VS5zLFTibwc5LkwJQUHOD4FpKo4JW4Ujb44-tYKQxT6iuKM8lpvQOwHehfLWRxL-yO77IZy-~IULB-iAH5Ru~fvQuctSbnGKgkpHS2bEvDoaVaw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0y"
+              },
+              {
+                "vsStageId": 3,
+                "name": "Hagglefish Market",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/8dc2f16d39c630bab40cead5b2485ca3559e829d0d3de0c2232c7a62fefb5fa9_1.png?Expires=1704844800\u0026Signature=PvdMv~ZvhiqBXY7GAW~wHyzNtGJu4w5fjQ0UOi4qEU7vxo~PTnVfccUX45cZuwlIE6dW4JiRWBOQ0IEkoHWoy2KWn0USb1ozDuWfmX0jhsF3lDshpKeQ1tulfMlKQLlN-ouNE-4Y28XNs2kp2ztHRCrdysOHHqC2Q98keeMCwoV5LvEN7rWayrhx3naFsL5~~maByVVhb4Dmnpk0FfIZgC-CnQQnmnKVC8gyT~gBapYufTpujXPh5CWkhnQCI7XPYneYwO8kdSV5YPuw96MV9JjZawetfJ~qgafTAMZG3CdEFF0jYyiIv6~X7ZsRIoMY2LrU7Y9V9bHju8YqC8kLKg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0z"
+              }
+            ],
+            "vsRule": {
+              "name": "Clam Blitz",
+              "rule": "CLAM",
+              "id": "VnNSdWxlLTQ="
+            }
+          },
+          "festMatchSettings": null
+        },
+        {
+          "startTime": "2023-09-07T18:00:00Z",
+          "endTime": "2023-09-07T20:00:00Z",
+          "xMatchSetting": {
+            "__isVsSetting": "XMatchSetting",
+            "__typename": "XMatchSetting",
+            "vsStages": [
+              {
+                "vsStageId": 5,
+                "name": "Um'ami Ruins",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f14c2a64e49d243679fc0884af91e1a07dc65600f9b90aefe92d7790dcffb191_1.png?Expires=1704844800\u0026Signature=ELc9vhZ9IYAuhsNuTlbWLSJsvqFc-4JNMXzFME6U1jBgt1sJxPCX5ek2qeqTcKe8IJZ00jduaQcUzUXWqTAzXVHZdc0E7PlFWfcawNXeHHq9ClwvE3r8OM94fYBds8GSdnQpT3vsrGZYYLNs3U~3J8XUfPWoSkwznbkpax0mXtOWMwAi1yHWnokTK9bVmwIXyFQqTL~7UhdrJXsawGmZ9X-nqqZCsXuEGQX6a-TzTfzvLN3l-ypYanUC~jKTuzHpAxfUYp3S7zWalxshhX7ofJJaeuKNv8IXcq22hItbTG06gUaudqkPHmciC5JsSjvOrkGCKuhSqgixHqcCR6xyug__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS01"
+              },
+              {
+                "vsStageId": 20,
+                "name": "Shipshape Cargo Co.",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_1.png?Expires=1704844800\u0026Signature=wvr67pB8u5ZQryyPjyCrNsFPn5-2R21FHFhTD0~-RQK8IM3vj~GiD9uuikE78w0V3DPzm4a4h853OfRHCYUYRkqfOdvnK7WFHp1LJQajgYVIRS1jnZK44f3uWD0Per9DnYWV~wjf-DD5jiIFnfVaMXPaNv6WoRCXpGf6m4IoP7zfBowIEcg6z-0nO1nNziwK5VqUo4lEyB3K99ui4lXY1jRNLPLMiIyDO4nZM6l5mkPDaRulos9adKVBTJ10MrzcD1yGnVly5qhZMa3mMWg59dJaRnd92B~GTWVYc9Pp-VdNGjo0uwy2ObQtRlZH9DKlcqFJYpQd8xhjhNLF8UveUw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0yMA=="
+              }
+            ],
+            "vsRule": {
+              "name": "Tower Control",
+              "rule": "LOFT",
+              "id": "VnNSdWxlLTI="
+            }
+          },
+          "festMatchSettings": null
+        }
+      ]
+    },
+    "eventSchedules": {
+      "nodes": [
+        {
+          "leagueMatchSetting": {
+            "leagueMatchEvent": {
+              "leagueMatchEventId": "SuperSubWeapon_LineMarker",
+              "name": "Work the Angles",
+              "desc": "Who's the best shot with an Angle Shooter?\u003cbr /\u003eLet's find out.",
+              "regulationUrl": null,
+              "regulation": "Aim is the name of the game! Bring your Angle Shooters for this battle of the best bounces.\u003cbr /\u003e\u003cbr /\u003e・ You can only use weapons that come with the Angle Shooter sub weapon.\u003cbr /\u003e・ Angle Shooter damage will be greatly increased for all players.\u003cbr /\u003e・ Angle Shooter ink consumption will also be greatly increased for all players.\u003cbr /\u003e・ Only primary gear abilities will be enabled! Secondary abilities will have no effect.",
+              "id": "TGVhZ3VlTWF0Y2hFdmVudC1TdXBlclN1YldlYXBvbl9MaW5lTWFya2Vy"
+            },
+            "vsStages": [
+              {
+                "vsStageId": 11,
+                "name": "Museum d'Alfonsino",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/b9d8cfa186d197a27e075600a107c99d9e21646d116730f0843e0fff0aaba7dd_1.png?Expires=1704844800\u0026Signature=eWr6sd-YmpgIbOdx96tTH4uFjPiuLFuF9YNiXa9yvJj5VJIBhJSCaPjn3VsGxSVTmRgkzFSnmcGPQ8dVjona8rQhTOycvVSQuJ4V9yfc4bYomdqw9U4ex1pYYTt1XIlxrQ7e1J3nEe9E0P6tOdqpzNb1Yhz2oPwnVnApUNBNoKSwc09W-Wxc~KVnmCx3yHP-~~sCK2HP7~r-D1uUITgBg6m-aU7zvUEJMFE2Aodokd8sI2vJXfUlQGyqXrm~LhdU28qrbjwnYbnliMcTNZhdSLtCZPNV-ZZpoQKRuF-dzl-zmHsabLCHcLkKYCnEbYbvm95pTAOsG7fCirxTKUmOYw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xMQ=="
+              },
+              {
+                "vsStageId": 13,
+                "name": "Inkblot Art Academy",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/40aba8b36a9439e2d670fde5b3478819ea8a94f9e503b9d783248a5716786f35_1.png?Expires=1704844800\u0026Signature=HFLQYG-CTDq97PpR9NKfPyvBRTI2yx2YrbENyqDsxn0wUqKu8joKmKpHWEd1yNTQX2ThYwkkgNYMBoxBR5xgixqC25jpqOk1m7Q4i2qAxhP0ICUK54JAqapK3IJsmfZYB4vaA5ouNBHzgvi4hsmF2~pnXNW2hw8evL45-d8q4xHpM85kAk4eAj1QpyFMNHxGFJgE1bt8IoPIoF3YLDNiQ1JFTUhPRATuFoNhdYIZD10~11ZNUvVlIZx8hqn4PMtosVr-ZHhcm7ny06M9ZvZ44H83VAbZJAG0nALjrVbcMsSID35lMVW~GdE2Q7iEUhokW3F8hZJRXl0uHX46uhG0cQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0xMw=="
+              }
+            ],
+            "__isVsSetting": "LeagueMatchSetting",
+            "__typename": "LeagueMatchSetting",
+            "vsRule": {
+              "name": "Splat Zones",
+              "rule": "AREA",
+              "id": "VnNSdWxlLTE="
+            }
+          },
+          "timePeriods": [
+            {
+              "startTime": "2023-09-07T02:00:00Z",
+              "endTime": "2023-09-07T04:00:00Z"
+            },
+            {
+              "startTime": "2023-09-07T10:00:00Z",
+              "endTime": "2023-09-07T12:00:00Z"
+            },
+            {
+              "startTime": "2023-09-07T18:00:00Z",
+              "endTime": "2023-09-07T20:00:00Z"
+            }
+          ]
+        },
+        {
+          "leagueMatchSetting": {
+            "leagueMatchEvent": {
+              "leagueMatchEventId": "CompetitionRehearsalsJP",
+              "name": "Tournament Test Run (Japan)",
+              "desc": "Brush up your skills before throwing\u003cbr /\u003edown in a tournament!",
+              "regulationUrl": "https://www.nintendo.co.jp/splatoon/koshien2023/online/index.html?utm_source=SplatNet3\u0026utm_medium=schedule\u0026utm_campaign=2023_spl_koshien",
+              "regulation": "This Challenge serves as a practice run for future tournaments in the Japan region. However, anyone can participate in this Challenge, regardless of whether they plan on participating in a future tournament.\u003cbr /\u003e\u003cbr /\u003eA separate application may be required to participate in tournaments, regardless of qualification status. Additionally, participation may be restricted depending on a player's country of residence or other factors.",
+              "id": "TGVhZ3VlTWF0Y2hFdmVudC1Db21wZXRpdGlvblJlaGVhcnNhbHNKUA=="
+            },
+            "vsStages": [
+              {
+                "vsStageId": 1,
+                "name": "Scorch Gorge",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/35f9ca08ccc2bf759774ab2cb886567c117b9287875ca92fb590c1294ddcdc1e_1.png?Expires=1704844800\u0026Signature=QPMKMTDhgndGoKsNAzY-CI0AmFsreK~IKQY4wtdQWiFE2kEISBOPV6YviW8s6OuwfYn8ipvIlZuwHL6kYE5BgdaqFExBb88ebxGcRwpjpclbSrIY5xdvkcQ5KPEJKx79UKReEhYMfcJyUoMa1t4fOrygSk~omqhAQdQEISkWFwfz-Ksna7HeLIIJ7iytPiRqX2GBcSlnJlp-jw8teYYD8NMwCzjWDOzxAOgQA2j6sjA5fYDRMoTVNPIFmhzy8WtpO-kL0mayDyEHM~I2S3JtGwU55BZgYas-xjUUHiZ0YHwNVe1xoJnf-YjTQEDPOh7Ro-T~GI4vCY6R6EaeEoRuaA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0x"
+              },
+              {
+                "vsStageId": 2,
+                "name": "Eeltail Alley",
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_1.png?Expires=1704844800\u0026Signature=CylRvhSFefkTHRGg0s0x341rDpK0dW1wPlRKW9EM4PVg72qKkE15JbX9DT4Xo18SyeYNM3rHdYMPM01dY5YLCFYBMkiXGBvC34dlUlZ253B6OES5Gua0Hwyt6-WTMPy0u2tinrVw6oSaYIH7gyQ1nf6T~AUEDd7yI5cIR~ZF4a2NRQMMQH36iDFNXCFxLNiM8S8JiT1GryeJGaKDFDqDMuPq00zGndRE5JGqiQ-VS5zLFTibwc5LkwJQUHOD4FpKo4JW4Ujb44-tYKQxT6iuKM8lpvQOwHehfLWRxL-yO77IZy-~IULB-iAH5Ru~fvQuctSbnGKgkpHS2bEvDoaVaw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "VnNTdGFnZS0y"
+              }
+            ],
+            "__isVsSetting": "LeagueMatchSetting",
+            "__typename": "LeagueMatchSetting",
+            "vsRule": {
+              "name": "Turf War",
+              "rule": "TURF_WAR",
+              "id": "VnNSdWxlLTA="
+            }
+          },
+          "timePeriods": [
+            {
+              "startTime": "2023-09-12T10:00:00Z",
+              "endTime": "2023-09-12T12:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    "festSchedules": {
+      "nodes": [
+        {
+          "startTime": "2023-09-06T20:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-06T22:00:00Z"
+        },
+        {
+          "startTime": "2023-09-06T22:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T00:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T00:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T02:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T02:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T04:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T04:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T06:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T06:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T08:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T08:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T10:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T10:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T12:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T12:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T14:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T14:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T16:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T16:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T18:00:00Z"
+        },
+        {
+          "startTime": "2023-09-07T18:00:00Z",
+          "festMatchSettings": null,
+          "endTime": "2023-09-07T20:00:00Z"
+        }
+      ]
+    },
+    "coopGroupingSchedule": {
+      "bannerImage": null,
+      "regularSchedules": {
+        "nodes": [
+          {
+            "startTime": "2023-09-05T16:00:00Z",
+            "endTime": "2023-09-07T08:00:00Z",
+            "setting": {
+              "__typename": "CoopNormalSetting",
+              "coopStage": {
+                "name": "Salmonid Smokeyard",
+                "thumbnailImage": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/630d89698e3e260ef12cb2a32e1cb2c4c83c0e58fc882762da1fa2cea19a5260_1.png?Expires=1704844800\u0026Signature=Rp1dA4vWMJLOlIhMR4X14KUKAy-4iqWfJ6AqfcuUIwG2nlynhABPzPtqNHfoAynuz7Euu60Xis~K2GubrbGshHoQwQjxWhXfHQUcJ8NxcS-98UWVpliy48A7yPIQP6-bA58KKfC8dG8NopNdsG1-4e-3d6KVjqfx5UlQqhwBEYDecu6XAdbh5dKCuUgvjPUpkKAdOKLDpaR~nolUXmY7yKlYJBzNF~ysoZkA0S0plIJL7jDCtN93uAw8~O3eHpntpGDPDy35Xf6AnNfopNUQ0bVB7CVokzbwnk~CtzCEJA7Q-CFow-hNd3X1hOW8c8vGkp0N06l0aY-0YLiqQZ~adA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/630d89698e3e260ef12cb2a32e1cb2c4c83c0e58fc882762da1fa2cea19a5260_0.png?Expires=1704844800\u0026Signature=vJq3PupmSHHvftsNjStvAfacoRVUm6gpadqZutosz4QZJd9iSxt-Szztk8RAb6gxhC3WeL9ZgLKGld0kEd7KVgnrtr70TRK0XR-i-idSwmVNtmhtZLFxBpkii8oq9HEWORmTCHSYOUQeqKn1okwftnRXy2ufWBHHtt7XVmUX7vjQib8Ie~OYL0A0I5tEQAshbNZY5jD-rSzavLFBMvGwjq~lPQP1i2IN4S9UYPioeVTqly7Z3dG6fQ-hlG86NAALqQrgn9C0sBBES~uu22MY73kLKllfIJmPdi0YTNsdHI7CXHrJcaoJ3pyRihqZLbPDfwoEDTTC8uck3Sf10jY4oA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "Q29vcFN0YWdlLTQ="
+              },
+              "__isCoopSetting": "CoopNormalSetting",
+              "weapons": [
+                {
+                  "name": "REEF-LUX 450",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/9baac6cc774d0e6f2ac8f6e217d700e6f1f47320130598c5f1e922210ccdcc89_0.png?Expires=1704844800\u0026Signature=aXcYKJVnyHN6YX4GEyer5o5N-f4sznwjdVT~rWeNckjCycR6aIBhlZ5EXw4RGDG5gMOWYVxB6TLwR48p2V1oCaKMD48McQ-NjqlsvYn4p4cmPTHYmlJMoLJ8Uqeg~u8X~elgglri7VEgh94yGyoYzuMFnUb5XEbRjPwhbyM6T7KWs4s8NzSnX~5cMVmI5xg4WuHET2iZgcZHDNv92UlTAvwDNb5yetcTnDSWNjnxIFsSKThsV5V6sD5WGhmm5qwtvTpoSwpTgqMXRZLdid7NWQ6UTJnX9NRtdremQsTLGfInyMTZ0-7XE1PyjGHI77D6gIUTyEAbwUljFTYeHDBXiQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Splatana Wiper",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/3aa72d418643038a9e3248af734b0d6a0bf3d3bf9793d75912b1b959f93c2258_0.png?Expires=1704844800\u0026Signature=lEKDxeGHnLdnNH62AfBVmHXihzUSCHR5RP145jAteQ01sYdgzdmYeMo6JmNnRCGONzwoIOYF5VSX8aI3w2~pHs6vzSpxPc~qs8G83xW4bMVEGaOVKAEf4j6Xe01KYfMha-b2YsuzcSo1j6WDQtIIzYkJUQrLWsa9k3gF6eZb2ESVU4k73jKSZ3ygjnfKTIy2fqnueO8R-6zS~aQfojHehFUnuafZ-HydxamLk2cIXJb3Y5zxWuazvEoccOPzLwTqPnFuADHM9pve~12UZYoOLIPC~E9~f6TJroRORoxevU9OlTjcqAeUWdcK4fLQR88Pc7~Hk~9vYrA3PKRoFm8g1A__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Heavy Edit Splatling",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/7f0192b8786a6fa7d5ed993022b1667de2fd90dadd8d34a3a7dff9578d34fa0a_0.png?Expires=1704844800\u0026Signature=tpZkyMayX8k3fvnuUaWS0M84duTO7MoqvgYhPL~YiNFmyomKZBsv6H9ZPNJuSzgR8Du8sDUlsoiJNUCPJFUDRPsYM~Gu2mF7Kz4K4sklCFlTOOwLET5itziEUaVwEL3nZxs28iRDFTvbVT9Qn4KCt6ufe-0BZLbJiDokFXhC6hm2LtzCgFWA-gsA1IscJZyZu9q--L0~5LJUAbA2Me6n-Os3HGP4PvCZntkMZa6~aV3v7vafv0nPF9KQaEgLfjTOtfSjrYmFBaMqkXPEa-LeCSrJvVD0GCf4f9uQCU615ngaVd6DR7qix0PULchrDC0Q4wUX78-KP~FYdZePYyfk0Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Goo Tuber",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/2b349390a464710982d7e1496130898e7b5a66c301aa44fc9e19332d42e360ad_0.png?Expires=1704844800\u0026Signature=Ovj26v4xJh0XAHyA~UTagNiPU3~X0Rvgjkttb4X8AooFsEQqVhW7wh4msXHlK1RWbnf44EbKrD89qeT~FwwYjX5yRivsRsLY7JKi6~B-mYmO2vRFPJysSCYm1ZW8o68yaWA2QCG7ErCg-UpaUCC28CDUhGIC9KPPzlTWOTOBKE4AB6FoAhzjaTiwwd847viV3Pg3PDcvSUndl9FNXms21DB9ql0zzIlEAOlBKh6GLSbAdLRps4nQfWh-3gTejBlCBXJQlN4S0K9OQ43qMjRK0LM7BBjC9i~Yr2FqnCxC7lwmKhBEUx67~VZGVKzHgeKQFAmSUgxFiQc1prRfCjHbXA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "startTime": "2023-09-07T08:00:00Z",
+            "endTime": "2023-09-09T00:00:00Z",
+            "setting": {
+              "__typename": "CoopNormalSetting",
+              "coopStage": {
+                "name": "Gone Fission Hydroplant",
+                "thumbnailImage": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/f1e4df4cff1dc5e0acc66a9654fecf949224f7e4f6bd36305d4600ac3fa3db7b_1.png?Expires=1704844800\u0026Signature=Kj9rF64U6HDINVKGUjuo2qM3GAQb-PI5lEgweC7mHhf2sj20BoFdxGN6vZYNrXSK3kF06zHhNTQ8sFmIXmkiEGE3t79HFFE10-Z8tuI7m8oXinLE13l73aro6j3vl1HOW6df8LhYiNZuIONSx7ccXJ3pLNghxC9JjniErupP-78W9~Vdw5AvArCI1WhFNsm230fkmM-rvpOYHgsYAtkLcQJoI1jgHHx7X59mdiDLEE1xjKtp078dLhOc2AOGs1qDvIV4HPRi2D0PcsNn99d~E0PoulMryoXPbco6T68x-Bkqv2SX3CaMjRleq6Mvt4dvWwqyJcq80boPhk4ecM1~vg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/f1e4df4cff1dc5e0acc66a9654fecf949224f7e4f6bd36305d4600ac3fa3db7b_0.png?Expires=1704844800\u0026Signature=HCDO4Ie8sItkKABznZV4Cao9t0kEXxBrDIN7Twy0hbFP~s5gMLKFnap2UcChHSdyHCnFvjPKWS5ebAd6AKhj4qlTx4LcAlaaYd1Uav0GAcnmteqW1RFpblLecLf2lx5fJVRwyjdeuf0VYVUnPw37ktj6~rohPVou9lHBETu2MsdUqLlRlZfZEYTe7D~EtP5qR9AClNqn7QJL~cfTmBDQIWtc1LHvfXMm8ok1SFG9R198aYZhKLOqD0BcHc9S2aAhaC-bSk9tErYj5otFEpScTJHejejxbYcu6XMTiUPHsLORqmkBqLTfiNJcGUYqdVV0P9eb6PWyxMVpGbI3Ee9O-g__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "Q29vcFN0YWdlLTc="
+              },
+              "__isCoopSetting": "CoopNormalSetting",
+              "weapons": [
+                {
+                  "name": "Splat Dualies",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/b43978029ea582de3aca34549cafd810df20082b94104634093392e11e30d9bd_0.png?Expires=1704844800\u0026Signature=ozWQBkEW9jin~LhJySYUhGb-lD1aEYnz89mGc2cZoc5VZNSbAlvJGZVTR~4tkdi1tHMFZ9qInlqJ8kQqaMfqXwAfaoDr~x3TuESd8iR8c4du93N6T-mRQoWLxYG4VTYl7iVZepdDE3jyAovMP2lM5kDoHC1rw3uO8YJGQUWNDNbG5Up7OPb7lWP9xWHJpJT5~X6Vl3g39XlZy9d88SGnblW~AubEcQRHiH5H0~QrPahzUY4xoz7UF6kYg8nTJ0S5WTysIYLkHHXV-qrAU5yO~~-HSe081jiv7FZqMzWLqEBIaVmdT~JkX-oCS3YbVsayhC5WunofmYSqxrn91reNwg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Splatana Stamper",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/ddd2a4258a70cdaf8a1dbc0ded024db497445d71f950fe7645fa8c69a178a082_0.png?Expires=1704844800\u0026Signature=nLsfP3UiMu9CSrnPJah-z3v0Xq4trzuXCw61Q6eW-JWsUNFj8Udo~Z4eJxidqVhM8H3sQ0T95im53T9H-2~hEpn-~cJ11qlKe0oGv4l4KUb-hIYFC-sLNGsTAQA1iAieZwso-Zlhf8w09DDpJj885PTndi5ZI8S-VWUvy6lkQRceVkwLUeM5eKpekcYS0Akf~EgYUFWhOiKoyYyQDZFSPaoA4Ol2jsAZRjqRqV2hoFSzij1dfiduBLsGd7f0GMBqdcH2rEER3gGiqdaXEgzlPzlVWaHSkGu9xEUlTtl1ws1NxfRX1NqlzQO2usxgwc5KKEUOn7SPRtmKo1u-3LiBRA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Explosher",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/1e32f5e1e65793585f6423e4fcae1a146a79d2a09e6e15575015af8a2032a4fe_0.png?Expires=1704844800\u0026Signature=UfqyL2ZOqpk0JusTjSORIHL0yWu3atV7XE2eD7s7BHoR1hmcdgEDR-rFmp-~c88buFSLV8KQlGPE85z-HymYJvPOASv73LGFHWPrLFw~C9C-PC0PQGjCxEv4aAZqrDYo3n31n9OHgoVVQRNCTd05gLmaGgySLWTPraCE9u-fwYqPz2TOAXhltsCY2Bb1gwxj8Y0-XuIbgHuxj0O-rcW8umbEEZCOkBbHIA8k6xzgaVt2if5NjNAHemwa85lvBaGiZSE4W4gSiwVFIlbNxpNbvV6alpFyKGHTYlFBWkFeVzmDCLlSAj8SH2Bi2sJbTDxONY7yCbUV15bhoWYW5e1cgA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Rapid Blaster Pro",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/954a5ea059f841fa5f1cd2596bb32f23b3d3b03fc3fa7972077bdbafe6051215_0.png?Expires=1704844800\u0026Signature=uEuejwfX3bmBbbGF7kvWpEgS9Y4A95trPMOiGMA2oeb-ZFI8o1Ufo8fdiWsxGRQMcQte6dZBnwEDJ9nc5L9KhzAPQ~IMpxV70NRi-ozaI4YTLhDh0rBOdGyjZ-PM9FKTAUYZOfyFCg-AUpvZTWPjTaGjgI5~pC4Ti7J7oueNPZKimr3chCnoRMhFzE7C7BHjtmdgb0ww0g9qdJJPjhmXp~1amGNHxQ1lEOUf9yaVpMWrap5wQSo4-miHlO96G2U5Q04Ng6Mytu1muSQB8WibKfqdVwVTmLUl4gLTix7IiAxnaXSlhrRngAkxWJECSexI8tQRLELKKTb-fNSpG52i2Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "startTime": "2023-09-09T00:00:00Z",
+            "endTime": "2023-09-10T16:00:00Z",
+            "setting": {
+              "__typename": "CoopNormalSetting",
+              "coopStage": {
+                "name": "Jammin' Salmon Junction",
+                "thumbnailImage": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/0e05d4caa34089a447535708370286f4ee6068661359b4d7cf6c319863424f84_1.png?Expires=1704844800\u0026Signature=To7U-EJPSZb3PMZ5iJ1dTjvn3ySyG5tsTN-8GJmvnY8ibqXCh4g6ss8GbRjfWRL2zkJfDPCJBGYkYmwC6ljWQt7K~6GzBqQRWhSAQfHiqnX1O49BMQR~TFjEI3T~WthwhNRu1alaYoQYP9G-YNsgdlnNmhU4WTsVwOyLbrRFMRPcBZGtVBL18NZQWd~xvM6ubSnIIElzn2tSZhacl-0zn~0x73ZNOvBkWGel6B8VXPPYiqvW3YDmhS4sUcwItu6QU1wU8XgVd9FV3tX3HVqO4Q7UuxSr7hTV33~OXcmFKRdV8RQJLKZqHKQhqZGK2h9rXc2KIqW~blhiBrmARWZYfA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/0e05d4caa34089a447535708370286f4ee6068661359b4d7cf6c319863424f84_0.png?Expires=1704844800\u0026Signature=RL1S-uL39wzBbidfKzITG4r7wKcHjTFdt1-yOAYE~D~rOOTOJ3zexTnXqbkwhy-n-hG6cptIyEFAjAGmdN~iL58a6yleyXQgkD8FGzuG8rGVZOTL9mYoCHGhNmCwldGBLXskgai~3K8oWKCrBuz84IrqkQyd63Cfo9aHo-HdVyKMUQhtnk1i1tfTZeUGj2Grbya0D69KGZvLiUhZGrEsUW2WdxUDDjH-ibx-lmEpbpAr-~2zOB9X3R6LlDXxUEPEOir9WRdkV0QRrLKGHdteagC8MWxQGkJadA4S0BtP5W~16If4I~RaHIZwufVO28lazHQqOi1hJSXI9j35dqv2AQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "Q29vcFN0YWdlLTg="
+              },
+              "__isCoopSetting": "CoopNormalSetting",
+              "weapons": [
+                {
+                  "name": "Splattershot Jr.",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/8e134a80cd54f4235329493afd43ff754b367a65e460facfcca862b174754b0e_0.png?Expires=1704844800\u0026Signature=RbqtRX4EQ2WllU9OPg~hNjTqMeoo29jdsA9tJySZmaRlgSrso1GPo1Zj09rls2-Jpjk9CTx1YtDF0HRkcvZWBfH0aTcP6Hq1jPWczBBvkOwKB5DwNGsU~8Tg9sG6Gx8GaYvYwXKBQ~qrvcYUx0Y3aMsnFTc6tTy9YNVIHsU~h4~HIQx~gklj6Ufh7-Sf2Bamf6TKPBPD9MHE6d4TpezKxbgkyCi-~Zh3CLH-AHATxGFGntO0xnhHNEcvjTNfMbJj2A-7f7opRJf82Axzd4Pw8nb~Yp-ubfQkY~30qiqFu7iFFj6uBlBl~lBKacUdcwnYgpRouTvdbGdKCvtLtSZ34Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "L-3 Nozzlenose",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/96833fc0f74242cd2bc73b241aab8a00d499ce9f6557722ef6503e12af8979f4_0.png?Expires=1704844800\u0026Signature=bG8cj-dxzeW8~L6S-qU4lKAmONCbLghQFJ8GivuescRG7YeBZMnYvnr2zroMdMq98rnL9ekP03oE-cq5p5XPpFpb6dDNaEFw8rFyLNO-TrX27COlKCjC6u5m4jcxvA56nLYABiTOl0qlCyxbJ3eJbFssg7yItelFbuJWxNMkGwn7VvE5UWAsfnRys9f4ccR3I-eaXciOua7Ug~JgOlJ1xfLIvjJJdo6LNBUYDM2SDRrh9tBf2jknpBHPLYHoFzo3RKZkKlv2BLrLEzVJrWoncwbf91onPEBqgSCls-P3-~ihanwghKvCzg6lCekW0ATtTUUtLRb0J18VHyGP42p7EA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Flingza Roller",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/8351e99589f03f49b5d681d36b083aaffd9c486a0558ab957ac44b0db0bb58bb_0.png?Expires=1704844800\u0026Signature=mcoxasYZzkjcwo9dPhHBtetUxnLseMOsNOvGpg~1fUTsxZjrXzYyUUbpBAT8t50fg530AHFw83Zh4KjMfIXBPEeqlVH2MEgKk62nMlnlKwLPOj4N~uqfl0mIDsq-5sltl9hqDl80QReKtXbr~0NpN04j~Hl500rc4irt~8TCN9iJO1h5MIklm1gfkCleYPU7RfzQ~9GOtY6UO6dsi-xAZ6tsPCYhwpSh3A3eOdT6OqToKHCHZdz62jOXVzeuw-JpN4aCZHSFHWapKiryM0MqGCVs9UrWKNe6Hu-IHmPRmtNuZ75q6iPPeEwNyjP9AjHJBoji-zmbpbgK6HJlHBrnFQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Bamboozler 14 Mk I",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/9c71334ea792864a00531040e0d05a183512e11277fd1fa681170874ba039268_0.png?Expires=1704844800\u0026Signature=Lp8979PSwlbHWVPhuoERwSW6vlhOA0HAZxXZDHWeurz790X1IVoP3OBSMejweMuj1l0OWAALcrHMKMzwDAE2PQQwseTEoBqULo3MBrf~I7gzJj6AqNPJnTqTeyT-jj6WZ9NuTAdvxWvD~oBQZbYTeisgeGMhMkLQesQJg6OzG9ie3vQSGyceVEFdEUStW9XF8oj4UHNCVkQa5ZUjVPwoBDQ~vhw400fAiznI8l5GZkZB8Ow4s-~E1VCoN4XxVOZ46Ii30jAT6225yk3xdAexDhjW6ALpbe~hj6hl9PRgUSuy3unSVMuvKhA8qZPsfuGuvZUF5Gn~b4MMsYXobDISRQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "startTime": "2023-09-10T16:00:00Z",
+            "endTime": "2023-09-12T08:00:00Z",
+            "setting": {
+              "__typename": "CoopNormalSetting",
+              "coopStage": {
+                "name": "Spawning Grounds",
+                "thumbnailImage": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/be584c7c7f547b8cbac318617f646680541f88071bc71db73cd461eb3ea6326e_1.png?Expires=1704844800\u0026Signature=Q-U-CnOq5nsUcAfL796d2BUNFhzA4zVfyMUMUwcItz2lP0XRYSs7vlg3FUjVsQ3itjCfIO6Gn~ALH6WqIrVQ6VPm5KDcNzWK0HIwrb3Fu40j6JklQvb1ZH9wFkoDnwKYuYV2hhwk3zWqO2Ur-gQYYyF-w2vAzCaJUVJE~rcPByr2BTZkwdzXyTYZIiYhmdtrv3UuZX1zvy8UfnC2og3Zm8a-vYQ9BMqmQKimjP-d~sy8fJjYrbNR9JM49CHybh5eJ8J6GOtvc212gWYptB0TAWqTEVpIUKOIHiM~nnkLuC72QdUHsu3jV4htrFsizVTlD93z4YWM6aiHzRlBl-TAmQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/be584c7c7f547b8cbac318617f646680541f88071bc71db73cd461eb3ea6326e_0.png?Expires=1704844800\u0026Signature=S0kcqSNJajK8uro0XroH9W3ct37Up0YY-TA3NMpxQv0RLGVSlD1IIdmC~YjgkYqNsduJe470JPGs028sLcNwaYuXC~hehovdQN1~kAf2OVvMopYnRVKKuE~1eX1krxaq0EyKjgQ9tGC2PChrhBDZgdY72UUZCPDvQHs0l1XArQcjtRQwMDOrYZZ80CPEWqAQVjNPJFo-Ikr6fwbwOAeGA4hM-~8ncazJbtYXXD0N0vWj8cn3g1PMcJcgLbcGQrMs2kyy6h4NYAeGEI3vvKYoimvIp1E6bC~wl1yzBgE14iJKPt5YvItx2OQntrTH9mEEDcl~6BOSYVxv1Q6Em2yitg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "Q29vcFN0YWdlLTE="
+              },
+              "__isCoopSetting": "CoopNormalSetting",
+              "weapons": [
+                {
+                  "name": "Carbon Roller",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/29358fd25b6ad1ba9e99f5721f0248af8bde7f1f757d00cbbc7a8a6be02a880d_0.png?Expires=1704844800\u0026Signature=aa8QHQX6QCPyWR3PFT8OyMvodzkwdrYbC-QGqmDsKQTsUzk1yvkT9aEg1xToc8BZeyDWgYPYk1tEXYhwPyG6r4tmp3HgU~lQQRODBHXiNzLJHXFtexLZjs4Ciyg8yuFZ89-wnKxR2vHD3bXLDv9RrzBTK~WDQKFXrn~aLBgWWzLLQQXbd4qLueGIutgI3EHPIYzYrALbDEMh2mwoRnpZQcsGOTpj-ni7pDYKGi4S8VOenld2fQ3iZYWEKagUfpVEjzk7K94Po7wu4TTdYUbk4NbN-r6-QEeNzyQdBLicADHLoBloU4rmCtpr9Gk68-oG2JmMqkqayMMTM0TUnQka0A__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Squeezer",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/db9f2ff8fab9f74c05c7589d43f132eacbff94154dcc20e09c864fced36d4d95_0.png?Expires=1704844800\u0026Signature=P~wXT04i-gKcMG41KlDQ0VNaOcObrNHHtC8XdKpmLFpBvTPvw1-QPP80639eUMpO7OG4TYH1RYu61NSu5ZzuGVu6KR4TlSmDnw1j~0V911HOHShom1An~CRFbBu4H-cEb6okDfe652YuloQIGR8-27a6xIKXSWQH0wdFwOljQosOtYZk-Kd6PmHifoEVIZn21oxn9U8pt~ii83Rh6-l6MKW6brjQSqh1VEYaaqZzT42bjQFtsyEb9nzRMBA5HtBK9k1EgE3pJ6pynoNL1LRBBxRJGuLD76YlgRwXAoyuzOpiEzImvPiV~VzsWKshf9ejdEQqtPmYDv-dYg8dtxEa4A__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "S-BLAST '92",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/3f8b7fb5cfa592fd251fe4f5707465e539ed79b8d4ae17df75198fbabec2e88f_0.png?Expires=1704844800\u0026Signature=IZymmZvE1v7REqV5Fe6M6BNKuyWay2L0AQBzFwx-VA6qp-a7zHiUhq4Yv6Cl1Ux37jrJDM0JuYhQfkyR~~NcfN~bgNxl-7FzcXkkqQC8poAWu3ZkXorqNJKof2oby2WCE1rKtEhWmcXxzlvmbaZ1-5oPRso-REqRATNisOYAzhENDEuTYcsqsdKzu3H3vT~f41e0k1pFRxrSRVzBfn4A5CLpxdvUFhYRR8JaoCD0t748ClLOcJRZBwdfA2o-Oj4hbOwD2fTFttYngV063YXdccEY1HUBRzTAft98xa46xkY~SJo3BcvwljG527zOnyAuD-IasW~RENkhO-dkQOrZmw__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Snipewriter 5H",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/082489b182fbbabddde40831dac5867d6acc4778b6a38d8f5c8d445455d638eb_0.png?Expires=1704844800\u0026Signature=Fe8KiS-5U5tUJL3FonxHY62Ig8dvGrf~rNWjV~sa03blJx86O0~QSJjjNvg8BI3kLulmqBLvnuOQBR3~DhDyz71SIMwIR2X9kb0mHR9ie-69jBL5S3Uf2YEMWDOZUcYIL3yVOxnHscENRkZhZLHCNQcSz6RjbhDabzLvnAv3enm0-URuwR5RDMXSHc9MZk-EIXMzxr8awnDrVMcj9Vlo6iPrNoUvOo9z9DDq-S~CYaZomx3bQRJ6Su0SDpQ~rnXOVwAQDHMjIJP6IZ9nRhno1aYGiZSayeSXu2hUm5yD9J3qPdo37eA18uvrXFtJ34Fg5s-7LjUomIrhtHIPFujNiA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "startTime": "2023-09-12T08:00:00Z",
+            "endTime": "2023-09-14T00:00:00Z",
+            "setting": {
+              "__typename": "CoopNormalSetting",
+              "coopStage": {
+                "name": "Sockeye Station",
+                "thumbnailImage": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/low_resolution/3418d2d89ef84288c78915b9acb63b4ad48df7bfcb48c27d6597920787e147ec_1.png?Expires=1704844800\u0026Signature=T2MH6c7W6sMFJA-0w9bJ8w~Hyo7tiaFimJKxb3AVA-QIc6eEsCAssdbEdRFAxBxaFMObmINkVHzcNYtMPFtQ4sk1~soCOb5G3c11vwy542YB5o1tLrBQkK52rXzhlM~LZIkT774tFS9rnaeGfEEv47mpvGuc2qzXYsopDaOtquFStyyFEuDHTGzN9XbydzhCdFcz4KpoVhxqXDXubyRgPMOBKMSFzFzoO0R1o3ONqQ~5Qg2c7tVKwaUGPKgBom5pATh6w7BYjf15-R~OoeXPP7XWio2ixGC3NFJ9ckKkGjk-L5v-eDwMTpnscxSbFjn40-mbLGvks3IXDEq6gNcLwg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "image": {
+                  "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/3418d2d89ef84288c78915b9acb63b4ad48df7bfcb48c27d6597920787e147ec_0.png?Expires=1704844800\u0026Signature=teRqjyRYaUZ0ZY8dgA8GKXaVoG4TVH~9jaaIebQo4nRcFXB~w-C8z2~2Tm~CRLb5V2Y1R-c28z5RXQwJbQRAjtwfjsPm~~u2DPK7Rz6UNYD33XQlNtORdjfrvBYoxu1~ed8iaHv-ki-A5NSx7iCupgNcn-lCUz-ucptd~lW2JfEgMcYown43~omPFQgB~LY8Sg3E-LzFZ2oUcBroGqCuF10BMbi57mHrYv1SW7CBoJ-BD2xoPiGC9Wd5~dojqXYd1fvwfEy8fKwVsEv0Hc39L~p7lingDqO8YyGwWuXKZ1nXaX0Fbgh~QZgXsfWsII~HWbM18BmdOoqpzf6faTBVuQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                },
+                "id": "Q29vcFN0YWdlLTI="
+              },
+              "__isCoopSetting": "CoopNormalSetting",
+              "weapons": [
+                {
+                  "name": "Dapple Dualies",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/f1c8fc32bd90fc9258dc17e9f9bcfd5e6498f6e283709bf1896b78193b8e39e9_0.png?Expires=1704844800\u0026Signature=sohb4sJ4GDtqYSvQRMcZty~WQceQQs6Bf3GEtCrn-m-zKpY5PIEx~7JDltvZM9~APkawOoIFvRuJQwr8p5-2n5PQiqE~oEo5S8nGSjjEpe~S9-4wdQSyoza0m~POtbuiYajy0lyyXCJHznePRYKKW9DrhOYhTzWaHfLWkeyky~-wLECPCYRe9jmJQnkYaHqnET0IL03gzNIrXgEUGGtO0B4tPgcMVj13qTukVuTrtnNqxDKnO~52xaJsutY0exUOjEqCoJ-BnHFVDDGxJiUjK-musx~QVQkxs9STTDxht~M2X6vnhurbBrqhz27kYxSxbUeZ9vOsZtCHXe-bx5DEWQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Splat Brella",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/15d101d0d11acbb8159e2701282879f2617d90c8573fd2f2239807721ff54ca4_0.png?Expires=1704844800\u0026Signature=cxvmfx7ybiQIOqNy8F3inad6rE~EwrWa50LtFofNuREXJiyUp4i4SqgW8afMMGUDiYwjQqGn9H8ZsmAYRIhDyV95mb8wH0HMTBTtMp2T07deec~zIeK1wThnsk0BHoSruyPHWA9yUQKFH4H8qIjx-tbaMWPbgFRzez9OR~mu4lGHk42mcun3o9e2j65q9oyhM~8r5NecXwkleo15FpW3ExWZubEqzsUcLgny6DG32BgAjvgVhP06e0Qm~JKMs~LJZgfEjjZkxnFcq7p1MQ1xCgrPHByufnjdPeocP~4z4RvEdPhjafiSMFlSo-3TvPQuZvjCAk~U7oI5e4HA4izWRg__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Range Blaster",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/0d2963b386b6da598b8da1087eab3f48b99256e2e6a20fc8bbe53b34579fb338_0.png?Expires=1704844800\u0026Signature=tF-49Mpolf9yoHy5VfbkCogSpyAdgv83B2gwWeXLY5ssGKhuPvZxcNyfxMj5F4EA2OBQRYMQoEXdLCCXlQ0DqBR0FjA7eteIhY1QkppRdF5-z-Y5GwYD2jhkxGHqnW9uTWAueQCfrNJw26DR4xor1SB1b0B4Ka5cwNW~reCKb-VCkOLHtZNBodxBg57~12qtmqx4GBSjJA5W7VEJqnVWpTQw0-PiLPAwpDtLK~NXvp0-17D~jbYbqQ9a2BxXfjKiIqJIfIwt3JfHMR1FEDTBp9Dx4dSHpqw8GIdHDtdY4T6baTlmxfjnB7xc6XBU8gQQISO92V1F5WPbOfe1h-jmVA__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                },
+                {
+                  "name": "Jet Squelcher",
+                  "image": {
+                    "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/weapon_illust/035920eb9428955c25aecb8a56c2b1b58f3e322af3657d921db1778de4b80c59_0.png?Expires=1704844800\u0026Signature=kNeGNht0FLHZHV5V5HQfVxElw1UsW-C6-7nk0jOSvCJIyT7aMdVCb1UxAcoMD25RQ0-J-TAgaJCndEzwPhSXzF2Cq0JX2tLkzEzQFjdYMcElGle~YSOr6zT5FtjImujwhGYgZ-kR97u6Cb6R5GuzKvdb9u0Sx-rgmX-txguQQbiQ1hwTLel5sdu95W-sPEAXQQPn8A8S82iPVJw41jxZxUDAl1C7U7g0iYeP8YW6IUtzpjWH0Be6gr~wCcExyflR7GdIGHyeUT1yby~dVXU-7JdiXRGu6iV9PiSQ59jCToLrtqoQspgxvy8VKntPUD-vPrOqyRcr6FXV81RUn9wcJQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "bigRunSchedules": {
+        "nodes": []
+      },
+      "teamContestSchedules": {
+        "nodes": []
+      }
+    },
+    "currentFest": null,
+    "currentPlayer": {
+      "userIcon": {
+        "url": "https://cdn-image-e0d67c509fb203858ebcb2fe3f88c2aa.baas.nintendo.com/1/873635dd214b5768"
+      }
+    },
+    "vsStages": {
+      "nodes": [
+        {
+          "vsStageId": 1,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/35f9ca08ccc2bf759774ab2cb886567c117b9287875ca92fb590c1294ddcdc1e_0.png?Expires=1704844800\u0026Signature=nGnpUVh3L5lc1LtIXUzRL9zmtl78QjCLSTIxvyschHoVBcxqDVSjtYsduqbCxZHC0aWtZw~QvkCw7NL1Qai9co9dcYZMsgCs2dMLulirJjE-d2n2GKGMwrPnGOCYgXjAdL~4jfURjCtLTi2FoTU4CdIYVLlXI-5AnCin-LEuGBxjn33eUP~f4-YYhbWQv6JpFApTytOz9AyNHefO4EDxvjp26vU8dJc17pvvjJtXsogleCog5nLssVwQbZs5Gv7dcRCpp6wVC1PK64SjNrsRwGPFN8~dHXWhbhDgYkyCp6gXH7R0ZDiLSySDy3xxunAcTrpu96-UeMHfOh1X27b6yQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Scorch Gorge",
+          "stats": {
+            "winRateAr": null,
+            "winRateLf": null,
+            "winRateGl": null,
+            "winRateCl": null,
+            "winRateTw": 0.5
+          },
+          "id": "VnNTdGFnZS0x"
+        },
+        {
+          "vsStageId": 2,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/898e1ae6c737a9d44552c7c81f9b710676492681525c514eadc68a6780aa52af_0.png?Expires=1704844800\u0026Signature=XrH-t9y1iI6dTRtKDTIEOyuPwxvsVnqC5mFv2WKiyEFCykUk8RltqGhPjJNXTEu27V6mjjdFmz0OZ9VEtm6icnhaacflwh8N6s5wY8LfeNatiREY1Y~u7aFj1RwsVqcG0JfiXAD48fVPri1cWPBxY1nTeHkXwYmjc0HrBraBLrUamA-MKwOxz3qJ38ggQ2in1Nj0zRUnsFdadP8bwfUZyhhpwmIumLZSZ6DI0DDRtvh00J3BbOL56sUoeuo4iiTBSronYnCpWIEK-bscNntyP2AzEcvlt5kKWhyePuWcxp~ufmZ5SkvgFudyLekkfvm0vjQRtcqBLNkd2om-RDaFSQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Eeltail Alley",
+          "stats": {
+            "winRateAr": null,
+            "winRateLf": null,
+            "winRateGl": null,
+            "winRateCl": null,
+            "winRateTw": 0.0
+          },
+          "id": "VnNTdGFnZS0y"
+        },
+        {
+          "vsStageId": 3,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/8dc2f16d39c630bab40cead5b2485ca3559e829d0d3de0c2232c7a62fefb5fa9_0.png?Expires=1704844800\u0026Signature=HhFuxEauedzLAndQxPu9WCNeY-dE34JykzVpljsH5unz8clwDkk75SFGKNPqlsLKO5CiDoEy3kbsFvrTJLqNospP5HR8buqw8v05oghrGH137SdKnUJzJuXjDHXnO7enFiZ6HbSWwRbY9x-rRHqSIyX6-0spu0Y-L23nAQES0a0P~Nu3S0C81HbpIE5K58B2D6O4K3QTM7K5s20n9P8eIXP-S~S5hTUvsDrUB7GQ~Q1mlsHezYJhdteNm9yj2eYs-ZYyVSARpNl0GNly0KsJ40pMhY5ul2ZtXiPOFx1GRaoOIUnSBFU8CQvdOXxn6GanaL5wRcvKKBFd93DY~QNPPA__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Hagglefish Market",
+          "stats": {
+            "winRateAr": null,
+            "winRateLf": null,
+            "winRateGl": null,
+            "winRateCl": null,
+            "winRateTw": 1.0
+          },
+          "id": "VnNTdGFnZS0z"
+        },
+        {
+          "vsStageId": 4,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/9b1c17b2075479d0397d2fb96efbc6fa3a28900712920e5fe1e9dfc59c6abc5c_0.png?Expires=1704844800\u0026Signature=Ors3LjPT62AJpdlpM2ypAGwt6a2wu~mFHoinTfipsIqHEPfu6Td2JVHqdZngvZHGQz61DkktZxS-Zp7vVEFxaui6nqUO5uLFSF5u~sQhXUL2tYSvOCVDrVAym3ZFliqSi8vLlWJE5WWzGLScRJ~-P3OFFHQjuDev1P7ylicxLyXbBW96eyNGmndpZ0VE5WhGYqIEMzic1CvvdTizSN6ks3gQckxGZbd9IWR6-DZmjQlhSD022NIoxPY-poy50l1BQVCEyf5-Ur-spB2dd2YKbr7wyFcAjFxS9GtVZcA589QRrtmQ8bm~DR9sJP3ZXVYVP7AA4b-~FJ6BXT2URyqzwQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Undertow Spillway",
+          "stats": {
+            "winRateAr": null,
+            "winRateLf": null,
+            "winRateGl": null,
+            "winRateCl": null,
+            "winRateTw": 0.0
+          },
+          "id": "VnNTdGFnZS00"
+        },
+        {
+          "vsStageId": 5,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/f14c2a64e49d243679fc0884af91e1a07dc65600f9b90aefe92d7790dcffb191_0.png?Expires=1704844800\u0026Signature=qtTCD7rXXMXyXGfCJ4ZBXZYaCcYFhZbXRQj2KRiyj8EGaDVELcvCRbTbuRHPk-4smDSmL6~o2T27AKhH4CLVfGwgol5rrJX2-8tumASHjn~tMwyEQ0gcZh3JpZRfA5olvBGtGb8schEabmWCa4YkiKhIMxziaZfPQd1~fTM-SzDoOBgOXqA-qPAjgB14l7OKGDF~t9VH546ZZwPI4iW7DlivdU6Y3-QPbWA3aTOUDj1-PGfaoXucuM5WAXPGjaeWOu5xfgC3ts7JIXiRxJLbePiNSVGcbxVUgBu2SDdDVWmaTlo4FlhNiN5J6tSweUEUzI4HiJ6tgTdBNCcmr7IsPg__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Um'ami Ruins",
+          "stats": null,
+          "id": "VnNTdGFnZS01"
+        },
+        {
+          "vsStageId": 6,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/de1f212e9ff0648f36cd3b8e0917ef36b3bd51445159297dcb948f34a09f2f05_0.png?Expires=1704844800\u0026Signature=USkV3bfiuEmv3MEPOeyqqGqQZwHtsZ5sK2nj1OuWK2F4-LneRljaiXEq2sMdt9gTrfJoapKBm1OSQ292LE8AtOcr757tcU2wRzH23sgM60PvsISaq6LAOauef00Jg4sRwo5LxojDq7xt5FcKTZW8zREsaxQXwkhY-fp6TULol-CbGTZB0VCORhtER7pukaxE15x3VofMNXLy1uKfxsUyo9ZkkYSBeJaHaW0sjX175rly4lAd8zQmkfMTrpA5gdYKo-aGY7EapVEwteS8IzUT6O7yXfbMYIwebvLfxkWK9G6GU4LTgTqLnrTB3Yx6OjM73zZkcxW9jLQYgZtkpGTl0Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Mincemeat Metalworks",
+          "stats": null,
+          "id": "VnNTdGFnZS02"
+        },
+        {
+          "vsStageId": 7,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/cd84d711b47a424334569ac20f33f8e0ab6a652dc07854dcd36508a0081e9034_0.png?Expires=1704844800\u0026Signature=qSCux5OtiT0Hs55EC~6j3kG6qRiUQxlyA6Aw7rZfk1mRVB0kpuIIZGRytCBli7yOx0HdEjDZLNxolTIxQX92jdTTcC~nqivQvaenY0tRS0IPT~YMErwKdQO35X41HqN3WaYs4GzgJp0attHCJNqernrS845wx~wfja~Pb5Mrq6z5rP~65-2Ib3KeVYz5XP0eJ6CoJdWygO4VbVi9JUGO-Dj5vFBgkWVS~U1nEywNNsvighSoMMegjEwbzsBBlXVo8AigaJ1bReN6TT9~ecz9UhaMQHKkEVKaANgx45fSsBAVeXNvCeS0VtTvX4pTqmVkOl5dgg-F3hqQ-T52zIoE5w__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Brinewater Springs",
+          "stats": null,
+          "id": "VnNTdGFnZS03"
+        },
+        {
+          "vsStageId": 8,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/f70e9f5af477a39ccfab631bfb81c9e2cedb4cd0947fe260847c214a6d23695f_0.png?Expires=1704844800\u0026Signature=rZ6fIYhzRXhdceavV8lQ1IrKWZ66KMNgjARxpW44lohE9WdmcSSWUBUhqVd4gn4k4e8Sq-ZMTANk65tONHtnWqLasCFe93UL5ElBEJicC-c8QNb08QvAtMperu7JKcLrLbT91H7ktZ2efaBoloqDqM9QZ-2U4f6IKUFr1csK6qcOLc8bmD7GrkL8HigWH3059oQTHLru7KosqD6U409ayGK38inx~-BADXbFhR38UDoyn8ETVM85BgImwneCRiub6mcN~GKZ9De9kZ~LcTDYf~6jLG18UGw76BzixK427Gj~2nOd2dvjJmKKtVvrj1Xeb6UYSfZ4H-zNXZIZ4-y~sQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Barnacle \u0026 Dime",
+          "stats": null,
+          "id": "VnNTdGFnZS04"
+        },
+        {
+          "vsStageId": 9,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/488017f3ce712fca9fb37d61fe306343054449bb2d2bb1751d95f54a98564cae_0.png?Expires=1704844800\u0026Signature=vBfALqPe0ui8V3EmDypwbLm9JCFVnVajGSfl1ej1WFlRXK2fxTtcl3f9PAsvys0xi9lIM4B6pzVmBWxU2MaRp55Qn9DAzuaD7SzaGxwlbOHhknoUOBiMg4UWS8MRkbjl3A-LSrAhqQMWvm6SbWuMx907pBTlcDAsYccPA0gM16khCdagsOnPyli~kphWOvqIe62cNNhBT2qh1lfA3Y3ApoTwnROzKqDj4WKGMhObMc9iKU3-UAk8OnifKiAdEOJmaETs1QISZgrNpGMa03cBxI0inAI30vSweirY1CyZsdRR5ZdVFsM4eebk8UuSDxnWk~zYCu3s58W3NfsNEh0umQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Flounder Heights",
+          "stats": null,
+          "id": "VnNTdGFnZS05"
+        },
+        {
+          "vsStageId": 10,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/1db8ab338b64b464df50e7f9e270e59423ff8caac6f09679a24f1b7acf3a82f3_0.png?Expires=1704844800\u0026Signature=imlSF8jNrJxfgdEdo9MdzxdHBrPuUfW9zJ7pLVQy1QyzZwBHlxf4rQnGT6r0nw-fVFwGmFMXDb0CMeepSv2QoiNoDy3MqpksXH44GWbd9QxomgH1Gf2nmUiA8fblLfqO1p28LU1Fu~XMVENkLNGlqeF5HQzOaasE6r-o7AVZC510q0Ata-6b5lQgFvX1gStCwbEaNN8nRAn6TOK00yKa59DLN9mJUhI6ncyWaiwEhF3P~lvT2X1Vt4NVTPa06-LTjjjhZUpBgTWoRFouQ2pMChzWAYoOs6ic851Cz7QrfoD4WhXaAU7ON7bBxeXgwO8TAP~bMDNYQOjVRODOaRAlrw__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Hammerhead Bridge",
+          "stats": {
+            "winRateAr": null,
+            "winRateLf": null,
+            "winRateGl": null,
+            "winRateCl": null,
+            "winRateTw": 0.0
+          },
+          "id": "VnNTdGFnZS0xMA=="
+        },
+        {
+          "vsStageId": 11,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/b9d8cfa186d197a27e075600a107c99d9e21646d116730f0843e0fff0aaba7dd_0.png?Expires=1704844800\u0026Signature=A~DKJS2pH-h1~vhMPgWwPlgyviD6GxNCvyuBK9Pr~x4JWbQ4e6t2ew-eHu6l2564RjnHQ1fl3NMi6P0HYSFJNta7ASH9JPZdzLIeH9auARNtkV~c6qLiwOweCN52kE7bFnBq0-T1kZRSQG8tBVZjfY80DHes4A2F6RexaJuKfwLhz6c3Dd6yNkldXgjruSN5RwjIgAIcPFvO9i-m4Gep4KSp5StPDO~wpus8uxHS1Jz75mgJvMqKRnLQ8s~chXW2xGIhpMItv-AIBpl2bzhs0tnoZKwPmi6Uhr0nvj75dAC8pQgvDM5Bg13D-eGV9FmInIAVyIoy~V8XzcmvpYnYDg__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Museum d'Alfonsino",
+          "stats": null,
+          "id": "VnNTdGFnZS0xMQ=="
+        },
+        {
+          "vsStageId": 12,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/8273118c1ffe1bf6fe031c7d8c9795dab52632c9b76e8e9f01f644ac5ae0ccc0_0.png?Expires=1704844800\u0026Signature=iRDeKXi0fhVszGOXXH8-049B8PVL0dF7DtdQPxE5iCj0JlB2p-uVUcu6KEsk3aKoNYs2Xyw9xY1jCYcWIaWRDuMIZzugttcLUGiQ4RbWimUABIM3zMI8ulP~Y0EKa6aldK464pll4VA3aQz5HFSk1U91HKvL0drpZNUmpvDPY3zOCumK5vw4MOleR1fqRSrgUcBYIAyvWMm6T7CmqVw3JDTlnCQE4e7caXFIs7dRXyld8Qp8~olQd14JXxXQlWNlu~MfzuYOuQF4zGsHnsUZVjYhVvWML8WPUXq6Grysj3RAnqRH4Y5jz6NHCn1aJ93R390jq~Pw5mBb614KgyRQ1g__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Mahi-Mahi Resort",
+          "stats": {
+            "winRateAr": null,
+            "winRateLf": null,
+            "winRateGl": null,
+            "winRateCl": null,
+            "winRateTw": 1.0
+          },
+          "id": "VnNTdGFnZS0xMg=="
+        },
+        {
+          "vsStageId": 13,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/40aba8b36a9439e2d670fde5b3478819ea8a94f9e503b9d783248a5716786f35_0.png?Expires=1704844800\u0026Signature=PbFAw-H7yAGFKcD~wwT30AC0VEc7KAWUH9CkRs3yJumgveFifzbFxg5zfjV5LZqjKKUXA3JgtTJ5hDWQb5Hb2N-thUj2WhOUsMoKUdz1pHyBeqaA4Ewrf0NWcMcI3SlvzPjEJFOUObA7CmYC6kw1t-WvH2EEP4s1l0z9nmx822Sz2nUHdZ~oP4FcjBza0VGMEsI6CXx26G7rpOBOazuCnHJLJR0PSlYxSmerwROtRJXGDuJ-Ki4QmMfvCNB~F4hKW96ClOkx72lJCIAg~YVaWhfstw1IHFibi5jCXfL16-I3DTMej4fld1vwqeY-zkfNEych7mzs~JE7qJEH2z6q~g__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Inkblot Art Academy",
+          "stats": null,
+          "id": "VnNTdGFnZS0xMw=="
+        },
+        {
+          "vsStageId": 14,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/48684c69d5c5a4ffaf16b712a4895545a8d01196115d514fc878ce99863bb3e9_0.png?Expires=1704844800\u0026Signature=DmvNL~c93q1xSKLY7ife86T1IlqqTVzFbOdQdb9iRCUv1i8qpKknUMx3~Q5Rq-kckgM3Mq7xkA0xwcJP9P53pYC9n5oYwcDi-CaQkxtgyPeSG-rOcp1r6IjH6aDQftwqjo862y6x8t-KJkGe46lAXg8JlG1L7N9DWbyndxu~iDLuiMUX5VbW5wy9sKLtOR98WWuLSoGVgfWHBKBagzLYaIi8hyvXWWmKod-Wr-UQn5-SkF2udMM1mnGuxWyj4WCdQxyAw~i-dZEKeL6SwpAI4psGOcgV4OGXh0cUQUUbd7s47-xDEzRfD4iBa3vq6grX98QHHnAIOxKUgW8E5KIUDw__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Sturgeon Shipyard",
+          "stats": null,
+          "id": "VnNTdGFnZS0xNA=="
+        },
+        {
+          "vsStageId": 15,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/a8ba96c3dbd015b7bc6ea4fa067245c4e9aee62b6696cb41e02d35139dd21fe7_0.png?Expires=1704844800\u0026Signature=tp1ZHb2-87KFpR7FHz1gzwkj89c22JkMG45~PrIELVN0cJCeirxg3T93Y5-iT4YQOeZZq1nkXWlRA6hLiVcLoZTsU7v3heImfLI5zDndOvD-mMJQysUNJSbX-d9PPF2aEaJ-9ncRccgfWRy4mQkHwNWUanFk~CbjS1KAGF625rP~LRwDGGGIGocLn-JjhiVPcV4BDvN657j11Pbs6p-Kg3O3vWDOUKqU~ZhxNQc~NLS~ZeUxmx6xY7K~ZBJcPOP1u4afefI4Ob9Q3kkz~x9TL5K5NspFdKKLDw8gY-8e8C8iPYnyi5d2lWmojbgguIUP6JBneHxprIxACPBTV2c2Mg__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "MakoMart",
+          "stats": {
+            "winRateAr": null,
+            "winRateLf": null,
+            "winRateGl": null,
+            "winRateCl": null,
+            "winRateTw": 0.75
+          },
+          "id": "VnNTdGFnZS0xNQ=="
+        },
+        {
+          "vsStageId": 16,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/61ea801fa4ed32360dcaf83986222ded46a72dbf56194acc6d0cf4659a92ba85_0.png?Expires=1704844800\u0026Signature=g-i~NuplOTbk44tSVFGuL-13qo6IemAIvo7Ao4ZuDd6kMDW1DbQ27AQTaNf~lPgGRr4Tr65HDgAy1IGstanO6MqDACCLvH~B4PliCtkG23Vp59iCL6sB0M6AA-hGr4ZALK2AK5rsM47xxe9PYIsP-r~FJjiNHPSlsrxvfvy87fPeUldQC-4MRKs9z31JqydJcqUCk9r40KEzy7A76mLtA96CKMVEcXxI8MoazxuSCqC6qNmK7zdhjGvEldrh3Z4Hu792hcKrWpZCpKE54CMmYFDnGVQIa2rbdrpgN2mqsCbJ1QpH5MN2zMjcZosnsBV-ThQ4S0dCzmt6ImY0qfNRZQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Wahoo World",
+          "stats": {
+            "winRateAr": null,
+            "winRateLf": null,
+            "winRateGl": null,
+            "winRateCl": null,
+            "winRateTw": 0.0
+          },
+          "id": "VnNTdGFnZS0xNg=="
+        },
+        {
+          "vsStageId": 17,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/7b3cf118bd9f45d141cd6db0ee75b06e697fa83945c7fe1e6f8483de6a591f5f_0.png?Expires=1704844800\u0026Signature=BsrBq7R~o1SzyGOpSyN3iX-rEaJ9ngaUAQnH5Fyw3oPJsI68NVcZ5GNoHzqBZO96cYhBL0bKFro5Yxwe4RfkDTS8iDad0bMFEWrLt3AiPWRB7FmCRX9HLYwmSrZxkG8VhxwiZLBrkS6IdRCa3fBZahyyME8QSfywGFJPCqLNTgS4rrzBQMxF-OpEOkJj8S5RErEQplC3NxVDK3vy6aIfFlcBRzjIuVeiOe3uSj3IUyjfQ8SH-rqA6vSufUT8ps8iM8h6Bt6dVC0FAW9sIkJx62nr1sTi3OtOMkm77LttRMELkImTcwM-o6-xcouCLUsqcSRygh2Y6EWUu1p9RdIZAQ__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Humpback Pump Track",
+          "stats": null,
+          "id": "VnNTdGFnZS0xNw=="
+        },
+        {
+          "vsStageId": 18,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/0b7fd997781e03eb9d5bf1875ed070f698afc654f4fe929452c65aa26c0a35fd_0.png?Expires=1704844800\u0026Signature=Ikfsir8BB2797ke7XIk8W40jRdWzMJxSkTea-5-tL~MH6LULVuMyHqdq2Rblq~BGgAG~5Jj~6-3GH8EWvHbY~x0rTBB7YCHMSArJzFzES6t~PZM7j1vcTi3zvwiAHlRvOvqfG24TwI6pzGMzlPeE21VzvFunjBfQ3upvWhAWr~GXEJnvzwoaZONiR9-MgMbKVleAszIVcfyyd67avAjHqMFFXVnKv654eaiKBbXQ9kSZ1k53VC-nliz9O78lvKjl27aeofdWiLjHDmZ-dmfT7je3I8vRDrijGHqxuSHNBxtGIEubsgwUT28Q2MCLm3hYSi-XMiQJxLGCQZIsedFm2A__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Manta Maria",
+          "stats": null,
+          "id": "VnNTdGFnZS0xOA=="
+        },
+        {
+          "vsStageId": 19,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/4e0e9e2046aff1d635e23946d9f0a461486d2aab349079e551037e426ac82c7a_0.png?Expires=1704844800\u0026Signature=YMymo-Na8sNgdn1IWTVzTRKrB6pDNcfu-GX~Gbd8WtGcTyvDx0ondcmDKdnNIOCk41D-IoUDWtj-WPoQZDneGem4KiBwzDpsNFFyyygXtWBkJ~BCnoFR5h9Dl16Dm8jCvhvXwtWuV9~laL9FqbeGuPxoGWlT1S~-R9AobMT-2CkL1lqInNMrt36sjKFPuX3X2qdxGZqD4qe6wSnzQM4VlYAo4zgdQorRz0qgmvKMvdYthpbPUOHM26j60Jdfu48TrWhaMBt-0LJb5pzRixz0CWQzeGJD6rATSfYC8~j9I9Yn6BjmW3qIZ2bvNtga3B4ilbYVPu0c5GhipZiJYCGcYw__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Crableg Capital",
+          "stats": null,
+          "id": "VnNTdGFnZS0xOQ=="
+        },
+        {
+          "vsStageId": 20,
+          "originalImage": {
+            "url": "https://api.lp1.av5ja.srv.nintendo.net/resources/prod/v2/stage_img/icon/high_resolution/b65a70eedf129848b9d2b492bb68712abf91a5cbda13131848947fb04c51d665_0.png?Expires=1704844800\u0026Signature=GiRmx~E744AHCaHiPcGVPnvy2w8WHjgGmXkgkhWq4Fuy1v1Eo8hMIQzSYUrfLZVH-wAgQP0dIYa4BCSY-C7C-FlOVGqSOMSpePQ1dVoQ9dTOTjm-D7qboYG-euN9QBUni8-pxGib9SX6LC7pVdBzmWc9igFO1sAadh6CacTrV6GZ~5s8euOgllmxSPEXxS4TxNmueBIco2YReFZVv6G5EgCC5oZhXgqdNsY91DD4aILUP99J9sBFz4cCLt7K6dnNxhpo3z3JE9TJ4GYOd-Akd3DzaGuyEuGjw-p1QB2yJ3lzUvBULwi48g11j6tYxjpBtwr2W3DJNI0bOCDKbwQS5Q__\u0026Key-Pair-Id=KNBS2THMRC385"
+          },
+          "name": "Shipshape Cargo Co.",
+          "stats": null,
+          "id": "VnNTdGFnZS0yMA=="
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,4 @@
+---
+'**/*.ts':
+  - bun eslint --fix
+  - bun prettier --write

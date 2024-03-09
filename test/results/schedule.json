@@ -1,0 +1,16 @@
+{
+  "bossId": 31,
+  "endTime": "2024-02-25T08:00:00Z",
+  "mode": "REGULAR",
+  "rareWeapons": [],
+  "rule": "REGULAR",
+  "seasonId": 5,
+  "stageId": 4,
+  "startTime": "2024-02-23T16:00:00Z",
+  "weaponList": [
+    -2,
+    -2,
+    -2,
+    -2
+  ]
+}

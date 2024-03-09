@@ -1,0 +1,44 @@
+{
+  "name": "NestJS",
+  "dockerComposeFile": [
+    "docker-compose.yaml"
+  ],
+  "service": "nestjs",
+  "workspaceFolder": "/home/bun/app",
+  "shutdownAction": "stopCompose",
+  "remoteUser": "bun",
+  "mounts": [
+    "source=${env:HOME}/home/bun/.ssh,target=/.ssh,type=bind,consistency=cached,readonly"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "moby": false,
+      "dockerDashComposeVersion": "v2"
+    }
+  },
+  "postAttachCommand": "git config --global --unset commit.template",
+  "postCreateCommand": "sudo chown -R bun:bun node_modules",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "debug.internalConsoleOptions": "neverOpen",
+        "editor.formatOnPaste": true,
+        "editor.guides.bracketPairs": "active",
+        "scm.defaultViewMode": "tree",
+        "diffEditor.diffAlgorithm": "advanced",
+        "diffEditor.experimental.showMoves": true,
+        "diffEditor.renderSideBySide": false,
+        "files.watcherExclude": {
+          "**/node_modules/**": true
+        },
+        "betterTypeScriptErrors.prettify": true
+      },
+      "extensions": []
+    }
+  }
+}

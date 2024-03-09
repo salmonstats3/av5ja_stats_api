@@ -1,0 +1,47 @@
+import { Body, Injectable, UseFilters } from '@nestjs/common'
+import { plainToInstance } from 'class-transformer'
+import { PrismaService } from 'nestjs-prisma'
+
+import { CoopHistoryDetailQuery as R3 } from '@/dto/av5ja/coop_history_detail.dto'
+import { CoopSchedule } from '@/dto/coop_schedule'
+import { CoopHistoryDetailQuery as R2 } from '@/dto/request/result.v2.dto'
+import { CoopMode } from '@/enum/coop_mode'
+import { ResultsFilter } from '@/results/results.filter'
+
+@Injectable()
+@UseFilters(ResultsFilter)
+export class ResultsService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create_v2(@Body() request: R2.V2.Paginated): Promise<R2.V2.Paginated> {
+    const results: R2.V2.CoopResult[] = request.results.filter((result) => result.isValid)
+    Promise.allSettled(results.map((result) => this.prisma.result.upsert(result.upsert)))
+    return request
+  }
+
+  async create_v3(@Body() request: R3.V3.Request): Promise<R3.V3.Request> {
+    // const schedule: CoopSchedule = await this.schedule(request)
+    // console.log(schedule)
+    // R2.V2.CoopResult.from(schedule, request)
+    return request
+  }
+
+  private async schedule(request: R3.V3.Request): Promise<CoopSchedule> {
+    return plainToInstance(
+      CoopSchedule,
+      this.prisma.schedule.findFirst({
+        where: {
+          endTime: {
+            lte: request.playTime,
+          },
+          mode: {
+            in: [CoopMode.REGULAR, CoopMode.LIMITED],
+          },
+          startTime: {
+            gte: request.playTime,
+          },
+        },
+      }),
+    )
+  }
+}
