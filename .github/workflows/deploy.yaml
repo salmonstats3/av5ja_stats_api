@@ -9,6 +9,7 @@ on:
     types: [closed]
   push:
     branches:
+      - '**'
       - '!main'
       - '!master'
       - '!develop'
