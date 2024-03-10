@@ -55,7 +55,7 @@ jobs:
         run: |
           bun test
         env:
-          TZ: UTC
+          TZ: Asia/Tokyo
           APP_HOST: 0.0.0.0
           APP_PORT: 3030
           APP_VERSION: 2.9.0
