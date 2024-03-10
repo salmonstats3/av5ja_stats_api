@@ -15,8 +15,6 @@ describe('ResultsController', () => {
   let app: INestApplication
 
   beforeEach(async () => {
-    timezoneMock.register('Etc/GMT-9')
-
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ResultsController],
       imports: [HttpModule],
@@ -40,6 +38,7 @@ describe('ResultsController', () => {
   })
 
   describe('create v3', () => {
+    timezoneMock.register('Etc/GMT-9')
     test('20230901', async () => {
       const response = await (async () => {
         if (configuration.isDevelopment) {
