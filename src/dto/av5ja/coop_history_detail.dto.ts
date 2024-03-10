@@ -198,11 +198,15 @@ export namespace CoopHistoryDetailQuery {
       readonly silver: number
 
       static from(gold: number | null, silver: number | null, bronze: number | null) {
-        return plainToInstance(Scale, {
-          bronze,
-          gold,
-          silver,
-        })
+        return plainToInstance(
+          Scale,
+          {
+            bronze,
+            gold,
+            silver,
+          },
+          { excludeExtraneousValues: true },
+        )
       }
     }
 
@@ -808,7 +812,11 @@ export namespace CoopHistoryDetailQuery {
       @ApiProperty({ nullable: true, required: true, type: Scale })
       @IsOptional()
       @Type(() => Scale)
-      @Transform(({ value }) => (value === null ? Scale.from(null, null, null) : plainToInstance(Scale, value)))
+      @Transform(({ value }) =>
+        value === null
+          ? Scale.from(null, null, null)
+          : plainToInstance(Scale, value, { excludeExtraneousValues: true }),
+      )
       @ValidateNested()
       @Expose()
       readonly scale: Scale

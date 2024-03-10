@@ -44,6 +44,7 @@ export class ResultsService {
           },
         },
       }),
+      { excludeExtraneousValues: true },
     )
   }
 }

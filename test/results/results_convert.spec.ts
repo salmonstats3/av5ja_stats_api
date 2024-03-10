@@ -19,9 +19,10 @@ describe('Results', () => {
 
   beforeAll(() => {})
 
-  const v0: R2.V2.CoopResult = plainToInstance(R2.V2.Paginated, verify_json).results[0]
-  const s0: CoopSchedule = plainToInstance(CoopSchedule, schedule_json)
-  const r0: R3.V3.Request = plainToInstance(R3.V3.Request, result_json)
+  const v0: R2.V2.CoopResult = plainToInstance(R2.V2.Paginated, verify_json, { excludeExtraneousValues: true })
+    .results[0]
+  const s0: CoopSchedule = plainToInstance(CoopSchedule, schedule_json, { excludeExtraneousValues: true })
+  const r0: R3.V3.Request = plainToInstance(R3.V3.Request, result_json, { excludeExtraneousValues: true })
   const r1 = R2.V2.CoopResult.from(s0, r0)
 
   describe('My Result', () => {
