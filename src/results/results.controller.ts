@@ -18,7 +18,7 @@ import { ResultsService } from '@/results/results.service'
 @Controller('results')
 @UseFilters(ResultsFilter)
 export class ResultsController {
-  constructor(readonly service: ResultsService) {}
+  constructor(readonly service: ResultsService) { }
 
   @Post()
   @Version('2')

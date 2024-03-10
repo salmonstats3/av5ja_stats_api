@@ -11,7 +11,7 @@ import { ResultsFilter } from '@/results/results.filter'
 @Injectable()
 @UseFilters(ResultsFilter)
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create_v2(@Body() request: R2.V2.Paginated): Promise<R2.V2.Paginated> {
     await Promise.allSettled(request._results.map((result) => this.prisma.result.upsert(result.upsert)))
