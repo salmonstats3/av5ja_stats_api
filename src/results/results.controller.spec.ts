@@ -1,6 +1,9 @@
 import { HttpModule } from '@nestjs/axios'
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
+import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 import { PrismaService } from 'nestjs-prisma'
 import * as request from 'supertest'
 import timezoneMock from 'timezone-mock'
@@ -33,15 +36,18 @@ describe('ResultsController', () => {
   })
 
   afterAll(async () => {
-    timezoneMock.unregister()
     await app.close()
   })
 
   describe('create v3', () => {
-    timezoneMock.register('Etc/GMT-9')
+    dayjs.extend(utc)
+    dayjs.extend(timezone)
+    dayjs.tz.setDefault('Asia/Tokyo')
+
     test('20230901', async () => {
       const response = await (async () => {
         if (configuration.isDevelopment) {
+          timezoneMock.register('Etc/GMT-9')
           return (
             await request
               .default(app.getHttpServer())
@@ -50,6 +56,7 @@ describe('ResultsController', () => {
               .send(v20230901)
           ).body
         }
+        timezoneMock.register('UTC')
         return v20230901v2
       })()
       const result = response.results[0]
