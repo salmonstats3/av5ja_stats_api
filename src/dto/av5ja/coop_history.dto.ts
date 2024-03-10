@@ -12,7 +12,7 @@ import { WeaponInfoMain, id } from '@/enum/coop_weapon_info/main'
 import { scheduleHash } from '@/utils/hash'
 
 export namespace CoopHistoryQuery {
-  class CoopStage {
+  class HistoryCoopStage {
     @ApiProperty({
       example: 'Q29vcFN0YWdlLTE=',
       required: true,
@@ -35,7 +35,7 @@ export namespace CoopHistoryQuery {
     @Transform(({ value }) => Common.ResultId.from(value))
     readonly id: Common.ResultId
 
-    @ApiProperty({ required: true, type: CoopStage })
+    @ApiProperty({ required: true, type: HistoryCoopStage })
     @Expose()
     @IsEnum(CoopStageId)
     @Transform(({ value }) => {
@@ -162,7 +162,7 @@ export namespace CoopHistoryQuery {
     readonly coopResult: CoopHistoryGroup
   }
 
-  export class Request {
+  export class HistoryRequest {
     @ApiProperty({ required: true, type: CoopHistoryDataClass })
     @Expose()
     @Type(() => CoopHistoryDataClass)
@@ -195,7 +195,7 @@ export namespace CoopHistoryQuery {
     readonly results: string[]
   }
 
-  export class Response {
+  export class HistoryResponse {
     @ApiProperty({ isArray: true, required: true, type: CoopHistory })
     @Expose()
     readonly histories: CoopHistory[]

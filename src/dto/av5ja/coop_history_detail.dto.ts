@@ -530,11 +530,12 @@ export namespace CoopHistoryDetailQuery {
       @IsEnum(WeaponInfoMain.Id, { each: true })
       readonly weaponList: WeaponInfoMain.Id[]
 
-      @ApiProperty({ required: true })
-      @Expose()
-      @Type(() => SpecialWeapon)
-      @ValidateNested()
-      readonly specialWeapon: SpecialWeapon
+      @ApiProperty({ required: true, type: SpecialWeapon })
+      @Expose({ name: 'specialWeapon' })
+      @Transform(({ value }) => (value === null ? null : value.weaponId))
+      @IsEnum(WeaponInfoSpecial.Id)
+      @IsOptional()
+      readonly specialId: WeaponInfoSpecial.Id | null
 
       @ApiProperty({
         minimum: 0,
@@ -922,21 +923,21 @@ export namespace CoopHistoryDetailQuery {
        * 合計獲得イクラ数
        */
       get ikuraNum(): number {
-        return this.players.map((player) => player.ikuraNum).reduce((a, b) => a + b)
+        return this.players.map((player) => player.ikuraNum).reduce((a, b) => a + b, 0)
       }
 
       /**
        * 合計獲得金イクラ数(ハコビヤに吸われた数を考慮する)
        */
       get goldenIkuraNum(): number {
-        return this.waveResults.map((wave) => wave.goldenIkuraNum ?? 0).reduce((a, b) => a + b)
+        return this.waveResults.map((wave) => wave.goldenIkuraNum ?? 0).reduce((a, b) => a + b, 0)
       }
 
       /**
        * 合計アシスト金イクラ数
        */
       get goldenIkuraAssistNum(): number {
-        return this.players.map((player) => player.goldenIkuraAssistNum).reduce((a, b) => a + b)
+        return this.players.map((player) => player.goldenIkuraAssistNum).reduce((a, b) => a + b, 0)
       }
 
       /**
@@ -975,7 +976,7 @@ export namespace CoopHistoryDetailQuery {
       readonly coopHistoryDetail: CoopHistoryDetail
     }
 
-    export class Request {
+    export class DetailRequest {
       @ApiProperty({ required: true, type: CoopResultDataClass })
       @Expose()
       @Type(() => CoopResultDataClass)

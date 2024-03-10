@@ -58,7 +58,7 @@ async function bootstrap() {
     engine: {
       handlebars: require('handlebars'),
     },
-    templates: join(__dirname, '@/', 'views'),
+    templates: join(__dirname, './', 'views'),
   })
   const builder = new DocumentBuilder()
     .setTitle(content.name)
