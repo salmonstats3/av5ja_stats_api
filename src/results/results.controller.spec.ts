@@ -1,9 +1,6 @@
 import { HttpModule } from '@nestjs/axios'
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
-import dayjs from 'dayjs'
-import timezone from 'dayjs/plugin/timezone'
-import utc from 'dayjs/plugin/utc'
 import { PrismaService } from 'nestjs-prisma'
 import * as request from 'supertest'
 import timezoneMock from 'timezone-mock'
@@ -40,14 +37,11 @@ describe('ResultsController', () => {
   })
 
   describe('create v3', () => {
-    dayjs.extend(utc)
-    dayjs.extend(timezone)
-    dayjs.tz.setDefault('Asia/Tokyo')
+    timezoneMock.register('UTC')
 
     test('20230901', async () => {
       const response = await (async () => {
         if (configuration.isDevelopment) {
-          timezoneMock.register('Etc/GMT-9')
           return (
             await request
               .default(app.getHttpServer())
@@ -56,13 +50,12 @@ describe('ResultsController', () => {
               .send(v20230901)
           ).body
         }
-        timezoneMock.register('UTC')
         return v20230901v2
       })()
       const result = response.results[0]
 
       expect(result.id.nplnUserId).toBe('a7grz65rxkvhfsbwmxmm')
-      expect(result.id.playTime).toBe('2023-09-06T06:13:58.000Z')
+      expect(result.id.playTime).toBe('2023-09-06T15:13:58.000Z')
       expect(result.id.type).toBe('CoopHistoryDetail')
       expect(result.id.uuid).toBe('54A47507-C5AC-4D76-9A78-73EC241CDFEF')
       expect(result.gradeId).toBe(8)
