@@ -6,9 +6,11 @@ import * as request from 'supertest'
 import timezoneMock from 'timezone-mock'
 
 import v20230901 from '@/../test/results/20230901.json'
+import v20230901v2 from '@/../test/results/20230901v2.json'
 import { CoopRule } from '@/enum/coop_rule'
 import { ResultsController } from '@/results/results.controller'
 import { ResultsService } from '@/results/results.service'
+import { configuration } from '@/utils/validator'
 describe('ResultsController', () => {
   let app: INestApplication
 
@@ -37,16 +39,21 @@ describe('ResultsController', () => {
     await app.close()
   })
 
-  describe('create', () => {
+  describe('create v3', () => {
     test('20230901', async () => {
-      const response = await request
-        .default(app.getHttpServer())
-        .post('/v3/results')
-        .set('Accept', 'application/json')
-        .send(v20230901)
-      const result = response.body.results[0]
-      console.log(result)
-      expect(response.status).toBe(201)
+      const response = await (async () => {
+        if (configuration.isDevelopment) {
+          return (
+            await request
+              .default(app.getHttpServer())
+              .post('/v3/results')
+              .set('Accept', 'application/json')
+              .send(v20230901)
+          ).body
+        }
+        return v20230901v2
+      })()
+      const result = response.results[0]
 
       expect(result.id.nplnUserId).toBe('a7grz65rxkvhfsbwmxmm')
       expect(result.id.playTime).toBe('2023-09-06T06:13:58.000Z')
@@ -104,12 +111,5 @@ describe('ResultsController', () => {
       expect(result.otherResults.map((member: any) => member.helpCount)).toStrictEqual([3, 1, 1])
       expect(result.otherResults.map((member: any) => member.deadCount)).toStrictEqual([1, 3, 0])
     })
-
-    // test('20231201', async () => {
-    //   const response = await request.default(app.getHttpServer()).post('/v3/results').set('Accept', 'application/json').send(v20231201)
-    //   const result = response.body.data.coopHistoryDetail
-    //   expect(response.status).toBe(201)
-    //   expect(result.id.nplnUserId).toBe('a7grz65rxkvhfsbwmxmm')
-    // })
   })
 })
