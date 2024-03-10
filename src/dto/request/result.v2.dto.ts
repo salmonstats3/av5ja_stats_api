@@ -89,15 +89,19 @@ export namespace CoopHistoryDetailQuery {
       readonly id: number
 
       static from(textColor: any, id: number) {
-        return plainToInstance(Background, {
-          id: id,
-          textColor: {
-            a: textColor[3],
-            b: textColor[2],
-            g: textColor[1],
-            r: textColor[0],
+        return plainToInstance(
+          Background,
+          {
+            id: id,
+            textColor: {
+              a: textColor[3],
+              b: textColor[2],
+              g: textColor[1],
+              r: textColor[0],
+            },
           },
-        })
+          { excludeExtraneousValues: true },
+        )
       }
     }
 
@@ -122,10 +126,14 @@ export namespace CoopHistoryDetailQuery {
        * @param id NamePlateBgInfo.Id
        */
       static from(badge: number[], textColor: number[], id: number): Nameplate {
-        return plainToInstance(Nameplate, {
-          background: Background.from(textColor, id),
-          badges: badge.map((b) => (b === -1 ? null : b)),
-        })
+        return plainToInstance(
+          Nameplate,
+          {
+            background: Background.from(textColor, id),
+            badges: badge.map((b) => (b === -1 ? null : b)),
+          },
+          { excludeExtraneousValues: true },
+        )
       }
     }
 
@@ -843,130 +851,135 @@ export namespace CoopHistoryDetailQuery {
       }
 
       static from(schedule: CoopSchedule, result: R3.V3.Request): CoopResult {
-        return plainToInstance(CoopResult, {
-          JobBonus: result.jobBonus,
-          bossCounts: result.bossCounts,
-          bossKillCounts: result.bossKillCounts,
-          dangerRate: result.dangerRate,
-          goldenIkuraAssistNum: result.goldenIkuraAssistNum,
-          goldenIkuraNum: result.goldenIkuraNum,
-          gradeId: result.gradeId,
-          gradePoint: result.gradePoint,
-          id: {
-            nplnUserId: result.id.nplnUserId,
-            playTime: dayjs(result.id.playTime).utc().toDate(),
-            type: result.id.type,
-            uuid: result.id.uuid,
-          },
-          ikuraNum: result.ikuraNum,
-          jobBonus: result.jobBonus,
-          jobRate: result.jobRate,
-          jobResult: {
-            bossId: result.bossId,
-            failureWave: result.failureWave,
-            isBossDefeated: result.isBossDefeated,
-            isClear: result.isClear,
-          },
-          jobScore: result.jobScore,
-          kumaPoint: result.kumaPoint,
-          myResult: {
-            bossKillCounts: result.bossKillCounts,
-            bossKillCountsTotal: result.myResult.bossKillCountsTotal,
-            byname: result.myResult.player.byname,
-            deadCount: result.myResult.deadCount,
-            goldenIkuraAssistNum: result.myResult.goldenIkuraAssistNum,
-            goldenIkuraNum: result.myResult.goldenIkuraNum,
-            helpCount: result.myResult.helpCount,
-            id: result.myResult.uid,
-            ikuraNum: result.myResult.ikuraNum,
-            isMyself: result.myResult.isMyself,
-            name: result.myResult.player.name,
-            nameId: result.myResult.player.nameId,
-            nameplate: {
-              background: {
-                id: result.myResult.player.nameplate.background.id,
-                textColor: {
-                  a: result.myResult.player.nameplate.background.textColor.a,
-                  b: result.myResult.player.nameplate.background.textColor.b,
-                  g: result.myResult.player.nameplate.background.textColor.g,
-                  r: result.myResult.player.nameplate.background.textColor.r,
-                },
-              },
-              badges: result.myResult.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id)),
+        return plainToInstance(
+          CoopResult,
+          {
+            JobBonus: result.jobBonus,
+            bossCounts: result.bossCounts,
+            bossKillCounts: result.teamBossKillCounts,
+            dangerRate: result.dangerRate,
+            goldenIkuraAssistNum: result.goldenIkuraAssistNum,
+            goldenIkuraNum: result.goldenIkuraNum,
+            gradeId: result.gradeId,
+            gradePoint: result.gradePoint,
+            id: {
+              nplnUserId: result.id.nplnUserId,
+              playTime: dayjs(result.id.playTime).utc().toDate(),
+              type: result.id.type,
+              uuid: result.id.uuid,
             },
-            nplnUserId: result.myResult.nplnUserId,
-            specialCounts: result.waveDetails.map(
-              (wave) =>
-                wave.specialWeapons.map((special) => special.id).filter((id) => id === result.myResult.specialWeapon.id)
-                  .length,
-            ),
-            specialId: result.myResult.specialWeapon.id,
-            species: result.myResult.player.species,
-            uniform: result.myResult.player.uniform.id,
-            weaponList: result.myResult.weaponList,
-          },
-          otherResults: result.otherResults.map((member) => {
-            return {
-              bossKillCounts: Array.from({ length: 14 }, () => null),
-              bossKillCountsTotal: member.bossKillCountsTotal,
-              byname: member.player.byname,
-              deadCount: member.deadCount,
-              goldenIkuraAssistNum: member.goldenIkuraAssistNum,
-              goldenIkuraNum: member.goldenIkuraNum,
-              helpCount: member.helpCount,
-              id: member.uid,
-              ikuraNum: member.ikuraNum,
-              isMyself: member.isMyself,
-              name: member.player.name,
-              nameId: member.player.nameId,
+            ikuraNum: result.ikuraNum,
+            jobBonus: result.jobBonus,
+            jobRate: result.jobRate,
+            jobResult: {
+              bossId: result.bossId,
+              failureWave: result.failureWave,
+              isBossDefeated: result.isBossDefeated,
+              isClear: result.isClear,
+            },
+            jobScore: result.jobScore,
+            kumaPoint: result.kumaPoint,
+            myResult: {
+              bossKillCounts: result.bossKillCounts,
+              bossKillCountsTotal: result.myResult.bossKillCountsTotal,
+              byname: result.myResult.player.byname,
+              deadCount: result.myResult.deadCount,
+              goldenIkuraAssistNum: result.myResult.goldenIkuraAssistNum,
+              goldenIkuraNum: result.myResult.goldenIkuraNum,
+              helpCount: result.myResult.helpCount,
+              id: result.myResult.uid,
+              ikuraNum: result.myResult.ikuraNum,
+              isMyself: result.myResult.isMyself,
+              name: result.myResult.player.name,
+              nameId: result.myResult.player.nameId,
               nameplate: {
                 background: {
-                  id: member.player.nameplate.background.id,
+                  id: result.myResult.player.nameplate.background.id,
                   textColor: {
-                    a: member.player.nameplate.background.textColor.a,
-                    b: member.player.nameplate.background.textColor.b,
-                    g: member.player.nameplate.background.textColor.g,
-                    r: member.player.nameplate.background.textColor.r,
+                    a: result.myResult.player.nameplate.background.textColor.a,
+                    b: result.myResult.player.nameplate.background.textColor.b,
+                    g: result.myResult.player.nameplate.background.textColor.g,
+                    r: result.myResult.player.nameplate.background.textColor.r,
                   },
                 },
-                badges: member.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id)),
+                badges: result.myResult.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id)),
               },
-              nplnUserId: member.nplnUserId,
+              nplnUserId: result.myResult.nplnUserId,
               specialCounts: result.waveDetails.map(
                 (wave) =>
-                  wave.specialWeapons.map((special) => special.id).filter((id) => id === member.specialWeapon.id)
-                    .length,
+                  wave.specialWeapons
+                    .map((special) => special.id)
+                    .filter((id) => id === result.myResult.specialWeapon.id).length,
               ),
-              specialId: member.specialWeapon.id,
-              species: member.player.species,
-              uniform: member.player.uniform.id,
-              weaponList: member.weaponList,
-            }
-          }),
-          playTime: dayjs(result.playTime).utc().toDate(),
-          scale: result.scale,
-          scenarioCode: result.scenarioCode,
-          schedule: {
-            endTime: schedule.endTime,
-            mode: schedule.mode,
-            rule: schedule.rule,
-            stageId: schedule.stageId,
-            startTime: schedule.startTime,
-            weaponList: schedule.weaponList,
+              specialId: result.myResult.specialWeapon.id,
+              species: result.myResult.player.species,
+              uniform: result.myResult.player.uniform.id,
+              weaponList: result.myResult.weaponList,
+            },
+            otherResults: result.otherResults.map((member) => {
+              return {
+                bossKillCounts: Array.from({ length: 14 }, () => null),
+                bossKillCountsTotal: member.bossKillCountsTotal,
+                byname: member.player.byname,
+                deadCount: member.deadCount,
+                goldenIkuraAssistNum: member.goldenIkuraAssistNum,
+                goldenIkuraNum: member.goldenIkuraNum,
+                helpCount: member.helpCount,
+                id: member.uid,
+                ikuraNum: member.ikuraNum,
+                isMyself: member.isMyself,
+                name: member.player.name,
+                nameId: member.player.nameId,
+                nameplate: {
+                  background: {
+                    id: member.player.nameplate.background.id,
+                    textColor: {
+                      a: member.player.nameplate.background.textColor.a,
+                      b: member.player.nameplate.background.textColor.b,
+                      g: member.player.nameplate.background.textColor.g,
+                      r: member.player.nameplate.background.textColor.r,
+                    },
+                  },
+                  badges: member.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id)),
+                },
+                nplnUserId: member.nplnUserId,
+                specialCounts: result.waveDetails.map(
+                  (wave) =>
+                    wave.specialWeapons.map((special) => special.id).filter((id) => id === member.specialWeapon.id)
+                      .length,
+                ),
+                specialId: member.specialWeapon.id,
+                species: member.player.species,
+                uniform: member.player.uniform.id,
+                weaponList: member.weaponList,
+              }
+            }),
+            playTime: dayjs(result.playTime).utc().toDate(),
+            scale: result.scale,
+            scenarioCode: result.scenarioCode,
+            schedule: {
+              endTime: schedule.endTime,
+              mode: schedule.mode,
+              rule: schedule.rule,
+              stageId: schedule.stageId,
+              startTime: schedule.startTime,
+              weaponList: schedule.weaponList,
+            },
+            smellMeter: result.smellMeter,
+            waveDetails: result.waveDetails.map((wave) => {
+              return {
+                eventType: wave.eventType,
+                goldenIkuraNum: wave.goldenIkuraNum,
+                goldenIkuraPopNum: wave.goldenIkuraPopNum,
+                id: wave.id,
+                isClear: wave.isClear(result.failureWave, result.isBossDefeated),
+                quotaNum: wave.quotaNum,
+                waterLevel: wave.waterLevel,
+              }
+            }),
           },
-          smellMeter: result.smellMeter,
-          waveDetails: result.waveDetails.map((wave) => {
-            return {
-              eventType: wave.eventType,
-              goldenIkuraNum: wave.goldenIkuraNum,
-              goldenIkuraPopNum: wave.goldenIkuraPopNum,
-              id: wave.id,
-              isClear: wave.isClear,
-              quotaNum: wave.quotaNum,
-              waterLevel: wave.waterLevel,
-            }
-          }),
-        })
+          { excludeExtraneousValues: true },
+        )
       }
     }
 
