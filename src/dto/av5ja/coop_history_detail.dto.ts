@@ -437,8 +437,17 @@ export namespace CoopHistoryDetailQuery {
         return this.eventWave?.id ?? CoopEventId.WaterLevels
       }
 
-      get isClear(): boolean {
-        return true
+      isClear(failureWave: number | null, isBossDefeated: boolean | null): boolean {
+        // 回線落ちは失敗扱い
+        if (failureWave === -1) {
+          return false
+        }
+        // オカシラシャケが出現していたらノルマがないWAVE(ExWAVE)以外は全てクリア
+        if (isBossDefeated !== null) {
+          return this.quotaNum === null ? isBossDefeated : true
+        }
+        // オカシラシャケが出現していない場合は失敗したWAVEが存在しなければクリア
+        return this.id !== failureWave
       }
     }
 
@@ -1031,6 +1040,10 @@ export namespace CoopHistoryDetailQuery {
 
       get bossKillCounts(): number[] {
         return this.data.coopHistoryDetail.bossKillCounts
+      }
+
+      get teamBossKillCounts(): number[] {
+        return this.data.coopHistoryDetail.teamBossKillCounts
       }
 
       get goldenIkuraNum(): number {

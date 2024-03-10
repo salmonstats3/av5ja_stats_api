@@ -846,7 +846,7 @@ export namespace CoopHistoryDetailQuery {
         return plainToInstance(CoopResult, {
           JobBonus: result.jobBonus,
           bossCounts: result.bossCounts,
-          bossKillCounts: result.bossKillCounts,
+          bossKillCounts: result.teamBossKillCounts,
           dangerRate: result.dangerRate,
           goldenIkuraAssistNum: result.goldenIkuraAssistNum,
           goldenIkuraNum: result.goldenIkuraNum,
@@ -961,7 +961,7 @@ export namespace CoopHistoryDetailQuery {
               goldenIkuraNum: wave.goldenIkuraNum,
               goldenIkuraPopNum: wave.goldenIkuraPopNum,
               id: wave.id,
-              isClear: wave.isClear,
+              isClear: wave.isClear(result.failureWave, result.isBossDefeated),
               quotaNum: wave.quotaNum,
               waterLevel: wave.waterLevel,
             }
