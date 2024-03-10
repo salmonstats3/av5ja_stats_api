@@ -1,5 +1,17 @@
 import { plainToInstance } from 'class-transformer'
-import { IsEnum, IsIP, IsInt, IsNotEmpty, IsNumber, IsSemVer, IsUrl, Max, Min, validateSync } from 'class-validator'
+import {
+  IsEnum,
+  IsIP,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsSemVer,
+  IsUrl,
+  Max,
+  Min,
+  validateSync,
+} from 'class-validator'
 import * as dotenv from 'dotenv'
 
 enum NodeEnv {
@@ -26,7 +38,8 @@ export class NestConfig {
   readonly APP_VERSION: string
 
   @IsUrl()
-  readonly WEBHOOK_URL: string
+  @IsOptional()
+  readonly WEBHOOK_URL: string | undefined
 
   get isDevelopment(): boolean {
     return this.NODE_ENV == NodeEnv.DEVELOPMENT
@@ -38,15 +51,15 @@ export const configuration = (() => {
   const configuration = plainToInstance(
     NestConfig,
     {
-      APP_HOST: process.env.APP_HOST,
-      APP_PORT: process.env.APP_PORT,
-      APP_VERSION: process.env.APP_VERSION,
-      NODE_ENV: process.env.NODE_ENV,
+      APP_HOST: process.env.APP_HOST ?? '0.0.0.0',
+      APP_PORT: process.env.APP_PORT ?? 3030,
+      APP_VERSION: process.env.APP_VERSION ?? '2.9.0',
+      NODE_ENV: process.env.NODE_ENV ?? 'development',
       WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     },
     { enableImplicitConversion: true },
   )
-  const errors = validateSync(configuration, { skipMissingProperties: false })
+  const errors = validateSync(configuration, { skipMissingProperties: true })
   if (errors.length > 0) {
     throw new Error(errors.toString())
   }

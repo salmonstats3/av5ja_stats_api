@@ -1,7 +1,7 @@
 FROM oven/bun:1.0.30 AS build
 COPY --from=node:20.11.1 /usr/local/bin/node /usr/local/bin/node
 
-RUN apt update && apt install -y vim sudo curl
+RUN apt update && apt install -y vim sudo curl make
 RUN apt-get -y autoremove \
   && apt-get -y clean \
   && rm -rf /var/lib/apt/lists/*
