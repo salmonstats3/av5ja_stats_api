@@ -80,7 +80,7 @@ async function bootstrap() {
     SwaggerStats.getMiddleware({
       swaggerOnly: true,
       swaggerSpec: document,
-      version: content.version,
+      version: configuration.APP_VERSION,
     }),
   )
   SwaggerModule.setup('api', app, document, options)

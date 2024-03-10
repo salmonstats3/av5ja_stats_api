@@ -51,13 +51,17 @@ export namespace Common {
       const match = regexp.exec(atob(rawValue))
       if (match !== null) {
         const [, type, prefix, nplnUserId, playTime, uuid] = match
-        return plainToInstance(ResultId, {
-          nplnUserId: nplnUserId,
-          playTime: dayjs(playTime).utc().toDate(),
-          prefix: prefix,
-          type: type,
-          uuid: uuid,
-        })
+        return plainToInstance(
+          ResultId,
+          {
+            nplnUserId: nplnUserId,
+            playTime: dayjs(playTime).utc().toDate(),
+            prefix: prefix,
+            type: type,
+            uuid: uuid,
+          },
+          { excludeExtraneousValues: true },
+        )
       } else {
         throw new BadRequestException('Invalid Common.ResultId')
       }

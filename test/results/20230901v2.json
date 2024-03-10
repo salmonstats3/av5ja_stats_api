@@ -1,0 +1,366 @@
+{
+  "results": [
+    {
+      "id": {
+        "type": "CoopHistoryDetail",
+        "nplnUserId": "a7grz65rxkvhfsbwmxmm",
+        "playTime": "2023-09-06T15:13:58.000Z",
+        "uuid": "54A47507-C5AC-4D76-9A78-73EC241CDFEF"
+      },
+      "uuid": "54A47507-C5AC-4D76-9A78-73EC241CDFEF",
+      "scale": [
+        11,
+        2,
+        0
+      ],
+      "jobScore": 115,
+      "gradeId": 8,
+      "kumaPoint": 376,
+      "waveDetails": [
+        {
+          "waterLevel": 1,
+          "eventType": 4,
+          "quotaNum": 26,
+          "goldenIkuraPopNum": 54,
+          "goldenIkuraNum": 29,
+          "id": 1,
+          "isClear": true
+        },
+        {
+          "waterLevel": 1,
+          "eventType": 0,
+          "quotaNum": 28,
+          "goldenIkuraPopNum": 63,
+          "goldenIkuraNum": 32,
+          "id": 2,
+          "isClear": true
+        },
+        {
+          "waterLevel": 1,
+          "eventType": 0,
+          "quotaNum": 30,
+          "goldenIkuraPopNum": 66,
+          "goldenIkuraNum": 33,
+          "id": 3,
+          "isClear": true
+        },
+        {
+          "waterLevel": 1,
+          "eventType": 0,
+          "quotaNum": null,
+          "goldenIkuraPopNum": 33,
+          "goldenIkuraNum": null,
+          "id": 4,
+          "isClear": true
+        }
+      ],
+      "jobResult": {
+        "bossId": 23,
+        "isBossDefeated": true,
+        "failureWave": null,
+        "isClear": true
+      },
+      "myResult": {
+        "byname": "Splatlandian Youth",
+        "name": "しんさとおして",
+        "nameId": "2218",
+        "nameplate": {
+          "badges": [
+            null,
+            null,
+            null
+          ],
+          "background": {
+            "textColor": {
+              "r": 1,
+              "g": 1,
+              "b": 1,
+              "a": 1
+            },
+            "id": 1
+          }
+        },
+        "uniform": 1,
+        "id": "20230906T151358:a7grz65rxkvhfsbwmxmm",
+        "species": "INKLING",
+        "weaponList": [
+          4050,
+          8010,
+          7020,
+          2060
+        ],
+        "specialId": 20006,
+        "bossKillCountsTotal": 10,
+        "ikuraNum": 1111,
+        "goldenIkuraNum": 22,
+        "nplnUserId": "a7grz65rxkvhfsbwmxmm",
+        "isMyself": true,
+        "goldenIkuraAssistNum": 3,
+        "deadCount": 1,
+        "helpCount": 0,
+        "specialCounts": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "bossKillCounts": [
+          0,
+          0,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "otherResults": [
+        {
+          "byname": "Fluffy Legendary Warrior",
+          "name": "れん >∞<　",
+          "nameId": "2424",
+          "nameplate": {
+            "badges": [
+              5220002,
+              5110000,
+              5230002
+            ],
+            "background": {
+              "textColor": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "id": 951
+            }
+          },
+          "uniform": 13,
+          "id": "20230906T151358:q5mqpzblwlu2mea4qtmm",
+          "species": "INKLING",
+          "weaponList": [
+            8010,
+            7020,
+            2060,
+            4050
+          ],
+          "specialId": 20009,
+          "bossKillCountsTotal": 14,
+          "ikuraNum": 999,
+          "goldenIkuraNum": 27,
+          "nplnUserId": "q5mqpzblwlu2mea4qtmm",
+          "isMyself": false,
+          "goldenIkuraAssistNum": 1,
+          "deadCount": 1,
+          "helpCount": 3,
+          "specialCounts": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "bossKillCounts": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "byname": "Clever Secretary",
+          "name": "びん",
+          "nameId": "2311",
+          "nameplate": {
+            "badges": [
+              5000022,
+              1060100,
+              6000001
+            ],
+            "background": {
+              "textColor": {
+                "r": 0.560499191,
+                "g": 0.0638148785,
+                "b": 0.173438996,
+                "a": 1
+              },
+              "id": 11002
+            }
+          },
+          "uniform": 2,
+          "id": "20230906T151358:ae5wjnyghvzbaquhanmm",
+          "species": "INKLING",
+          "weaponList": [
+            7020,
+            2060,
+            4050,
+            8010
+          ],
+          "specialId": 20012,
+          "bossKillCountsTotal": 10,
+          "ikuraNum": 1169,
+          "goldenIkuraNum": 18,
+          "nplnUserId": "ae5wjnyghvzbaquhanmm",
+          "isMyself": false,
+          "goldenIkuraAssistNum": 2,
+          "deadCount": 3,
+          "helpCount": 1,
+          "specialCounts": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "bossKillCounts": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "byname": "Floaty Streamer",
+          "name": "しいくちゃんねる",
+          "nameId": "1211",
+          "nameplate": {
+            "badges": [
+              5200032,
+              5200072,
+              5200062
+            ],
+            "background": {
+              "textColor": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "id": 2001
+            }
+          },
+          "uniform": 9,
+          "id": "20230906T151358:a5qxexnsmuwseqrkanmm",
+          "species": "INKLING",
+          "weaponList": [
+            2060,
+            4050,
+            8010,
+            7020
+          ],
+          "specialId": 20014,
+          "bossKillCountsTotal": 20,
+          "ikuraNum": 1058,
+          "goldenIkuraNum": 32,
+          "nplnUserId": "a5qxexnsmuwseqrkanmm",
+          "isMyself": false,
+          "goldenIkuraAssistNum": 0,
+          "deadCount": 0,
+          "helpCount": 1,
+          "specialCounts": [
+            0,
+            0,
+            2,
+            1
+          ],
+          "bossKillCounts": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      ],
+      "gradePoint": 100,
+      "jobRate": 2.4,
+      "playTime": "2023-09-06T15:13:58.000Z",
+      "bossCounts": [
+        2,
+        7,
+        9,
+        8,
+        5,
+        4,
+        6,
+        6,
+        5,
+        1,
+        7,
+        0,
+        0,
+        0
+      ],
+      "bossKillCounts": [
+        2,
+        5,
+        9,
+        8,
+        5,
+        4,
+        5,
+        5,
+        4,
+        0,
+        7,
+        0,
+        0,
+        0
+      ],
+      "dangerRate": 2.07,
+      "jobBonus": 100,
+      "schedule": {
+        "startTime": "2023-09-05T16:00:00Z",
+        "endTime": "2023-09-07T08:00:00Z",
+        "mode": "REGULAR",
+        "rule": "REGULAR",
+        "stageId": 4,
+        "weaponList": [
+          7020,
+          8010,
+          4050,
+          2060
+        ]
+      },
+      "goldenIkuraNum": 94,
+      "goldenIkuraAssistNum": 6,
+      "ikuraNum": 4337,
+      "smellMeter": 3,
+      "scenarioCode": null
+    }
+  ]
+}

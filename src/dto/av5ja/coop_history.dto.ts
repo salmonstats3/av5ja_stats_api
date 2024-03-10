@@ -170,14 +170,18 @@ export namespace CoopHistoryQuery {
     readonly data: CoopHistoryDataClass
 
     get histories(): CoopHistoryQuery.Response {
-      return plainToInstance(CoopHistoryQuery.Response, {
-        histories: this.data.coopResult.historyGroups.nodes.map((node) => {
-          return {
-            results: node.resultIds.map((resultId) => resultId.rawValue),
-            schedule: node.schedule,
-          }
-        }),
-      })
+      return plainToInstance(
+        CoopHistoryQuery.Response,
+        {
+          histories: this.data.coopResult.historyGroups.nodes.map((node) => {
+            return {
+              results: node.resultIds.map((resultId) => resultId.rawValue),
+              schedule: node.schedule,
+            }
+          }),
+        },
+        { excludeExtraneousValues: true },
+      )
     }
   }
 
