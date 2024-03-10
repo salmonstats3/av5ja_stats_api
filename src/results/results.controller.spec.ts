@@ -84,7 +84,7 @@ describe('ResultsController', () => {
 
       // EnemyResults
       expect(result.bossCounts).toStrictEqual([2, 7, 9, 8, 5, 4, 6, 6, 5, 1, 7, 0, 0, 0])
-      expect(result.bossKillCounts).toEqual([2, 5, 9, 8, 5, 4, 5, 5, 4, 0, 7, 0, 0, 0])
+      expect(result.bossKillCounts).toStrictEqual([2, 5, 9, 8, 5, 4, 5, 5, 4, 0, 7, 0, 0, 0])
       expect(result.myResult.bossKillCounts).toStrictEqual([0, 0, 3, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0])
 
       // otherResults
