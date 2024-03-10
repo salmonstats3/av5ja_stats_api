@@ -139,7 +139,7 @@ export namespace CoopHistoryQuery {
   }
 
   class Node {
-    @ApiProperty({ required: true, type: CoopScheduleNode })
+    @ApiProperty({ isArray: true, required: true, type: CoopScheduleNode })
     @Expose()
     @Type(() => CoopScheduleNode)
     @ValidateNested({ each: true })
@@ -187,14 +187,17 @@ export namespace CoopHistoryQuery {
 
   class CoopHistory {
     @ApiProperty({ required: true, type: CoopScheduleNode })
+    @Expose()
     readonly schedule: CoopScheduleNode
 
     @ApiProperty({ isArray: true, required: true, type: Common.ResultId })
+    @Expose()
     readonly results: string[]
   }
 
   export class Response {
     @ApiProperty({ isArray: true, required: true, type: CoopHistory })
+    @Expose()
     readonly histories: CoopHistory[]
   }
 }
