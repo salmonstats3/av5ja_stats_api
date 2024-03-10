@@ -42,6 +42,19 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v5
+        if: github.branch == 'develop'
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name == 'pull_request' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/app:${{ steps.version.outputs.current-version }}-dev
+            ghcr.io/${{ github.repository_owner }}/app:latest-dev
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        if: github.branch != 'develop'
         with:
           context: .
           file: Dockerfile
