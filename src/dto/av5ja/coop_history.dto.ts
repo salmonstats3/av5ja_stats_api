@@ -169,9 +169,9 @@ export namespace CoopHistoryQuery {
     @ValidateNested({ each: true })
     readonly data: CoopHistoryDataClass
 
-    get histories(): CoopHistoryQuery.Response {
+    get histories(): CoopHistoryQuery.HistoryResponse {
       return plainToInstance(
-        CoopHistoryQuery.Response,
+        CoopHistoryQuery.HistoryResponse,
         {
           histories: this.data.coopResult.historyGroups.nodes.map((node) => {
             return {

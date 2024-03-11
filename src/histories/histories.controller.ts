@@ -10,11 +10,11 @@ export class HistoriesController {
   constructor(private readonly service: HistoriesService) {}
 
   @Post()
-  @ApiBody({ type: CoopHistoryQuery.Request })
+  @ApiBody({ type: CoopHistoryQuery.HistoryRequest })
   @ApiOperation({ summary: 'Create a new history' })
-  @ApiOkResponse({ type: CoopHistoryQuery.Response })
+  @ApiOkResponse({ type: CoopHistoryQuery.HistoryResponse })
   @ApiBadRequestResponse()
-  async create(@Body() request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response> {
+  async create(@Body() request: CoopHistoryQuery.HistoryRequest): Promise<CoopHistoryQuery.HistoryResponse> {
     return this.service.create(request)
   }
 }

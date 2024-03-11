@@ -9,7 +9,7 @@ import { CoopMode } from '@/enum/coop_mode'
 export class HistoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response> {
+  async create(request: CoopHistoryQuery.HistoryRequest): Promise<CoopHistoryQuery.HistoryResponse> {
     const schedules: Partial<CoopSchedule>[] = request.histories.histories
       .map((history) => history.schedule)
       .filter((schedule) => schedule.mode === CoopMode.PRIVATE_CUSTOM)
