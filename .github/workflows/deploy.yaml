@@ -7,12 +7,6 @@ on:
       - 'master'
       - 'develop'
     types: [closed]
-  push:
-    branches:
-      - '**'
-      - '!main'
-      - '!master'
-      - '!develop'
 
 jobs:
   deploy:
@@ -42,7 +36,7 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v5
-        if: github.branch == 'develop'
+        if: github.base_ref == 'develop'
         with:
           context: .
           file: Dockerfile
@@ -53,7 +47,7 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v5
-        if: github.branch != 'develop'
+        if: github.base_ref == 'master'
         with:
           context: .
           file: Dockerfile
