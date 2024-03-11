@@ -16,6 +16,7 @@ export namespace Common {
     readonly type: string
 
     @ApiProperty({ required: true, type: 'string' })
+    @Expose()
     readonly prefix: string
 
     @ApiProperty({ required: true, type: 'string' })
@@ -38,7 +39,7 @@ export namespace Common {
      */
     get rawValue(): string {
       return btoa(
-        `${this.type}-${this.prefix}-${this.nplnUserId}:${dayjs(this.playTime).utc().format('YYYYMMDDTHHmmss')}_${this.uuid.toLowerCase()}`,
+        `${this.type}-${this.prefix}-${this.nplnUserId}:${dayjs(this.playTime).format('YYYYMMDDTHHmmss')}_${this.uuid.toLowerCase()}`,
       )
     }
 

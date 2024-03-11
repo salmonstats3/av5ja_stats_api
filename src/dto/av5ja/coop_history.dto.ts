@@ -12,7 +12,7 @@ import { WeaponInfoMain, id } from '@/enum/coop_weapon_info/main'
 import { scheduleHash } from '@/utils/hash'
 
 export namespace CoopHistoryQuery {
-  class CoopStage {
+  class HistoryCoopStage {
     @ApiProperty({
       example: 'Q29vcFN0YWdlLTE=',
       required: true,
@@ -35,7 +35,7 @@ export namespace CoopHistoryQuery {
     @Transform(({ value }) => Common.ResultId.from(value))
     readonly id: Common.ResultId
 
-    @ApiProperty({ required: true, type: CoopStage })
+    @ApiProperty({ required: true, type: HistoryCoopStage })
     @Expose()
     @IsEnum(CoopStageId)
     @Transform(({ value }) => {
@@ -139,7 +139,7 @@ export namespace CoopHistoryQuery {
   }
 
   class Node {
-    @ApiProperty({ required: true, type: CoopScheduleNode })
+    @ApiProperty({ isArray: true, required: true, type: CoopScheduleNode })
     @Expose()
     @Type(() => CoopScheduleNode)
     @ValidateNested({ each: true })
@@ -162,16 +162,16 @@ export namespace CoopHistoryQuery {
     readonly coopResult: CoopHistoryGroup
   }
 
-  export class Request {
+  export class HistoryRequest {
     @ApiProperty({ required: true, type: CoopHistoryDataClass })
     @Expose()
     @Type(() => CoopHistoryDataClass)
     @ValidateNested({ each: true })
     readonly data: CoopHistoryDataClass
 
-    get histories(): CoopHistoryQuery.Response {
+    get histories(): CoopHistoryQuery.HistoryResponse {
       return plainToInstance(
-        CoopHistoryQuery.Response,
+        CoopHistoryQuery.HistoryResponse,
         {
           histories: this.data.coopResult.historyGroups.nodes.map((node) => {
             return {
@@ -187,14 +187,17 @@ export namespace CoopHistoryQuery {
 
   class CoopHistory {
     @ApiProperty({ required: true, type: CoopScheduleNode })
+    @Expose()
     readonly schedule: CoopScheduleNode
 
     @ApiProperty({ isArray: true, required: true, type: Common.ResultId })
+    @Expose()
     readonly results: string[]
   }
 
-  export class Response {
+  export class HistoryResponse {
     @ApiProperty({ isArray: true, required: true, type: CoopHistory })
+    @Expose()
     readonly histories: CoopHistory[]
   }
 }

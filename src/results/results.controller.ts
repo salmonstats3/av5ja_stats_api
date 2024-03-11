@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Version } from '@nestjs/common'
+import { Body, Controller, Post, UseFilters, Version } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -8,22 +8,22 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
+import { ResultsFilter } from './results.filter'
+
 import { CoopHistoryDetailQuery as R3 } from '@/dto/av5ja/coop_history_detail.dto'
 import { CoopHistoryDetailQuery as R2 } from '@/dto/request/result.v2.dto'
 import { ResultsService } from '@/results/results.service'
 
 @ApiTags('Results')
 @Controller('results')
-// @UseInterceptors(ResultsInterceptor)
-// @UseFilters(ResultsFilter)
+@UseFilters(ResultsFilter)
 export class ResultsController {
   constructor(readonly service: ResultsService) {}
 
   @Post()
   @Version('2')
   @ApiBody({ type: R2.V2.Paginated })
-  @ApiOkResponse()
-  @ApiNotFoundResponse()
+  @ApiOkResponse({ type: R2.V2.Paginated })
   @ApiBadRequestResponse()
   @ApiOperation({ deprecated: true, summary: 'Create a new result.' })
   create_v2(
@@ -35,12 +35,12 @@ export class ResultsController {
 
   @Post()
   @Version('3')
-  @ApiBody({ type: R3.V3.Request })
-  @ApiOkResponse()
+  @ApiBody({ type: R3.V3.DetailRequest })
+  @ApiOkResponse({ type: R2.V2.Paginated })
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   @ApiOperation({ summary: 'Create a new result.' })
-  create_v3(@Body() request: R3.V3.Request) {
+  create_v3(@Body() request: R3.V3.DetailRequest) {
     return this.service.create_v3(request)
   }
 }

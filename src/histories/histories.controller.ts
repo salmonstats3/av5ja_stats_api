@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common'
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { CoopHistoryQuery } from '@/dto/av5ja/coop_history.dto'
 import { HistoriesService } from '@/histories/histories.service'
@@ -10,10 +10,11 @@ export class HistoriesController {
   constructor(private readonly service: HistoriesService) {}
 
   @Post()
+  @ApiBody({ type: CoopHistoryQuery.HistoryRequest })
   @ApiOperation({ summary: 'Create a new history' })
-  @ApiOkResponse()
+  @ApiOkResponse({ type: CoopHistoryQuery.HistoryResponse })
   @ApiBadRequestResponse()
-  async create(@Body() request: CoopHistoryQuery.Request): Promise<CoopHistoryQuery.Response> {
+  async create(@Body() request: CoopHistoryQuery.HistoryRequest): Promise<CoopHistoryQuery.HistoryResponse> {
     return this.service.create(request)
   }
 }
