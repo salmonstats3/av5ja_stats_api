@@ -64,6 +64,8 @@ export class SchedulesService {
           ),
         )
         .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix())
+        .filter((schedule) => dayjs(schedule.startTime).isAfter(dayjs(request.startTime)))
+        .slice(-request.count)
       await Promise.allSettled(schedules.map((schedule) => this.prisima.schedule.upsert(schedule.upsert)))
       return {
         schedules: schedules,
