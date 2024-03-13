@@ -48,7 +48,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'pull_request' }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/app:${{ steps.hash.outputs.sha }}
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:${{ steps.hash.outputs.sha }}
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:develop
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -59,5 +60,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'pull_request' }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/app:${{ steps.version.outputs.current-version }}
-            ghcr.io/${{ github.repository_owner }}/app:latest
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:${{ steps.version.outputs.current-version }}
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:latest
