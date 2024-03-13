@@ -18,7 +18,7 @@ export class SchedulesService {
   constructor(
     private readonly axios: HttpService,
     private readonly prisima: PrismaService,
-  ) {}
+  ) { }
 
   private readonly firestore = getFirestore(initializeApp(firebaseConfig))
 
