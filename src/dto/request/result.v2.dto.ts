@@ -989,7 +989,11 @@ export namespace CoopHistoryDetailQuery {
       @ArrayMaxSize(200)
       @ValidateNested({ each: true })
       @Type(() => CoopResult)
-      results: CoopResult[]
+      private readonly results: CoopResult[]
+
+      get _results(): CoopResult[] {
+        return this.results.filter((result) => result.isValid)
+      }
     }
   }
 }

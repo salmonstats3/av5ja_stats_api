@@ -3,6 +3,8 @@ import { Expose, Transform, Type, plainToInstance } from 'class-transformer'
 import { IsDate, IsEnum, IsOptional, ValidateNested } from 'class-validator'
 import dayjs from 'dayjs'
 
+import { CoopHistoryDetailQuery } from './coop_history_detail.dto'
+
 import { Common } from '@/dto/common'
 import { CoopSchedule } from '@/dto/coop_schedule'
 import { CoopMode } from '@/enum/coop_mode'
@@ -72,7 +74,7 @@ export namespace CoopHistoryQuery {
     readonly nodes: HistoryDetailNode[]
   }
 
-  class CoopScheduleNode {
+  class CoopScheduleUpdateNode {
     @ApiProperty({ required: true, type: Date })
     @Expose()
     @IsDate()
@@ -96,7 +98,9 @@ export namespace CoopHistoryQuery {
     @Expose()
     @IsEnum(CoopRule)
     readonly rule: CoopRule
+  }
 
+  class CoopScheduleNode extends CoopScheduleUpdateNode {
     @ApiProperty({ isArray: true, required: true, type: HistoryDetail })
     @Expose()
     @Type(() => HistoryDetail)
@@ -199,5 +203,39 @@ export namespace CoopHistoryQuery {
     @ApiProperty({ isArray: true, required: true, type: CoopHistory })
     @Expose()
     readonly histories: CoopHistory[]
+  }
+
+  class CoopHistoryUpdateClass {
+    @ApiProperty({ required: true, type: CoopSchedule })
+    @Expose()
+    @Type(() => CoopSchedule)
+    readonly schedule: CoopSchedule
+
+    @ApiProperty({ isArray: true, required: true, type: CoopHistoryDetailQuery.V3.DetailRequest })
+    @Expose({ name: 'results' })
+    @Type(() => CoopHistoryDetailQuery.V3.DetailRequest)
+    @ValidateNested({ each: true })
+    private readonly results: CoopHistoryDetailQuery.V3.DetailRequest[]
+
+    get _results(): CoopHistoryDetailQuery.V3.DetailRequest[] {
+      return this.results.filter((result) => {
+        if (this.schedule.mode === CoopMode.PRIVATE_CUSTOM) {
+          return this.schedule.rule === result.rule && this.schedule.stageId === result.stageId
+        }
+        return (
+          this.schedule.rule === result.rule &&
+          this.schedule.stageId === result.stageId &&
+          result.playTime >= this.schedule.startTime &&
+          result.playTime <= this.schedule.endTime
+        )
+      })
+    }
+  }
+
+  export class HistoryUpdateRequest {
+    @ApiProperty({ isArray: true, required: true, type: CoopHistoryUpdateClass })
+    @Expose()
+    @Type(() => CoopHistoryUpdateClass)
+    readonly histories: CoopHistoryUpdateClass[]
   }
 }

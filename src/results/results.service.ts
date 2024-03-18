@@ -11,11 +11,10 @@ import { ResultsFilter } from '@/results/results.filter'
 @Injectable()
 @UseFilters(ResultsFilter)
 export class ResultsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create_v2(@Body() request: R2.V2.Paginated): Promise<R2.V2.Paginated> {
-    const results: R2.V2.CoopResult[] = request.results.filter((result) => result.isValid)
-    await Promise.allSettled(results.map((result) => this.prisma.result.upsert(result.upsert)))
+    await Promise.allSettled(request._results.map((result) => this.prisma.result.upsert(result.upsert)))
     return request
   }
 
@@ -23,9 +22,7 @@ export class ResultsService {
     const schedule: CoopSchedule = await this.schedule(request)
     const result = R2.V2.CoopResult.from(schedule, request)
     await this.prisma.result.upsert(result.upsert)
-    return {
-      results: [result],
-    }
+    return plainToInstance(R2.V2.Paginated, { results: [result] })
   }
 
   private async schedule(request: R3.V3.DetailedRequest): Promise<CoopSchedule> {
