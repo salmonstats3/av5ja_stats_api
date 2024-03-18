@@ -16,13 +16,13 @@ export class CoopSchedule {
   readonly id: string
 
   @Expose()
-  @ApiProperty({ example: '2022-01-01T00:00:00Z' })
-  @Transform(({ value }) => (value === null ? null : dayjs(value).utc().format('YYYY-MM-DDTHH:mm:ss[Z]')))
+  @ApiProperty({ example: '2022-01-01T00:00:00Z', nullable: true, type: Date })
+  @Transform(({ value }) => (value === null ? null : dayjs(value).utc().toDate()))
   readonly startTime: Date | null
 
   @Expose()
-  @ApiProperty({ example: '2022-01-01T00:00:00Z' })
-  @Transform(({ value }) => (value === null ? null : dayjs(value).utc().format('YYYY-MM-DDTHH:mm:ss[Z]')))
+  @ApiProperty({ example: '2022-01-01T00:00:00Z', nullable: true, type: Date })
+  @Transform(({ value }) => (value === null ? null : dayjs(value).utc().toDate()))
   readonly endTime: Date | null
 
   @Expose()
