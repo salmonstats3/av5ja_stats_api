@@ -99,8 +99,8 @@ export class CoopSchedule {
         id: scheduleHash(
           mode,
           rule,
-          dayjs(schedule.startTime).toDate(),
-          dayjs(schedule.endTime).toDate(),
+          dayjs(schedule.startTime).utc().toDate(),
+          dayjs(schedule.endTime).utc().toDate(),
           stageId,
           weaponList,
         ),

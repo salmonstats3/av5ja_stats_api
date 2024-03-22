@@ -632,7 +632,7 @@ export namespace CoopHistoryDetailQuery {
       }
 
       get uid(): string {
-        return `${dayjs(this.player.id.playTime).format('YYYYMMDDTHHmmss')}:${this.player.id.nplnUserId}`
+        return `${dayjs(this.player.id.playTime).utc().format('YYYYMMDDTHHmmss')}:${this.player.id.nplnUserId}`
       }
 
       /**
