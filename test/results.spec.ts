@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
+import timezoneMock from 'timezone-mock'
 
 import { Common } from '@/dto/common'
 import { CoopSchedule } from '@/dto/coop_schedule'
@@ -10,6 +11,7 @@ describe('AppController (e2e)', () => {
     dayjs.extend(utc)
     dayjs.extend(timezone)
     dayjs.tz.setDefault('Asia/Tokyo')
+    timezoneMock.register('UTC')
   })
 
   const results: string[] = [
