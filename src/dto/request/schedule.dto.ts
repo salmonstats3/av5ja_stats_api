@@ -11,7 +11,7 @@ export class GetCoopScheduleRequest {
     required: false,
   })
   @IsDateString()
-  @Transform(({ value }) => value || dayjs().toISOString())
+  @Transform(({ value }) => value || dayjs().utc().toISOString())
   startTime: Date
 
   @Expose()

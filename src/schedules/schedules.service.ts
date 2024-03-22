@@ -29,11 +29,11 @@ export class SchedulesService {
       const schedules: CoopSchedule[] = [data['Normal'], data['BigRun'], data['TeamContest']]
         .flat()
         .map((schedule: any) => CoopSchedule.from(schedule))
-        .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix())
+        .sort((a, b) => dayjs(b.startTime).utc().unix() - dayjs(a.startTime).utc().unix())
       Promise.allSettled(
         schedules.map(async (schedule) => {
           setDoc(
-            doc(this.firestore, schedule.rule, dayjs(schedule.startTime).toISOString()),
+            doc(this.firestore, schedule.rule, dayjs(schedule.startTime).utc().toISOString()),
             JSON.parse(JSON.stringify(schedule)),
           )
         }),
@@ -63,7 +63,7 @@ export class SchedulesService {
             }),
           ),
         )
-        .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix())
+        .sort((a, b) => dayjs(b.startTime).utc().unix() - dayjs(a.startTime).utc().unix())
       await Promise.allSettled(schedules.map((schedule) => this.prisima.schedule.upsert(schedule.upsert)))
       return {
         schedules: schedules,

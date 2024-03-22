@@ -7,12 +7,6 @@ on:
       - 'master'
       - 'develop'
     types: [closed]
-  push:
-    branches:
-      - '**'
-      - '!main'
-      - '!master'
-      - '!develop'
 
 jobs:
   deploy:
@@ -20,6 +14,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - uses: benjlevesque/short-sha@v3.0
+        id: hash
+        with:
+          length: 7
 
       - name: Get Package Version
         id: version
@@ -42,11 +41,24 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v5
+        if: github.base_ref == 'develop'
         with:
           context: .
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'pull_request' }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/app:${{ steps.version.outputs.current-version }}
-            ghcr.io/${{ github.repository_owner }}/app:latest
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:${{ steps.hash.outputs.sha }}
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:develop
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        if: github.base_ref == 'master'
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name == 'pull_request' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:${{ steps.version.outputs.current-version }}
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:latest
