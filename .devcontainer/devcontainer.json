@@ -1,15 +1,10 @@
 {
   "name": "NestJS",
-  "dockerComposeFile": [
-    "docker-compose.yaml"
-  ],
+  "dockerComposeFile": ["docker-compose.yaml"],
   "service": "nestjs",
   "workspaceFolder": "/home/bun/app",
   "shutdownAction": "stopCompose",
   "remoteUser": "bun",
-  "mounts": [
-    "source=${env:HOME}/home/bun/.ssh,target=/.ssh,type=bind,consistency=cached,readonly"
-  ],
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/common-utils:2": {

@@ -976,7 +976,7 @@ export namespace CoopHistoryDetailQuery {
       readonly coopHistoryDetail: CoopHistoryDetail
     }
 
-    export class DetailRequest {
+    export class DetailedRequest {
       @ApiProperty({ required: true, type: CoopResultDataClass })
       @Expose()
       @Type(() => CoopResultDataClass)
