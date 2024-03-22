@@ -20,20 +20,20 @@ export function scheduleHash(
         .digest('hex')
     : createHash('md5')
         .update(
-          `${mode}-${rule}-${stageId}-${dayjs(startTime).unix()}-${dayjs(endTime).unix()}-${weaponList.join(',')}`,
+          `${mode}-${rule}-${stageId}-${dayjs(startTime).utc().unix()}-${dayjs(endTime).utc().unix()}-${weaponList.join(',')}`,
         )
         .digest('hex')
 }
 
 export function resultHash(uuid: string, playTime: Date): string {
   return createHash('md5')
-    .update(`${dayjs(playTime).unix()}-${uuid.toLowerCase()}`)
+    .update(`${dayjs(playTime).utc().unix()}-${uuid.toLowerCase()}`)
     .digest('hex')
 }
 
 export function playerHash(uuid: string, playTime: Date, nplnUserId: string): string {
   return createHash('md5')
-    .update(`${dayjs(playTime).unix()}-${uuid.toLowerCase()}-${nplnUserId}`)
+    .update(`${dayjs(playTime).utc().unix()}-${uuid.toLowerCase()}-${nplnUserId}`)
     .digest('hex')
 }
 

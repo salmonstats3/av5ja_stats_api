@@ -35,12 +35,12 @@ export class ResultsController {
 
   @Post()
   @Version('3')
-  @ApiBody({ type: R3.V3.DetailRequest })
+  @ApiBody({ type: R3.V3.DetailedRequest })
   @ApiOkResponse({ type: R2.V2.Paginated })
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   @ApiOperation({ summary: 'Create a new result.' })
-  create_v3(@Body() request: R3.V3.DetailRequest) {
+  create_v3(@Body() request: R3.V3.DetailedRequest) {
     return this.service.create_v3(request)
   }
 }

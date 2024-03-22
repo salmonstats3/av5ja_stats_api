@@ -632,7 +632,7 @@ export namespace CoopHistoryDetailQuery {
       }
 
       get uid(): string {
-        return `${dayjs(this.player.id.playTime).format('YYYYMMDDTHHmmss')}:${this.player.id.nplnUserId}`
+        return `${dayjs(this.player.id.playTime).utc().format('YYYYMMDDTHHmmss')}:${this.player.id.nplnUserId}`
       }
 
       /**
@@ -976,7 +976,7 @@ export namespace CoopHistoryDetailQuery {
       readonly coopHistoryDetail: CoopHistoryDetail
     }
 
-    export class DetailRequest {
+    export class DetailedRequest {
       @ApiProperty({ required: true, type: CoopResultDataClass })
       @Expose()
       @Type(() => CoopResultDataClass)

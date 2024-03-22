@@ -850,7 +850,7 @@ export namespace CoopHistoryDetailQuery {
         }
       }
 
-      static from(schedule: CoopSchedule, result: R3.V3.DetailRequest): CoopResult {
+      static from(schedule: CoopSchedule, result: R3.V3.DetailedRequest): CoopResult {
         return plainToInstance(
           CoopResult,
           {
