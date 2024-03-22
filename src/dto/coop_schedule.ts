@@ -86,6 +86,8 @@ export class CoopSchedule {
           return CoopBossInfoId.SakeRope
         case 'SakelienGiant':
           return CoopBossInfoId.SakelienGiant
+        case 'Random':
+          return CoopBossInfoId.Random
         default:
           return null
       }

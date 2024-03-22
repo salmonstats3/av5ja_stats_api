@@ -39,6 +39,6 @@ export function playerHash(uuid: string, playTime: Date, nplnUserId: string): st
 
 export function waveHash(uuid: string, playTime: Date, id: number): string {
   return createHash('md5')
-    .update(`${dayjs(playTime).utc().unix()}-${uuid.toLowerCase()}-${id}`)
+    .update(`${dayjs(playTime).unix()}-${uuid.toLowerCase()}-${id}`)
     .digest('hex')
 }
