@@ -22,7 +22,7 @@ export class ResultsService {
   async create_v3(@Body() request: R3.V3.DetailedRequest): Promise<R2.V2.Paginated> {
     const schedule: CoopSchedule = await this.schedule(request)
     const result = R2.V2.CoopResult.from(schedule, request)
-    // await this.prisma.result.upsert(result.upsert)
+    await this.prisma.result.upsert(result.upsert)
     return {
       results: [result],
     }
