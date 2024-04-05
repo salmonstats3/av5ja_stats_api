@@ -102,7 +102,7 @@ jobs:
 
       - name: Check version update
         id: check-version-update
-        uses: ./.github/workflows/composite/check-version-update
+        uses: ./.github/workflows/actions/check-version-update
         with:
           current_version: ${{ steps.current_version.outputs.version }}
           release_version: ${{ steps.release_version.outputs.version }}
