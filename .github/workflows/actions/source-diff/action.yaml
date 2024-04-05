@@ -1,0 +1,21 @@
+name: Check Source Diff
+description: Check source diff between pull request and target branch
+
+inputs:
+  path:
+    required: true
+outputs:
+  changed:
+    vlaue: ${{ steps.check-source-diff.outputs.changed }}
+runs:
+  using: composite
+  steps:
+    - name: Check Source Diff
+      id: check-source-diff
+      env:
+        TARGET_BRANCH: ${{ github.base_ref }}
+      shell: bash
+      run: |
+        git fetch origin $TARGET_BRANCH --depth=1
+        count=`git diff origin/${TARGET_BRANCH} HEAD --name-only --relative=${{ inputs.path }} | wc -l`
+        echo "changed=$count" >> $GITHUB_OUTPUT

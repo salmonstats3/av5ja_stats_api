@@ -78,7 +78,7 @@ jobs:
         with:
           ref: master
 
-      - name: Get New Version
+      - name: Get Current Version
         id: current_version
         run: |
           echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
@@ -86,7 +86,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get New Version
+      - name: Get Release Version
         id: release_version
         run: |
           echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
