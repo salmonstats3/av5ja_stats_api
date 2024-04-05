@@ -8,6 +8,7 @@ on:
       - '!master'
 
 jobs:
+  # ビルド
   build:
     runs-on: self-hosted
     steps:
@@ -29,6 +30,7 @@ jobs:
           bun prisma generate
           bun run build
 
+  # テスト
   test:
     needs: build
     runs-on: self-hosted
