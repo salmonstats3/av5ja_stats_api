@@ -78,7 +78,7 @@ jobs:
         id: current_version
         uses: ./.github/workflows/actions/package-version
         with:
-          branch: ${{ github.base_ref }}
+          ref: ${{ github.base_ref }}
 
       - name: Get Release Version
         id: release_version

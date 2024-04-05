@@ -1,7 +1,7 @@
 name: Get Version from Package.json
 
 inputs:
-  branch:
+  ref:
     description: 'Branch name'
     required: false
     default: ${{ github.ref }}
