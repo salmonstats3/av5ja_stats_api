@@ -10,7 +10,7 @@ on:
 
 jobs:
   set_tag:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && github.base_ref == 'master'
     runs-on: self-hosted
     steps:
       - name: Checkout code
