@@ -1,19 +1,9 @@
 name: Semantic Versioning
 
 on:
-  push:
+  pull_request:
     branches:
-      - '**'
-      - '!main'
-      - '!master'
-  # pull_request:
-  #   branches:
-  #     - '**'
-  #     - '!main'
-  #     - '!master'
-  # types:
-  #   - labeled
-  #   - unlabeled
+      - 'develop'
 
 jobs:
   # version_check:
