@@ -71,6 +71,7 @@ jobs:
   #         git push origin HEAD
 
   version:
+    if: github.base_ref == 'master'
     runs-on: self-hosted
     steps:
       - name: Checkout
