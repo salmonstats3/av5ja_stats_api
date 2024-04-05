@@ -30,7 +30,7 @@ jobs:
 
       - name: Check
         run: |
-          echo ${{ steps.version.outputs.tag }}
+          echo ${{ steps.version.outputs.current-version }}
           echo ${{ steps.previous_version.outputs.tag }}
 
   # ビルド
