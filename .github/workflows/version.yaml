@@ -3,6 +3,7 @@ name: Semantic Versioning
 on:
   pull_request:
     branches:
+      - '**'
       - 'develop'
 
 jobs:
@@ -70,7 +71,7 @@ jobs:
   #         git push origin HEAD
 
   version:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v4
