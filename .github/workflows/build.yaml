@@ -8,7 +8,34 @@ on:
       - '!master'
 
 jobs:
+  verify:
+    # バージョンチェックはPRのみで実行
+    # if: github.event_name == 'pull_request'
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get Package Version
+        id: version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: .
+
+      - name: Get Previous tag
+        id: previous_version
+        uses: 'WyriHaximus/github-action-get-previous-tag@v1'
+        with:
+          fallback: 1.0.0
+
+      - name: Check
+        run: |
+          echo ${{ steps.version.outputs.tag }}
+          echo ${{ steps.previous_version.outputs.tag }}
+
+  # ビルド
   build:
+    needs: verify
     runs-on: self-hosted
     steps:
       - name: Checkout
@@ -29,6 +56,7 @@ jobs:
           bun prisma generate
           bun run build
 
+  # テスト
   test:
     needs: build
     runs-on: self-hosted
