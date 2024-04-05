@@ -1,7 +1,7 @@
 name: check-version-update
 
 inputs:
-  new_version:
+  release_version:
     required: true
   current_version:
     required: true
@@ -16,12 +16,12 @@ runs:
       id: check-version-update
       shell: bash
       run: |
-        new_version=${{ inputs.new_version }}
-        new_ver_array=(${new_version//./ })
+        release_version=${{ inputs.release_version }}
+        release_ver_array=(${release_version//./ })
         current_version=${{ inputs.current_version }}
         current_ver_array=(${current_version//./ })
-        if [ ${new_ver_array[0]} -gt ${current_ver_array[0]} ]; then echo "semver=Semver-Major" >> "$GITHUB_OUTPUT"; exit 0; fi
-        if [ ${new_ver_array[0]} -eq ${current_ver_array[0]} ] && [ ${new_ver_array[1]} -gt ${current_ver_array[1]} ]; then echo "semver=Semver-Minor" >> "$GITHUB_OUTPUT"; exit 0; fi
-        if [ ${new_ver_array[0]} -eq ${current_ver_array[0]} ] && [ ${new_ver_array[1]} -eq ${current_ver_array[1]} ] && [ ${new_ver_array[2]} -gt ${current_ver_array[2]} ]; then echo "semver=Semver-Patch" >> "$GITHUB_OUTPUT"; exit 0; fi
+        if [ ${release_ver_array[0]} -gt ${current_ver_array[0]} ]; then echo "semver=Semver-Major" >> "$GITHUB_OUTPUT"; exit 0; fi
+        if [ ${release_ver_array[0]} -eq ${current_ver_array[0]} ] && [ ${release_ver_array[1]} -gt ${current_ver_array[1]} ]; then echo "semver=Semver-Minor" >> "$GITHUB_OUTPUT"; exit 0; fi
+        if [ ${release_ver_array[0]} -eq ${current_ver_array[0]} ] && [ ${release_ver_array[1]} -eq ${current_ver_array[1]} ] && [ ${release_ver_array[2]} -gt ${current_ver_array[2]} ]; then echo "semver=Semver-Patch" >> "$GITHUB_OUTPUT"; exit 0; fi
         echo "Please update version in package.json"
         exit 1
