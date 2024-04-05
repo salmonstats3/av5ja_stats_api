@@ -18,7 +18,7 @@ runs:
   steps:
     - uses: actions/checkout@v4
       with:
-        ref: ${{ inputs.branch }}
+        ref: ${{ inputs.ref }}
 
     - id: package_version
       shell: bash
