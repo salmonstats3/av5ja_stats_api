@@ -90,7 +90,7 @@ jobs:
       - name: Get New Version
         id: current_version
         run: |
-          echo "$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
+          echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -98,7 +98,7 @@ jobs:
       - name: Get New Version
         id: release_version
         run: |
-          echo "$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
+          echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
 
       - name: Check version update
         id: check-version-update
