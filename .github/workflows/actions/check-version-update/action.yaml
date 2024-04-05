@@ -18,7 +18,6 @@ runs:
       with:
         ref: ${{ github.base_ref }}
 
-    - name: Current Version
       id: current_version
       shell: bash
       run: |
@@ -39,9 +38,6 @@ runs:
       id: check-version-update
       shell: bash
       run: |
-        release_version=${{ steps.release_version.outputs.version }}
-        release_ver_array=(${release_version//./ })
-        current_version=${{ steps.current_version.outputs.version }}
         current_ver_array=(${current_version//./ })
         if [ ${release_ver_array[0]} -gt ${current_ver_array[0]} ]; then echo "semver=Semver-Major" >> "$GITHUB_OUTPUT"; exit 0; fi
         if [ ${release_ver_array[0]} -eq ${current_ver_array[0]} ] && [ ${release_ver_array[1]} -gt ${current_ver_array[1]} ]; then echo "semver=Semver-Minor" >> "$GITHUB_OUTPUT"; exit 0; fi
