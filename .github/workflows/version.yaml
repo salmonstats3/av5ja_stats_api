@@ -1,0 +1,47 @@
+name: Semantic Versioning
+
+on:
+  pull_request:
+    branches:
+      - '**'
+      - '!main'
+      - '!master'
+      - '!develop'
+
+jobs:
+  version:
+    # バージョンチェックはPRのみで実行
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Get New Version
+        id: curent_version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: .
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get New Version
+        id: new_version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: .
+
+      - name: Check version update
+        id: check-version-update
+        uses: ./.github/workflows/composite/check-version-update
+        with:
+          current_version: ${{ steps.current_version.outputs.current-version }}
+          new_version: ${{ steps.new_version.outputs.current-version }}
+
+      - name: Set Label to Pull Request
+        if: github.event_name == 'pull_request'
+        uses: ./.github/workflows/composite/set-label
+        with:
+          semver: ${{ steps.check-version-update.outputs.semver }}
