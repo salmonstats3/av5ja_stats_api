@@ -74,6 +74,9 @@ jobs:
     if: github.base_ref == 'master'
     runs-on: self-hosted
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Get Current Version
         id: current_version
         uses: ./.github/workflows/actions/package-version
