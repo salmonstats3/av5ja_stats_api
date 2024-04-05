@@ -1,4 +1,4 @@
-name: check-version-update
+name: Check Version Update
 
 inputs:
   release_version:
