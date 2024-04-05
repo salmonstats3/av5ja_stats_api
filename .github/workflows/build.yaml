@@ -11,7 +11,7 @@ jobs:
   verify:
     # バージョンチェックはPRのみで実行
     # if: github.event_name == 'pull_request'
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
