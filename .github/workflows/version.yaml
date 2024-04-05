@@ -100,6 +100,6 @@ jobs:
 
       - name: Set Label to Pull Request
         if: github.event_name == 'pull_request'
-        uses: ./.github/workflows/composite/set-label
+        uses: ./.github/workflows/actions/set-label
         with:
           semver: ${{ steps.check-version-update.outputs.semver }}
