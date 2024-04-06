@@ -74,27 +74,9 @@ jobs:
     if: github.base_ref == 'master'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Get Current Version
-        id: current_version
-        uses: ./.github/workflows/actions/package-version
-        with:
-          ref: ${{ github.base_ref }}
-
-      - name: Get Release Version
-        id: release_version
-        uses: ./.github/workflows/actions/package-version
-        with:
-          branch: ${{ github.ref }}
-
       - name: Check version update
         id: check-version-update
         uses: ./.github/workflows/actions/check-version-update
-        with:
-          current_version: ${{ steps.current_version.outputs.version }}
-          release_version: ${{ steps.release_version.outputs.version }}
 
       - name: Set Label to Pull Request
         if: github.event_name == 'pull_request'
