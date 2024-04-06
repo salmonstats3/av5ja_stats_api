@@ -1,5 +1,10 @@
 name: Check Version Update with Pull Request
 
+inputs:
+  path:
+    description: 'Path to package.json'
+    required: false
+    default: '.'
 outputs:
   semver:
     description: 'Semantic Versioning'
