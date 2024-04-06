@@ -1,5 +1,5 @@
 import { initializeApp } from '@firebase/app'
-import { collection, getDocs, getFirestore, query, orderBy, setDoc, doc } from '@firebase/firestore/lite'
+import { collection, getDocs, getFirestore, query, orderBy, doc } from '@firebase/firestore/lite'
 import { HttpService } from '@nestjs/axios'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
@@ -29,13 +29,10 @@ export class SchedulesService {
       const schedules: CoopSchedule[] = [data['Normal'], data['BigRun'], data['TeamContest']]
         .flat()
         .map((schedule: any) => CoopSchedule.from(schedule))
-        .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix())
+        .sort((a, b) => dayjs(b.startTime).utc().unix() - dayjs(a.startTime).utc().unix())
       Promise.allSettled(
         schedules.map(async (schedule) => {
-          setDoc(
-            doc(this.firestore, schedule.rule, dayjs(schedule.startTime).toISOString()),
-            JSON.parse(JSON.stringify(schedule)),
-          )
+          doc(this.firestore, schedule.rule, dayjs(schedule.startTime).utc().toISOString())
         }),
       )
       await Promise.allSettled(schedules.map((schedule) => this.prisima.schedule.upsert(schedule.upsert)))
@@ -63,7 +60,7 @@ export class SchedulesService {
             }),
           ),
         )
-        .sort((a, b) => dayjs(b.startTime).unix() - dayjs(a.startTime).unix())
+        .sort((a, b) => dayjs(b.startTime).utc().unix() - dayjs(a.startTime).utc().unix())
         .filter((schedule) => dayjs(schedule.startTime).isAfter(dayjs(request.startTime)))
         .slice(-request.count)
       await Promise.allSettled(schedules.map((schedule) => this.prisima.schedule.upsert(schedule.upsert)))
