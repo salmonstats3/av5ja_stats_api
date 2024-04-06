@@ -10,6 +10,7 @@ on:
 jobs:
   # ビルド
   build:
+    if: ${{ github.event_name == 'push' }}
     runs-on: self-hosted
     steps:
       - name: Checkout
