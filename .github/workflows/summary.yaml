@@ -1,4 +1,4 @@
-name: Semantic Versioning
+name: Generate Pull Request Summary by ChatGPT
 
 on:
   pull_request:
