@@ -1,0 +1,20 @@
+name: Semantic Versioning
+
+on:
+  pull_request:
+    branches:
+      - '**'
+      - 'develop'
+
+jobs:
+  version:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Pull Request Summary Example
+        uses: tkgstrator/pull_request_summary_action@0.0.1
+        with:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
