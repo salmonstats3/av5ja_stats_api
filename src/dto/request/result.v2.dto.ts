@@ -36,7 +36,7 @@ import { WaterLevelId } from '@/enum/coop_water_level'
 import { WeaponInfoMain } from '@/enum/coop_weapon_info/main'
 import { WeaponInfoSpecial } from '@/enum/coop_weapon_info/special'
 import { Species } from '@/enum/species'
-import { resultHash, scheduleHash } from '@/utils/hash'
+import { playerHash, resultHash, scheduleHash } from '@/utils/hash'
 
 /**
  * TODO: 既存コードのコピーなので修正予定
@@ -190,6 +190,13 @@ export namespace CoopHistoryDetailQuery {
       @IsBoolean()
       readonly isClear: boolean
 
+      @ApiProperty({ required: true, type: String })
+      @IsString()
+      @IsOptional()
+      @IsHash('md5')
+      @Expose()
+      readonly hash: string
+
       get create(): Prisma.WaveCreateManyResultInput {
         return {
           eventType: this.eventType,
@@ -231,6 +238,13 @@ export namespace CoopHistoryDetailQuery {
     }
 
     class PlayerResultV2 {
+      @ApiProperty()
+      @IsString()
+      @IsNotEmpty()
+      @IsOptional()
+      @Expose()
+      readonly hash: string
+
       @ApiProperty()
       @IsString()
       @IsNotEmpty()
@@ -895,6 +909,7 @@ export namespace CoopHistoryDetailQuery {
               deadCount: result.myResult.deadCount,
               goldenIkuraAssistNum: result.myResult.goldenIkuraAssistNum,
               goldenIkuraNum: result.myResult.goldenIkuraNum,
+              hash: playerHash(result.id.uuid, result.id.playTime, result.id.nplnUserId),
               helpCount: result.myResult.helpCount,
               id: result.myResult.uid,
               ikuraNum: result.myResult.ikuraNum,
@@ -932,6 +947,7 @@ export namespace CoopHistoryDetailQuery {
                 deadCount: member.deadCount,
                 goldenIkuraAssistNum: member.goldenIkuraAssistNum,
                 goldenIkuraNum: member.goldenIkuraNum,
+                hash: playerHash(result.id.uuid, result.id.playTime, member.nplnUserId),
                 helpCount: member.helpCount,
                 id: member.uid,
                 ikuraNum: member.ikuraNum,
@@ -975,6 +991,7 @@ export namespace CoopHistoryDetailQuery {
                 schedule.weaponList,
               ),
               mode: schedule.mode,
+              rareWeapons: schedule.rareWeapons,
               rule: schedule.rule,
               stageId: schedule.stageId,
               startTime: schedule.startTime,
@@ -986,6 +1003,7 @@ export namespace CoopHistoryDetailQuery {
                 eventType: wave.eventType,
                 goldenIkuraNum: wave.goldenIkuraNum,
                 goldenIkuraPopNum: wave.goldenIkuraPopNum,
+                hash: wave.hash(result.id),
                 id: wave.id,
                 isClear: wave.isClear(result.failureWave, result.isBossDefeated),
                 quotaNum: wave.quotaNum,
