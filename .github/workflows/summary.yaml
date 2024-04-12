@@ -1,4 +1,8 @@
-name: Generate Pull Request Summary by ChatGPT
+name: Code Review by ChatGPT
+
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   pull_request:
@@ -13,8 +17,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Pull Request Summary Example
-        uses: tkgstrator/pull_request_summary_action@0.0.1
-        with:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: Code Review
+      - uses: anc95/ChatGPT-CodeReview@main
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LANGUAGE: English
+          OPENAI_API_ENDPOINT: https://api.openai.com/v1
+          MODEL: gpt-3.5-turbo-0125
+          top_p: 1
+          temperature: 1
