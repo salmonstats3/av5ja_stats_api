@@ -1,4 +1,4 @@
-FROM oven/bun:1 AS base
+FROM oven/bun:1.1.1 AS base
 
 ARG APP_PORT APP_HOST APP_VERSION
 ENV APP_PORT=${APP_PORT} APP_HOST=${APP_HOST} APP_VERSION=${APP_VERSION}
@@ -31,6 +31,7 @@ FROM gcr.io/distroless/nodejs20-debian12 AS release
 WORKDIR /app
 COPY --from=install /app/dev/node_modules ./node_modules
 COPY --from=prerelease /app/dist ./dist
+COPY --from=prerelease /app/package.json ./package.json
 
 # Launch
 EXPOSE ${APP_PORT}

@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    container_name: av5ja_stats_api
+    # container_name: av5ja_stats_api
     ports:
       - $APP_PORT:$APP_PORT
     tty: true
@@ -16,7 +16,7 @@ services:
 
   db:
     image: postgres:15.4
-    container_name: av5ja_stats_db
+    # container_name: av5ja_stats_db
     restart: always
     ports:
       - 5432:5432

@@ -7,25 +7,44 @@ on:
       - 'master'
       - 'develop'
     types: [closed]
-  push:
-    branches:
-      - '**'
-      - '!main'
-      - '!master'
-      - '!develop'
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  set_tag:
+    if: github.event.pull_request.merged == true && github.base_ref == 'master'
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get Package Version
-        id: version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - name: Get Version
+        id: current_version
+        run: |
+          echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
+
+      - name: Set Tags
+        run: |
+          git fetch origin ${{ github.event.pull_request.head.ref }}
+          git checkout ${{ github.event.pull_request.head.ref }}
+          git tag `echo '${{ github.event.pull_request.head.ref }}'`
+          git push origin `echo '${{ github.event.pull_request.head.ref }}'`
+
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: self-hosted
+    needs: [tag]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: benjlevesque/short-sha@v3.0
+        id: hash
         with:
-          path: .
+          length: 7
+
+      - name: Get Version
+        id: current_version
+        run: |
+          echo "version=$(cat package.json | jq -r '.version')" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -42,11 +61,24 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v5
+        if: github.base_ref == 'develop'
         with:
           context: .
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'pull_request' }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/app:${{ steps.version.outputs.current-version }}
-            ghcr.io/${{ github.repository_owner }}/app:latest
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:${{ steps.hash.outputs.sha }}
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:develop
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        if: github.base_ref == 'master'
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name == 'pull_request' }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:${{ steps.current_version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/av5ja_stats_api:latest

@@ -1,17 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Expose, Transform, Type } from 'class-transformer'
-import { IsDateString, IsInt, Max, Min } from 'class-validator'
+import { IsDateString, IsInt, IsOptional, Max, Min } from 'class-validator'
 import dayjs from 'dayjs'
 
 export class GetCoopScheduleRequest {
   @Expose()
   @ApiProperty({
+    default: dayjs().toISOString(),
     description:
       'The date and time in ISO 8601 format to use for fetching schedules. If not provided, the current date and time will be used.',
     required: false,
   })
   @IsDateString()
-  @Transform(({ value }) => value || dayjs().toISOString())
+  @Transform(({ value }) => value || dayjs().utc().toISOString())
   startTime: Date
 
   @Expose()
@@ -24,9 +25,10 @@ export class GetCoopScheduleRequest {
     type: 'integer',
   })
   @IsInt()
+  @IsOptional()
   @Min(1)
   @Max(100)
-  @Transform(({ value }) => value || 5)
+  @Transform(({ value }) => value)
   @Type(() => Number)
   count: number
 }

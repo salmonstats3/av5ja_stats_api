@@ -850,7 +850,7 @@ export namespace CoopHistoryDetailQuery {
         }
       }
 
-      static from(schedule: CoopSchedule, result: R3.V3.Request): CoopResult {
+      static from(schedule: CoopSchedule, result: R3.V3.DetailedRequest): CoopResult {
         return plainToInstance(
           CoopResult,
           {
@@ -907,11 +907,10 @@ export namespace CoopHistoryDetailQuery {
               nplnUserId: result.myResult.nplnUserId,
               specialCounts: result.waveDetails.map(
                 (wave) =>
-                  wave.specialWeapons
-                    .map((special) => special.id)
-                    .filter((id) => id === result.myResult.specialWeapon.id).length,
+                  wave.specialWeapons.map((special) => special.id).filter((id) => id === result.myResult.specialId)
+                    .length,
               ),
-              specialId: result.myResult.specialWeapon.id,
+              specialId: result.myResult.specialId,
               species: result.myResult.player.species,
               uniform: result.myResult.player.uniform.id,
               weaponList: result.myResult.weaponList,
@@ -945,10 +944,9 @@ export namespace CoopHistoryDetailQuery {
                 nplnUserId: member.nplnUserId,
                 specialCounts: result.waveDetails.map(
                   (wave) =>
-                    wave.specialWeapons.map((special) => special.id).filter((id) => id === member.specialWeapon.id)
-                      .length,
+                    wave.specialWeapons.map((special) => special.id).filter((id) => id === member.specialId).length,
                 ),
-                specialId: member.specialWeapon.id,
+                specialId: member.specialId,
                 species: member.player.species,
                 uniform: member.player.uniform.id,
                 weaponList: member.weaponList,
@@ -991,7 +989,11 @@ export namespace CoopHistoryDetailQuery {
       @ArrayMaxSize(200)
       @ValidateNested({ each: true })
       @Type(() => CoopResult)
-      results: CoopResult[]
+      private readonly results: CoopResult[]
+
+      get _results(): CoopResult[] {
+        return this.results.filter((result) => result.isValid)
+      }
     }
   }
 }

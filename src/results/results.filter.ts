@@ -62,7 +62,7 @@ export class ResultsFilter implements ExceptionFilter {
             },
           ],
           footer: {
-            text: dayjs().toISOString(),
+            text: dayjs().utc().toISOString(),
           },
           title: title,
         },
