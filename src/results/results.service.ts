@@ -18,11 +18,11 @@ export class ResultsService {
     return request
   }
 
-  async create_v3(@Body() request: R3.V3.DetailedRequest): Promise<R2.V2.Paginated> {
+  async create_v3(@Body() request: R3.V3.DetailedRequest): Promise<R2.V2.CoopResult> {
     const schedule: CoopSchedule = await this.schedule(request)
     const result = R2.V2.CoopResult.from(schedule, request)
     await this.prisma.result.upsert(result.upsert)
-    return plainToInstance(R2.V2.Paginated, { results: [result] })
+    return plainToInstance(R2.V2.CoopResult, result)
   }
 
   private async schedule(request: R3.V3.DetailedRequest): Promise<CoopSchedule> {

@@ -9,6 +9,7 @@ import {
   IsBoolean,
   IsDate,
   IsEnum,
+  IsHash,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -489,6 +490,12 @@ export namespace CoopHistoryDetailQuery {
       @ValidateNested()
       readonly id: Common.ResultId
 
+      @ApiProperty({ required: true, type: String })
+      @IsString()
+      @IsHash('md5')
+      @Expose()
+      readonly hash: string
+
       @ApiProperty({ required: true, type: 'uuid' })
       @IsUUID()
       @Expose()
@@ -862,6 +869,7 @@ export namespace CoopHistoryDetailQuery {
             goldenIkuraNum: result.goldenIkuraNum,
             gradeId: result.gradeId,
             gradePoint: result.gradePoint,
+            hash: resultHash(result.id.uuid, result.id.playTime),
             id: {
               nplnUserId: result.id.nplnUserId,
               playTime: dayjs(result.id.playTime).utc().toDate(),
