@@ -1,6 +1,6 @@
 {
   "name": "salmon_stats_app",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "",
   "author": "tkgling",
   "private": true,
@@ -50,7 +50,7 @@
     "fastify": "^4.26.1",
     "handlebars": "^4.7.8",
     "nestjs-prisma": "^0.23.0",
-    "prom-client": "15.1.0",
+    "prom-client": "^15.1.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",

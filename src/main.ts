@@ -58,7 +58,7 @@ async function bootstrap() {
     engine: {
       handlebars: require('handlebars'),
     },
-    templates: join(__dirname, '@/', 'views'),
+    templates: join(__dirname, './', 'views'),
   })
   const builder = new DocumentBuilder()
     .setTitle(content.name)
@@ -80,7 +80,7 @@ async function bootstrap() {
     SwaggerStats.getMiddleware({
       swaggerOnly: true,
       swaggerSpec: document,
-      version: configuration.APP_VERSION,
+      version: content.version,
     }),
   )
   SwaggerModule.setup('api', app, document, options)

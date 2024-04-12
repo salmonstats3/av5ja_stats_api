@@ -16,6 +16,7 @@ export namespace Common {
     readonly type: string
 
     @ApiProperty({ required: true, type: 'string' })
+    @Expose()
     readonly prefix: string
 
     @ApiProperty({ required: true, type: 'string' })
@@ -101,7 +102,7 @@ export namespace Common {
     get rawValue(): string {
       // 逆変換時にはJSTからUTCに変換する
       return btoa(
-        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).format('YYYYMMDDTHHmmss')}_${this.uuid}:${this.suffix}-${
+        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).utc().format('YYYYMMDDTHHmmss')}_${this.uuid}:${this.suffix}-${
           this.nplnUserId
         }`,
       )
@@ -112,7 +113,7 @@ export namespace Common {
     }
 
     get rawId(): string {
-      const playTime: string = dayjs(this.playTime).format('YYYYMMDDTHHmmss')
+      const playTime: string = dayjs(this.playTime).utc().format('YYYYMMDDTHHmmss')
       return `${playTime}:${this.nplnUserId}`
     }
 

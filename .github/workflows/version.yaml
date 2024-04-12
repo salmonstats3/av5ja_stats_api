@@ -1,0 +1,25 @@
+name: Semantic Versioning
+
+on:
+  pull_request:
+    branches:
+      - '**'
+      - 'develop'
+
+jobs:
+  version:
+    if: github.base_ref == 'master'
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check version update
+        id: check-version-update
+        uses: ./.github/workflows/actions/check-version-update
+
+      - name: Set Label to Pull Request
+        if: github.event_name == 'pull_request'
+        uses: ./.github/workflows/actions/set-label
+        with:
+          semver: ${{ steps.check-version-update.outputs.semver }}

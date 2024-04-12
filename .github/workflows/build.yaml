@@ -8,6 +8,7 @@ on:
       - '!master'
 
 jobs:
+  # ビルド
   build:
     runs-on: self-hosted
     steps:
@@ -17,7 +18,8 @@ jobs:
       - name: Bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: latest
+          bun-version: 1.1.1
+          no-cache: false
 
       - name: Install
         run: |
@@ -29,6 +31,7 @@ jobs:
           bun prisma generate
           bun run build
 
+  # テスト
   test:
     needs: build
     runs-on: self-hosted
