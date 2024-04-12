@@ -9,6 +9,7 @@ on:
     branches:
       - '**'
       - 'develop'
+    types: [opened, reopened, synchronize]
 
 jobs:
   version:
