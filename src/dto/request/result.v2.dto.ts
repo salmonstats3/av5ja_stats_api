@@ -492,6 +492,7 @@ export namespace CoopHistoryDetailQuery {
 
       @ApiProperty({ required: true, type: String })
       @IsString()
+      @IsOptional()
       @IsHash('md5')
       @Expose()
       readonly hash: string
@@ -965,6 +966,14 @@ export namespace CoopHistoryDetailQuery {
             scenarioCode: result.scenarioCode,
             schedule: {
               endTime: schedule.endTime,
+              id: scheduleHash(
+                schedule.mode,
+                schedule.rule,
+                dayjs(schedule.startTime).utc().toDate(),
+                dayjs(schedule.endTime).utc().toDate(),
+                schedule.stageId,
+                schedule.weaponList,
+              ),
               mode: schedule.mode,
               rule: schedule.rule,
               stageId: schedule.stageId,
