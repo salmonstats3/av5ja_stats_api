@@ -12,6 +12,10 @@ import {
 } from '@willsoto/nestjs-prometheus'
 import { PrismaModule } from 'nestjs-prisma'
 
+import { RecordsController } from './records/records.controller'
+import { RecordsModule } from './records/records.module'
+import { RecordsService } from './records/records.service'
+
 import { AppController } from '@/app.controller'
 import { AppService } from '@/app.service'
 import { HistoriesController } from '@/histories/histories.controller'
@@ -36,6 +40,7 @@ import { VersionService } from '@/version/version.service'
     VersionController,
     ResourcesController,
     HistoriesController,
+    RecordsController,
   ],
   imports: [
     PrometheusModule.register({
@@ -66,6 +71,7 @@ import { VersionService } from '@/version/version.service'
     }),
     PrismaModule.forRoot({ isGlobal: true }),
     ResourceModule,
+    RecordsModule,
   ],
   providers: [
     AppService,
@@ -98,6 +104,7 @@ import { VersionService } from '@/version/version.service'
     VersionService,
     ResourcesService,
     HistoriesService,
+    RecordsService,
   ],
 })
 export class AppModule implements NestModule {
