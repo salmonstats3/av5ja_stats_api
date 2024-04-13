@@ -17,7 +17,7 @@ describe('Results', () => {
   dayjs.extend(utc)
   dayjs.extend(timezone)
 
-  beforeAll(() => { })
+  beforeAll(() => {})
 
   const v0: R2.V2.CoopResult = plainToInstance(R2.V2.Paginated, verify_json, { excludeExtraneousValues: true })
     .results[0]

@@ -8,7 +8,7 @@ import { HistoriesService } from '@/histories/histories.service'
 @ApiTags('Histories')
 @Controller('histories')
 export class HistoriesController {
-  constructor(private readonly service: HistoriesService) { }
+  constructor(private readonly service: HistoriesService) {}
 
   @Post()
   @ApiBody({ type: CoopHistoryQuery.HistoryRequest })
