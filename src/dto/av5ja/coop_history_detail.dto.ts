@@ -33,6 +33,7 @@ import { WaterLevelId } from '@/enum/coop_water_level'
 import { WeaponInfoMain, id } from '@/enum/coop_weapon_info/main'
 import { WeaponInfoSpecial } from '@/enum/coop_weapon_info/special'
 import { Species } from '@/enum/species'
+import { waveHash } from '@/utils/hash'
 
 /**
  * TODO: 既存コードのコピーなので修正予定
@@ -441,6 +442,16 @@ export namespace CoopHistoryDetailQuery {
         return this.eventWave?.id ?? CoopEventId.WaterLevels
       }
 
+      /**
+       * ハッシュ
+       */
+      hash(id: Common.ResultId): string {
+        return waveHash(id.uuid, id.playTime, this.id)
+      }
+
+      /**
+       * クリア可否
+       */
       isClear(failureWave: number | null, isBossDefeated: boolean | null): boolean {
         // 回線落ちは失敗扱い
         if (failureWave === -1) {
