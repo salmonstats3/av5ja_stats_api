@@ -179,7 +179,7 @@ export namespace CoopHistoryQuery {
         {
           histories: this.data.coopResult.historyGroups.nodes.map((node) => {
             return {
-              results: node.resultIds.map((resultId) => resultId.rawValue),
+              results: node.resultIds,
               schedule: node.schedule,
             }
           }),
@@ -196,11 +196,13 @@ export namespace CoopHistoryQuery {
 
     @ApiProperty({ isArray: true, required: true, type: Common.ResultId })
     @Expose()
-    readonly results: string[]
+    @Type(() => Common.ResultId)
+    readonly results: Common.ResultId[]
   }
 
   export class HistoryResponse {
     @ApiProperty({ isArray: true, required: true, type: CoopHistory })
+    @Type(() => CoopHistory)
     @Expose()
     readonly histories: CoopHistory[]
   }
@@ -211,13 +213,13 @@ export namespace CoopHistoryQuery {
     @Type(() => CoopSchedule)
     readonly schedule: CoopSchedule
 
-    @ApiProperty({ isArray: true, required: true, type: CoopHistoryDetailQuery.V3.DetailRequest })
+    @ApiProperty({ isArray: true, required: true, type: CoopHistoryDetailQuery.V3.DetailedRequest })
     @Expose({ name: 'results' })
-    @Type(() => CoopHistoryDetailQuery.V3.DetailRequest)
+    @Type(() => CoopHistoryDetailQuery.V3.DetailedRequest)
     @ValidateNested({ each: true })
-    private readonly results: CoopHistoryDetailQuery.V3.DetailRequest[]
+    private readonly results: CoopHistoryDetailQuery.V3.DetailedRequest[]
 
-    get _results(): CoopHistoryDetailQuery.V3.DetailRequest[] {
+    get _results(): CoopHistoryDetailQuery.V3.DetailedRequest[] {
       return this.results.filter((result) => {
         if (this.schedule.mode === CoopMode.PRIVATE_CUSTOM) {
           return this.schedule.rule === result.rule && this.schedule.stageId === result.stageId
