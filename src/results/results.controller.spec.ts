@@ -40,7 +40,7 @@ describe('ResultsController', () => {
     timezoneMock.register('UTC')
 
     test('20230901', async () => {
-      const response = await (async () => {
+      const result = await (async () => {
         if (configuration.isDevelopment) {
           return (
             await request
@@ -52,7 +52,6 @@ describe('ResultsController', () => {
         }
         return v20230901v2
       })()
-      const result = response.results[0]
 
       expect(result.id.nplnUserId).toBe('a7grz65rxkvhfsbwmxmm')
       expect(result.id.playTime).toBe('2023-09-06T15:13:58.000Z')

@@ -29,7 +29,7 @@ export class ResultsController {
   create_v2(
     @Body()
     request: R2.V2.Paginated,
-  ) {
+  ): Promise<R2.V2.Paginated> {
     return this.service.create_v2(request)
   }
 
@@ -40,7 +40,7 @@ export class ResultsController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   @ApiOperation({ summary: 'Create a new result.' })
-  create_v3(@Body() request: R3.V3.DetailedRequest) {
+  create_v3(@Body() request: R3.V3.DetailedRequest): Promise<R2.V2.CoopResult> {
     return this.service.create_v3(request)
   }
 }
