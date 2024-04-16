@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer'
-import { IsDate, IsEnum, IsOptional, ValidateNested } from 'class-validator'
+import { IsDate, IsEnum, IsInt, IsOptional, Min, ValidateNested } from 'class-validator'
 import dayjs from 'dayjs'
 
 import { CoopHistoryDetailQuery } from './coop_history_detail.dto'
@@ -150,12 +150,66 @@ export namespace CoopHistoryQuery {
     readonly nodes: CoopScheduleNode[]
   }
 
+  class CoopHistoryPointCard {
+    @ApiProperty({ name: 'defeatBossCount', required: true, type: 'integer' })
+    @IsInt()
+    @Expose({ name: 'defeatBossCount' })
+    readonly bossKillCount: number
+
+    @ApiProperty({ name: 'deliverCount', required: true, type: 'integer' })
+    @IsInt()
+    @Expose({ name: 'deliverCount' })
+    readonly ikuraNum: number
+
+    @ApiProperty({ name: 'goldenDeliverCount', required: true, type: 'integer' })
+    @IsInt()
+    @Expose({ name: 'goldenDeliverCount' })
+    readonly goldenIkuraNum: number
+
+    @ApiProperty({ required: true, type: 'integer' })
+    @IsInt()
+    @Min(0)
+    @Expose()
+    readonly playCount: number
+
+    @ApiProperty({ required: true, type: 'integer' })
+    @IsInt()
+    @Min(0)
+    @Expose()
+    readonly rescueCount: number
+
+    @ApiProperty({ name: 'regularPoint', required: true, type: 'integer' })
+    @IsInt()
+    @Min(0)
+    @Expose({ name: 'regularPoint' })
+    readonly kumaPoint: number
+
+    @ApiProperty({ name: 'totalPoint', required: true, type: 'integer' })
+    @IsInt()
+    @Min(0)
+    @Expose({ name: 'totalPoint' })
+    readonly totalKumaPoint: number
+
+    @ApiProperty({ nullable: true, required: true, type: 'integer' })
+    @IsInt()
+    @IsOptional()
+    @Min(0)
+    @Expose()
+    readonly limitedPoint: number | null
+  }
+
   class CoopHistoryGroup {
     @ApiProperty({ required: true, type: Node })
     @Expose()
     @Type(() => Node)
     @ValidateNested({ each: true })
     readonly historyGroups: Node
+
+    @ApiProperty({ required: true, type: CoopHistoryPointCard })
+    @Expose()
+    @Type(() => CoopHistoryPointCard)
+    @ValidateNested()
+    readonly pointCard: CoopHistoryPointCard
   }
 
   class CoopHistoryDataClass {
