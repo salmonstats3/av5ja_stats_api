@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer'
 import { IsEnum, IsInt, IsOptional, ValidateNested } from 'class-validator'
+import dayjs from 'dayjs'
 
 import { CoopEnemyInfoId } from '@/enum/coop_enemy'
 import { CoopGradeId } from '@/enum/coop_grade'
@@ -48,6 +49,16 @@ export namespace CoopRecordQuery {
   }
 
   class StageHighestRecord {
+    @ApiProperty({ required: true, type: Date })
+    @Expose()
+    @Transform(({ value }) => (value == null ? null : dayjs(value).utc().toISOString()))
+    readonly startTime: Date
+
+    @ApiProperty({ required: true, type: Date })
+    @Expose()
+    @Transform(({ value }) => (value == null ? null : dayjs(value).utc().toISOString()))
+    readonly endTime: Date | null
+
     @ApiProperty({ required: true, type: StageRecord })
     @Expose()
     @Type(() => StageRecord)
@@ -188,13 +199,13 @@ export namespace CoopRecordQuery {
   export class RecordResponse {
     constructor(record: RecordRequest) {
       this.stageRecords = record.stageHighestRecords.map((record) => ({
-        endTime: null,
+        endTime: record.endTime || null,
         goldenIkuraNum: record.goldenIkuraNum || null,
         grade: record.grade.id,
         gradePoint: record.gradePoint,
         rank: record.rank || null,
         stageId: record.coopStage.id,
-        startTime: null,
+        startTime: record.startTime || null,
         trophy: record.trophy || null,
       }))
 
