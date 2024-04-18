@@ -8,11 +8,11 @@ export class GetCoopScheduleRequest {
   @ApiProperty({
     default: dayjs().toISOString(),
     description:
-      'The date and time in ISO 8601 format to use for fetching schedules. If not provided, the current date and time will be used.',
+      'The date and time in ISO 8601 format to use for fetching schedules. If not provided, the "1970-01-01T00:00:00.000Z" and time will be used.',
     required: false,
   })
   @IsDateString()
-  @Transform(({ value }) => value || dayjs().utc().toISOString())
+  @Transform(({ value }) => value || dayjs(0).utc().toISOString())
   startTime: Date
 
   @Expose()

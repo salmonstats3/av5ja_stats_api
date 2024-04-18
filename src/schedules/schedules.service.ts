@@ -52,6 +52,7 @@ export class SchedulesService {
           getDocs(query(collection(this.firestore, setting), orderBy('startTime', 'desc'))),
         ),
       )
+      console.log(request)
       const schedules: CoopSchedule[] = documents
         .flatMap((document) =>
           document.docs.map((doc) =>
