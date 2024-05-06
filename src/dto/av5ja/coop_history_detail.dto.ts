@@ -15,6 +15,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   Max,
   Min,
   ValidateNested,
@@ -59,6 +60,11 @@ export namespace CoopHistoryDetailQuery {
         return parseInt(match[1], 10)
       })
       readonly id: CoopEnemyInfoId
+
+      @Expose({ name: 'image' })
+      @IsUrl()
+      @Transform(({ value }) => value.url)
+      readonly url: URL
     }
 
     class EnemyResult {
@@ -541,6 +547,18 @@ export namespace CoopHistoryDetailQuery {
       @IsEnum(WeaponInfoMain.Id, { each: true })
       readonly weaponList: WeaponInfoMain.Id[]
 
+      @Expose()
+      @Type(() => URL)
+      @IsUrl({}, { each: true })
+      @Transform(({ obj }) => obj.weapons.map((value: any) => value.image.url))
+      readonly weaponListURLs: URL[]
+
+      // @Expose()
+      // @Type(() => URL)
+      // @IsUrl()
+      // @Transform(({ obj }) => obj.specialWeapon.image.url)
+      // readonly specialURL: URL
+
       @ApiProperty({ required: true, type: SpecialWeapon })
       @Expose({ name: 'specialWeapon' })
       @Transform(({ value }) => (value === null ? null : value.weaponId))
@@ -797,16 +815,6 @@ export namespace CoopHistoryDetailQuery {
       @Expose()
       readonly smellMeter: number | null
 
-      // @ApiProperty({ isArray: true, maxItems: 4, minItems: 0, required: true, type: MainWeapon })
-      // @IsArray()
-      // @ArrayNotEmpty()
-      // @ArrayMinSize(0)
-      // @ArrayMaxSize(4)
-      // @Type(() => MainWeapon)
-      // @Expose()
-      // @ValidateNested({ each: true })
-      // readonly weapons: MainWeapon[]
-
       @ApiProperty({
         maximum: 999,
         minimum: 0,
@@ -876,6 +884,11 @@ export namespace CoopHistoryDetailQuery {
       @Max(150)
       @Expose()
       readonly jobBonus: number | null
+
+      @Expose({ name: 'weapons' })
+      @IsUrl({}, { each: true })
+      @Transform(({ value }) => value.map((value: any) => value.image.url))
+      readonly weaponListURL: URL[]
 
       /**
        * モード
@@ -1108,6 +1121,21 @@ export namespace CoopHistoryDetailQuery {
 
       get otherResults(): MemberResult[] {
         return this.data.coopHistoryDetail.memberResults
+      }
+
+      get members(): MemberResult[] {
+        return [this.data.coopHistoryDetail.myResult].concat(this.data.coopHistoryDetail.memberResults)
+      }
+
+      get assetURLs(): URL[] {
+        return [
+          ...new Set(
+            this.members
+              .flatMap((member) => member.weaponListURLs)
+              .concat(this.data.coopHistoryDetail.enemyResults.map((enemy) => enemy.enemy.url))
+              .concat(this.data.coopHistoryDetail.weaponListURL),
+          ),
+        ]
       }
     }
   }
