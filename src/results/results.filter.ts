@@ -29,7 +29,6 @@ export class ResultsFilter implements ExceptionFilter {
       }
     }
 
-    console.log(exception)
     const response = exception.getResponse()
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

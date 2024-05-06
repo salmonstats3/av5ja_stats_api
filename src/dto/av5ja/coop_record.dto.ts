@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Expose, Transform, Type, plainToInstance } from 'class-transformer'
-import { IsEnum, IsInt, IsOptional, ValidateNested } from 'class-validator'
+import { IsEnum, IsInt, IsOptional, IsUrl, ValidateNested } from 'class-validator'
 import dayjs from 'dayjs'
 
 import { CoopEnemyInfoId } from '@/enum/coop_enemy'
@@ -12,6 +12,11 @@ export namespace CoopRecordQuery {
     @ApiProperty({ required: true, type: 'integer' })
     @Expose({ name: 'coopEnemyId' })
     readonly id: number
+
+    @Expose()
+    @Transform(({ obj }) => obj.image.url)
+    @IsUrl()
+    readonly url: URL
   }
 
   class CoopGrade {
@@ -46,6 +51,11 @@ export namespace CoopRecordQuery {
     })
     @IsEnum(CoopStageId)
     readonly id: CoopStageId
+
+    @Expose()
+    @IsUrl()
+    @Transform(({ obj }) => obj.image.url)
+    readonly url: URL
   }
 
   class StageHighestRecord {
@@ -177,6 +187,12 @@ export namespace CoopRecordQuery {
       )
     }
 
+    get assetURLs(): URL[] {
+      return this.stageHighestRecords
+        .map((record) => record.coopStage.url)
+        .concat(this.enemyRecords.map((record) => record.enemy.url))
+    }
+
     get enemyRecords(): DefeatRecord[] {
       return this.data.coopRecord.defeatEnemyRecords.concat(this.data.coopRecord.defeatBossRecords)
     }
@@ -213,9 +229,12 @@ export namespace CoopRecordQuery {
         count: count,
         enemyId: enemy.id,
       }))
+
+      this.assetURLs = record.assetURLs
     }
 
     readonly stageRecords: CoopStageRecord[]
     readonly enemyRecords: CoopEnemyRecord[]
+    readonly assetURLs: URL[]
   }
 }
