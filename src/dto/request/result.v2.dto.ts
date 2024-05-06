@@ -756,7 +756,8 @@ export namespace CoopHistoryDetailQuery {
       @IsOptional()
       readonly scenarioCode: string | null
 
-      @ApiProperty({ isArray: true })
+      @ApiProperty({ isArray: true, required: false, type: URL })
+      @IsArray()
       @Expose()
       readonly assetURLs: URL[]
 
