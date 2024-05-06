@@ -756,6 +756,10 @@ export namespace CoopHistoryDetailQuery {
       @IsOptional()
       readonly scenarioCode: string | null
 
+      @ApiProperty({ isArray: true })
+      @Expose()
+      readonly assetURLs: URL[]
+
       /**
        * 夜WAVEを含まないかどうか
        */
@@ -914,11 +918,11 @@ export namespace CoopHistoryDetailQuery {
         }
       }
 
-      static from(schedule: CoopSchedule, result: R3.V3.DetailedRequest): CoopResult {
+      static from(schedule: CoopSchedule, result: R3.V3.DetailedRequest, withURL: boolean = false): CoopResult {
         return plainToInstance(
           CoopResult,
           {
-            JobBonus: result.jobBonus,
+            assetURLs: withURL ? result.assetURLs : undefined,
             bossCounts: result.bossCounts,
             bossKillCounts: result.teamBossKillCounts,
             dangerRate: result.dangerRate,
