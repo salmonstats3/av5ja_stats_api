@@ -1,8 +1,8 @@
-import { Expose, Transform } from 'class-transformer'
+import { Expose, Transform } from "class-transformer"
 
 export namespace RowId {
   export class CoopEnemyInfo {
-    @Expose({ name: 'Type' })
+    @Expose({ name: "Type" })
     row_id: string
 
     get url(): string {
@@ -11,14 +11,14 @@ export namespace RowId {
   }
 
   export class WeaponInfoMain {
-    @Expose({ name: 'Id' })
+    @Expose({ name: "Id" })
     id: number
 
-    @Expose({ name: 'Label' })
+    @Expose({ name: "Label" })
     label: string
 
-    @Expose({ name: '__RowId' })
-    @Transform((param) => param.value.replace('_Coop', ''))
+    @Expose({ name: "__RowId" })
+    @Transform((param) => param.value.replace("_Coop", ""))
     row_id: string
 
     get url(): string {

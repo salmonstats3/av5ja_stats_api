@@ -7,5 +7,5 @@ export enum CoopGradeId {
   Grade05 = 5,
   Grade06 = 6,
   Grade07 = 7,
-  Grade08 = 8,
+  Grade08 = 8
 }

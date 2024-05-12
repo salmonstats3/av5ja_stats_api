@@ -8,13 +8,19 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noExplicitAny": "off"
+				"noExplicitAny": "off",
+				"noImplicitAnyLet": "off",
+				"noGlobalIsNan": "off",
+				"useGetterReturn": "off"
 			},
 			"complexity": {
-				"useLiteralKeys": "off"
+				"useLiteralKeys": "off",
+				"useRegexLiterals": "off"
 			},
 			"style": {
-				"noUselessElse": "off"
+				"noUselessElse": "off",
+				"useImportType": "off",
+				"noInferrableTypes": "off"
 			},
 			"correctness": {
 				"noConstantCondition": "off"

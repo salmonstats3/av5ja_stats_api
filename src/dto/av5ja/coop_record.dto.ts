@@ -1,16 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Expose, Transform, Type, plainToInstance } from 'class-transformer'
-import { IsEnum, IsInt, IsOptional, IsUrl, ValidateNested } from 'class-validator'
-import dayjs from 'dayjs'
+import { ApiProperty } from "@nestjs/swagger"
+import { Expose, Transform, Type, plainToInstance } from "class-transformer"
+import { IsEnum, IsInt, IsOptional, IsUrl, ValidateNested } from "class-validator"
+import dayjs from "dayjs"
 
-import { CoopEnemyInfoId } from '@/enum/coop_enemy'
-import { CoopGradeId } from '@/enum/coop_grade'
-import { CoopStageId } from '@/enum/coop_stage'
+import { CoopEnemyInfoId } from "@/enum/coop_enemy"
+import { CoopGradeId } from "@/enum/coop_grade"
+import { CoopStageId } from "@/enum/coop_stage"
 
 export namespace CoopRecordQuery {
   export class EnemyRecord {
-    @ApiProperty({ required: true, type: 'integer' })
-    @Expose({ name: 'coopEnemyId' })
+    @ApiProperty({ required: true, type: "integer" })
+    @Expose({ name: "coopEnemyId" })
     readonly id: number
 
     @Expose()
@@ -21,11 +21,11 @@ export namespace CoopRecordQuery {
 
   class CoopGrade {
     @ApiProperty({
-      description: 'Base64 Encoded string. For example `Q29vcEdyYWRlLTg=` means `CoopGrade-8`.',
-      example: 'Q29vcEdyYWRlLTg=',
+      description: "Base64 Encoded string. For example `Q29vcEdyYWRlLTg=` means `CoopGrade-8`.",
+      example: "Q29vcEdyYWRlLTg=",
       nullable: true,
       required: true,
-      type: 'string',
+      type: "string"
     })
     @IsEnum(CoopGradeId)
     @IsOptional()
@@ -33,21 +33,21 @@ export namespace CoopRecordQuery {
     @Transform(({ value }) => {
       const regexp = /-([0-9-]*)/
       const match = regexp.exec(atob(value))
-      return match === null ? null : parseInt(match[1], 10)
+      return match === null ? null : Number.parseInt(match[1], 10)
     })
     readonly id: CoopGradeId | null
   }
 
   class StageRecord {
-    @ApiProperty({ required: true, type: 'integer' })
-    @Expose({ name: 'coopStageId' })
+    @ApiProperty({ required: true, type: "integer" })
+    @Expose({ name: "coopStageId" })
     @Transform(({ obj, value }) => {
       if (value !== undefined) {
         return value
       }
       const regexp = /-([0-9-]*)/
       const match = regexp.exec(atob(obj.id))
-      return match === null ? CoopStageId.Dummy : parseInt(match[1], 10)
+      return match === null ? CoopStageId.Dummy : Number.parseInt(match[1], 10)
     })
     @IsEnum(CoopStageId)
     readonly id: CoopStageId
@@ -78,28 +78,28 @@ export namespace CoopRecordQuery {
     @Expose()
     @Type(() => CoopGrade)
     @Transform(({ obj }) =>
-      plainToInstance(CoopGrade, obj.grade ?? obj.highestGrade, { excludeExtraneousValues: true }),
+      plainToInstance(CoopGrade, obj.grade ?? obj.highestGrade, { excludeExtraneousValues: true })
     )
     readonly grade: CoopGrade
 
-    @ApiProperty({ required: true, type: 'integer' })
+    @ApiProperty({ required: true, type: "integer" })
     @Expose()
     @Transform(({ obj }) => obj.gradePoint ?? obj.highestGradePoint)
     @IsInt()
     @IsOptional()
     readonly gradePoint: number | null
 
-    @ApiProperty({ required: true, type: 'string' })
+    @ApiProperty({ required: true, type: "string" })
     @Expose()
     readonly trophy: string
 
-    @ApiProperty({ name: 'highestJobScore', nullable: true, required: false, type: 'integer' })
+    @ApiProperty({ name: "highestJobScore", nullable: true, required: false, type: "integer" })
     @Transform(({ value }) => (value === null ? null : value))
-    @Expose({ name: 'highestJobScore' })
+    @Expose({ name: "highestJobScore" })
     readonly goldenIkuraNum: number | null
 
-    @ApiProperty({ name: 'rankPercentile', nullable: true, required: false, type: 'integer' })
-    @Expose({ name: 'rankPercentile' })
+    @ApiProperty({ name: "rankPercentile", nullable: true, required: false, type: "integer" })
+    @Expose({ name: "rankPercentile" })
     readonly rank: number | null
   }
 
@@ -126,8 +126,8 @@ export namespace CoopRecordQuery {
     @ValidateNested()
     readonly enemy: EnemyRecord
 
-    @ApiProperty({ required: true, type: 'integer' })
-    @Expose({ name: 'defeatCount' })
+    @ApiProperty({ required: true, type: "integer" })
+    @Expose({ name: "defeatCount" })
     readonly count: number
   }
 
@@ -183,7 +183,7 @@ export namespace CoopRecordQuery {
 
     get stageHighestRecords(): StageHighestRecord[] {
       return this.data.coopRecord.stageHighestRecords.concat(
-        this.data.coopRecord.bigRunRecord.records.edges.map((edge) => edge.node),
+        this.data.coopRecord.bigRunRecord.records.edges.map((edge) => edge.node)
       )
     }
 
@@ -222,12 +222,12 @@ export namespace CoopRecordQuery {
         rank: record.rank || null,
         stageId: record.coopStage.id,
         startTime: record.startTime || null,
-        trophy: record.trophy || null,
+        trophy: record.trophy || null
       }))
 
       this.enemyRecords = record.enemyRecords.map(({ enemy, count }) => ({
         count: count,
-        enemyId: enemy.id,
+        enemyId: enemy.id
       }))
 
       this.assetURLs = record.assetURLs

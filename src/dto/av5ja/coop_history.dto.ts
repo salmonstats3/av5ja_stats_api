@@ -1,37 +1,37 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Expose, Transform, Type, plainToInstance } from 'class-transformer'
-import { IsDate, IsEnum, IsInt, IsOptional, Min, ValidateNested } from 'class-validator'
-import dayjs from 'dayjs'
+import { ApiProperty } from "@nestjs/swagger"
+import { Expose, Transform, Type, plainToInstance } from "class-transformer"
+import { IsDate, IsEnum, IsInt, IsOptional, Min, ValidateNested } from "class-validator"
+import dayjs from "dayjs"
 
-import { CoopHistoryDetailQuery } from './coop_history_detail.dto'
+import { CoopHistoryDetailQuery } from "./coop_history_detail.dto"
 
-import { Common } from '@/dto/common'
-import { CoopSchedule } from '@/dto/coop_schedule'
-import { CoopMode } from '@/enum/coop_mode'
-import { CoopRule } from '@/enum/coop_rule'
-import { CoopStageId } from '@/enum/coop_stage'
-import { WeaponInfoMain, id } from '@/enum/coop_weapon_info/main'
-import { scheduleHash } from '@/utils/hash'
+import { Common } from "@/dto/common"
+import { CoopSchedule } from "@/dto/coop_schedule"
+import { CoopMode } from "@/enum/coop_mode"
+import { CoopRule } from "@/enum/coop_rule"
+import { CoopStageId } from "@/enum/coop_stage"
+import { WeaponInfoMain, id } from "@/enum/coop_weapon_info/main"
+import { scheduleHash } from "@/utils/hash"
 
 export namespace CoopHistoryQuery {
   class HistoryCoopStage {
     @ApiProperty({
-      example: 'Q29vcFN0YWdlLTE=',
+      example: "Q29vcFN0YWdlLTE=",
       required: true,
-      type: 'string',
+      type: "string"
     })
     @Expose()
     @IsEnum(CoopStageId)
     @Transform(({ value }) => {
       const regexp = /-([0-9-]*)/
       const match = regexp.exec(atob(value))
-      return match === null ? CoopStageId.Dummy : parseInt(match[1], 10)
+      return match === null ? CoopStageId.Dummy : Number.parseInt(match[1], 10)
     })
     readonly id: CoopStageId
   }
 
   class HistoryDetailNode {
-    @ApiProperty({ required: true, type: 'string' })
+    @ApiProperty({ required: true, type: "string" })
     @Expose()
     @Type(() => Common.ResultId)
     @Transform(({ value }) => Common.ResultId.from(value))
@@ -43,17 +43,17 @@ export namespace CoopHistoryQuery {
     @Transform(({ value }) => {
       const regexp = /-([0-9-]*)/
       const match = regexp.exec(atob(value.id))
-      return match === null ? CoopStageId.Dummy : parseInt(match[1], 10)
+      return match === null ? CoopStageId.Dummy : Number.parseInt(match[1], 10)
     })
     readonly coopStage: CoopStageId
 
     @ApiProperty({
       enum: WeaponInfoMain.Id,
       isArray: true,
-      name: 'weapons',
-      required: true,
+      name: "weapons",
+      required: true
     })
-    @Expose({ name: 'weapons' })
+    @Expose({ name: "weapons" })
     @Transform(({ value }) => {
       const regexp = /([a-f0-9]{64})/
       const weaponList: WeaponInfoMain.Id[] = value.map((value: any) => {
@@ -131,9 +131,9 @@ export namespace CoopHistoryQuery {
           rule: this.rule,
           stageId: this.stageId,
           startTime: this.startTime,
-          weaponList: this.weaponList,
+          weaponList: this.weaponList
         },
-        { excludeExtraneousValues: true },
+        { excludeExtraneousValues: true }
       )
     }
 
@@ -151,46 +151,46 @@ export namespace CoopHistoryQuery {
   }
 
   class CoopHistoryPointCard {
-    @ApiProperty({ name: 'defeatBossCount', required: true, type: 'integer' })
+    @ApiProperty({ name: "defeatBossCount", required: true, type: "integer" })
     @IsInt()
-    @Expose({ name: 'defeatBossCount' })
+    @Expose({ name: "defeatBossCount" })
     readonly bossKillCount: number
 
-    @ApiProperty({ name: 'deliverCount', required: true, type: 'integer' })
+    @ApiProperty({ name: "deliverCount", required: true, type: "integer" })
     @IsInt()
-    @Expose({ name: 'deliverCount' })
+    @Expose({ name: "deliverCount" })
     readonly ikuraNum: number
 
-    @ApiProperty({ name: 'goldenDeliverCount', required: true, type: 'integer' })
+    @ApiProperty({ name: "goldenDeliverCount", required: true, type: "integer" })
     @IsInt()
-    @Expose({ name: 'goldenDeliverCount' })
+    @Expose({ name: "goldenDeliverCount" })
     readonly goldenIkuraNum: number
 
-    @ApiProperty({ required: true, type: 'integer' })
+    @ApiProperty({ required: true, type: "integer" })
     @IsInt()
     @Min(0)
     @Expose()
     readonly playCount: number
 
-    @ApiProperty({ required: true, type: 'integer' })
+    @ApiProperty({ required: true, type: "integer" })
     @IsInt()
     @Min(0)
     @Expose()
     readonly rescueCount: number
 
-    @ApiProperty({ name: 'regularPoint', required: true, type: 'integer' })
+    @ApiProperty({ name: "regularPoint", required: true, type: "integer" })
     @IsInt()
     @Min(0)
-    @Expose({ name: 'regularPoint' })
+    @Expose({ name: "regularPoint" })
     readonly kumaPoint: number
 
-    @ApiProperty({ name: 'totalPoint', required: true, type: 'integer' })
+    @ApiProperty({ name: "totalPoint", required: true, type: "integer" })
     @IsInt()
     @Min(0)
-    @Expose({ name: 'totalPoint' })
+    @Expose({ name: "totalPoint" })
     readonly totalKumaPoint: number
 
-    @ApiProperty({ nullable: true, required: true, type: 'integer' })
+    @ApiProperty({ nullable: true, required: true, type: "integer" })
     @IsInt()
     @IsOptional()
     @Min(0)
@@ -234,11 +234,11 @@ export namespace CoopHistoryQuery {
           histories: this.data.coopResult.historyGroups.nodes.map((node) => {
             return {
               results: node.resultIds,
-              schedule: node.schedule,
+              schedule: node.schedule
             }
-          }),
+          })
         },
-        { excludeExtraneousValues: true },
+        { excludeExtraneousValues: true }
       )
     }
   }
@@ -268,7 +268,7 @@ export namespace CoopHistoryQuery {
     readonly schedule: CoopSchedule
 
     @ApiProperty({ isArray: true, required: true, type: CoopHistoryDetailQuery.V3.DetailedRequest })
-    @Expose({ name: 'results' })
+    @Expose({ name: "results" })
     @Type(() => CoopHistoryDetailQuery.V3.DetailedRequest)
     @ValidateNested({ each: true })
     private readonly results: CoopHistoryDetailQuery.V3.DetailedRequest[]

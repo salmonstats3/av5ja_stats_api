@@ -1,7 +1,7 @@
-import { BadRequestException } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
-import { Prisma } from '@prisma/client'
-import { Expose, Transform, Type, plainToInstance } from 'class-transformer'
+import { BadRequestException } from "@nestjs/common"
+import { ApiProperty } from "@nestjs/swagger"
+import { Prisma } from "@prisma/client"
+import { Expose, Transform, Type, plainToInstance } from "class-transformer"
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -19,24 +19,24 @@ import {
   Length,
   Max,
   Min,
-  ValidateNested,
-} from 'class-validator'
-import dayjs from 'dayjs'
+  ValidateNested
+} from "class-validator"
+import dayjs from "dayjs"
 
-import { CoopHistoryDetailQuery as R3 } from '@/dto/av5ja/coop_history_detail.dto'
-import { Common } from '@/dto/common'
-import { CoopSchedule } from '@/dto/coop_schedule'
-import { CoopBossInfoId } from '@/enum/coop_enemy'
-import { CoopEventId } from '@/enum/coop_event'
-import { CoopGradeId } from '@/enum/coop_grade'
-import { CoopMode } from '@/enum/coop_mode'
-import { CoopRule } from '@/enum/coop_rule'
-import { CoopStageId } from '@/enum/coop_stage'
-import { WaterLevelId } from '@/enum/coop_water_level'
-import { WeaponInfoMain } from '@/enum/coop_weapon_info/main'
-import { WeaponInfoSpecial } from '@/enum/coop_weapon_info/special'
-import { Species } from '@/enum/species'
-import { playerHash, resultHash, scheduleHash } from '@/utils/hash'
+import { CoopHistoryDetailQuery as R3 } from "@/dto/av5ja/coop_history_detail.dto"
+import { Common } from "@/dto/common"
+import { CoopSchedule } from "@/dto/coop_schedule"
+import { CoopBossInfoId } from "@/enum/coop_enemy"
+import { CoopEventId } from "@/enum/coop_event"
+import { CoopGradeId } from "@/enum/coop_grade"
+import { CoopMode } from "@/enum/coop_mode"
+import { CoopRule } from "@/enum/coop_rule"
+import { CoopStageId } from "@/enum/coop_stage"
+import { WaterLevelId } from "@/enum/coop_water_level"
+import { WeaponInfoMain } from "@/enum/coop_weapon_info/main"
+import { WeaponInfoSpecial } from "@/enum/coop_weapon_info/special"
+import { Species } from "@/enum/species"
+import { playerHash, resultHash, scheduleHash } from "@/utils/hash"
 
 /**
  * TODO: 既存コードのコピーなので修正予定
@@ -84,7 +84,7 @@ export namespace CoopHistoryDetailQuery {
       @Type(() => TextColor)
       readonly textColor: TextColor
 
-      @ApiProperty({ minimum: 0, type: 'integer' })
+      @ApiProperty({ minimum: 0, type: "integer" })
       @Expose()
       @IsInt()
       readonly id: number
@@ -98,16 +98,16 @@ export namespace CoopHistoryDetailQuery {
               a: textColor[3],
               b: textColor[2],
               g: textColor[1],
-              r: textColor[0],
-            },
+              r: textColor[0]
+            }
           },
-          { excludeExtraneousValues: true },
+          { excludeExtraneousValues: true }
         )
       }
     }
 
     class Nameplate {
-      @ApiProperty({ isArray: true, maxItems: 3, minItems: 3, type: 'integer' })
+      @ApiProperty({ isArray: true, maxItems: 3, minItems: 3, type: "integer" })
       @Expose()
       @IsArray()
       @ArrayMinSize(3)
@@ -131,9 +131,9 @@ export namespace CoopHistoryDetailQuery {
           Nameplate,
           {
             background: Background.from(textColor, id),
-            badges: badge.map((b) => (b === -1 ? null : b)),
+            badges: badge.map((b) => (b === -1 ? null : b))
           },
-          { excludeExtraneousValues: true },
+          { excludeExtraneousValues: true }
         )
       }
     }
@@ -153,7 +153,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -161,7 +161,7 @@ export namespace CoopHistoryDetailQuery {
       @Expose()
       readonly quotaNum: number | null
 
-      @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, required: true, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
@@ -171,7 +171,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @Expose()
       @IsInt()
@@ -179,7 +179,7 @@ export namespace CoopHistoryDetailQuery {
       @Min(0)
       readonly goldenIkuraNum: number | null
 
-      @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, required: true, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
@@ -193,7 +193,7 @@ export namespace CoopHistoryDetailQuery {
       @ApiProperty({ required: true, type: String })
       @IsString()
       @IsOptional()
-      @IsHash('md5')
+      @IsHash("md5")
       @Expose()
       readonly hash: string
 
@@ -205,7 +205,7 @@ export namespace CoopHistoryDetailQuery {
           isClear: this.isClear,
           quotaNum: this.quotaNum,
           waterLevel: this.waterLevel,
-          waveId: this.id,
+          waveId: this.id
         }
       }
     }
@@ -223,7 +223,7 @@ export namespace CoopHistoryDetailQuery {
       @IsBoolean()
       readonly isBossDefeated: boolean | null
 
-      @ApiProperty({ maximum: 5, minimum: 1, nullable: true, type: 'integer' })
+      @ApiProperty({ maximum: 5, minimum: 1, nullable: true, type: "integer" })
       @Expose()
       @IsOptional()
       @IsInt()
@@ -268,16 +268,16 @@ export namespace CoopHistoryDetailQuery {
       @Expose()
       readonly nameplate: Nameplate
 
-      @ApiProperty({ minimum: 0, type: 'integer' })
+      @ApiProperty({ minimum: 0, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
       readonly uniform: number
 
       @ApiProperty({
-        example: '20230923T213430:a7grz65rxkvhfsbwmxmm',
+        example: "20230923T213430:a7grz65rxkvhfsbwmxmm",
         required: true,
-        type: String,
+        type: String
       })
       @Expose()
       @IsString()
@@ -294,7 +294,7 @@ export namespace CoopHistoryDetailQuery {
         enum: WeaponInfoMain.Id,
         isArray: true,
         maxItems: 5,
-        minItems: 0,
+        minItems: 0
       })
       @Expose()
       @IsArray()
@@ -309,19 +309,19 @@ export namespace CoopHistoryDetailQuery {
       @IsEnum(WeaponInfoSpecial.Id)
       readonly specialId: WeaponInfoSpecial.Id
 
-      @ApiProperty({ minimum: 0, type: 'integer' })
+      @ApiProperty({ minimum: 0, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
       readonly bossKillCountsTotal: number
 
-      @ApiProperty({ minimum: 0, type: 'integer' })
+      @ApiProperty({ minimum: 0, type: "integer" })
       @IsInt()
       @Min(0)
       @Expose()
       readonly ikuraNum: number
 
-      @ApiProperty({ minimum: 0, type: 'integer' })
+      @ApiProperty({ minimum: 0, type: "integer" })
       @IsInt()
       @Min(0)
       @Expose()
@@ -339,25 +339,25 @@ export namespace CoopHistoryDetailQuery {
       @Expose()
       readonly isMyself: boolean
 
-      @ApiProperty({ minimum: 0, type: 'integer' })
+      @ApiProperty({ minimum: 0, type: "integer" })
       @IsInt()
       @Min(0)
       @Expose()
       readonly goldenIkuraAssistNum: number
 
-      @ApiProperty({ minimum: 0, type: 'integer' })
+      @ApiProperty({ minimum: 0, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
       readonly deadCount: number
 
-      @ApiProperty({ minimum: 0, type: 'integer' })
+      @ApiProperty({ minimum: 0, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
       readonly helpCount: number
 
-      @ApiProperty({ isArray: true, type: 'integer' })
+      @ApiProperty({ isArray: true, type: "integer" })
       @Expose()
       @IsArray()
       @IsNotEmpty()
@@ -372,7 +372,7 @@ export namespace CoopHistoryDetailQuery {
       @IsOptional()
       readonly gradeId: CoopGradeId | null
 
-      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, nullable: true, type: "integer" })
       @Expose()
       @IsInt()
       @IsOptional()
@@ -384,25 +384,25 @@ export namespace CoopHistoryDetailQuery {
       @IsOptional()
       readonly jobRate: number | null
 
-      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, nullable: true, type: "integer" })
       @Expose()
       @IsInt()
       @IsOptional()
       readonly jobBonus: number | null
 
-      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, nullable: true, type: "integer" })
       @Expose()
       @IsInt()
       @IsOptional()
       readonly jobScore: number | null
 
-      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, nullable: true, type: "integer" })
       @Expose()
       @IsInt()
       @IsOptional()
       readonly kumaPoint: number | null
 
-      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, nullable: true, type: "integer" })
       @Expose()
       @IsInt()
       @IsOptional()
@@ -412,7 +412,7 @@ export namespace CoopHistoryDetailQuery {
         isArray: true,
         maxItems: 14,
         minItems: 14,
-        type: 'integer',
+        type: "integer"
       })
       @Expose()
       @IsArray()
@@ -458,7 +458,7 @@ export namespace CoopHistoryDetailQuery {
         jobScore: number | null,
         kumaPoint: number | null,
         jobRate: number | null,
-        smellMeter: number | null,
+        smellMeter: number | null
       ): Prisma.PlayerUpdateArgs {
         return {
           data: {
@@ -487,15 +487,15 @@ export namespace CoopHistoryDetailQuery {
             species: this.species,
             textColor: this.nameplate.background.textColor.rawValue,
             uniform: this.uniform,
-            weaponList: this.weaponList,
+            weaponList: this.weaponList
           },
           where: {
             playTime_uuid_nplnUserId: {
               nplnUserId: this.nplnUserId,
               playTime: id.playTime,
-              uuid: id.uuid,
-            },
-          },
+              uuid: id.uuid
+            }
+          }
         }
       }
 
@@ -506,7 +506,7 @@ export namespace CoopHistoryDetailQuery {
         jobBonus: number | null,
         jobScore: number | null,
         kumaPoint: number | null,
-        smellMeter: number | null,
+        smellMeter: number | null
       ): Prisma.PlayerCreateManyResultInput {
         return {
           badges: this.nameplate.badges.map((badge) => (badge === null ? -1 : badge)),
@@ -534,7 +534,7 @@ export namespace CoopHistoryDetailQuery {
           species: this.species,
           textColor: this.nameplate.background.textColor.rawValue,
           uniform: this.uniform,
-          weaponList: this.weaponList,
+          weaponList: this.weaponList
         }
       }
     }
@@ -549,11 +549,11 @@ export namespace CoopHistoryDetailQuery {
       @ApiProperty({ required: true, type: String })
       @IsString()
       @IsOptional()
-      @IsHash('md5')
+      @IsHash("md5")
       @Expose()
       readonly hash: string
 
-      @ApiProperty({ required: true, type: 'uuid' })
+      @ApiProperty({ required: true, type: "uuid" })
       @IsUUID()
       @Expose()
       @Transform(({ obj }) => obj.id.uuid.toUpperCase())
@@ -563,7 +563,7 @@ export namespace CoopHistoryDetailQuery {
         isArray: true,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsArray()
       @ArrayMaxSize(3)
@@ -576,7 +576,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -587,7 +587,7 @@ export namespace CoopHistoryDetailQuery {
         enum: CoopGradeId,
         minimum: 0,
         nullable: true,
-        required: true,
+        required: true
       })
       @IsEnum(CoopGradeId)
       @IsOptional()
@@ -598,7 +598,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -637,7 +637,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -665,7 +665,7 @@ export namespace CoopHistoryDetailQuery {
         maxItems: 14,
         minItems: 0,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @Expose()
       @IsArray()
@@ -678,7 +678,7 @@ export namespace CoopHistoryDetailQuery {
         maxItems: 14,
         minItems: 0,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @Expose()
       @IsArray()
@@ -690,7 +690,7 @@ export namespace CoopHistoryDetailQuery {
         maximum: 3.33,
         minimum: 0,
         required: true,
-        type: 'number',
+        type: "number"
       })
       @Expose()
       @IsNumber()
@@ -703,7 +703,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @Expose()
       @IsNumber()
@@ -718,19 +718,19 @@ export namespace CoopHistoryDetailQuery {
       @Expose()
       readonly schedule: CoopSchedule
 
-      @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, required: true, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
       readonly goldenIkuraNum: number
 
-      @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, required: true, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
       readonly goldenIkuraAssistNum: number
 
-      @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, required: true, type: "integer" })
       @Expose()
       @IsInt()
       @Min(0)
@@ -741,7 +741,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @Expose()
       @IsInt()
@@ -781,17 +781,17 @@ export namespace CoopHistoryDetailQuery {
               this.jobBonus,
               this.jobScore,
               this.kumaPoint,
-              this.smellMeter,
-            ),
+              this.smellMeter
+            )
           ),
-          skipDuplicates: true,
+          skipDuplicates: true
         }
       }
 
       private get waves(): Prisma.WaveCreateManyResultInputEnvelope {
         return {
           data: this.waveDetails.map((wave) => wave.create),
-          skipDuplicates: true,
+          skipDuplicates: true
         }
       }
 
@@ -805,7 +805,7 @@ export namespace CoopHistoryDetailQuery {
           this.schedule.startTime,
           this.schedule.endTime,
           this.stageId,
-          this.weaponList,
+          this.weaponList
         )
       }
 
@@ -855,9 +855,9 @@ export namespace CoopHistoryDetailQuery {
         // WAVEがない場合は回線落ち-1でないといけない
         if (this.waveDetails.length === 0 && this.jobResult.failureWave !== -1) {
           throw new BadRequestException({
-            error: 'Bad Request',
-            message: ['failureWave must be 0 in case the size of waveDetails is 0'],
-            status: 400,
+            error: "Bad Request",
+            message: ["failureWave must be 0 in case the size of waveDetails is 0"],
+            status: 400
           })
         }
         return true
@@ -882,18 +882,18 @@ export namespace CoopHistoryDetailQuery {
             nightLess: this.nightLess,
             playTime: this.playTime,
             players: {
-              createMany: this.players,
+              createMany: this.players
             },
             resultId: this.resultId,
             scenarioCode: this.scenarioCode,
             schedule: {
-              connectOrCreate: this.schedule.connectOrCreate,
+              connectOrCreate: this.schedule.connectOrCreate
             },
             silver: this.scale[1],
             uuid: this.uuid,
             waves: {
-              createMany: this.waves,
-            },
+              createMany: this.waves
+            }
           },
           update: {
             players: {
@@ -905,17 +905,17 @@ export namespace CoopHistoryDetailQuery {
                 this.jobScore,
                 this.kumaPoint,
                 this.jobRate,
-                this.smellMeter,
-              ),
-            },
+                this.smellMeter
+              )
+            }
           },
           where: {
             playTime_uuid_scheduleId: {
               playTime: this.playTime,
               scheduleId: this.scheduleId,
-              uuid: this.uuid,
-            },
-          },
+              uuid: this.uuid
+            }
+          }
         }
       }
 
@@ -936,7 +936,7 @@ export namespace CoopHistoryDetailQuery {
               nplnUserId: result.id.nplnUserId,
               playTime: dayjs(result.id.playTime).utc().toDate(),
               type: result.id.type,
-              uuid: result.id.uuid,
+              uuid: result.id.uuid
             },
             ikuraNum: result.ikuraNum,
             jobBonus: result.jobBonus,
@@ -945,7 +945,7 @@ export namespace CoopHistoryDetailQuery {
               bossId: result.bossId,
               failureWave: result.failureWave,
               isBossDefeated: result.isBossDefeated,
-              isClear: result.isClear,
+              isClear: result.isClear
             },
             jobScore: result.jobScore,
             kumaPoint: result.kumaPoint,
@@ -976,22 +976,22 @@ export namespace CoopHistoryDetailQuery {
                     a: result.myResult.player.nameplate.background.textColor.a,
                     b: result.myResult.player.nameplate.background.textColor.b,
                     g: result.myResult.player.nameplate.background.textColor.g,
-                    r: result.myResult.player.nameplate.background.textColor.r,
-                  },
+                    r: result.myResult.player.nameplate.background.textColor.r
+                  }
                 },
-                badges: result.myResult.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id)),
+                badges: result.myResult.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id))
               },
               nplnUserId: result.myResult.nplnUserId,
               smellMeter: result.smellMeter,
               specialCounts: result.waveDetails.map(
                 (wave) =>
                   wave.specialWeapons.map((special) => special.id).filter((id) => id === result.myResult.specialId)
-                    .length,
+                    .length
               ),
               specialId: result.myResult.specialId,
               species: result.myResult.player.species,
               uniform: result.myResult.player.uniform.id,
-              weaponList: result.myResult.weaponList,
+              weaponList: result.myResult.weaponList
             },
             otherResults: result.otherResults.map((member) => {
               return {
@@ -1014,7 +1014,7 @@ export namespace CoopHistoryDetailQuery {
                   bossId: result.bossId,
                   failureWave: result.failureWave,
                   isBossDefeated: result.isBossDefeated,
-                  isClear: result.isClear,
+                  isClear: result.isClear
                 },
                 jobScore: null,
                 kumaPoint: null,
@@ -1027,21 +1027,21 @@ export namespace CoopHistoryDetailQuery {
                       a: member.player.nameplate.background.textColor.a,
                       b: member.player.nameplate.background.textColor.b,
                       g: member.player.nameplate.background.textColor.g,
-                      r: member.player.nameplate.background.textColor.r,
-                    },
+                      r: member.player.nameplate.background.textColor.r
+                    }
                   },
-                  badges: member.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id)),
+                  badges: member.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id))
                 },
                 nplnUserId: member.nplnUserId,
                 smellMeter: null,
                 specialCounts: result.waveDetails.map(
                   (wave) =>
-                    wave.specialWeapons.map((special) => special.id).filter((id) => id === member.specialId).length,
+                    wave.specialWeapons.map((special) => special.id).filter((id) => id === member.specialId).length
                 ),
                 specialId: member.specialId,
                 species: member.player.species,
                 uniform: member.player.uniform.id,
-                weaponList: member.weaponList,
+                weaponList: member.weaponList
               }
             }),
             playTime: dayjs(result.playTime).utc().toDate(),
@@ -1055,14 +1055,14 @@ export namespace CoopHistoryDetailQuery {
                 dayjs(schedule.startTime).utc().toDate(),
                 dayjs(schedule.endTime).utc().toDate(),
                 schedule.stageId,
-                schedule.weaponList,
+                schedule.weaponList
               ),
               mode: schedule.mode,
               rareWeapons: schedule.rareWeapons,
               rule: schedule.rule,
               stageId: schedule.stageId,
               startTime: schedule.startTime,
-              weaponList: schedule.weaponList,
+              weaponList: schedule.weaponList
             },
             smellMeter: result.smellMeter,
             waveDetails: result.waveDetails.map((wave) => {
@@ -1074,11 +1074,11 @@ export namespace CoopHistoryDetailQuery {
                 id: wave.id,
                 isClear: wave.isClear(result.failureWave, result.isBossDefeated),
                 quotaNum: wave.quotaNum,
-                waterLevel: wave.waterLevel,
+                waterLevel: wave.waterLevel
               }
-            }),
+            })
           },
-          { excludeExtraneousValues: true },
+          { excludeExtraneousValues: true }
         )
       }
     }

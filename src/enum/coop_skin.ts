@@ -15,5 +15,5 @@ export enum CoopSkinId {
   COP014 = 14,
   COP015 = 15,
   COP016 = 16,
-  COP017 = 17,
+  COP017 = 17
 }

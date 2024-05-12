@@ -7,5 +7,5 @@ export enum CoopEventId {
   Fog = 5,
   CohockCharge = 6,
   Giant = 7,
-  Mudmouth = 8,
+  Mudmouth = 8
 }

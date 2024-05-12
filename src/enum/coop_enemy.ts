@@ -12,12 +12,12 @@ export enum CoopEnemyInfoId {
   SakeSaucer = 14,
   SakelienGolden = 15,
   Sakedozer = 17,
-  SakeBigMouth = 20,
+  SakeBigMouth = 20
 }
 
 export enum CoopBossInfoId {
   Random = 31,
   SakelienGiant = 23,
   SakeRope = 24,
-  SakeJaw = 25,
+  SakeJaw = 25
 }

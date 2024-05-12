@@ -1,6 +1,6 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common'
-import { Observable, throwError } from 'rxjs'
-import { catchError } from 'rxjs/operators'
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common"
+import { Observable, throwError } from "rxjs"
+import { catchError } from "rxjs/operators"
 
 @Injectable()
 export class ResultsInterceptor implements NestInterceptor {
@@ -9,8 +9,8 @@ export class ResultsInterceptor implements NestInterceptor {
       catchError((error) =>
         throwError(() => {
           throw error
-        }),
-      ),
+        })
+      )
     )
   }
 }

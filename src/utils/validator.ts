@@ -1,4 +1,4 @@
-import { plainToInstance } from 'class-transformer'
+import { plainToInstance } from "class-transformer"
 import {
   IsEnum,
   IsIP,
@@ -10,14 +10,14 @@ import {
   IsUrl,
   Max,
   Min,
-  validateSync,
-} from 'class-validator'
-import * as dotenv from 'dotenv'
+  validateSync
+} from "class-validator"
+import * as dotenv from "dotenv"
 
 enum NodeEnv {
-  DEVELOPMENT = 'development',
-  PRODUCTION = 'production',
-  TEST = 'test',
+  DEVELOPMENT = "development",
+  PRODUCTION = "production",
+  TEST = "test"
 }
 
 export class NestConfig {
@@ -32,7 +32,7 @@ export class NestConfig {
 
   @IsNotEmpty()
   @IsIP()
-  readonly APP_HOST: string = '0.0.0.0'
+  readonly APP_HOST: string = "0.0.0.0"
 
   @IsSemVer()
   readonly APP_VERSION: string
@@ -42,22 +42,22 @@ export class NestConfig {
   readonly WEBHOOK_URL: string | undefined
 
   get isDevelopment(): boolean {
-    return this.NODE_ENV == NodeEnv.DEVELOPMENT
+    return this.NODE_ENV === NodeEnv.DEVELOPMENT
   }
 }
 
 export const configuration = (() => {
-  dotenv.config({ override: true, path: '.env' })
+  dotenv.config({ override: true, path: ".env" })
   const configuration = plainToInstance(
     NestConfig,
     {
-      APP_HOST: process.env.APP_HOST ?? '0.0.0.0',
+      APP_HOST: process.env.APP_HOST ?? "0.0.0.0",
       APP_PORT: process.env.APP_PORT ?? 3030,
-      APP_VERSION: process.env.APP_VERSION ?? '2.9.0',
-      NODE_ENV: process.env.NODE_ENV ?? 'development',
-      WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
+      APP_VERSION: process.env.APP_VERSION ?? "2.9.0",
+      NODE_ENV: process.env.NODE_ENV ?? "development",
+      WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL
     },
-    { enableImplicitConversion: true },
+    { enableImplicitConversion: true }
   )
   const errors = validateSync(configuration, { skipMissingProperties: true })
   if (errors.length > 0) {

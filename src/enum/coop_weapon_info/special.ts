@@ -11,6 +11,6 @@ export namespace WeaponInfoSpecial {
     SpTripleTornado = 20014,
     SpCastle = 20017,
     SpPogo = 20018,
-    SpSuperLanding = 20101,
+    SpSuperLanding = 20101
   }
 }
