@@ -68,6 +68,7 @@ export class SchedulesService {
         schedules: schedules,
       }
     } catch (error) {
+      console.error(error)
       throw new HttpException('Too Many Requests', HttpStatus.TOO_MANY_REQUESTS)
     }
   }

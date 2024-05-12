@@ -9,6 +9,7 @@ import {
   IsBoolean,
   IsDate,
   IsEnum,
+  IsHash,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -35,7 +36,7 @@ import { WaterLevelId } from '@/enum/coop_water_level'
 import { WeaponInfoMain } from '@/enum/coop_weapon_info/main'
 import { WeaponInfoSpecial } from '@/enum/coop_weapon_info/special'
 import { Species } from '@/enum/species'
-import { resultHash, scheduleHash } from '@/utils/hash'
+import { playerHash, resultHash, scheduleHash } from '@/utils/hash'
 
 /**
  * TODO: 既存コードのコピーなので修正予定
@@ -189,6 +190,13 @@ export namespace CoopHistoryDetailQuery {
       @IsBoolean()
       readonly isClear: boolean
 
+      @ApiProperty({ required: true, type: String })
+      @IsString()
+      @IsOptional()
+      @IsHash('md5')
+      @Expose()
+      readonly hash: string
+
       get create(): Prisma.WaveCreateManyResultInput {
         return {
           eventType: this.eventType,
@@ -230,6 +238,13 @@ export namespace CoopHistoryDetailQuery {
     }
 
     class PlayerResultV2 {
+      @ApiProperty()
+      @IsString()
+      @IsNotEmpty()
+      @IsOptional()
+      @Expose()
+      readonly hash: string
+
       @ApiProperty()
       @IsString()
       @IsNotEmpty()
@@ -351,6 +366,48 @@ export namespace CoopHistoryDetailQuery {
       @Type(() => Number)
       readonly specialCounts: number[]
 
+      @ApiProperty({ enum: CoopGradeId, nullable: true })
+      @Expose()
+      @IsEnum(CoopGradeId)
+      @IsOptional()
+      readonly gradeId: CoopGradeId | null
+
+      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @Expose()
+      @IsInt()
+      @IsOptional()
+      readonly gradePoint: number | null
+
+      @ApiProperty({ minimum: 0, nullable: true, type: Number })
+      @Expose()
+      @IsNumber()
+      @IsOptional()
+      readonly jobRate: number | null
+
+      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @Expose()
+      @IsInt()
+      @IsOptional()
+      readonly jobBonus: number | null
+
+      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @Expose()
+      @IsInt()
+      @IsOptional()
+      readonly jobScore: number | null
+
+      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @Expose()
+      @IsInt()
+      @IsOptional()
+      readonly kumaPoint: number | null
+
+      @ApiProperty({ minimum: 0, nullable: true, type: 'integer' })
+      @Expose()
+      @IsInt()
+      @IsOptional()
+      readonly smellMeter: number | null
+
       @ApiProperty({
         isArray: true,
         maxItems: 14,
@@ -365,33 +422,33 @@ export namespace CoopHistoryDetailQuery {
       @Transform(({ value }) => value.map((v: number) => (v === -1 ? null : v)))
       readonly bossKillCounts: (number | null)[]
 
-      private gradeId(gradeId: number | null): CoopGradeId | null {
-        return this.isMyself ? gradeId : null
-      }
+      // private gradeId(gradeId: number | null): CoopGradeId | null {
+      //   return this.isMyself ? gradeId : null
+      // }
 
-      private gradePoint(gradePoint: number | null): number | null {
-        return this.isMyself ? gradePoint : null
-      }
+      // private gradePoint(gradePoint: number | null): number | null {
+      //   return this.isMyself ? gradePoint : null
+      // }
 
-      private jobRate(jobRate: number | null): number | null {
-        return this.isMyself ? jobRate : null
-      }
+      // private jobRate(jobRate: number | null): number | null {
+      //   return this.isMyself ? jobRate : null
+      // }
 
-      private jobBonus(jobBonus: number | null): number {
-        return this.isMyself ? jobBonus : null
-      }
+      // private jobBonus(jobBonus: number | null): number {
+      //   return this.isMyself ? jobBonus : null
+      // }
 
-      private jobScore(jobScore: number | null): number | null {
-        return this.isMyself ? jobScore : null
-      }
+      // private jobScore(jobScore: number | null): number | null {
+      //   return this.isMyself ? jobScore : null
+      // }
 
-      private kumaPoint(kumaPoint: number | null): number | null {
-        return this.isMyself ? kumaPoint : null
-      }
+      // private kumaPoint(kumaPoint: number | null): number | null {
+      //   return this.isMyself ? kumaPoint : null
+      // }
 
-      private smellMeter(smellMeter: number | null): number | null {
-        return this.isMyself ? smellMeter : null
-      }
+      // private smellMeter(smellMeter: number | null): number | null {
+      //   return this.isMyself ? smellMeter : null
+      // }
 
       update(
         id: Common.ResultId,
@@ -459,19 +516,19 @@ export namespace CoopHistoryDetailQuery {
           deadCount: this.deadCount,
           goldenIkuraAssistNum: this.goldenIkuraAssistNum,
           goldenIkuraNum: this.goldenIkuraNum,
-          gradeId: this.gradeId(gradeId),
-          gradePoint: this.gradePoint(gradePoint),
+          gradeId: gradeId,
+          gradePoint: gradePoint,
           helpCount: this.helpCount,
           ikuraNum: this.ikuraNum,
-          jobBonus: this.jobBonus(jobBonus),
-          jobRate: this.jobRate(jobRate),
-          jobScore: this.jobScore(jobScore),
-          kumaPoint: this.kumaPoint(kumaPoint),
+          jobBonus: jobBonus,
+          jobRate: jobRate,
+          jobScore: jobScore,
+          kumaPoint: kumaPoint,
           name: this.name,
           nameId: this.nameId,
           nameplate: this.nameplate.background.id,
           nplnUserId: this.nplnUserId,
-          smellMeter: this.smellMeter(smellMeter),
+          smellMeter: smellMeter,
           specialCounts: this.specialCounts,
           specialId: this.specialId,
           species: this.species,
@@ -488,6 +545,13 @@ export namespace CoopHistoryDetailQuery {
       @Expose()
       @ValidateNested()
       readonly id: Common.ResultId
+
+      @ApiProperty({ required: true, type: String })
+      @IsString()
+      @IsOptional()
+      @IsHash('md5')
+      @Expose()
+      readonly hash: string
 
       @ApiProperty({ required: true, type: 'uuid' })
       @IsUUID()
@@ -692,6 +756,11 @@ export namespace CoopHistoryDetailQuery {
       @IsOptional()
       readonly scenarioCode: string | null
 
+      @ApiProperty({ isArray: true, required: false, type: URL })
+      @IsArray()
+      @Expose()
+      readonly assetURLs: URL[]
+
       /**
        * 夜WAVEを含まないかどうか
        */
@@ -850,11 +919,11 @@ export namespace CoopHistoryDetailQuery {
         }
       }
 
-      static from(schedule: CoopSchedule, result: R3.V3.DetailedRequest): CoopResult {
+      static from(schedule: CoopSchedule, result: R3.V3.DetailedRequest, withURL: boolean = false): CoopResult {
         return plainToInstance(
           CoopResult,
           {
-            JobBonus: result.jobBonus,
+            assetURLs: withURL ? result.assetURLs : undefined,
             bossCounts: result.bossCounts,
             bossKillCounts: result.teamBossKillCounts,
             dangerRate: result.dangerRate,
@@ -862,6 +931,7 @@ export namespace CoopHistoryDetailQuery {
             goldenIkuraNum: result.goldenIkuraNum,
             gradeId: result.gradeId,
             gradePoint: result.gradePoint,
+            hash: resultHash(result.id.uuid, result.id.playTime),
             id: {
               nplnUserId: result.id.nplnUserId,
               playTime: dayjs(result.id.playTime).utc().toDate(),
@@ -886,10 +956,17 @@ export namespace CoopHistoryDetailQuery {
               deadCount: result.myResult.deadCount,
               goldenIkuraAssistNum: result.myResult.goldenIkuraAssistNum,
               goldenIkuraNum: result.myResult.goldenIkuraNum,
+              gradeId: result.gradeId,
+              gradePoint: result.gradePoint,
+              hash: playerHash(result.id.uuid, result.id.playTime, result.id.nplnUserId),
               helpCount: result.myResult.helpCount,
               id: result.myResult.uid,
               ikuraNum: result.myResult.ikuraNum,
               isMyself: result.myResult.isMyself,
+              jobBonus: result.jobBonus,
+              jobRate: result.jobRate,
+              jobScore: result.jobScore,
+              kumaPoint: result.kumaPoint,
               name: result.myResult.player.name,
               nameId: result.myResult.player.nameId,
               nameplate: {
@@ -905,6 +982,7 @@ export namespace CoopHistoryDetailQuery {
                 badges: result.myResult.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id)),
               },
               nplnUserId: result.myResult.nplnUserId,
+              smellMeter: result.smellMeter,
               specialCounts: result.waveDetails.map(
                 (wave) =>
                   wave.specialWeapons.map((special) => special.id).filter((id) => id === result.myResult.specialId)
@@ -923,10 +1001,23 @@ export namespace CoopHistoryDetailQuery {
                 deadCount: member.deadCount,
                 goldenIkuraAssistNum: member.goldenIkuraAssistNum,
                 goldenIkuraNum: member.goldenIkuraNum,
+                gradeId: null,
+                gradePoint: null,
+                hash: playerHash(result.id.uuid, result.id.playTime, member.nplnUserId),
                 helpCount: member.helpCount,
                 id: member.uid,
                 ikuraNum: member.ikuraNum,
                 isMyself: member.isMyself,
+                jobBonus: null,
+                jobRate: null,
+                jobResult: {
+                  bossId: result.bossId,
+                  failureWave: result.failureWave,
+                  isBossDefeated: result.isBossDefeated,
+                  isClear: result.isClear,
+                },
+                jobScore: null,
+                kumaPoint: null,
                 name: member.player.name,
                 nameId: member.player.nameId,
                 nameplate: {
@@ -942,6 +1033,7 @@ export namespace CoopHistoryDetailQuery {
                   badges: member.player.nameplate.badges.map((badge) => (badge === null ? null : badge.id)),
                 },
                 nplnUserId: member.nplnUserId,
+                smellMeter: null,
                 specialCounts: result.waveDetails.map(
                   (wave) =>
                     wave.specialWeapons.map((special) => special.id).filter((id) => id === member.specialId).length,
@@ -957,7 +1049,16 @@ export namespace CoopHistoryDetailQuery {
             scenarioCode: result.scenarioCode,
             schedule: {
               endTime: schedule.endTime,
+              id: scheduleHash(
+                schedule.mode,
+                schedule.rule,
+                dayjs(schedule.startTime).utc().toDate(),
+                dayjs(schedule.endTime).utc().toDate(),
+                schedule.stageId,
+                schedule.weaponList,
+              ),
               mode: schedule.mode,
+              rareWeapons: schedule.rareWeapons,
               rule: schedule.rule,
               stageId: schedule.stageId,
               startTime: schedule.startTime,
@@ -969,6 +1070,7 @@ export namespace CoopHistoryDetailQuery {
                 eventType: wave.eventType,
                 goldenIkuraNum: wave.goldenIkuraNum,
                 goldenIkuraPopNum: wave.goldenIkuraPopNum,
+                hash: wave.hash(result.id),
                 id: wave.id,
                 isClear: wave.isClear(result.failureWave, result.isBossDefeated),
                 quotaNum: wave.quotaNum,

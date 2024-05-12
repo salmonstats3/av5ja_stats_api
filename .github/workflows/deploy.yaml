@@ -31,7 +31,7 @@ jobs:
   deploy:
     if: github.event.pull_request.merged == true
     runs-on: self-hosted
-    needs: [tag]
+    needs: [set_tag]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

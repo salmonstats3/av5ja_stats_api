@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseFilters, Version } from '@nestjs/common'
+import { Body, Controller, Headers, Post, UseFilters, Version } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -29,7 +29,7 @@ export class ResultsController {
   create_v2(
     @Body()
     request: R2.V2.Paginated,
-  ) {
+  ): Promise<R2.V2.Paginated> {
     return this.service.create_v2(request)
   }
 
@@ -40,7 +40,7 @@ export class ResultsController {
   @ApiNotFoundResponse()
   @ApiBadRequestResponse()
   @ApiOperation({ summary: 'Create a new result.' })
-  create_v3(@Body() request: R3.V3.DetailedRequest) {
-    return this.service.create_v3(request)
+  create_v3(@Body() request: R3.V3.DetailedRequest, @Headers('User-Agent') agent: string): Promise<R2.V2.CoopResult> {
+    return this.service.create_v3(request, agent)
   }
 }

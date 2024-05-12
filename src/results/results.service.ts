@@ -18,11 +18,13 @@ export class ResultsService {
     return request
   }
 
-  async create_v3(@Body() request: R3.V3.DetailedRequest): Promise<R2.V2.Paginated> {
+  async create_v3(request: R3.V3.DetailedRequest, agent: string): Promise<R2.V2.CoopResult> {
+    const pattern: RegExp = /av5ja\/([0-9]{1}\.[0-9]{1}\.[0-9]{1})/
+    const withURL: boolean = pattern.test(agent)
     const schedule: CoopSchedule = await this.schedule(request)
-    const result = R2.V2.CoopResult.from(schedule, request)
+    const result: R2.V2.CoopResult = R2.V2.CoopResult.from(schedule, request, withURL)
     await this.prisma.result.upsert(result.upsert)
-    return plainToInstance(R2.V2.Paginated, { results: [result] })
+    return result
   }
 
   private async schedule(request: R3.V3.DetailedRequest): Promise<CoopSchedule> {
