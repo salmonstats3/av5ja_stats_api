@@ -51,8 +51,8 @@ jobs:
 
       - name: Lint and Format
         run: |
-          bun lint
-          bun format
+          bun run lint
+          bun run format
 
       - name: Test
         run: |
