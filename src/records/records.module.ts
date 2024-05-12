@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common'
+import { Module } from "@nestjs/common"
 
-import { RecordsService } from './records.service'
+import { RecordsService } from "./records.service"
 
 @Module({
-  providers: [RecordsService],
+  providers: [RecordsService]
 })
 export class RecordsModule {}

@@ -38,7 +38,17 @@
         },
         "betterTypeScriptErrors.prettify": true
       },
-      "extensions": []
+      "extensions": [
+        "EditorConfig.EditorConfig",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "PKief.material-icon-theme",
+        "antfu.file-nesting",
+        "biomejs.biome",
+        "bradlc.vscode-tailwindcss",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-typescript-next"
+      ]
     }
   }
 }

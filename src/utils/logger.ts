@@ -1,7 +1,7 @@
-import { Logger } from '@nestjs/common'
-import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
+import { Logger } from "@nestjs/common"
+import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify"
 
-const logger = new Logger('FastifyServer')
+const logger = new Logger("FastifyServer")
 
 /**
  * Log preValidation
@@ -27,10 +27,10 @@ export const onSend = (
   request: FastifyRequest,
   reply: FastifyReply,
   payload: unknown,
-  done: HookHandlerDoneFunction,
+  done: HookHandlerDoneFunction
 ) => {
   let body
-  if (typeof payload === 'string') {
+  if (typeof payload === "string") {
     try {
       body = JSON.parse(payload)
     } catch (e) {

@@ -13,5 +13,5 @@ export enum CoopStageId {
   Temple = 103,
   Factory = 104,
   Section = 105,
-  Distinct = 106,
+  Distinct = 106
 }

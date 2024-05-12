@@ -1,3 +1,3 @@
-describe('ResultsFilter', () => {
-  it('should be defined', () => {})
+describe("ResultsFilter", () => {
+  it("should be defined", () => {})
 })

@@ -1,16 +1,16 @@
-import { HttpService } from '@nestjs/axios'
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common'
-import { HttpAdapterHost } from '@nestjs/core'
-import dayjs from 'dayjs'
-import { lastValueFrom } from 'rxjs'
+import { HttpService } from "@nestjs/axios"
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common"
+import { HttpAdapterHost } from "@nestjs/core"
+import dayjs from "dayjs"
+import { lastValueFrom } from "rxjs"
 
-import { configuration } from '@/utils/validator'
+import { configuration } from "@/utils/validator"
 
 @Catch()
 export class ResultsFilter implements ExceptionFilter {
   constructor(
     private readonly host: HttpAdapterHost,
-    private readonly axios: HttpService,
+    private readonly axios: HttpService
   ) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
@@ -42,45 +42,45 @@ export class ResultsFilter implements ExceptionFilter {
       embeds: [
         {
           author: {
-            name: `@${nplnUserId}`,
+            name: `@${nplnUserId}`
           },
           color: 5620992,
           fields: [
             {
               inline: true,
-              name: 'Status',
-              value: status.toString(),
+              name: "Status",
+              value: status.toString()
             },
             {
               inline: true,
-              name: 'Environment',
-              value: configuration.isDevelopment ? 'Development' : 'Production',
+              name: "Environment",
+              value: configuration.isDevelopment ? "Development" : "Production"
             },
             {
-              name: 'Errors',
-              value: messages.join('\n'),
-            },
+              name: "Errors",
+              value: messages.join("\n")
+            }
           ],
           footer: {
-            text: dayjs().utc().toISOString(),
+            text: dayjs().utc().toISOString()
           },
-          title: title,
-        },
-      ],
+          title: title
+        }
+      ]
     }
     const formData = new FormData()
     formData.append(
-      'file',
+      "file",
       new Blob([JSON.stringify({ results: results })], {
-        type: 'application/json',
+        type: "application/json"
       }),
-      'results.json',
+      "results.json"
     )
-    formData.append('payload_json', JSON.stringify(content))
+    formData.append("payload_json", JSON.stringify(content))
     lastValueFrom(
       this.axios.post(url, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }),
+        headers: { "Content-Type": "multipart/form-data" }
+      })
     )
   }
 }

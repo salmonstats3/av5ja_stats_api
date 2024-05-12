@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common'
+import { Module } from "@nestjs/common"
 
-import { ResultsController } from '@/results/results.controller'
-import { ResultsService } from '@/results/results.service'
+import { ResultsController } from "@/results/results.controller"
+import { ResultsService } from "@/results/results.service"
 
 @Module({
   controllers: [ResultsController],
-  providers: [ResultsService],
+  providers: [ResultsService]
 })
 export class ResultsModule {}

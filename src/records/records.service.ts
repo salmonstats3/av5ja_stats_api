@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common'
-import { PrismaService } from 'nestjs-prisma'
+import { Injectable } from "@nestjs/common"
+import { PrismaService } from "nestjs-prisma"
 
-import { CoopRecordQuery } from '@/dto/av5ja/coop_record.dto'
+import { CoopRecordQuery } from "@/dto/av5ja/coop_record.dto"
 
 @Injectable()
 export class RecordsService {

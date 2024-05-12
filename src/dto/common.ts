@@ -1,25 +1,25 @@
-import { BadRequestException } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
-import { Expose, Transform, plainToInstance } from 'class-transformer'
-import { IsUUID } from 'class-validator'
-import dayjs from 'dayjs'
+import { BadRequestException } from "@nestjs/common"
+import { ApiProperty } from "@nestjs/swagger"
+import { Expose, Transform, plainToInstance } from "class-transformer"
+import { IsUUID } from "class-validator"
+import dayjs from "dayjs"
 
-import { playerHash, resultHash } from '@/utils/hash'
+import { playerHash, resultHash } from "@/utils/hash"
 
 /**
  * TODO: 既存コードのコピーなので修正予定
  */
 export namespace Common {
   export class ResultId {
-    @ApiProperty({ required: true, type: 'string' })
+    @ApiProperty({ required: true, type: "string" })
     @Expose()
     readonly type: string
 
-    @ApiProperty({ required: true, type: 'string' })
+    @ApiProperty({ required: true, type: "string" })
     @Expose()
     readonly prefix: string
 
-    @ApiProperty({ required: true, type: 'string' })
+    @ApiProperty({ required: true, type: "string" })
     @Expose()
     readonly nplnUserId: string
 
@@ -28,7 +28,7 @@ export namespace Common {
     @Transform(({ value }) => dayjs(value).utc().toDate())
     readonly playTime: Date
 
-    @ApiProperty({ required: true, type: 'uuid' })
+    @ApiProperty({ required: true, type: "uuid" })
     @Expose()
     @IsUUID()
     @Transform(({ value }) => value.toUpperCase())
@@ -39,7 +39,9 @@ export namespace Common {
      */
     get rawValue(): string {
       return btoa(
-        `${this.type}-${this.prefix}-${this.nplnUserId}:${dayjs(this.playTime).utc().format('YYYYMMDDTHHmmss')}_${this.uuid.toLowerCase()}`,
+        `${this.type}-${this.prefix}-${this.nplnUserId}:${dayjs(this.playTime)
+          .utc()
+          .format("YYYYMMDDTHHmmss")}_${this.uuid.toLowerCase()}`
       )
     }
 
@@ -59,36 +61,36 @@ export namespace Common {
             playTime: dayjs(playTime).utc().toDate(),
             prefix: prefix,
             type: type,
-            uuid: uuid,
+            uuid: uuid
           },
-          { excludeExtraneousValues: true },
+          { excludeExtraneousValues: true }
         )
       } else {
-        throw new BadRequestException('Invalid Common.ResultId')
+        throw new BadRequestException("Invalid Common.ResultId")
       }
     }
   }
 
   export class PlayerId {
     @ApiProperty({
-      description: 'Base64 encoded string.',
+      description: "Base64 encoded string.",
       required: true,
-      type: 'string',
+      type: "string"
     })
     @Expose()
     readonly id: string
 
     readonly prefix: string
 
-    @ApiProperty({ required: true, type: 'string' })
+    @ApiProperty({ required: true, type: "string" })
     @Expose()
     readonly nplnUserId: string
 
-    @ApiProperty({ required: true, type: 'string' })
+    @ApiProperty({ required: true, type: "string" })
     @Expose()
     readonly playTime: Date
 
-    @ApiProperty({ required: true, type: 'string' })
+    @ApiProperty({ required: true, type: "string" })
     @Expose()
     readonly uuid: string
 
@@ -102,9 +104,9 @@ export namespace Common {
     get rawValue(): string {
       // 逆変換時にはJSTからUTCに変換する
       return btoa(
-        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).utc().format('YYYYMMDDTHHmmss')}_${this.uuid}:${this.suffix}-${
-          this.nplnUserId
-        }`,
+        `${this.id}-${this.prefix}-${this.hostNplnUserId}:${dayjs(this.playTime).utc().format("YYYYMMDDTHHmmss")}_${
+          this.uuid
+        }:${this.suffix}-${this.nplnUserId}`
       )
     }
 
@@ -113,7 +115,7 @@ export namespace Common {
     }
 
     get rawId(): string {
-      const playTime: string = dayjs(this.playTime).utc().format('YYYYMMDDTHHmmss')
+      const playTime: string = dayjs(this.playTime).utc().format("YYYYMMDDTHHmmss")
       return `${playTime}:${this.nplnUserId}`
     }
 

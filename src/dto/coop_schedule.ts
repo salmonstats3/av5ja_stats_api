@@ -1,14 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Prisma } from '@prisma/client'
-import { Expose, Transform, plainToInstance } from 'class-transformer'
-import dayjs from 'dayjs'
+import { ApiProperty } from "@nestjs/swagger"
+import { Prisma } from "@prisma/client"
+import { Expose, Transform, plainToInstance } from "class-transformer"
+import dayjs from "dayjs"
 
-import { CoopBossInfoId } from '@/enum/coop_enemy'
-import { CoopMode } from '@/enum/coop_mode'
-import { CoopRule } from '@/enum/coop_rule'
-import { CoopStageId } from '@/enum/coop_stage'
-import { WeaponInfoMain } from '@/enum/coop_weapon_info/main'
-import { scheduleHash } from '@/utils/hash'
+import { CoopBossInfoId } from "@/enum/coop_enemy"
+import { CoopMode } from "@/enum/coop_mode"
+import { CoopRule } from "@/enum/coop_rule"
+import { CoopStageId } from "@/enum/coop_stage"
+import { WeaponInfoMain } from "@/enum/coop_weapon_info/main"
+import { scheduleHash } from "@/utils/hash"
 
 export class CoopSchedule {
   @Expose()
@@ -16,12 +16,12 @@ export class CoopSchedule {
   readonly id: string
 
   @Expose()
-  @ApiProperty({ example: '2022-01-01T00:00:00Z', nullable: true, type: Date })
+  @ApiProperty({ example: "2022-01-01T00:00:00Z", nullable: true, type: Date })
   @Transform(({ value }) => (value === null ? null : dayjs(value).utc().toDate()))
   readonly startTime: Date | null
 
   @Expose()
-  @ApiProperty({ example: '2022-01-01T00:00:00Z', nullable: true, type: Date })
+  @ApiProperty({ example: "2022-01-01T00:00:00Z", nullable: true, type: Date })
   @Transform(({ value }) => (value === null ? null : dayjs(value).utc().toDate()))
   readonly endTime: Date | null
 
@@ -37,7 +37,7 @@ export class CoopSchedule {
   @ApiProperty({
     enum: CoopBossInfoId,
     example: CoopBossInfoId.SakelienGiant,
-    nullable: true,
+    nullable: true
   })
   readonly bossId: CoopBossInfoId
 
@@ -52,9 +52,9 @@ export class CoopSchedule {
       WeaponInfoMain.Id.BlasterBear,
       WeaponInfoMain.Id.ShelterBear,
       WeaponInfoMain.Id.ChargerBear,
-      WeaponInfoMain.Id.SlosherBear,
+      WeaponInfoMain.Id.SlosherBear
     ],
-    isArray: true,
+    isArray: true
   })
   readonly rareWeapons: WeaponInfoMain.Id[]
 
@@ -65,9 +65,9 @@ export class CoopSchedule {
       WeaponInfoMain.Id.RandomGold,
       WeaponInfoMain.Id.RandomGold,
       WeaponInfoMain.Id.RandomGold,
-      WeaponInfoMain.Id.RandomGold,
+      WeaponInfoMain.Id.RandomGold
     ],
-    isArray: true,
+    isArray: true
   })
   readonly weaponList: WeaponInfoMain.Id[]
 
@@ -80,13 +80,13 @@ export class CoopSchedule {
     const rareWeapons: WeaponInfoMain.Id[] = schedule.rareWeapons
     const bossId: CoopBossInfoId | null = (() => {
       switch (schedule.bigBoss) {
-        case 'SakeJaw':
+        case "SakeJaw":
           return CoopBossInfoId.SakeJaw
-        case 'SakeRope':
+        case "SakeRope":
           return CoopBossInfoId.SakeRope
-        case 'SakelienGiant':
+        case "SakelienGiant":
           return CoopBossInfoId.SakelienGiant
-        case 'Random':
+        case "Random":
           return CoopBossInfoId.Random
         default:
           return null
@@ -104,16 +104,16 @@ export class CoopSchedule {
           dayjs(schedule.startTime).utc().toDate(),
           dayjs(schedule.endTime).utc().toDate(),
           stageId,
-          weaponList,
+          weaponList
         ),
         mode: mode,
         rareWeapons: rareWeapons,
         rule: rule,
         stageId: stageId,
         startTime: schedule.startTime,
-        weaponList: weaponList,
+        weaponList: weaponList
       },
-      { excludeExtraneousValues: true },
+      { excludeExtraneousValues: true }
     )
   }
 
@@ -128,7 +128,7 @@ export class CoopSchedule {
         scheduleId: this.id,
         stageId: this.stageId,
         startTime: this.startTime,
-        weaponList: this.weaponList,
+        weaponList: this.weaponList
       },
       update: {
         bossId: this.bossId,
@@ -138,11 +138,11 @@ export class CoopSchedule {
         rule: this.rule,
         stageId: this.stageId,
         startTime: this.startTime,
-        weaponList: this.weaponList,
+        weaponList: this.weaponList
       },
       where: {
-        scheduleId: this.id,
-      },
+        scheduleId: this.id
+      }
     }
   }
 
@@ -153,7 +153,7 @@ export class CoopSchedule {
       this.startTime,
       this.endTime,
       this.stageId,
-      this.weaponList,
+      this.weaponList
     )
     return {
       create: {
@@ -164,11 +164,11 @@ export class CoopSchedule {
         scheduleId: scheduleId,
         stageId: this.stageId,
         startTime: this.startTime,
-        weaponList: this.weaponList,
+        weaponList: this.weaponList
       },
       where: {
-        scheduleId: scheduleId,
-      },
+        scheduleId: scheduleId
+      }
     }
   }
 }

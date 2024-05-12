@@ -1,4 +1,4 @@
 ---
 '**/*.ts':
-  - bun eslint --fix
-  - bun prettier --write
+  - bunx @biomejs/biome lint src
+  - bunx @biomejs/biome format src 

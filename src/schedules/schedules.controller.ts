@@ -1,30 +1,30 @@
-import { CacheInterceptor } from '@nestjs/cache-manager'
-import { Controller, Get, Query, UseInterceptors, Version } from '@nestjs/common'
+import { CacheInterceptor } from "@nestjs/cache-manager"
+import { Controller, Get, Query, UseInterceptors, Version } from "@nestjs/common"
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiServiceUnavailableResponse,
   ApiTags,
-  ApiTooManyRequestsResponse,
-} from '@nestjs/swagger'
+  ApiTooManyRequestsResponse
+} from "@nestjs/swagger"
 
-import { CoopSchedule } from '@/dto/coop_schedule'
-import { GetCoopScheduleRequest } from '@/dto/request/schedule.dto'
-import { GetCoopScheduleResponse } from '@/dto/schedule.dto'
-import { SchedulesService } from '@/schedules/schedules.service'
+import { CoopSchedule } from "@/dto/coop_schedule"
+import { GetCoopScheduleRequest } from "@/dto/request/schedule.dto"
+import { GetCoopScheduleResponse } from "@/dto/schedule.dto"
+import { SchedulesService } from "@/schedules/schedules.service"
 
-@ApiTags('Schedules')
-@Controller('schedules')
+@ApiTags("Schedules")
+@Controller("schedules")
 @UseInterceptors(CacheInterceptor)
 export class SchedulesController {
   constructor(private readonly service: SchedulesService) {}
 
   @Get()
-  @Version('1')
+  @Version("1")
   @ApiOperation({
     deprecated: true,
-    summary: 'Fetch Salmon Run schedules for Splatoon 3.',
+    summary: "Fetch Salmon Run schedules for Splatoon 3."
   })
   @ApiNotFoundResponse()
   @ApiTooManyRequestsResponse()
@@ -35,10 +35,10 @@ export class SchedulesController {
   }
 
   @Get()
-  @Version('2')
+  @Version("2")
   @ApiOperation({
     deprecated: true,
-    summary: 'Fetch Salmon Run schedules for Splatoon 3.',
+    summary: "Fetch Salmon Run schedules for Splatoon 3."
   })
   @ApiNotFoundResponse()
   @ApiTooManyRequestsResponse()
@@ -49,8 +49,8 @@ export class SchedulesController {
   }
 
   @Get()
-  @Version('3')
-  @ApiOperation({ summary: 'Fetch Salmon Run schedules for Splatoon 3.' })
+  @Version("3")
+  @ApiOperation({ summary: "Fetch Salmon Run schedules for Splatoon 3." })
   @ApiNotFoundResponse()
   @ApiTooManyRequestsResponse()
   @ApiServiceUnavailableResponse()

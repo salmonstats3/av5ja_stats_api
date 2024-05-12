@@ -1,6 +1,6 @@
-import { BadRequestException } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
-import { Expose, Transform, Type, plainToInstance } from 'class-transformer'
+import { BadRequestException } from "@nestjs/common"
+import { ApiProperty } from "@nestjs/swagger"
+import { Expose, Transform, Type, plainToInstance } from "class-transformer"
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -18,23 +18,23 @@ import {
   IsUrl,
   Max,
   Min,
-  ValidateNested,
-} from 'class-validator'
-import dayjs from 'dayjs'
+  ValidateNested
+} from "class-validator"
+import dayjs from "dayjs"
 
-import { Common } from '@/dto/common'
-import { CoopBossInfoId, CoopEnemyInfoId } from '@/enum/coop_enemy'
-import { CoopEventId } from '@/enum/coop_event'
-import { CoopGradeId } from '@/enum/coop_grade'
-import { CoopMode } from '@/enum/coop_mode'
-import { CoopRule } from '@/enum/coop_rule'
-import { CoopSkinId } from '@/enum/coop_skin'
-import { CoopStageId } from '@/enum/coop_stage'
-import { WaterLevelId } from '@/enum/coop_water_level'
-import { WeaponInfoMain, id } from '@/enum/coop_weapon_info/main'
-import { WeaponInfoSpecial } from '@/enum/coop_weapon_info/special'
-import { Species } from '@/enum/species'
-import { waveHash } from '@/utils/hash'
+import { Common } from "@/dto/common"
+import { CoopBossInfoId, CoopEnemyInfoId } from "@/enum/coop_enemy"
+import { CoopEventId } from "@/enum/coop_event"
+import { CoopGradeId } from "@/enum/coop_grade"
+import { CoopMode } from "@/enum/coop_mode"
+import { CoopRule } from "@/enum/coop_rule"
+import { CoopSkinId } from "@/enum/coop_skin"
+import { CoopStageId } from "@/enum/coop_stage"
+import { WaterLevelId } from "@/enum/coop_water_level"
+import { WeaponInfoMain, id } from "@/enum/coop_weapon_info/main"
+import { WeaponInfoSpecial } from "@/enum/coop_weapon_info/special"
+import { Species } from "@/enum/species"
+import { waveHash } from "@/utils/hash"
 
 /**
  * TODO: 既存コードのコピーなので修正予定
@@ -43,11 +43,11 @@ export namespace CoopHistoryDetailQuery {
   export namespace V3 {
     class CoopEnemy {
       @ApiProperty({
-        description: 'Base64 Encoded string. For example `Q29vcEVuZW15LTQ=` means `CoopEnemy-4`.',
-        example: 'Q29vcEVuZW15LTQ=',
+        description: "Base64 Encoded string. For example `Q29vcEVuZW15LTQ=` means `CoopEnemy-4`.",
+        example: "Q29vcEVuZW15LTQ=",
         nullable: true,
         required: true,
-        type: 'string',
+        type: "string"
       })
       @IsEnum(CoopEnemyInfoId)
       @Expose()
@@ -57,30 +57,30 @@ export namespace CoopHistoryDetailQuery {
         if (match === null) {
           throw new BadRequestException(`Invalid CoopEnemyInfoId: ${value}`)
         }
-        return parseInt(match[1], 10)
+        return Number.parseInt(match[1], 10)
       })
       readonly id: CoopEnemyInfoId
 
-      @Expose({ name: 'image' })
+      @Expose({ name: "image" })
       @IsUrl()
       @Transform(({ value }) => value.url)
       readonly url: URL
     }
 
     class EnemyResult {
-      @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, required: true, type: "integer" })
       @IsInt()
       @Min(0)
       @Expose()
       readonly defeatCount: number
 
-      @ApiProperty({ minimum: 0, required: true, type: 'integer' })
+      @ApiProperty({ minimum: 0, required: true, type: "integer" })
       @IsInt()
       @Min(0)
       @Expose()
       readonly teamDefeatCount: number
 
-      @ApiProperty({ minimum: 1, required: true, type: 'integer' })
+      @ApiProperty({ minimum: 1, required: true, type: "integer" })
       @IsInt()
       @Min(1)
       @Expose()
@@ -95,11 +95,11 @@ export namespace CoopHistoryDetailQuery {
 
     class KingSalmonId {
       @ApiProperty({
-        description: 'Base64 Encoded string. For example `Q29vcEVuZW15LTIz=` means `CoopEnemy-23`.',
-        example: 'Q29vcEVuZW15LTIz',
+        description: "Base64 Encoded string. For example `Q29vcEVuZW15LTIz=` means `CoopEnemy-23`.",
+        example: "Q29vcEVuZW15LTIz",
         nullable: true,
         required: true,
-        type: 'string',
+        type: "string"
       })
       @IsEnum(CoopBossInfoId)
       @Expose()
@@ -109,7 +109,7 @@ export namespace CoopHistoryDetailQuery {
         if (match === null) {
           throw new BadRequestException(`Invalid CoopEnemyInfoId: ${value}`)
         }
-        return parseInt(match[1], 10)
+        return Number.parseInt(match[1], 10)
       })
       id: CoopBossInfoId
     }
@@ -117,38 +117,38 @@ export namespace CoopHistoryDetailQuery {
     class SpecialWeapon {
       @ApiProperty({
         enum: WeaponInfoSpecial.Id,
-        name: 'weaponId',
-        required: true,
+        name: "weaponId",
+        required: true
       })
       @IsEnum(WeaponInfoSpecial.Id)
-      @Expose({ name: 'weaponId' })
+      @Expose({ name: "weaponId" })
       readonly id: WeaponInfoSpecial.Id
     }
 
     class SpecialWeaponUsage {
       @ApiProperty({
-        description: 'Base64 Encoded string. For example `U3BlY2lhbFdlYXBvbi0yMDAwOQ==` means `SpecialWeapon-20009`.',
-        example: 'U3BlY2lhbFdlYXBvbi0yMDAwOQ==',
+        description: "Base64 Encoded string. For example `U3BlY2lhbFdlYXBvbi0yMDAwOQ==` means `SpecialWeapon-20009`.",
+        example: "U3BlY2lhbFdlYXBvbi0yMDAwOQ==",
         required: true,
-        type: 'string',
+        type: "string"
       })
       @IsEnum(WeaponInfoSpecial.Id)
-      @Expose({ name: 'id' })
+      @Expose({ name: "id" })
       @Transform(({ value }) => {
         const regexp = /-([0-9-]*)/
         const match = regexp.exec(atob(value))
-        return match === null ? WeaponInfoSpecial.Id.RandomGreen : parseInt(match[1], 10)
+        return match === null ? WeaponInfoSpecial.Id.RandomGreen : Number.parseInt(match[1], 10)
       })
       readonly id: WeaponInfoSpecial.Id
     }
 
     class AfterGrade {
       @ApiProperty({
-        description: 'Base64 Encoded string. For example `Q29vcEdyYWRlLTg=` means `CoopGrade-8`.',
-        example: 'Q29vcEdyYWRlLTg=',
+        description: "Base64 Encoded string. For example `Q29vcEdyYWRlLTg=` means `CoopGrade-8`.",
+        example: "Q29vcEdyYWRlLTg=",
         nullable: true,
         required: true,
-        type: 'string',
+        type: "string"
       })
       @IsEnum(CoopGradeId)
       @IsOptional()
@@ -156,7 +156,7 @@ export namespace CoopHistoryDetailQuery {
       @Transform(({ value }) => {
         const regexp = /-([0-9-]*)/
         const match = regexp.exec(atob(value))
-        return match === null ? null : parseInt(match[1], 10)
+        return match === null ? null : Number.parseInt(match[1], 10)
       })
       readonly id: CoopGradeId | null
     }
@@ -167,7 +167,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -181,7 +181,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -195,7 +195,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -210,9 +210,9 @@ export namespace CoopHistoryDetailQuery {
           {
             bronze,
             gold,
-            silver,
+            silver
           },
-          { excludeExtraneousValues: true },
+          { excludeExtraneousValues: true }
         )
       }
     }
@@ -226,17 +226,17 @@ export namespace CoopHistoryDetailQuery {
 
     class EventWave {
       @ApiProperty({
-        description: 'Base64 Encoded string. For example `Q29vcEV2ZW50V2F2ZS00` means `CoopEventWave-4`.',
-        example: 'Q29vcEV2ZW50V2F2ZS00',
+        description: "Base64 Encoded string. For example `Q29vcEV2ZW50V2F2ZS00` means `CoopEventWave-4`.",
+        example: "Q29vcEV2ZW50V2F2ZS00",
         required: true,
-        type: 'string',
+        type: "string"
       })
       @IsEnum(CoopEventId)
       @Expose()
       @Transform(({ value }) => {
         const regexp = /-([0-9-]*)/
         const match = regexp.exec(atob(value))
-        return match === null ? CoopGradeId.Grade00 : parseInt(match[1], 10)
+        return match === null ? CoopGradeId.Grade00 : Number.parseInt(match[1], 10)
       })
       readonly id: CoopEventId
     }
@@ -279,34 +279,34 @@ export namespace CoopHistoryDetailQuery {
       readonly textColor: TextColor
 
       @ApiProperty({
-        description: 'Base64 Encoded string. For example `TmFtZXBsYXRlQmFja2dyb3VuZC0x` means `NameplateBackground-1`.',
-        example: 'TmFtZXBsYXRlQmFja2dyb3VuZC0x',
+        description: "Base64 Encoded string. For example `TmFtZXBsYXRlQmFja2dyb3VuZC0x` means `NameplateBackground-1`.",
+        example: "TmFtZXBsYXRlQmFja2dyb3VuZC0x",
         required: true,
-        type: 'string',
+        type: "string"
       })
       @IsInt()
       @Expose()
       @Transform(({ value }) => {
         const regexp = /-([0-9-]*)/
         const match = regexp.exec(atob(value))
-        return match === null ? 1 : parseInt(match[1], 10)
+        return match === null ? 1 : Number.parseInt(match[1], 10)
       })
       readonly id: number
     }
 
     class Badge {
       @ApiProperty({
-        description: 'Base64 Encoded string. For example `QmFkZ2UtNTIyMDAwMg==` means `Badge-5220002`.',
-        example: 'QmFkZ2UtNTIyMDAwMg==',
+        description: "Base64 Encoded string. For example `QmFkZ2UtNTIyMDAwMg==` means `Badge-5220002`.",
+        example: "QmFkZ2UtNTIyMDAwMg==",
         required: true,
-        type: 'string',
+        type: "string"
       })
       @IsInt()
       @Expose()
       @Transform(({ value }) => {
         const regexp = /-([0-9-]*)/
         const match = regexp.exec(atob(value))
-        return match === null ? null : parseInt(match[1], 10)
+        return match === null ? null : Number.parseInt(match[1], 10)
       })
       readonly id: number
     }
@@ -316,7 +316,7 @@ export namespace CoopHistoryDetailQuery {
         isArray: true,
         nullable: true,
         required: true,
-        type: Badge,
+        type: Badge
       })
       @IsArray()
       @ArrayMinSize(3)
@@ -334,23 +334,23 @@ export namespace CoopHistoryDetailQuery {
 
     class Uniform {
       @ApiProperty({
-        description: 'Base64 Encoded string. For example `Q29vcFVuaWZvcm0tMTM=` means `CoopUniform-13`.',
-        example: 'Q29vcFVuaWZvcm0tMTM=',
+        description: "Base64 Encoded string. For example `Q29vcFVuaWZvcm0tMTM=` means `CoopUniform-13`.",
+        example: "Q29vcFVuaWZvcm0tMTM=",
         required: true,
-        type: 'string',
+        type: "string"
       })
       @Expose()
       @IsEnum(CoopSkinId)
       @Transform(({ value }) => {
         const regexp = /-([0-9-]*)/
         const match = regexp.exec(atob(value))
-        return match === null ? CoopSkinId.COP001 : parseInt(match[1], 10)
+        return match === null ? CoopSkinId.COP001 : Number.parseInt(match[1], 10)
       })
       readonly id: CoopSkinId
     }
 
     class BossResult {
-      @ApiProperty({ required: true, type: 'boolean' })
+      @ApiProperty({ required: true, type: "boolean" })
       @IsBoolean()
       @Expose()
       hasDefeatBoss: boolean
@@ -378,39 +378,39 @@ export namespace CoopHistoryDetailQuery {
       @ApiProperty({
         maximum: 35,
         minimum: 0,
-        name: 'deliverNorm',
+        name: "deliverNorm",
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
       @Min(0)
-      @Expose({ name: 'deliverNorm' })
+      @Expose({ name: "deliverNorm" })
       readonly quotaNum: number | null
 
       @ApiProperty({
         minimum: 0,
-        name: 'goldenPopCount',
+        name: "goldenPopCount",
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @Min(0)
-      @Expose({ name: 'goldenPopCount' })
+      @Expose({ name: "goldenPopCount" })
       readonly goldenIkuraPopNum: number
 
       @ApiProperty({
         minimum: 0,
-        name: 'teamDeliverCount',
+        name: "teamDeliverCount",
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
       @Min(0)
-      @Expose({ name: 'teamDeliverCount' })
+      @Expose({ name: "teamDeliverCount" })
       readonly goldenIkuraNum: number | null
 
       @ApiProperty({
@@ -419,7 +419,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: false,
         required: true,
-        type: SpecialWeaponUsage,
+        type: SpecialWeaponUsage
       })
       @IsArray()
       @ArrayMinSize(0)
@@ -431,14 +431,14 @@ export namespace CoopHistoryDetailQuery {
 
       @ApiProperty({
         minimum: 0,
-        name: 'waveNumber',
+        name: "waveNumber",
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @Min(0)
       @Max(5)
-      @Expose({ name: 'waveNumber' })
+      @Expose({ name: "waveNumber" })
       readonly id: number
 
       /**
@@ -473,19 +473,19 @@ export namespace CoopHistoryDetailQuery {
     }
 
     class PlayerResult {
-      @ApiProperty({ required: true, type: 'string' })
+      @ApiProperty({ required: true, type: "string" })
       @IsString()
       @IsNotEmpty()
       @Expose()
       readonly byname: string
 
-      @ApiProperty({ required: true, type: 'string' })
+      @ApiProperty({ required: true, type: "string" })
       @IsString()
       @IsNotEmpty()
       @Expose()
       readonly name: string
 
-      @ApiProperty({ required: true, type: 'string' })
+      @ApiProperty({ required: true, type: "string" })
       @IsString()
       @IsNotEmpty()
       @Expose()
@@ -504,9 +504,9 @@ export namespace CoopHistoryDetailQuery {
       readonly uniform: Uniform
 
       @ApiProperty({
-        description: 'Base64 Encoded string.',
+        description: "Base64 Encoded string.",
         required: true,
-        type: 'string',
+        type: "string"
       })
       @Expose()
       @Type(() => Common.PlayerId)
@@ -532,10 +532,10 @@ export namespace CoopHistoryDetailQuery {
       @ApiProperty({
         enum: WeaponInfoMain.Id,
         isArray: true,
-        name: 'weapons',
-        required: true,
+        name: "weapons",
+        required: true
       })
-      @Expose({ name: 'weapons' })
+      @Expose({ name: "weapons" })
       @Transform(({ value }) => {
         const regexp = /([a-f0-9]{64})/
         const weaponList: WeaponInfoMain.Id[] = value.map((value: any) => {
@@ -560,7 +560,7 @@ export namespace CoopHistoryDetailQuery {
       // readonly specialURL: URL
 
       @ApiProperty({ required: true, type: SpecialWeapon })
-      @Expose({ name: 'specialWeapon' })
+      @Expose({ name: "specialWeapon" })
       @Transform(({ value }) => (value === null ? null : value.weaponId))
       @IsEnum(WeaponInfoSpecial.Id)
       @IsOptional()
@@ -568,68 +568,68 @@ export namespace CoopHistoryDetailQuery {
 
       @ApiProperty({
         minimum: 0,
-        name: 'defeatEnemyCount',
+        name: "defeatEnemyCount",
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @Min(0)
-      @Expose({ name: 'defeatEnemyCount' })
+      @Expose({ name: "defeatEnemyCount" })
       readonly bossKillCountsTotal: number
 
       @ApiProperty({
         minimum: 0,
-        name: 'deliverCount',
+        name: "deliverCount",
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @Min(0)
-      @Expose({ name: 'deliverCount' })
+      @Expose({ name: "deliverCount" })
       readonly ikuraNum: number
 
       @ApiProperty({
         minimum: 0,
-        name: 'goldenAssistCount',
+        name: "goldenAssistCount",
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @Min(0)
-      @Expose({ name: 'goldenAssistCount' })
+      @Expose({ name: "goldenAssistCount" })
       readonly goldenIkuraAssistNum: number
 
       @ApiProperty({
         minimum: 0,
-        name: 'goldenDeliverCount',
+        name: "goldenDeliverCount",
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @Min(0)
-      @Expose({ name: 'goldenDeliverCount' })
+      @Expose({ name: "goldenDeliverCount" })
       readonly goldenIkuraNum: number
 
       @ApiProperty({
         minimum: 0,
-        name: 'rescueCount',
+        name: "rescueCount",
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @Min(0)
-      @Expose({ name: 'rescueCount' })
+      @Expose({ name: "rescueCount" })
       readonly helpCount: number
 
       @ApiProperty({
         minimum: 0,
-        name: 'rescuedCount',
+        name: "rescuedCount",
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @Min(0)
-      @Expose({ name: 'rescuedCount' })
+      @Expose({ name: "rescuedCount" })
       readonly deadCount: number
 
       /**
@@ -661,7 +661,7 @@ export namespace CoopHistoryDetailQuery {
       }
 
       get uid(): string {
-        return `${dayjs(this.player.id.playTime).utc().format('YYYYMMDDTHHmmss')}:${this.player.id.nplnUserId}`
+        return `${dayjs(this.player.id.playTime).utc().format("YYYYMMDDTHHmmss")}:${this.player.id.nplnUserId}`
       }
 
       /**
@@ -679,13 +679,13 @@ export namespace CoopHistoryDetailQuery {
           this.player.nameplate.background.textColor.r,
           this.player.nameplate.background.textColor.g,
           this.player.nameplate.background.textColor.b,
-          this.player.nameplate.background.textColor.a,
+          this.player.nameplate.background.textColor.a
         ]
       }
     }
 
     class CoopHistoryDetail {
-      @ApiProperty({ required: true, type: 'string' })
+      @ApiProperty({ required: true, type: "string" })
       @Expose()
       @Type(() => Common.ResultId)
       @Transform(({ value }) => Common.ResultId.from(value))
@@ -708,7 +708,7 @@ export namespace CoopHistoryDetailQuery {
         maxItems: 3,
         minItems: 1,
         required: true,
-        type: MemberResult,
+        type: MemberResult
       })
       @IsArray()
       @ArrayNotEmpty()
@@ -730,7 +730,7 @@ export namespace CoopHistoryDetailQuery {
         maxItems: 14,
         minItems: 0,
         required: true,
-        type: EnemyResult,
+        type: EnemyResult
       })
       @IsArray()
       @ArrayMinSize(0)
@@ -745,7 +745,7 @@ export namespace CoopHistoryDetailQuery {
         maxItems: 5,
         minItems: 0,
         required: true,
-        type: WaveResult,
+        type: WaveResult
       })
       @IsArray()
       @ArrayMinSize(0)
@@ -755,7 +755,7 @@ export namespace CoopHistoryDetailQuery {
       @ValidateNested({ each: true })
       readonly waveResults: WaveResult[]
 
-      @ApiProperty({ maximum: 5, minimum: -1, required: true, type: 'integer' })
+      @ApiProperty({ maximum: 5, minimum: -1, required: true, type: "integer" })
       @IsInt()
       @Min(-1)
       @Max(5)
@@ -780,7 +780,7 @@ export namespace CoopHistoryDetailQuery {
       @Transform(({ value }) => {
         const regexp = /-([0-9-]*)/
         const match = regexp.exec(atob(value.id))
-        return match === null ? null : parseInt(match[1], 10)
+        return match === null ? null : Number.parseInt(match[1], 10)
       })
       readonly coopStage: CoopStageId
 
@@ -788,14 +788,14 @@ export namespace CoopHistoryDetailQuery {
         maximum: 3.33,
         minimum: 0,
         required: true,
-        type: 'number',
+        type: "number"
       })
       @Min(0)
       @Max(3.33)
       @Expose()
       readonly dangerRate: number
 
-      @ApiProperty({ nullable: true, required: true, type: 'string' })
+      @ApiProperty({ nullable: true, required: true, type: "string" })
       @IsString()
       @IsOptional()
       @Expose()
@@ -806,7 +806,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -820,22 +820,20 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
       @Min(0)
       @Max(999)
-      @Expose({ name: 'afterGradePoint' })
+      @Expose({ name: "afterGradePoint" })
       readonly gradePoint: number | null
 
       @ApiProperty({ nullable: true, required: true, type: Scale })
       @IsOptional()
       @Type(() => Scale)
       @Transform(({ value }) =>
-        value === null
-          ? Scale.from(null, null, null)
-          : plainToInstance(Scale, value, { excludeExtraneousValues: true }),
+        value === null ? Scale.from(null, null, null) : plainToInstance(Scale, value, { excludeExtraneousValues: true })
       )
       @ValidateNested()
       @Expose()
@@ -845,19 +843,19 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
       @Min(0)
-      @Expose({ name: 'jobPoint' })
+      @Expose({ name: "jobPoint" })
       readonly kumaPoint: number | null
 
       @ApiProperty({
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -876,7 +874,7 @@ export namespace CoopHistoryDetailQuery {
         minimum: 0,
         nullable: true,
         required: true,
-        type: 'integer',
+        type: "integer"
       })
       @IsInt()
       @IsOptional()
@@ -885,7 +883,7 @@ export namespace CoopHistoryDetailQuery {
       @Expose()
       readonly jobBonus: number | null
 
-      @Expose({ name: 'weapons' })
+      @Expose({ name: "weapons" })
       @IsUrl({}, { each: true })
       @Transform(({ value }) => value.map((value: any) => value.image.url))
       readonly weaponListURL: URL[]
@@ -1027,7 +1025,7 @@ export namespace CoopHistoryDetailQuery {
         return [
           this.data.coopHistoryDetail.scale.bronze,
           this.data.coopHistoryDetail.scale.silver,
-          this.data.coopHistoryDetail.scale.gold,
+          this.data.coopHistoryDetail.scale.gold
         ]
       }
 
@@ -1133,8 +1131,8 @@ export namespace CoopHistoryDetailQuery {
             this.members
               .flatMap((member) => member.weaponListURLs)
               .concat(this.data.coopHistoryDetail.enemyResults.map((enemy) => enemy.enemy.url))
-              .concat(this.data.coopHistoryDetail.weaponListURL),
-          ),
+              .concat(this.data.coopHistoryDetail.weaponListURL)
+          )
         ]
       }
     }

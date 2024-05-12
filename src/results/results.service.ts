@@ -1,12 +1,12 @@
-import { Body, Injectable, UseFilters } from '@nestjs/common'
-import { plainToInstance } from 'class-transformer'
-import { PrismaService } from 'nestjs-prisma'
+import { Body, Injectable, UseFilters } from "@nestjs/common"
+import { plainToInstance } from "class-transformer"
+import { PrismaService } from "nestjs-prisma"
 
-import { CoopHistoryDetailQuery as R3 } from '@/dto/av5ja/coop_history_detail.dto'
-import { CoopSchedule } from '@/dto/coop_schedule'
-import { CoopHistoryDetailQuery as R2 } from '@/dto/request/result.v2.dto'
-import { CoopMode } from '@/enum/coop_mode'
-import { ResultsFilter } from '@/results/results.filter'
+import { CoopHistoryDetailQuery as R3 } from "@/dto/av5ja/coop_history_detail.dto"
+import { CoopSchedule } from "@/dto/coop_schedule"
+import { CoopHistoryDetailQuery as R2 } from "@/dto/request/result.v2.dto"
+import { CoopMode } from "@/enum/coop_mode"
+import { ResultsFilter } from "@/results/results.filter"
 
 @Injectable()
 @UseFilters(ResultsFilter)
@@ -33,17 +33,17 @@ export class ResultsService {
       this.prisma.schedule.findFirst({
         where: {
           endTime: {
-            gte: request.playTime,
+            gte: request.playTime
           },
           mode: {
-            in: [CoopMode.REGULAR, CoopMode.LIMITED],
+            in: [CoopMode.REGULAR, CoopMode.LIMITED]
           },
           startTime: {
-            lte: request.playTime,
-          },
-        },
+            lte: request.playTime
+          }
+        }
       }),
-      { excludeExtraneousValues: true },
+      { excludeExtraneousValues: true }
     )
   }
 }

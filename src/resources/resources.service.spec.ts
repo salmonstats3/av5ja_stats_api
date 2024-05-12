@@ -1,21 +1,21 @@
-import { HttpModule } from '@nestjs/axios'
-import { Test, TestingModule } from '@nestjs/testing'
+import { HttpModule } from "@nestjs/axios"
+import { Test, TestingModule } from "@nestjs/testing"
 
-import { ResourcesService } from '@/resources/resources.service'
+import { ResourcesService } from "@/resources/resources.service"
 
-describe('ResourceService', () => {
+describe("ResourceService", () => {
   let service: ResourcesService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule],
-      providers: [ResourcesService],
+      providers: [ResourcesService]
     }).compile()
 
     service = module.get<ResourcesService>(ResourcesService)
   })
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined()
   })
 })

@@ -1,34 +1,34 @@
-import { HttpModule } from '@nestjs/axios'
-import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common'
-import { Test, TestingModule } from '@nestjs/testing'
-import { PrismaService } from 'nestjs-prisma'
-import * as request from 'supertest'
-import timezoneMock from 'timezone-mock'
+import { HttpModule } from "@nestjs/axios"
+import { INestApplication, ValidationPipe, VersioningType } from "@nestjs/common"
+import { Test, TestingModule } from "@nestjs/testing"
+import { PrismaService } from "nestjs-prisma"
+import * as request from "supertest"
+import timezoneMock from "timezone-mock"
 
-import v20230901 from '@/../test/results/20230901.json'
-import v20230901v2 from '@/../test/results/20230901v2.json'
-import { CoopRule } from '@/enum/coop_rule'
-import { ResultsController } from '@/results/results.controller'
-import { ResultsService } from '@/results/results.service'
-import { configuration } from '@/utils/validator'
-describe('ResultsController', () => {
+import v20230901 from "@/../test/results/20230901.json"
+import v20230901v2 from "@/../test/results/20230901v2.json"
+import { CoopRule } from "@/enum/coop_rule"
+import { ResultsController } from "@/results/results.controller"
+import { ResultsService } from "@/results/results.service"
+import { configuration } from "@/utils/validator"
+describe("ResultsController", () => {
   let app: INestApplication
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ResultsController],
       imports: [HttpModule],
-      providers: [ResultsService, PrismaService],
+      providers: [ResultsService, PrismaService]
     }).compile()
 
     app = module.createNestApplication()
     app.useGlobalPipes(
       new ValidationPipe({
-        transform: true,
-      }),
+        transform: true
+      })
     )
 
-    app.enableVersioning({ defaultVersion: '3', type: VersioningType.URI })
+    app.enableVersioning({ defaultVersion: "3", type: VersioningType.URI })
     await app.init()
   })
 
@@ -36,27 +36,27 @@ describe('ResultsController', () => {
     await app.close()
   })
 
-  describe('create v3', () => {
-    timezoneMock.register('UTC')
+  describe("create v3", () => {
+    timezoneMock.register("UTC")
 
-    test('20230901', async () => {
+    test("20230901", async () => {
       const result = await (async () => {
         if (configuration.isDevelopment) {
           return (
             await request
               .default(app.getHttpServer())
-              .post('/v3/results')
-              .set('Accept', 'application/json')
+              .post("/v3/results")
+              .set("Accept", "application/json")
               .send(v20230901)
           ).body
         }
         return v20230901v2
       })()
 
-      expect(result.id.nplnUserId).toBe('a7grz65rxkvhfsbwmxmm')
-      expect(result.id.playTime).toBe('2023-09-06T15:13:58.000Z')
-      expect(result.id.type).toBe('CoopHistoryDetail')
-      expect(result.id.uuid).toBe('54A47507-C5AC-4D76-9A78-73EC241CDFEF')
+      expect(result.id.nplnUserId).toBe("a7grz65rxkvhfsbwmxmm")
+      expect(result.id.playTime).toBe("2023-09-06T15:13:58.000Z")
+      expect(result.id.type).toBe("CoopHistoryDetail")
+      expect(result.id.uuid).toBe("54A47507-C5AC-4D76-9A78-73EC241CDFEF")
       expect(result.gradeId).toBe(8)
 
       expect(result.scale[2]).toBe(0)
@@ -88,19 +88,19 @@ describe('ResultsController', () => {
 
       // otherResults
       expect(result.otherResults.map((member: any) => member.nplnUserId)).toStrictEqual([
-        'q5mqpzblwlu2mea4qtmm',
-        'ae5wjnyghvzbaquhanmm',
-        'a5qxexnsmuwseqrkanmm',
+        "q5mqpzblwlu2mea4qtmm",
+        "ae5wjnyghvzbaquhanmm",
+        "a5qxexnsmuwseqrkanmm"
       ])
-      expect(result.otherResults.map((member: any) => member.nameId)).toStrictEqual(['2424', '2311', '1211'])
+      expect(result.otherResults.map((member: any) => member.nameId)).toStrictEqual(["2424", "2311", "1211"])
       expect(result.otherResults.map((member: any) => member.nameplate.badges)).toStrictEqual([
         [5220002, 5110000, 5230002],
         [5000022, 1060100, 6000001],
-        [5200032, 5200072, 5200062],
+        [5200032, 5200072, 5200062]
       ])
       expect(result.otherResults.map((member: any) => member.nameplate.background.id)).toStrictEqual([951, 11002, 2001])
       expect(result.otherResults.map((member: any) => member.uniform)).toStrictEqual([13, 2, 9])
-      expect(result.otherResults.map((member: any) => member.species)).toStrictEqual(['INKLING', 'INKLING', 'INKLING'])
+      expect(result.otherResults.map((member: any) => member.species)).toStrictEqual(["INKLING", "INKLING", "INKLING"])
       expect(result.otherResults.map((member: any) => member.specialId)).toStrictEqual([20009, 20012, 20014])
       expect(result.otherResults.map((member: any) => member.bossKillCountsTotal)).toStrictEqual([14, 10, 20])
       expect(result.otherResults.map((member: any) => member.ikuraNum)).toStrictEqual([999, 1169, 1058])

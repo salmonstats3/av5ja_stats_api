@@ -1,7 +1,7 @@
-import { ResultsInterceptor } from '@/results/results.interceptor'
+import { ResultsInterceptor } from "@/results/results.interceptor"
 
-describe('ResultsInterceptor', () => {
-  it('should be defined', () => {
+describe("ResultsInterceptor", () => {
+  it("should be defined", () => {
     expect(new ResultsInterceptor()).toBeDefined()
   })
 })

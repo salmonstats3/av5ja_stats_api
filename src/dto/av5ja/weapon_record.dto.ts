@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Expose, Transform, Type } from 'class-transformer'
-import { ValidateNested } from 'class-validator'
+import { ApiProperty } from "@nestjs/swagger"
+import { Expose, Transform, Type } from "class-transformer"
+import { ValidateNested } from "class-validator"
 
 export namespace WeaponRecordQuery {
   class WeaponRecordNode {

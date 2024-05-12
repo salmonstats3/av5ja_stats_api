@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common'
+import { Module } from "@nestjs/common"
 
-import { HistoriesService } from '@/histories/histories.service'
+import { HistoriesService } from "@/histories/histories.service"
 
 @Module({
-  providers: [HistoriesService],
+  providers: [HistoriesService]
 })
 export class HistoriesModule {}
