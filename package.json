@@ -59,6 +59,7 @@
     "swagger-themes": "^1.4.2"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.7.3",
     "@commitlint/cli": "^18.6.0",
     "@commitlint/config-conventional": "^18.6.0",
     "@commitlint/cz-commitlint": "^18.6.0",
