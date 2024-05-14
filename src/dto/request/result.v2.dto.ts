@@ -910,11 +910,7 @@ export namespace CoopHistoryDetailQuery {
             }
           },
           where: {
-            playTime_uuid_scheduleId: {
-              playTime: this.playTime,
-              scheduleId: this.scheduleId,
-              uuid: this.uuid
-            }
+            resultId: this.resultId
           }
         }
       }
