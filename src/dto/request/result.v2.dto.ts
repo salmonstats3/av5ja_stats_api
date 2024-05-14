@@ -910,8 +910,8 @@ export namespace CoopHistoryDetailQuery {
             }
           },
           where: {
-            resultId: this.resultId,
-          },
+            resultId: this.resultId
+          }
         }
       }
 
