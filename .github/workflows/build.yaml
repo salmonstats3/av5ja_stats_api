@@ -61,6 +61,6 @@ jobs:
           TZ: Asia/Tokyo
           APP_HOST: 0.0.0.0
           APP_PORT: 3030
-          APP_VERSION: 2.9.0
+          APP_VERSION: 2.10.0
           NODE_ENV: test
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}

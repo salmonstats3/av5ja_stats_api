@@ -21,8 +21,8 @@
       "dockerDashComposeVersion": "v2"
     }
   },
-  "postAttachCommand": "git config --global --unset commit.template",
-  "postCreateCommand": "sudo chown -R bun:bun node_modules",
+  "postAttachCommand": "/bin/zsh postAttachCommand.sh",
+  "postCreateCommand": "/bin/zsh postCreateCommand.sh",
   "customizations": {
     "vscode": {
       "settings": {

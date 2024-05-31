@@ -53,7 +53,7 @@ export const configuration = (() => {
     {
       APP_HOST: process.env.APP_HOST ?? "0.0.0.0",
       APP_PORT: process.env.APP_PORT ?? 3030,
-      APP_VERSION: process.env.APP_VERSION ?? "2.9.0",
+      APP_VERSION: process.env.APP_VERSION ?? "2.10.0",
       NODE_ENV: process.env.NODE_ENV ?? "development",
       WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL
     },

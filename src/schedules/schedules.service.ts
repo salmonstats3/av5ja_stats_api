@@ -15,58 +15,12 @@ import { firebaseConfig } from "@/utils/firebase.config"
 
 @Injectable()
 export class SchedulesService {
-  constructor(
-    private readonly axios: HttpService,
-    private readonly prisima: PrismaService
-  ) {}
+  constructor(private readonly axios: HttpService) {}
 
-  private readonly firestore = getFirestore(initializeApp(firebaseConfig))
-
-  async find(): Promise<GetCoopScheduleResponse> {
+  async findAll(): Promise<GetCoopScheduleResponse> {
     try {
-      const url: string = "https://splatoon.oatmealdome.me/api/v1/three/coop/phases?count=5"
-      const data: any = (await lastValueFrom(this.axios.get(url))).data
-      const schedules: CoopSchedule[] = [data["Normal"], data["BigRun"], data["TeamContest"]]
-        .flat()
-        .map((schedule: any) => CoopSchedule.from(schedule))
-        .sort((a, b) => dayjs(b.startTime).utc().unix() - dayjs(a.startTime).utc().unix())
-      Promise.allSettled(
-        schedules.map(async (schedule) => {
-          doc(this.firestore, schedule.rule, dayjs(schedule.startTime).utc().toISOString())
-        })
-      )
-      await Promise.allSettled(schedules.map((schedule) => this.prisima.schedule.upsert(schedule.upsert)))
-      return { schedules: schedules }
-    } catch (error) {
-      throw new HttpException("Too Many Requests", HttpStatus.TOO_MANY_REQUESTS)
-    }
-  }
-
-  async findAll(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    request: GetCoopScheduleRequest
-  ): Promise<GetCoopScheduleResponse> {
-    try {
-      const documents = await Promise.all(
-        Object.values(CoopSettingId).map(async (setting) =>
-          getDocs(query(collection(this.firestore, setting), orderBy("startTime", "desc")))
-        )
-      )
-      const schedules: CoopSchedule[] = documents
-        .flatMap((document) =>
-          document.docs.map((doc) =>
-            plainToInstance(CoopSchedule, doc.data(), {
-              excludeExtraneousValues: true
-            })
-          )
-        )
-        .sort((a, b) => dayjs(b.startTime).utc().unix() - dayjs(a.startTime).utc().unix())
-        .filter((schedule) => dayjs(schedule.startTime).isAfter(dayjs(request.startTime)))
-        .slice(-request.count)
-      await Promise.allSettled(schedules.map((schedule) => this.prisima.schedule.upsert(schedule.upsert)))
-      return {
-        schedules: schedules
-      }
+      const url: URL = new URL("https://av5ja.lemonandchan.workers.dev/schedules")
+      return (await lastValueFrom(this.axios.get(url.toString()))).data as GetCoopScheduleResponse
     } catch (error) {
       console.error(error)
       throw new HttpException("Too Many Requests", HttpStatus.TOO_MANY_REQUESTS)
