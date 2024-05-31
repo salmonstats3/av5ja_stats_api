@@ -15,12 +15,11 @@ import { firebaseConfig } from "@/utils/firebase.config"
 
 @Injectable()
 export class SchedulesService {
-  constructor(
-    private readonly axios: HttpService) { }
+  constructor(private readonly axios: HttpService) {}
 
   async findAll(): Promise<GetCoopScheduleResponse> {
     try {
-      const url: URL = new URL('https://av5ja.lemonandchan.workers.dev/schedules')
+      const url: URL = new URL("https://av5ja.lemonandchan.workers.dev/schedules")
       return (await lastValueFrom(this.axios.get(url.toString()))).data as GetCoopScheduleResponse
     } catch (error) {
       console.error(error)

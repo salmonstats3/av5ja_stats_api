@@ -18,7 +18,7 @@ import { SchedulesService } from "@/schedules/schedules.service"
 @Controller("schedules")
 @UseInterceptors(CacheInterceptor)
 export class SchedulesController {
-  constructor(private readonly service: SchedulesService) { }
+  constructor(private readonly service: SchedulesService) {}
 
   @Get()
   @Version("3")
