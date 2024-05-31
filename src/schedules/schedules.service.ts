@@ -15,7 +15,7 @@ import { firebaseConfig } from "@/utils/firebase.config"
 
 @Injectable()
 export class SchedulesService {
-  constructor(private readonly axios: HttpService) {}
+  constructor(private readonly axios: HttpService) { }
 
   async findAll(): Promise<GetCoopScheduleResponse> {
     try {
