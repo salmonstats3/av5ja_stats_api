@@ -1,5 +1,6 @@
 export enum CoopStageId {
   Dummy = -999,
+  Random = -1,
   Tutorial = 0,
   Shakeup = 1,
   Shakespiral = 2,

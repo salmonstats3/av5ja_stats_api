@@ -3,6 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        BUN_VERSION: 1.1.10
+        NODE_VERSION: 20.13.1
     container_name: av5ja_stats_api
     ports:
       - $APP_PORT:$APP_PORT

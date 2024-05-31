@@ -15,6 +15,7 @@
     "build": "nest build -b swc",
     "format": "bunx @biomejs/biome format src",
     "format:fix": "bunx @biomejs/biome format --write src",
+    "start": "wrangler dev --local --port 8080",
     "start:dev": "nest start -b swc --watch",
     "start:prod": "node dist/main",
     "lint": "bunx @biomejs/biome lint src",
@@ -56,7 +57,8 @@
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
     "swagger-stats": "^0.99.7",
-    "swagger-themes": "^1.4.2"
+    "swagger-themes": "^1.4.2",
+    "wrangler": "^3.57.2"
   },
   "devDependencies": {
     "@biomejs/biome": "1.7.3",

@@ -18,36 +18,7 @@ import { SchedulesService } from "@/schedules/schedules.service"
 @Controller("schedules")
 @UseInterceptors(CacheInterceptor)
 export class SchedulesController {
-  constructor(private readonly service: SchedulesService) {}
-
-  @Get()
-  @Version("1")
-  @ApiOperation({
-    deprecated: true,
-    summary: "Fetch Salmon Run schedules for Splatoon 3."
-  })
-  @ApiNotFoundResponse()
-  @ApiTooManyRequestsResponse()
-  @ApiServiceUnavailableResponse()
-  @ApiOkResponse({ type: GetCoopScheduleResponse })
-  async findL(): Promise<CoopSchedule[]> {
-    return (await this.service.find()).schedules
-  }
-
-  @Get()
-  @Version("2")
-  @ApiOperation({
-    deprecated: true,
-    summary: "Fetch Salmon Run schedules for Splatoon 3."
-  })
-  @ApiNotFoundResponse()
-  @ApiTooManyRequestsResponse()
-  @ApiServiceUnavailableResponse()
-  @ApiOkResponse({ type: GetCoopScheduleResponse })
-  @UseInterceptors(CacheInterceptor)
-  async findAllL(@Query() request: GetCoopScheduleRequest): Promise<CoopSchedule[]> {
-    return (await this.service.findAll(request)).schedules
-  }
+  constructor(private readonly service: SchedulesService) { }
 
   @Get()
   @Version("3")
@@ -57,7 +28,7 @@ export class SchedulesController {
   @ApiServiceUnavailableResponse()
   @ApiOkResponse({ type: GetCoopScheduleResponse })
   // @UseInterceptors(CacheInterceptor)
-  async findAll(@Query() request: GetCoopScheduleRequest): Promise<GetCoopScheduleResponse> {
-    return this.service.findAll(request)
+  async findAll(): Promise<GetCoopScheduleResponse> {
+    return this.service.findAll()
   }
 }

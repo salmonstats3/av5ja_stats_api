@@ -1,0 +1,7 @@
+name = "av5ja_stats_api"
+main = "src/worker.ts"
+compatibility_date="2024-05-13"
+
+kv_namespaces = [
+  { binding = "Schedule", id = "c520e398008648e2a3a7769cc5c739de",  preview_id = "e09c635e09c04d3aa4a43d409aa0a841" }
+]
