@@ -20,7 +20,7 @@ export class SchedulesService {
 
   async findAll(): Promise<GetCoopScheduleResponse> {
     try {
-      const url: URL = new URL('https://av5ja.lemonandchan.workers.dev/')
+      const url: URL = new URL('https://av5ja.lemonandchan.workers.dev/schedules')
       return (await lastValueFrom(this.axios.get(url.toString()))).data as GetCoopScheduleResponse
     } catch (error) {
       console.error(error)
