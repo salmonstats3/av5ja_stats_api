@@ -44,6 +44,7 @@ export class SchedulesController {
   @ApiTooManyRequestsResponse()
   @ApiServiceUnavailableResponse()
   @ApiOkResponse({ type: GetCoopScheduleResponse })
+  @UseInterceptors(CacheInterceptor)
   async findAllL(@Query() request: GetCoopScheduleRequest): Promise<CoopSchedule[]> {
     return (await this.service.findAll(request)).schedules
   }
@@ -55,6 +56,7 @@ export class SchedulesController {
   @ApiTooManyRequestsResponse()
   @ApiServiceUnavailableResponse()
   @ApiOkResponse({ type: GetCoopScheduleResponse })
+  // @UseInterceptors(CacheInterceptor)
   async findAll(@Query() request: GetCoopScheduleRequest): Promise<GetCoopScheduleResponse> {
     return this.service.findAll(request)
   }
